@@ -1,0 +1,124 @@
+//@version=5
+// =============================================================================
+//  NQ 5-minute Opening Range Breakout — regime-filtered (research build)
+//  Companion to strongchicken04/sp500-futures-research
+//
+//  Shows ENTRY, STOP and 10R TARGET for the 5-min ORB, and decides on its own
+//  whether the day qualifies using the regime filter.
+//
+//  Rules drawn:
+//    * Opening range = first 5-min candle of the US cash session (09:30-09:35 ET)
+//    * Direction     = OR close > OR open -> long ; < -> short ; = -> no trade
+//    * Entry         = open of the 09:35 bar (in the OR direction)
+//    * Stop          = opposite OR extreme (long: OR low, short: OR high)
+//    * Target        = 10R  (R = |entry - stop|)
+//    * Filter modes:
+//        Best (v3):  (rvol20 > 0.156  OR  |gap| > 0.30%)  AND  trend50 <= 4.06%
+//        Re-fit (v4): (|gap| > 0.33%  OR  rvol20 < 0.122); on gap-down days take
+//                      SHORT setups only (directional tilt)
+//
+//  Use on a 5-minute (or 1-minute) NQ chart. Position sizing / vol-targeting is a
+//  money-management step and is intentionally NOT part of this level indicator.
+// =============================================================================
+indicator("NQ 5-min ORB (regime-filtered)", overlay=true, max_lines_count=500, max_labels_count=500, max_boxes_count=200)
+
+// ---------------- inputs ----------------
+tz        = input.string("America/New_York", "Session timezone")
+orMins    = input.int(5,   "Opening-range minutes", minval=1)
+targetR   = input.float(10.0, "Target (R multiples)")
+mode      = input.string("Best (v3)", "Filter mode", options=["Best (v3)", "Re-fit (v4)"])
+showBox   = input.bool(true,  "Show opening-range box")
+showSkip  = input.bool(true,  "Mark skipped (filtered-out) days")
+
+// v3 thresholds
+v3_rvolHi = input.float(0.156,  "v3: rvol20 high threshold", group="Best (v3) filter")
+v3_gapMin = input.float(0.003,  "v3: |gap| min",             group="Best (v3) filter")
+v3_trMax  = input.float(0.0406, "v3: max trend50 (avoid strong uptrend)", group="Best (v3) filter")
+// v4 thresholds
+v4_gapMin = input.float(0.0033, "v4: |gap| min",             group="Re-fit (v4) filter")
+v4_vLo    = input.float(0.122,  "v4: rvol20 low threshold",  group="Re-fit (v4) filter")
+
+// ---------------- daily regime features (previous completed day, non-repainting)
+prevClose = request.security(syminfo.tickerid, "D", close[1],                                    lookahead=barmerge.lookahead_on)
+rvol20    = request.security(syminfo.tickerid, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
+sma50     = request.security(syminfo.tickerid, "D", ta.sma(close, 50)[1],                        lookahead=barmerge.lookahead_on)
+trend50   = prevClose > 0 and sma50 > 0 ? prevClose / sma50 - 1.0 : na
+
+// ---------------- session / opening-range state ----------------
+tod       = hour(time, tz) * 60 + minute(time, tz)          // minutes since ET midnight
+orStart   = 9 * 60 + 30                                     // 09:30
+orEnd     = orStart + orMins                                // 09:35 by default
+isOR      = tod >= orStart and tod < orEnd
+justOpen  = isOR and (na(tod[1]) or tod[1] < orStart)
+isEntry   = tod >= orEnd and (na(tod[1]) or tod[1] < orEnd) // first bar at/after 09:35
+
+var float orOpen  = na
+var float orHigh  = na
+var float orLow   = na
+var float orClose = na
+var int   orT0    = na
+var bool  traded  = false
+
+if isOR
+    if justOpen
+        orOpen  := open
+        orHigh  := high
+        orLow   := low
+        orT0    := time
+        traded  := false
+    else
+        orHigh  := math.max(orHigh, high)
+        orLow   := math.min(orLow, low)
+    orClose := close
+
+// ---------------- evaluate the setup at the entry bar ----------------
+var line   lnEntry = na
+var line   lnStop  = na
+var line   lnTp    = na
+var label  lbl     = na
+var box    orBox   = na
+
+f_dayEnd() =>
+    timestamp(tz, year(time, tz), month(time, tz), dayofmonth(time, tz), 16, 0)
+
+if isEntry and not traded and not na(orOpen)
+    traded := true
+    entry  = open
+    gap    = na(prevClose) or prevClose == 0 ? na : orOpen / prevClose - 1.0
+    dir    = orClose > orOpen ? 1 : (orClose < orOpen ? -1 : 0)
+
+    // ---- filter (na-safe) ----
+    favorable = false
+    if mode == "Best (v3)"
+        volOk = not na(rvol20) and rvol20 > v3_rvolHi
+        gapOk = not na(gap)    and math.abs(gap) > v3_gapMin
+        trOk  = not na(trend50) and trend50 <= v3_trMax
+        favorable := (volOk or gapOk) and trOk
+    else
+        gapOk = not na(gap)    and math.abs(gap) > v4_gapMin
+        volOk = not na(rvol20) and rvol20 < v4_vLo
+        favorable := gapOk or volOk
+        // v4 directional tilt: on gap-down days, take shorts only
+        if not na(gap) and gap < -v4_gapMin and dir == 1
+            favorable := false
+
+    if dir != 0 and favorable
+        stop = dir == 1 ? orLow : orHigh
+        R    = math.abs(entry - stop)
+        if R > 0
+            tp     = entry + dir * targetR * R
+            t2     = f_dayEnd()
+            colDir = dir == 1 ? color.new(color.teal, 0) : color.new(color.red, 0)
+            lnEntry := line.new(time, entry, t2, entry, xloc=xloc.bar_time, color=colDir,           width=2)
+            lnStop  := line.new(time, stop,  t2, stop,  xloc=xloc.bar_time, color=color.red,         width=1, style=line.style_dashed)
+            lnTp    := line.new(time, tp,    t2, tp,    xloc=xloc.bar_time, color=color.green,        width=1, style=line.style_dashed)
+            txt = (dir == 1 ? "LONG" : "SHORT") + "  entry " + str.tostring(entry, "#.##") + "  SL " + str.tostring(stop, "#.##") + "  TP " + str.tostring(tp, "#.##") + " (+" + str.tostring(targetR, "#") + "R)"
+            lbl := label.new(time, tp, txt, xloc=xloc.bar_time, style=label.style_label_down, color=colDir, textcolor=color.white, size=size.small)
+            if showBox
+                orBox := box.new(orT0, orHigh, time, orLow, xloc=xloc.bar_time, border_color=color.new(color.gray, 40), bgcolor=color.new(color.gray, 88))
+    else
+        if showSkip
+            label.new(time, high, "no-trade", xloc=xloc.bar_time, style=label.style_label_down, color=color.new(color.gray, 30), textcolor=color.white, size=size.tiny)
+
+// ---------------- optional: live opening-range box while it forms ----------------
+plotshape(isOR, title="OR window", style=shape.circle, location=location.bottom, color=color.new(color.blue, 60), size=size.tiny)
