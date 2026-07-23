@@ -1,0 +1,147 @@
+{
+  "config": {
+    "data_dir": "/tmp/claude-0/-home-user-sp500-futures-research/53c3bf28-8c3c-5400-8ec7-9c6a782819be/scratchpad/fsdata/pyfinancialdata/data/currencies/oanda/NAS100_USD",
+    "start_year": 2005,
+    "end_year": 2020,
+    "start_equity": 100000.0,
+    "risk_pct": 0.01,
+    "max_leverage": 4.0,
+    "target_R": 10.0,
+    "cost_bps_per_side": 1.5,
+    "allow_long": true,
+    "allow_short": true
+  },
+  "n_trades": 3820,
+  "n_wins": 775,
+  "n_losses": 3045,
+  "win_rate_pct": 20.287958115183248,
+  "exit_breakdown": {
+    "stop": 2983,
+    "eod": 701,
+    "target": 136
+  },
+  "long_trades": 1925,
+  "short_trades": 1895,
+  "lev_capped_trades": 2755,
+  "avg_R": 0.10909947643979061,
+  "expectancy_R": 0.10909947643979061,
+  "avg_win_R": 4.41210064516129,
+  "avg_loss_R": -0.98608144499179,
+  "profit_factor": 0.8607087290776921,
+  "start_equity": 100000.0,
+  "end_equity": 17237.93208563021,
+  "total_return_pct": -82.76206791436978,
+  "cagr_pct": -10.817218394759998,
+  "years": 15.356605065023956,
+  "ann_vol_pct": 26.953574000950063,
+  "sharpe": -0.2810520998688598,
+  "sortino": -1.709200258559588,
+  "max_drawdown_pct": -89.4536420806427,
+  "calmar": -0.12092541056079356,
+  "yearly": {
+    "2005": {
+      "trades": 216,
+      "return_pct": -49.8,
+      "win_rate_pct": 10.2,
+      "expectancy_R": -0.288
+    },
+    "2006": {
+      "trades": 237,
+      "return_pct": -37.85,
+      "win_rate_pct": 14.3,
+      "expectancy_R": 0.024
+    },
+    "2007": {
+      "trades": 247,
+      "return_pct": -25.31,
+      "win_rate_pct": 15.8,
+      "expectancy_R": 0.006
+    },
+    "2008": {
+      "trades": 253,
+      "return_pct": 47.61,
+      "win_rate_pct": 21.3,
+      "expectancy_R": 0.274
+    },
+    "2009": {
+      "trades": 248,
+      "return_pct": 10.72,
+      "win_rate_pct": 25.8,
+      "expectancy_R": 0.321
+    },
+    "2010": {
+      "trades": 253,
+      "return_pct": -36.05,
+      "win_rate_pct": 18.6,
+      "expectancy_R": -0.036
+    },
+    "2011": {
+      "trades": 250,
+      "return_pct": -7.02,
+      "win_rate_pct": 22.0,
+      "expectancy_R": 0.093
+    },
+    "2012": {
+      "trades": 250,
+      "return_pct": -16.85,
+      "win_rate_pct": 19.2,
+      "expectancy_R": -0.053
+    },
+    "2013": {
+      "trades": 246,
+      "return_pct": 5.32,
+      "win_rate_pct": 23.6,
+      "expectancy_R": 0.245
+    },
+    "2014": {
+      "trades": 253,
+      "return_pct": 0.72,
+      "win_rate_pct": 21.7,
+      "expectancy_R": 0.209
+    },
+    "2015": {
+      "trades": 253,
+      "return_pct": -39.76,
+      "win_rate_pct": 16.2,
+      "expectancy_R": -0.123
+    },
+    "2016": {
+      "trades": 256,
+      "return_pct": 33.92,
+      "win_rate_pct": 25.4,
+      "expectancy_R": 0.428
+    },
+    "2017": {
+      "trades": 254,
+      "return_pct": -25.81,
+      "win_rate_pct": 20.9,
+      "expectancy_R": -0.075
+    },
+    "2018": {
+      "trades": 256,
+      "return_pct": 35.83,
+      "win_rate_pct": 23.4,
+      "expectancy_R": 0.334
+    },
+    "2019": {
+      "trades": 258,
+      "return_pct": -4.29,
+      "win_rate_pct": 22.9,
+      "expectancy_R": 0.194
+    },
+    "2020": {
+      "trades": 90,
+      "return_pct": 10.94,
+      "win_rate_pct": 23.3,
+      "expectancy_R": 0.162
+    }
+  },
+  "avg_trades_per_year": 248.75289712961313,
+  "buy_hold": {
+    "total_return_pct": 461.185647425897,
+    "cagr_pct": 11.887286069057934,
+    "sharpe": 0.6280728731075003,
+    "max_drawdown_pct": -53.89085057882269,
+    "years": 15.356605065023956
+  }
+}

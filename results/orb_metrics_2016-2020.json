@@ -1,0 +1,81 @@
+{
+  "config": {
+    "data_dir": "/tmp/claude-0/-home-user-sp500-futures-research/53c3bf28-8c3c-5400-8ec7-9c6a782819be/scratchpad/fsdata/pyfinancialdata/data/currencies/oanda/NAS100_USD",
+    "start_year": 2016,
+    "end_year": 2020,
+    "start_equity": 100000.0,
+    "risk_pct": 0.01,
+    "max_leverage": 4.0,
+    "target_R": 10.0,
+    "cost_bps_per_side": 1.5,
+    "allow_long": true,
+    "allow_short": true
+  },
+  "n_trades": 1114,
+  "n_wins": 258,
+  "n_losses": 856,
+  "win_rate_pct": 23.159784560143628,
+  "exit_breakdown": {
+    "stop": 830,
+    "eod": 248,
+    "target": 36
+  },
+  "long_trades": 576,
+  "short_trades": 538,
+  "lev_capped_trades": 826,
+  "avg_R": 0.21584290843806103,
+  "expectancy_R": 0.21584290843806103,
+  "avg_win_R": 4.17481007751938,
+  "avg_loss_R": -0.9773971962616823,
+  "profit_factor": 1.0574470128436035,
+  "start_equity": 100000.0,
+  "end_equity": 143278.26466091347,
+  "total_return_pct": 43.278264660913464,
+  "cagr_pct": 8.606225337315543,
+  "years": 4.355920602327173,
+  "ann_vol_pct": 27.885745400729718,
+  "sharpe": 0.4335732737176606,
+  "sortino": 2.5855780727232682,
+  "max_drawdown_pct": -36.06027509426274,
+  "calmar": 0.23866222081829902,
+  "yearly": {
+    "2016": {
+      "trades": 256,
+      "return_pct": 33.92,
+      "win_rate_pct": 25.4,
+      "expectancy_R": 0.428
+    },
+    "2017": {
+      "trades": 254,
+      "return_pct": -25.81,
+      "win_rate_pct": 20.9,
+      "expectancy_R": -0.075
+    },
+    "2018": {
+      "trades": 256,
+      "return_pct": 35.83,
+      "win_rate_pct": 23.4,
+      "expectancy_R": 0.334
+    },
+    "2019": {
+      "trades": 258,
+      "return_pct": -4.29,
+      "win_rate_pct": 22.9,
+      "expectancy_R": 0.194
+    },
+    "2020": {
+      "trades": 90,
+      "return_pct": 10.94,
+      "win_rate_pct": 23.3,
+      "expectancy_R": 0.162
+    }
+  },
+  "avg_trades_per_year": 255.7438717787555,
+  "buy_hold": {
+    "total_return_pct": 99.90663762059306,
+    "cagr_pct": 17.23618688418791,
+    "sharpe": 0.8440760674913318,
+    "max_drawdown_pct": -29.049997944163476,
+    "years": 4.355920602327173
+  }
+}
