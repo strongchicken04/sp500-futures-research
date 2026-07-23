@@ -77,8 +77,14 @@ class Config:
 # --------------------------------------------------------------------------- #
 # Data loading
 # --------------------------------------------------------------------------- #
+_LOAD_CACHE: dict = {}
+
+
 def load_rth_1min(cfg: Config) -> pd.DataFrame:
     """Load OANDA NAS100 1-min CSVs, convert UTC->ET, keep RTH bars only."""
+    key = (cfg.data_dir, cfg.start_year, cfg.end_year)
+    if key in _LOAD_CACHE:
+        return _LOAD_CACHE[key]
     files = []
     for year in range(cfg.start_year, cfg.end_year + 1):
         files += glob.glob(os.path.join(cfg.data_dir, str(year),
@@ -95,7 +101,9 @@ def load_rth_1min(cfg: Config) -> pd.DataFrame:
     # Regular Trading Hours only: 09:30 (570) .. 16:00 (960)
     df = df[(df["etmin"] >= OR_START) & (df["etmin"] <= 16 * 60)].copy()
     df.sort_values("time", inplace=True)
-    return df[["date", "etmin", "open", "high", "low", "close", "volume"]]
+    out = df[["date", "etmin", "open", "high", "low", "close", "volume"]]
+    _LOAD_CACHE[key] = out
+    return out
 
 
 # --------------------------------------------------------------------------- #
