@@ -12,14 +12,17 @@ File: [`nq_orb_indicator.pine`](nq_orb_indicator.pine)
    (1-minute also works; higher timeframes than the OR window will not).
 
 ## What it draws
-For every day the filter accepts, at **09:35 ET** it plots:
-- **Entry** line (teal = long, red = short) at the 09:35 price,
-- **Stop** (dashed red) at the opposite extreme of the 09:30–09:35 opening range,
-- **Target** (dashed green) at **10R**, and a label with the exact entry/SL/TP,
-- the opening-range **box** (09:30–09:35).
+For every day the filter accepts, at **09:35 ET** it draws **three clear horizontal
+lines that extend to the right edge**, each with a live price tag pinned to the
+right so you can place paper orders straight off them:
+- **ENTRY** (blue) at the 09:35 price,
+- **STOP-LOSS** (red) at the opposite extreme of the 09:30–09:35 opening range,
+- **TAKE-PROFIT** (green) at **10R**,
+- plus the opening-range **box** (09:30–09:35), and a **✔ TP hit / ✖ SL hit** marker
+  when price reaches a level.
 
-Days the filter rejects show a small grey **"no-trade"** marker (toggle off with
-*Mark skipped days*).
+Lines are cleared automatically at the next cash open, so the chart always shows the
+current day's trade. Days the filter rejects simply draw nothing.
 
 ## Filter modes (input)
 - **Best (v3)** *(default)* — the best risk-adjusted build:
