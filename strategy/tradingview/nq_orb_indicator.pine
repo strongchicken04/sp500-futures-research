@@ -1,11 +1,11 @@
 //@version=5
 // =============================================================================
-//  NQ 5-minute Opening Range Breakout — regime-filtered (paper-trading levels)
+//  NQ 5-minute Opening Range Breakout - regime-filtered (paper-trading levels)
 //  Companion to strongchicken04/sp500-futures-research
 //
 //  Draws THREE clear horizontal lines for the qualifying day's trade, each
 //  extended to the right edge with a live price tag:
-//        ENTRY (blue) · STOP-LOSS (red) · TAKE-PROFIT = 10R (green)
+//        ENTRY (blue) - STOP-LOSS (red) - TAKE-PROFIT = 10R (green)
 //
 //  Opening range = first 5-min candle of the US cash session (09:30-09:35 ET).
 //  Entry = 09:35 price in the OR direction. Stop = opposite OR extreme. Target = 10R.
@@ -16,7 +16,7 @@ indicator("NQ ORB levels (Entry / SL / TP)", overlay=true, max_lines_count=100, 
 
 // ---------------- inputs ----------------
 tz        = input.string("America/New_York", "Session timezone")
-orMins    = input.int(5,     "Opening-range minutes", minval=1)
+orMins    = input.int(5,      "Opening-range minutes", minval=1)
 targetR   = input.float(10.0, "Target (R multiples)")
 mode      = input.string("Best (v3)", "Filter mode", options=["Best (v3)", "Re-fit (v4)"])
 showBox   = input.bool(true,  "Show opening-range box")
@@ -29,7 +29,8 @@ v4_vLo    = input.float(0.122,  "v4: rvol20 low",  group="Re-fit (v4) filter")
 
 // ---------------- daily regime features (prev completed day, non-repainting) ----
 prevClose = request.security(syminfo.tickerid, "D", close[1], lookahead=barmerge.lookahead_on)
-rvol20    = request.security(syminfo.tickerid, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
+dailyRet  = close / close[1] - 1.0
+rvol20    = request.security(syminfo.tickerid, "D", ta.stdev(dailyRet, 20)[1] * math.sqrt(252), lookahead=barmerge.lookahead_on)
 sma50     = request.security(syminfo.tickerid, "D", ta.sma(close, 50)[1], lookahead=barmerge.lookahead_on)
 trend50   = prevClose > 0 and sma50 > 0 ? prevClose / sma50 - 1.0 : na
 
@@ -45,21 +46,19 @@ var float orOpen  = na
 var float orHigh  = na
 var float orLow   = na
 var float orClose = na
-var int   orT0    = na
+var int   orBar0  = na
 var bool  traded  = false
 
-// persistent drawing objects for the current day's trade
 var line  eLine = na
 var line  sLine = na
 var line  tLine = na
 var label eLab  = na
 var label sLab  = na
 var label tLab  = na
-var box   orBox = na
 var bool  active = false
-var int   dirV   = 0
-var float slPx = na
-var float tpPx = na
+var int   dirn   = 0
+var float slPx   = na
+var float tpPx   = na
 
 // reset at the cash open
 if justOpen
@@ -67,10 +66,10 @@ if justOpen
     orHigh  := high
     orLow   := low
     orClose := close
-    orT0    := time
+    orBar0  := bar_index
     traded  := false
     active  := false
-    dirV    := 0
+    dirn    := 0
     slPx    := na
     tpPx    := na
     line.delete(eLine)
@@ -87,52 +86,52 @@ else if isOR
 // ---------------- evaluate the setup at 09:35 ----------------
 if isEntry and not traded and not na(orOpen)
     traded := true
-    entry  = open
-    gap    = na(prevClose) or prevClose == 0 ? na : orOpen / prevClose - 1.0
-    dir    = orClose > orOpen ? 1 : (orClose < orOpen ? -1 : 0)
+    entPx  = open
+    gapv   = na(prevClose) or prevClose == 0 ? na : orOpen / prevClose - 1.0
+    d      = orClose > orOpen ? 1 : (orClose < orOpen ? -1 : 0)
 
     favorable = false
     if mode == "Best (v3)"
         volOk = not na(rvol20)  and rvol20 > v3_rvolHi
-        gapOk = not na(gap)     and math.abs(gap) > v3_gapMin
+        gapOk = not na(gapv)    and math.abs(gapv) > v3_gapMin
         trOk  = not na(trend50) and trend50 <= v3_trMax
         favorable := (volOk or gapOk) and trOk
     else
-        gapOk2 = not na(gap)    and math.abs(gap) > v4_gapMin
-        volOk2 = not na(rvol20) and rvol20 < v4_vLo
+        gapOk2 = not na(gapv)    and math.abs(gapv) > v4_gapMin
+        volOk2 = not na(rvol20)  and rvol20 < v4_vLo
         favorable := gapOk2 or volOk2
-        if not na(gap) and gap < -v4_gapMin and dir == 1
-            favorable := false      // v4: shorts only on gap-down days
+        if not na(gapv) and gapv < -v4_gapMin and d == 1
+            favorable := false
 
-    if dir != 0 and favorable
-        stop = dir == 1 ? orLow : orHigh
-        R    = math.abs(entry - stop)
-        if R > 0
-            tp = entry + dir * targetR * R
-            slPx   := stop
-            tpPx   := tp
-            dirV   := dir
+    if d != 0 and favorable
+        stopPx = d == 1 ? orLow : orHigh
+        rr     = math.abs(entPx - stopPx)
+        if rr > 0
+            tpVal  = entPx + d * targetR * rr
+            slPx   := stopPx
+            tpPx   := tpVal
+            dirn   := d
             active := true
-            eLine := line.new(bar_index, entry, bar_index + 1, entry, extend=extend.right, color=color.new(color.blue, 0),  width=2)
-            sLine := line.new(bar_index, stop,  bar_index + 1, stop,  extend=extend.right, color=color.new(color.red, 0),   width=2)
-            tLine := line.new(bar_index, tp,    bar_index + 1, tp,    extend=extend.right, color=color.new(color.green, 0), width=2)
-            eTxt = (dir == 1 ? "▲ LONG entry " : "▼ SHORT entry ") + str.tostring(entry, "#.##")
-            eLab := label.new(bar_index, entry, eTxt, style=label.style_label_left, color=color.new(color.blue, 0),  textcolor=color.white, size=size.small)
-            sLab := label.new(bar_index, stop,  "SL " + str.tostring(stop, "#.##"), style=label.style_label_left, color=color.new(color.red, 0),   textcolor=color.white, size=size.small)
-            tLab := label.new(bar_index, tp,    "TP " + str.tostring(tp, "#.##") + "  (+" + str.tostring(targetR, "#") + "R)", style=label.style_label_left, color=color.new(color.green, 0), textcolor=color.white, size=size.small)
+            eLine := line.new(bar_index, entPx,  bar_index + 1, entPx,  extend=extend.right, color=color.blue,  width=2)
+            sLine := line.new(bar_index, stopPx, bar_index + 1, stopPx, extend=extend.right, color=color.red,   width=2)
+            tLine := line.new(bar_index, tpVal,  bar_index + 1, tpVal,  extend=extend.right, color=color.green, width=2)
+            eTxt = (d == 1 ? "LONG entry " : "SHORT entry ") + str.tostring(entPx, "#.##")
+            eLab := label.new(bar_index, entPx,  eTxt, style=label.style_label_left, color=color.blue,  textcolor=color.white, size=size.small)
+            sLab := label.new(bar_index, stopPx, "SL " + str.tostring(stopPx, "#.##"), style=label.style_label_left, color=color.red, textcolor=color.white, size=size.small)
+            tLab := label.new(bar_index, tpVal,  "TP " + str.tostring(tpVal, "#.##") + " (+" + str.tostring(targetR, "#") + "R)", style=label.style_label_left, color=color.green, textcolor=color.white, size=size.small)
             if showBox
-                orBox := box.new(orT0, orHigh, time, orLow, xloc=xloc.bar_time, border_color=color.new(color.gray, 40), bgcolor=color.new(color.gray, 90))
+                box.new(orBar0, orHigh, bar_index, orLow, border_color=color.new(color.gray, 40), bgcolor=color.new(color.gray, 90))
 
-// ---------------- keep the price tags pinned to the right edge; flag TP/SL hit --
+// ---------------- pin the price tags to the right edge; flag TP/SL hit ----------
 if active
     label.set_x(eLab, bar_index)
     label.set_x(sLab, bar_index)
     label.set_x(tLab, bar_index)
-    hitSL = dirV == 1 ? low <= slPx : high >= slPx
-    hitTP = dirV == 1 ? high >= tpPx : low <= tpPx
+    hitSL = dirn == 1 ? low <= slPx : high >= slPx
+    hitTP = dirn == 1 ? high >= tpPx : low <= tpPx
     if hitSL
-        label.new(bar_index, slPx, "✖ SL hit", style=label.style_label_up, color=color.new(color.red, 0), textcolor=color.white, size=size.small)
+        label.new(bar_index, slPx, "SL hit", style=label.style_label_up, color=color.red, textcolor=color.white, size=size.small)
         active := false
     else if hitTP
-        label.new(bar_index, tpPx, "✔ TP hit", style=label.style_label_down, color=color.new(color.green, 0), textcolor=color.white, size=size.small)
+        label.new(bar_index, tpPx, "TP hit", style=label.style_label_down, color=color.green, textcolor=color.white, size=size.small)
         active := false
