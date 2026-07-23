@@ -1,10 +1,4 @@
 __pycache__/
 *.pyc
-.ipynb_checkpoints/
-# raw third-party market data (GPL, downloaded via scripts, not redistributed)
-data/raw/
-*.bi5
-lean-workspace/data/
-
-# transient run logs
+data/financial-data/
 *.log

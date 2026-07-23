@@ -1,0 +1,67 @@
+{
+  "engine": "QuantConnect LEAN (cloud)",
+  "instrument": "NQ E-mini future (real QC minute data)",
+  "period": "2016-01-01 to 2024-01-01",
+  "start_equity": 1000000,
+  "sizing": "5-min ORB long+short, 1% risk, 4x leverage cap, 10R target",
+  "note": "QC default fee model applied; NO explicit slippage modeled (optimistic on fills).",
+  "headline": {
+    "total_return_pct": 66.9,
+    "cagr_pct": 6.606,
+    "max_drawdown_pct": 33.2,
+    "sharpe": 0.23,
+    "sortino": 1.11,
+    "annual_vol_pct": 24.4,
+    "win_rate_pct": 24.0,
+    "profit_loss_ratio": 3.41,
+    "profit_factor": 1.048,
+    "total_trades": 2035,
+    "avg_win_pct": 2.76,
+    "avg_loss_pct": -0.81,
+    "max_consecutive_losses": 30,
+    "total_fees_usd": 272224.4,
+    "end_equity": 1669060.6
+  },
+  "yearly": {
+    "2016": {
+      "return_pct": 37.5,
+      "win_rate_pct": 25.2,
+      "trades": 250
+    },
+    "2017": {
+      "return_pct": -13.7,
+      "win_rate_pct": 23.5,
+      "trades": 247
+    },
+    "2018": {
+      "return_pct": 36.6,
+      "win_rate_pct": 24.3,
+      "trades": 255
+    },
+    "2019": {
+      "return_pct": 2.8,
+      "win_rate_pct": 23.4,
+      "trades": 256
+    },
+    "2020": {
+      "return_pct": -8.4,
+      "win_rate_pct": 21.7,
+      "trades": 258
+    },
+    "2021": {
+      "return_pct": 19.1,
+      "win_rate_pct": 26.8,
+      "trades": 257
+    },
+    "2022": {
+      "return_pct": 9.6,
+      "win_rate_pct": 24.0,
+      "trades": 258
+    },
+    "2023": {
+      "return_pct": -16.2,
+      "win_rate_pct": 21.7,
+      "trades": 254
+    }
+  }
+}
