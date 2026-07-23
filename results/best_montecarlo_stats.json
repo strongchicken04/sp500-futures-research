@@ -1,0 +1,16 @@
+{
+  "actual_cagr_pct": 8.1,
+  "actual_maxdd_pct": -12.8,
+  "cagr_pct": {
+    "p5": -0.5,
+    "p50": 8.0,
+    "p95": 17.9
+  },
+  "maxdd_pct": {
+    "p5": -38.5,
+    "p50": -22.9,
+    "p95": -14.7
+  },
+  "prob_profit_pct": 93.9,
+  "prob_maxdd_worse_than_25pct": 38.9
+}
