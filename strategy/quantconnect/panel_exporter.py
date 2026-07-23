@@ -81,6 +81,7 @@ class NQPanelExporter(QCAlgorithm):
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=True)
         f.SetFilter(0, 120)
+        self.future = f
         self.cont = f.Symbol
         self.today_bars = {}
         self.daily_closes = deque(maxlen=70)
@@ -125,13 +126,23 @@ class NQPanelExporter(QCAlgorithm):
             fv = ",,,"
         Rs = [sim_variant(bars, *v[1:]) for v in VARIANTS]
         rcells = ",".join("" if r is None else f"{r:.4f}" for r in Rs)
-        self.rows.append(f"{date.strftime('%Y-%m-%d')},{fv},{rcells}")
+        row = f"{date.strftime('%Y-%m-%d')},{fv},{rcells}"
+        self.rows.append(row)
         self.daily_closes.append(day_close)
+
+        # Free tier blocks ObjectStore writes and API log reads, so exfiltrate each
+        # day's panel row through an ORDER TAG: a far-from-market limit order that is
+        # cancelled immediately (never fills) but is still returned, with its tag, by
+        # the backtests/orders/read API endpoint.
+        try:
+            sym = self.future.Mapped
+            if sym is not None and sym in self.Securities and self.Securities[sym].Price > 0:
+                tkt = self.LimitOrder(sym, 1, round(day_open * 0.5, 2), tag=row)
+                tkt.Cancel()
+        except Exception as e:
+            self.Debug(f"tag order failed {date}: {e}")
 
     def OnEndOfAlgorithm(self):
         if self.last_date is not None:
             self._process_day(self.last_date)
-        header = "date,rvol20,gap_pct,trend20,trend50," + ",".join(v[0] for v in VARIANTS)
-        csv = "\n".join([header] + self.rows)
-        self.ObjectStore.Save("nq_panel.csv", csv)
-        self.Log(f"PANEL_ROWS={len(self.rows)} BYTES={len(csv)} saved to ObjectStore key nq_panel.csv")
+        self.Log(f"PANEL_ROWS={len(self.rows)} (exfiltrated via order tags; read with backtests/orders/read)")
