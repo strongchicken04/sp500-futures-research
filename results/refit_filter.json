@@ -1,0 +1,87 @@
+{
+  "filter": "(|gap| > 0.0033) OR (rvol20 < 0.122)",
+  "directional": "on gap-down (< -0.0033) days use short-only breakout",
+  "thresholds_fit_on": "real NQ 2009-2019",
+  "gap_med": 0.0033,
+  "vlo": 0.12165533333333334,
+  "by_period": {
+    "2009-2019": {
+      "no filter (base)": {
+        "share": 96.586,
+        "expR": 0.182,
+        "win": 21.763,
+        "rsharpe": 1.074
+      },
+      "OLD filter": {
+        "share": 51.024,
+        "expR": 0.33,
+        "win": 23.803,
+        "rsharpe": 1.342
+      },
+      "RE-FIT gap|lowvol": {
+        "share": 68.847,
+        "expR": 0.288,
+        "win": 23.747,
+        "rsharpe": 1.384
+      },
+      "RE-FIT +directional": {
+        "share": 57.708,
+        "expR": 0.279,
+        "win": 23.537,
+        "rsharpe": 1.232
+      }
+    },
+    "2020-2025_OOS": {
+      "no filter (base)": {
+        "share": 99.788,
+        "expR": 0.184,
+        "win": 22.049,
+        "rsharpe": 1.138
+      },
+      "OLD filter": {
+        "share": 57.193,
+        "expR": 0.202,
+        "win": 21.455,
+        "rsharpe": 0.925
+      },
+      "RE-FIT gap|lowvol": {
+        "share": 66.432,
+        "expR": 0.236,
+        "win": 23.355,
+        "rsharpe": 1.179
+      },
+      "RE-FIT +directional": {
+        "share": 51.481,
+        "expR": 0.287,
+        "win": 23.562,
+        "rsharpe": 1.217
+      }
+    },
+    "2016-2025": {
+      "no filter (base)": {
+        "share": 99.142,
+        "expR": 0.202,
+        "win": 22.456,
+        "rsharpe": 1.226
+      },
+      "OLD filter": {
+        "share": 54.289,
+        "expR": 0.268,
+        "win": 22.423,
+        "rsharpe": 1.153
+      },
+      "RE-FIT gap|lowvol": {
+        "share": 70.098,
+        "expR": 0.269,
+        "win": 23.951,
+        "rsharpe": 1.345
+      },
+      "RE-FIT +directional": {
+        "share": 56.087,
+        "expR": 0.279,
+        "win": 23.889,
+        "rsharpe": 1.233
+      }
+    }
+  }
+}

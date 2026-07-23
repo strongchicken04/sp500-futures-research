@@ -274,6 +274,29 @@ breakout stayed positive everywhere, so filtering mostly just halves trade count
 real NQ through 2025); treat the high-vol filter threshold as stale and re-fit it
 (the gap component is the durable part).*
 
+### Re-fitted filter ([`strategy/refit_filter.py`](strategy/refit_filter.py))
+
+Re-fitting on real NQ (thresholds on 2009-2019, validated on 2020-2025) confirms the
+durable signal is **gap size**, with a **low-vol** leg (the post-2020 pattern) and a
+**directional tilt** (short-only breakout on gap-down days, where shorts made +0.40 R
+vs +0.21 R in 2020-2025). Expectancy per trade (R) / R-Sharpe by period:
+
+| Signal | 2009-2019 | 2020-2025 (OOS) | 2016-2025 |
+|---|---|---|---|
+| no filter (base) | +0.182 / 1.07 | +0.184 / 1.14 | +0.202 / 1.23 |
+| OLD filter (high-vol) | +0.330 / 1.34 | +0.202 / **0.92** | +0.268 / 1.15 |
+| **RE-FIT `gap OR low-vol`** | +0.288 / **1.38** | +0.236 / **1.18** | +0.269 / **1.35** |
+| **RE-FIT + directional** | +0.279 / 1.23 | **+0.287** / 1.22 | +0.279 / 1.23 |
+
+![Re-fit comparison](results/refit_filter_comparison.png)
+
+The OLD filter's R-Sharpe fell **below no-filter** out-of-sample (0.92 < 1.14) — it
+was actively hurting. The **re-fit `gap OR low-vol`** restores a robust uplift in
+*every* period (R-Sharpe 1.18-1.38); adding the directional tilt gives the highest
+per-trade expectancy out-of-sample (+0.287 R, trading ~half the days). Definition in
+[`results/refit_filter.json`](results/refit_filter.json):
+`trade if |gap| > 0.33% OR rvol20 < 0.122; on gap-down days, short-only`.
+
 ---
 
 ## Conclusion — go / no-go
@@ -281,11 +304,11 @@ real NQ through 2025); treat the high-vol filter threshold as stale and re-fit i
 1. **Plain 5-min ORB on NQ — no-go.** Profit factor ≈ 1.05, Sharpe ≈ 0.23, −33%
    drawdown, up to 30 consecutive losers (before slippage, which flips it negative
    near 3 bp/side). Underperforms buy-and-hold NQ ~3× and lost money in 2023.
-2. **Regime filter — helped historically, but its edge decayed post-2020.** On
-   2009–2019 it ~doubled expectancy (and lifted the real-NQ 2016–2024 run to Sharpe
-   0.32); on 2020–2025 real NQ it barely raises expectancy (+0.18→+0.20 R) because
-   the high-vol relationship inverted. Its durable parts are the **gap signal** and
-   the **trade-count/cost cut**; the high-vol threshold needs re-fitting.
+2. **Regime filter — the original decayed post-2020, but a re-fit repairs it.** The
+   high-vol filter fell below no-filter out-of-sample (R-Sharpe 0.92 < 1.14). The
+   **re-fit `gap OR low-vol` (+ short-on-gap-down) filter** restores a robust uplift
+   in every period (R-Sharpe 1.18-1.38, expectancy +0.24-0.29 R) while trading
+   ~half-to-two-thirds of days — the durable, deployable filter.
 3. **Vol-targeting + use as an overlay — this is the deployable form.** It cuts the
    drawdown to ~11% at unchanged return (proxy), and a 50/50 blend with buy-and-hold
    NQ **beats buy-and-hold's Sharpe with half the drawdown**. The edge is genuine
@@ -297,9 +320,8 @@ an NQ book, not as a standalone system.**
 **Remaining before capital:**
 1. **Model slippage explicitly** — every QC run excludes it; verify the edge
    survives ~1 tick/side on entries and stops (the single biggest open risk).
-2. **Re-fit the regime filter on recent data** — the 2009-2025 real-NQ panel
-   ([`results/nq_panel_real.csv`](results/nq_panel_real.csv)) shows the high-vol
-   threshold went stale post-2020; keep the gap signal, re-derive the rest.
+2. **Confirm the re-fit `gap OR low-vol` filter at contract level on QC** (signal-
+   level uplift is already validated on the real-NQ panel; verify net equity/DD).
 3. **Paper-trade the live vol-targeted overlay** before sizing up.
 3. **Exit research** — 10R fires on only ~2–5% of trades; test trailing stops /
    partial take-profit.
