@@ -1,0 +1,19 @@
+{
+  "engine": "QuantConnect LEAN",
+  "instrument": "NQ E-mini (real)",
+  "period": "2016-2025 (2020-25 OOS)",
+  "strategy": "FINAL: re-fit filter (gap|lowvol) + short-on-gap-down + vol-target",
+  "headline": {
+    "cagr_pct": 8.211,
+    "max_drawdown_pct": 28.2,
+    "sharpe": 0.308,
+    "sortino": 1.091,
+    "annual_vol_pct": 12.7,
+    "calmar": 0.29,
+    "profit_factor": 1.157,
+    "total_trades": 1371,
+    "total_fees_usd": 126940.3,
+    "end_equity": 2117454.7
+  },
+  "finding": "Worst DD -27% was the 2017 low-vol UPTREND grind (peak 2016-07 -> trough 2017-11). The re-fit filter admits low-vol days and dropped the 'avoid strong uptrend' rule, and vol-targeting sizes UP in low vol -> it re-entered exactly the regime the old vol-target config avoided. Signal improvement (expectancy) did NOT translate to risk improvement."
+}

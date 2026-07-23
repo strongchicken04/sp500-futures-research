@@ -299,6 +299,32 @@ per-trade expectancy out-of-sample (+0.287 R, trading ~half the days). Definitio
 
 ---
 
+## Part 5 — Final contract-level confirmation (and a lesson)
+
+All real-NQ QC runs side by side:
+
+| Version | Period | CAGR | MaxDD | Sharpe | Calmar | Trades | Fees |
+|---|---|---|---|---|---|---|---|
+| 1. Baseline (unfiltered) | 2016–24 | 6.6% | −33% | 0.23 | 0.20 | 2035 | $272k |
+| 2. Regime filter | 2016–24 | 9.2% | −35% | 0.32 | 0.26 | 1084 | $143k |
+| **3. Vol-target + old filter** | 2016–24 | 8.0% | **−13%** | **0.36** | **0.62** | 1084 | $87k |
+| 4. Final (re-fit + directional + vol-target) | 2016–25 | 8.2% | −28% | 0.31 | 0.29 | 1371 | $127k |
+
+**The re-fit improved the signal but hurt the risk.** Its worst drawdown (−27%) was
+the **2017 low-vol *uptrend* grind** (peak 2016-07 → trough 2017-11). The re-fit
+filter admits low-vol days and dropped the "avoid strong uptrend" rule, and
+vol-targeting *sizes up* in low vol — so the two compounded and re-entered exactly
+the regime the old vol-target config (version 3) sidesteps. Higher per-trade
+expectancy did **not** translate into a better equity curve.
+
+**Lesson: optimise the signal and the risk together.** Version 3 (vol-target + a
+filter that avoids low-vol grinds) remains the best risk-adjusted build. The durable
+gap signal is worth keeping, but its low-vol leg must not be paired with
+vol-targeting; grind-avoidance (the old filter's uptrend exclusion) matters more for
+drawdown than the marginal expectancy the low-vol leg adds.
+
+---
+
 ## Conclusion — go / no-go
 
 1. **Plain 5-min ORB on NQ — no-go.** Profit factor ≈ 1.05, Sharpe ≈ 0.23, −33%
@@ -309,12 +335,16 @@ per-trade expectancy out-of-sample (+0.287 R, trading ~half the days). Definitio
    **re-fit `gap OR low-vol` (+ short-on-gap-down) filter** restores a robust uplift
    in every period (R-Sharpe 1.18-1.38, expectancy +0.24-0.29 R) while trading
    ~half-to-two-thirds of days — the durable, deployable filter.
-3. **Vol-targeting + use as an overlay — this is the deployable form.** It cuts the
-   drawdown to ~11% at unchanged return (proxy), and a 50/50 blend with buy-and-hold
-   NQ **beats buy-and-hold's Sharpe with half the drawdown**. The edge is genuine
-   but modest and *diversifying*, not a standalone index-beater.
+3. **Vol-targeting + a grind-avoiding filter — this is the deployable form
+   (version 3).** Drawdown ~13%, Sharpe 0.36, Calmar 0.62 on real NQ; a 50/50 blend
+   with buy-and-hold NQ **beats buy-and-hold's Sharpe with half the drawdown**. The
+   edge is genuine but modest and *diversifying*, not a standalone index-beater.
+4. **The re-fit filter is a cautionary result** — it lifted per-trade expectancy yet
+   worsened the drawdown by re-admitting low-vol grinds that vol-targeting oversizes.
+   Keep the gap signal; keep grind-avoidance; do **not** pair a low-vol filter leg
+   with vol-targeting.
 
-**Verdict: worth pursuing — as a vol-targeted, regime-filtered intraday *overlay* on
+**Verdict: worth pursuing — as a vol-targeted, grind-avoiding intraday *overlay* on
 an NQ book, not as a standalone system.**
 
 **Remaining before capital:**
