@@ -5,3 +5,6 @@ __pycache__/
 data/raw/
 *.bi5
 lean-workspace/data/
+
+# transient run logs
+*.log
