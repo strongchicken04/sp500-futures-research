@@ -217,7 +217,24 @@ The blend **beats buy & hold on risk-adjusted return in both periods** (Sharpe
 overlay is uncorrelated. Standalone on the full 15 years the strategy still trails
 (Sharpe 0.26) — its role is a low-correlation *overlay*, not a replacement.
 
-*(Real-NQ confirmation of the vol-targeted sizing: QC project **34427985**.)*
+### Vol-targeting confirmed on real NQ (QuantConnect 2016–2024)
+
+The proxy result reproduces on real NQ futures (QC project 34427985):
+
+![De-risking path on NQ](results/qc_nq_derisking_path.png)
+
+| Metric (real NQ) | Baseline 1%/4× | Regime filter | **Filter + vol-target** |
+|---|---|---|---|
+| CAGR | 6.6% | 9.2% | 8.0% |
+| **Max drawdown** | −33% | −35% | **−13%** |
+| Annual vol | 24% | 20% | **11.9%** |
+| Sharpe | 0.23 | 0.32 | **0.36** |
+| **Calmar** | 0.20 | 0.26 | **0.62** |
+| Total fees | $272k | $143k | **$87k** |
+
+Vol-targeting **cut the drawdown from 35% to 13%** for a small give-up in CAGR — its
+Calmar (0.62) now **beats buy-and-hold NQ's ~0.49**. The 2020 whipsaw went from
+−20% to **−6.9%**, exactly where the sizing pulls risk down.
 
 ---
 
@@ -238,10 +255,10 @@ overlay is uncorrelated. Standalone on the full 15 years the strategy still trai
 an NQ book, not as a standalone system.**
 
 **Remaining before capital:**
-1. **Confirm vol-targeting on real NQ** (project 34427985) and extend the proxy
-   study past 2020 (data here ends 2020-05).
-2. **Model slippage explicitly** — every QC run excludes it; verify the edge
-   survives ~1 tick/side on entries and stops.
+1. **Model slippage explicitly** — every QC run excludes it; verify the edge
+   survives ~1 tick/side on entries and stops (the single biggest open risk).
+2. **Extend the proxy study past 2020** (OANDA data here ends 2020-05) and paper-
+   trade the live overlay before sizing up.
 3. **Exit research** — 10R fires on only ~2–5% of trades; test trailing stops /
    partial take-profit.
 4. **MNQ** for retail-size granularity.

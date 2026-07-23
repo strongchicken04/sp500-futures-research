@@ -1,0 +1,18 @@
+{
+  "engine": "QuantConnect LEAN",
+  "instrument": "NQ E-mini (real)",
+  "period": "2016-2024 (2020-24 OOS)",
+  "strategy": "Regime-filtered + vol-targeted 5-min ORB",
+  "headline": {
+    "cagr_pct": 8.041,
+    "max_drawdown_pct": 13.0,
+    "sharpe": 0.357,
+    "sortino": 1.287,
+    "annual_vol_pct": 11.9,
+    "calmar": 0.62,
+    "profit_factor": 1.159,
+    "total_trades": 1084,
+    "total_fees_usd": 86649.3,
+    "end_equity": 1857725.7
+  }
+}
