@@ -109,7 +109,9 @@ def load_rth_1min(cfg: Config) -> pd.DataFrame:
 # --------------------------------------------------------------------------- #
 # Backtest engine
 # --------------------------------------------------------------------------- #
-def run_backtest(cfg: Config):
+def run_backtest(cfg: Config, allowed_dates=None):
+    """allowed_dates: optional set of 'YYYY-MM-DD' strings; if given, only those
+    days are traded (used by the regime filter)."""
     df = load_rth_1min(cfg)
     equity = cfg.start_equity
     trades = []
@@ -118,6 +120,9 @@ def run_backtest(cfg: Config):
     cost = cfg.cost_bps_per_side / 1e4
 
     for date, day in df.groupby("date", sort=True):
+        if allowed_dates is not None and date not in allowed_dates:
+            daily_equity.append((date, equity))
+            continue
         bars = day.set_index("etmin")
         # Need the OR open bar (570), an OR close bar (574) and the entry bar (575)
         if OR_START not in bars.index or ENTRY_MIN not in bars.index:

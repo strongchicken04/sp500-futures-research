@@ -1,0 +1,83 @@
+{
+  "thresholds": {
+    "vol": 0.15598625744427952,
+    "gap": 0.003038010456408058,
+    "up": 0.04060105520132018
+  },
+  "favourable_day_share_pct": 52.8,
+  "train_2005_2015": {
+    "baseline": {
+      "n_trades": 2706,
+      "win_rate_pct": 19.106,
+      "expectancy_R": 0.065,
+      "profit_factor": 0.825,
+      "cagr_pct": -17.527,
+      "sharpe": -0.574,
+      "max_drawdown_pct": -88.526
+    },
+    "filtered": {
+      "n_trades": 1491,
+      "win_rate_pct": 21.395,
+      "expectancy_R": 0.205,
+      "profit_factor": 1.015,
+      "cagr_pct": 1.354,
+      "sharpe": 0.167,
+      "max_drawdown_pct": -43.335
+    },
+    "buy_hold": {
+      "cagr_pct": 10.13,
+      "sharpe": 0.55,
+      "max_drawdown_pct": -53.89
+    }
+  },
+  "test_2016_2020": {
+    "baseline": {
+      "n_trades": 1114,
+      "win_rate_pct": 23.16,
+      "expectancy_R": 0.216,
+      "profit_factor": 1.057,
+      "cagr_pct": 8.606,
+      "sharpe": 0.434,
+      "max_drawdown_pct": -36.06
+    },
+    "filtered": {
+      "n_trades": 548,
+      "win_rate_pct": 22.628,
+      "expectancy_R": 0.354,
+      "profit_factor": 1.123,
+      "cagr_pct": 12.759,
+      "sharpe": 0.63,
+      "max_drawdown_pct": -24.363
+    },
+    "buy_hold": {
+      "cagr_pct": 17.24,
+      "sharpe": 0.84,
+      "max_drawdown_pct": -29.05
+    }
+  },
+  "full_2005_2020": {
+    "baseline": {
+      "n_trades": 3820,
+      "win_rate_pct": 20.288,
+      "expectancy_R": 0.109,
+      "profit_factor": 0.861,
+      "cagr_pct": -10.817,
+      "sharpe": -0.281,
+      "max_drawdown_pct": -89.454
+    },
+    "filtered": {
+      "n_trades": 2039,
+      "win_rate_pct": 21.726,
+      "expectancy_R": 0.245,
+      "profit_factor": 1.056,
+      "cagr_pct": 4.465,
+      "sharpe": 0.299,
+      "max_drawdown_pct": -43.335
+    },
+    "buy_hold": {
+      "cagr_pct": 11.89,
+      "sharpe": 0.63,
+      "max_drawdown_pct": -53.89
+    }
+  }
+}
