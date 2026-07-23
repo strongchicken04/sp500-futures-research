@@ -238,14 +238,54 @@ Calmar (0.62) now **beats buy-and-hold NQ's ~0.49**. The 2020 whipsaw went from
 
 ---
 
+## Part 4 — Extended to real NQ 2009–2025
+
+The OANDA proxy ends 2020-05. To extend past it, the 8-variant panel + regime
+features were recomputed on **real NQ minute data 2009–2025** inside QuantConnect
+([`strategy/quantconnect/panel_exporter.py`](strategy/quantconnect/panel_exporter.py))
+and exfiltrated via order tags (free tier blocks ObjectStore/log export), giving
+[`results/nq_panel_real.csv`](results/nq_panel_real.csv) — 4,252 trading days.
+
+**The base edge persists and is *stronger* on real NQ** (expectancy in R, full sample):
+
+| Variant | Proxy 2005–2020 | **Real NQ 2009–2025** |
+|---|---|---|
+| brk5_10R (breakout) | +0.109 | **+0.188** |
+| brk5_short | +0.117 | **+0.193** |
+| fade5_eod (fade) | −0.283 | −0.024 *(still ≤ 0)* |
+
+**But the regime filter's edge decayed after 2020** — the honest payoff of extending
+the data:
+
+| Filter uplift (brk5_10R expectancy) | all days | filtered days |
+|---|---|---|
+| 2009–2019 | +0.182 R | **+0.330 R** |
+| **2020–2025 (out-of-sample)** | +0.184 R | **+0.202 R** |
+
+![Rolling expectancy on real NQ](results/nq_real_rolling_expectancy.png)
+
+Pre-2020 the filter nearly doubled expectancy; post-2020 it barely helps — the
+**high-volatility relationship inverted** (2020–2025 the breakout was actually best
+in *low* vol), while the **gap signal held** (gap-up still the best regime). The raw
+breakout stayed positive everywhere, so filtering mostly just halves trade count
+(and cost) now rather than lifting the edge.
+
+*Takeaway: rely on the persistent base breakout + vol-targeting (both confirmed on
+real NQ through 2025); treat the high-vol filter threshold as stale and re-fit it
+(the gap component is the durable part).*
+
+---
+
 ## Conclusion — go / no-go
 
 1. **Plain 5-min ORB on NQ — no-go.** Profit factor ≈ 1.05, Sharpe ≈ 0.23, −33%
    drawdown, up to 30 consecutive losers (before slippage, which flips it negative
    near 3 bp/side). Underperforms buy-and-hold NQ ~3× and lost money in 2023.
-2. **Regime filter — real, out-of-sample-robust improvement.** Trading only
-   high-vol / gap / non-uptrend days ~doubles expectancy, lifts Sharpe to 0.32,
-   halves trades & fees, shortens losing streaks — confirmed on real NQ 2020–2024.
+2. **Regime filter — helped historically, but its edge decayed post-2020.** On
+   2009–2019 it ~doubled expectancy (and lifted the real-NQ 2016–2024 run to Sharpe
+   0.32); on 2020–2025 real NQ it barely raises expectancy (+0.18→+0.20 R) because
+   the high-vol relationship inverted. Its durable parts are the **gap signal** and
+   the **trade-count/cost cut**; the high-vol threshold needs re-fitting.
 3. **Vol-targeting + use as an overlay — this is the deployable form.** It cuts the
    drawdown to ~11% at unchanged return (proxy), and a 50/50 blend with buy-and-hold
    NQ **beats buy-and-hold's Sharpe with half the drawdown**. The edge is genuine
@@ -257,8 +297,10 @@ an NQ book, not as a standalone system.**
 **Remaining before capital:**
 1. **Model slippage explicitly** — every QC run excludes it; verify the edge
    survives ~1 tick/side on entries and stops (the single biggest open risk).
-2. **Extend the proxy study past 2020** (OANDA data here ends 2020-05) and paper-
-   trade the live overlay before sizing up.
+2. **Re-fit the regime filter on recent data** — the 2009-2025 real-NQ panel
+   ([`results/nq_panel_real.csv`](results/nq_panel_real.csv)) shows the high-vol
+   threshold went stale post-2020; keep the gap signal, re-derive the rest.
+3. **Paper-trade the live vol-targeted overlay** before sizing up.
 3. **Exit research** — 10R fires on only ~2–5% of trades; test trailing stops /
    partial take-profit.
 4. **MNQ** for retail-size granularity.
