@@ -1,0 +1,69 @@
+{
+  "engine": "QuantConnect LEAN (cloud)",
+  "instrument": "NQ E-mini future (real)",
+  "period": "2016-01-01 to 2024-01-01 (2020-2024 out-of-sample vs filter fit)",
+  "strategy": "Regime-filtered 5-min ORB (vol|gap & not-strong-uptrend), 1% risk / 4x / 10R",
+  "thresholds": {
+    "rvol20": 0.156,
+    "abs_gap": 0.003,
+    "trend50_max": 0.0406,
+    "fit_on": "NAS100 2005-2015"
+  },
+  "headline": {
+    "total_return_pct": 102.4,
+    "cagr_pct": 9.204,
+    "max_drawdown_pct": 34.9,
+    "sharpe": 0.319,
+    "sortino": 1.359,
+    "annual_vol_pct": 20.0,
+    "win_rate_pct": 24.0,
+    "profit_loss_ratio": 3.57,
+    "profit_factor": 1.095,
+    "total_trades": 1084,
+    "max_consecutive_losses": 19,
+    "total_fees_usd": 143344.8,
+    "end_equity": 2024080.2
+  },
+  "yearly": {
+    "2016": {
+      "return_pct": 27.2,
+      "win_rate_pct": 25.6,
+      "trades": 121
+    },
+    "2017": {
+      "return_pct": -1.3,
+      "win_rate_pct": 22.1,
+      "trades": 86
+    },
+    "2018": {
+      "return_pct": 35.9,
+      "win_rate_pct": 24.9,
+      "trades": 173
+    },
+    "2019": {
+      "return_pct": 11.7,
+      "win_rate_pct": 25.6,
+      "trades": 133
+    },
+    "2020": {
+      "return_pct": -20.3,
+      "win_rate_pct": 18.3,
+      "trades": 93
+    },
+    "2021": {
+      "return_pct": 15.4,
+      "win_rate_pct": 26.8,
+      "trades": 127
+    },
+    "2022": {
+      "return_pct": 23.0,
+      "win_rate_pct": 24.8,
+      "trades": 226
+    },
+    "2023": {
+      "return_pct": -6.2,
+      "win_rate_pct": 20.8,
+      "trades": 125
+    }
+  }
+}

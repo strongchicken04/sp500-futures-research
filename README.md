@@ -11,9 +11,12 @@ The paper trades **QQQ** with leverage over 2016–2023. Here we take the *same
 mechanical rules* and apply them to the **Nasdaq-100 future (NQ)**, then backtest
 on **QuantConnect** with real NQ minute data. Full rules: [`strategy/rules.md`](strategy/rules.md).
 
-**TL;DR — the raw edge is real but marginal; it does *not* replicate the paper's
-success on NQ and, as sized, badly underperforms simply holding NQ. Recommendation:
-do not trade as-is → [Conclusion](#conclusion--go--no-go).**
+**TL;DR — the raw 5-min ORB edge on NQ is real but marginal (profit factor ~1.05)
+and underperforms holding NQ. A [regime filter](#part-2--regime-switching-does-a-filter-fix-it)
+(trade only on high-vol / gap / non-uptrend days) is an out-of-sample-robust
+improvement — +102% vs +67%, Sharpe 0.32 vs 0.23, half the trades — but still
+trails buy-and-hold and keeps a ~35% leverage drawdown. Promising research base,
+not deployable as-is → [Conclusion](#conclusion--go--no-go).**
 
 ---
 
@@ -120,37 +123,104 @@ The paper's headline profits come from things the *plain index ORB does not have
 
 ---
 
+## Part 2 — Regime-switching: does a filter fix it?
+
+Instead of trading the ORB every day, **test several variants, find which regime
+each one likes, and only trade when the regime is favourable.** Built on the
+daily panel in [`strategy/regime_research.py`](strategy/regime_research.py) (8 ORB
+variants × ex-ante regime features), with a strict **train (2005–2015) / test
+(2016–2020)** split to avoid curve-fitting.
+
+**What the regimes say** (patterns consistent on *both* train and test):
+
+| Feature (ex-ante) | Breakout works when… | …and fails when |
+|---|---|---|
+| Realised vol (20d) | **high** vol | low vol |
+| Trend (50d) | flat / **down** trend | strong uptrend |
+| Opening gap | **large** \|gap\| | flat open |
+| Fade (mean-revert) | **never** — negative in every regime | — |
+
+So the useful switch is not breakout-vs-fade, it is **breakout-ON vs stand-aside**.
+Filter (thresholds frozen on train): trade the 5-min breakout only when
+`rvol20 > 0.156` **or** `|gap| > 0.30%`, **and** `trend50 ≤ 4.1%`.
+
+**Proxy result, net of 1.5 bp/side** ([`results/regime_strategy_results.json`](results/regime_strategy_results.json)):
+
+| | Expectancy | CAGR | Sharpe | MaxDD |
+|---|---|---|---|---|
+| Unfiltered, full 2005–2020 | +0.11 R | **−10.8%** | −0.28 | −90% |
+| **Filtered**, full 2005–2020 | **+0.25 R** | **+4.5%** | 0.30 | −43% |
+| Unfiltered, test 2016–2020 | +0.22 R | +8.6% | 0.43 | −36% |
+| **Filtered**, test 2016–2020 | **+0.35 R** | **+12.8%** | 0.63 | −24% |
+
+The filter **flips the losing full-history run positive, roughly doubles per-trade
+expectancy and halves drawdown — out-of-sample.**
+
+### Confirmed on real NQ (QuantConnect, 2016–2024; 2020–24 is out-of-sample)
+
+![Regime filter vs unfiltered on NQ](results/qc_regime_vs_baseline_nq.png)
+
+| Metric | Unfiltered | **Regime-filtered** |
+|---|---|---|
+| Total return | +66.9% | **+102.4%** |
+| CAGR | 6.6% | **9.2%** |
+| Sharpe / Sortino | 0.23 / 1.11 | **0.32 / 1.36** |
+| Annual vol | 24.4% | **20.0%** |
+| Profit factor | 1.05 | **1.10** |
+| Max drawdown | −33% | −35% *(not improved)* |
+| Max consecutive losses | 30 | **19** |
+| Trades / fees | 2,035 / $272k | **1,084 / $143k** |
+
+Per-year (real NQ, filtered): the filter cut the bad years hard — **2017 −1%**
+(was −14%), **2019 +12%** (was +3%), **2022 +23%** (was +10% — a high-vol
+downtrend, the filter's sweet spot), **2023 −6%** (was −16%). The one year it made
+*worse* was **2020 (−20% vs −8%)**: the COVID crash + V-recovery is a high-vol
+whipsaw that trips the filter ON into 4× leveraged chop — which is exactly why the
+max drawdown does **not** improve.
+
+---
+
 ## Conclusion — go / no-go
 
-**No-go as-is.** On NQ the mechanical 5-min ORB is *not* a deployable standalone
-edge:
+**Plain 5-min ORB on NQ: no-go.** Profit factor ≈ 1.05, Sharpe ≈ 0.23, −33%
+drawdown, up to 30 consecutive losers — *before* slippage, which the proxy shows
+flips it negative around 3 bp/side. It underperforms buy-and-hold NQ by ~3× and
+lost money in the 2023 rally.
 
-- Profit factor ≈ **1.05**, Sharpe ≈ **0.23**, drawdown **−33%**, up to **30
-  consecutive losers** — and that is *before* realistic slippage, which the proxy
-  shows flips it negative around 3 bp/side.
-- It **underperforms buy-and-hold NQ by ~3×** over the paper's own window and even
-  **lost money in the 2023 rally**.
+**Regime-filtered ORB: a real, out-of-sample-robust improvement — but not yet
+deployable.** The filter nearly doubles expectancy, lifts Sharpe to 0.32, halves
+trades and fees, and shortens losing streaks, and it holds up on real NQ 2020–2024
+that it was never fitted to. Yet it **still trails buy-and-hold NQ (9.2% vs ~18%
+CAGR)** and **still carries a ~35% leverage-driven drawdown**. It is a promising
+research base, not a finished system.
 
-**Worth further research only with material changes** (in rough priority):
-1. **Model slippage properly** before anything else — it is the make-or-break variable.
-2. **Trade-selection filter** (relative volume / ATR / gap), per the follow-up
-   paper — skip the low-expectancy low-vol days that bleed the equity curve.
-3. **De-risk sizing** — drop the 4× cap toward volatility-target / fixed-fractional
-   to cut the 33–90% drawdowns; use **MNQ** for granularity at retail size.
-4. **Exit research** — the 10R target is hit on only ~2–5% of trades; test lower
-   targets, trailing stops, or partial profit-taking.
+**Next steps (in priority):**
+1. **De-risk the sizing** — the 4× cap is what keeps the drawdown at 35%. Move to
+   volatility-targeting / fixed-fractional (and **MNQ** for granularity). This is
+   the highest-leverage change: the edge is now positive, so cutting risk should
+   raise Sharpe toward the buy-and-hold benchmark.
+2. **Model slippage explicitly** — the QC runs exclude it; confirm the filtered
+   edge survives ~1 tick/side on entries and stops.
+3. **Tame the 2020-type whipsaw** — add an intraday "chop" guard (e.g. skip when the
+   opening range is huge relative to ATR, or require follow-through past the OR).
+4. **Exit research** — 10R fires on only ~2–5% of trades; test trailing stops /
+   partial take-profit.
 
 ---
 
 ## Reproduce
 
 ```bash
-# 1. Standalone proxy backtest (data auto-clonable; see data/README.md)
+# 1. Standalone proxy backtests (data auto-clonable; see data/README.md)
 python3 strategy/orb_backtest.py --data-dir <NAS100_dir> --start-year 2016 --end-year 2020 --out results/orb
-python3 strategy/run_matrix.py   --data-dir <NAS100_dir> --out-dir results
+python3 strategy/run_matrix.py   --data-dir <NAS100_dir> --out-dir results   # cost sweep
+python3 strategy/regime_research.py --data-dir <NAS100_dir> --out results/daily_panel.csv
+python3 strategy/regime_strategy.py --data-dir <NAS100_dir> --out-dir results  # filtered vs baseline
 
-# 2. QuantConnect (real NQ): open strategy/quantconnect/main.py in a QC project and Backtest.
-#    A ready project already exists in the connected account: project 34424955.
+# 2. QuantConnect (real NQ): open the algorithm in a QC project and Backtest.
+#    Ready projects exist in the connected account:
+#      strategy/quantconnect/main.py         -> project 34424955  (unfiltered)
+#      strategy/quantconnect/main_regime.py  -> project 34426838  (regime-filtered)
 ```
 
 Artifacts: [`results/`](results/) — QC statistics & equity JSON, proxy matrix,
