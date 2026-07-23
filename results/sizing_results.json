@@ -1,0 +1,92 @@
+{
+  "test_2016_2020": {
+    "base_1pct_4x": {
+      "cagr": 12.76,
+      "vol": 23.11,
+      "sharpe": 0.63,
+      "maxdd": -24.36,
+      "calmar": 0.52
+    },
+    "half_0.5pct_2x": {
+      "cagr": 6.88,
+      "vol": 11.55,
+      "sharpe": 0.63,
+      "maxdd": -12.38,
+      "calmar": 0.56
+    },
+    "low_0.35pct_3x": {
+      "cagr": 7.17,
+      "vol": 10.47,
+      "sharpe": 0.71,
+      "maxdd": -8.62,
+      "calmar": 0.83
+    },
+    "voltarget": {
+      "cagr": 12.67,
+      "vol": 15.7,
+      "sharpe": 0.83,
+      "maxdd": -10.76,
+      "calmar": 1.18
+    },
+    "buy_hold": {
+      "cagr": 17.24,
+      "vol": 21.06,
+      "sharpe": 0.84,
+      "maxdd": -29.05,
+      "calmar": 0.59
+    },
+    "blend_50_50": {
+      "cagr": 15.64,
+      "sharpe": 1.18,
+      "maxdd": -16.26,
+      "vol": 13.0,
+      "beta_to_market": -0.016,
+      "corr": -0.021
+    }
+  },
+  "full_2005_2020": {
+    "base_1pct_4x": {
+      "cagr": 4.47,
+      "vol": 22.45,
+      "sharpe": 0.3,
+      "maxdd": -43.34,
+      "calmar": 0.1
+    },
+    "half_0.5pct_2x": {
+      "cagr": 2.84,
+      "vol": 11.22,
+      "sharpe": 0.3,
+      "maxdd": -24.33,
+      "calmar": 0.12
+    },
+    "low_0.35pct_3x": {
+      "cagr": 2.25,
+      "vol": 10.18,
+      "sharpe": 0.26,
+      "maxdd": -23.82,
+      "calmar": 0.09
+    },
+    "voltarget": {
+      "cagr": 2.93,
+      "vol": 14.75,
+      "sharpe": 0.26,
+      "maxdd": -35.95,
+      "calmar": 0.08
+    },
+    "buy_hold": {
+      "cagr": 11.89,
+      "vol": 20.96,
+      "sharpe": 0.63,
+      "maxdd": -53.89,
+      "calmar": 0.22
+    },
+    "blend_50_50": {
+      "cagr": 8.0,
+      "sharpe": 0.66,
+      "maxdd": -26.54,
+      "vol": 12.89,
+      "beta_to_market": 0.009,
+      "corr": 0.013
+    }
+  }
+}

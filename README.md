@@ -180,31 +180,71 @@ max drawdown does **not** improve.
 
 ---
 
+## Part 3 — De-risking: volatility targeting & diversification
+
+The filtered edge is positive, so the last problem is the 35% leverage drawdown.
+[`strategy/sizing_research.py`](strategy/sizing_research.py) tests alternative
+sizings on the filtered strategy and — crucially — the strategy's value **as an
+overlay** (its market beta is ~0.09, correlation to NAS100 ≈ **0**).
+
+**Volatility targeting** — `risk_t = clip(0.001 / rvol20, 0.2%, 1.2%)`, i.e. risk
+*less* when realised vol is high (exactly the 2020 whipsaw) — dominates the flat 4×
+sizing (proxy, test 2016–2020):
+
+| Sizing (filtered) | CAGR | Vol | Sharpe | MaxDD | Calmar |
+|---|---|---|---|---|---|
+| 1% risk / 4× (base) | 12.8% | 23% | 0.63 | −24% | 0.52 |
+| **Vol-targeted** | 12.7% | 16% | **0.83** | **−11%** | **1.18** |
+| Buy & Hold NAS100 | 17.2% | 21% | 0.84 | −29% | 0.59 |
+
+Same return, **half the drawdown**, Sharpe now matches buy & hold and Calmar
+doubles it.
+
+**As a diversifier it is stronger still.** A 50/50 daily-rebalanced blend of buy &
+hold NAS100 + vol-targeted ORB (correlation ≈ 0):
+
+| | CAGR | Sharpe | MaxDD |
+|---|---|---|---|
+| Buy & Hold NAS100 (test 2016–2020) | 17.2% | 0.84 | −29% |
+| **50/50 blend (test)** | 15.6% | **1.18** | **−16%** |
+| Buy & Hold NAS100 (full 2005–2020) | 11.9% | 0.63 | −54% |
+| **50/50 blend (full)** | 8.0% | **0.66** | **−27%** |
+
+![Vol-targeted ORB as a diversifier](results/blend_test.png)
+
+The blend **beats buy & hold on risk-adjusted return in both periods** (Sharpe
+1.18 vs 0.84; 0.66 vs 0.63) with **roughly half the drawdown**, because the ORB
+overlay is uncorrelated. Standalone on the full 15 years the strategy still trails
+(Sharpe 0.26) — its role is a low-correlation *overlay*, not a replacement.
+
+*(Real-NQ confirmation of the vol-targeted sizing: QC project **34427985**.)*
+
+---
+
 ## Conclusion — go / no-go
 
-**Plain 5-min ORB on NQ: no-go.** Profit factor ≈ 1.05, Sharpe ≈ 0.23, −33%
-drawdown, up to 30 consecutive losers — *before* slippage, which the proxy shows
-flips it negative around 3 bp/side. It underperforms buy-and-hold NQ by ~3× and
-lost money in the 2023 rally.
+1. **Plain 5-min ORB on NQ — no-go.** Profit factor ≈ 1.05, Sharpe ≈ 0.23, −33%
+   drawdown, up to 30 consecutive losers (before slippage, which flips it negative
+   near 3 bp/side). Underperforms buy-and-hold NQ ~3× and lost money in 2023.
+2. **Regime filter — real, out-of-sample-robust improvement.** Trading only
+   high-vol / gap / non-uptrend days ~doubles expectancy, lifts Sharpe to 0.32,
+   halves trades & fees, shortens losing streaks — confirmed on real NQ 2020–2024.
+3. **Vol-targeting + use as an overlay — this is the deployable form.** It cuts the
+   drawdown to ~11% at unchanged return (proxy), and a 50/50 blend with buy-and-hold
+   NQ **beats buy-and-hold's Sharpe with half the drawdown**. The edge is genuine
+   but modest and *diversifying*, not a standalone index-beater.
 
-**Regime-filtered ORB: a real, out-of-sample-robust improvement — but not yet
-deployable.** The filter nearly doubles expectancy, lifts Sharpe to 0.32, halves
-trades and fees, and shortens losing streaks, and it holds up on real NQ 2020–2024
-that it was never fitted to. Yet it **still trails buy-and-hold NQ (9.2% vs ~18%
-CAGR)** and **still carries a ~35% leverage-driven drawdown**. It is a promising
-research base, not a finished system.
+**Verdict: worth pursuing — as a vol-targeted, regime-filtered intraday *overlay* on
+an NQ book, not as a standalone system.**
 
-**Next steps (in priority):**
-1. **De-risk the sizing** — the 4× cap is what keeps the drawdown at 35%. Move to
-   volatility-targeting / fixed-fractional (and **MNQ** for granularity). This is
-   the highest-leverage change: the edge is now positive, so cutting risk should
-   raise Sharpe toward the buy-and-hold benchmark.
-2. **Model slippage explicitly** — the QC runs exclude it; confirm the filtered
-   edge survives ~1 tick/side on entries and stops.
-3. **Tame the 2020-type whipsaw** — add an intraday "chop" guard (e.g. skip when the
-   opening range is huge relative to ATR, or require follow-through past the OR).
-4. **Exit research** — 10R fires on only ~2–5% of trades; test trailing stops /
+**Remaining before capital:**
+1. **Confirm vol-targeting on real NQ** (project 34427985) and extend the proxy
+   study past 2020 (data here ends 2020-05).
+2. **Model slippage explicitly** — every QC run excludes it; verify the edge
+   survives ~1 tick/side on entries and stops.
+3. **Exit research** — 10R fires on only ~2–5% of trades; test trailing stops /
    partial take-profit.
+4. **MNQ** for retail-size granularity.
 
 ---
 

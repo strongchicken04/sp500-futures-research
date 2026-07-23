@@ -109,9 +109,11 @@ def load_rth_1min(cfg: Config) -> pd.DataFrame:
 # --------------------------------------------------------------------------- #
 # Backtest engine
 # --------------------------------------------------------------------------- #
-def run_backtest(cfg: Config, allowed_dates=None):
+def run_backtest(cfg: Config, allowed_dates=None, risk_by_date=None):
     """allowed_dates: optional set of 'YYYY-MM-DD' strings; if given, only those
-    days are traded (used by the regime filter)."""
+    days are traded (used by the regime filter).
+    risk_by_date: optional {date: risk_fraction} overriding cfg.risk_pct per day
+    (used by volatility-targeted sizing)."""
     df = load_rth_1min(cfg)
     equity = cfg.start_equity
     trades = []
@@ -160,8 +162,10 @@ def run_backtest(cfg: Config, allowed_dates=None):
 
         target = entry + direction * cfg.target_R * R
 
-        # Position sizing (paper): risk-cap vs leverage-cap
-        units_risk = cfg.risk_pct * equity / R
+        # Position sizing: risk-cap vs leverage-cap. risk_by_date lets a caller
+        # override the per-trade risk fraction per day (e.g. volatility targeting).
+        rp = risk_by_date.get(date, cfg.risk_pct) if risk_by_date else cfg.risk_pct
+        units_risk = rp * equity / R
         units_lev = cfg.max_leverage * equity / entry
         units = min(units_risk, units_lev)
 
