@@ -1,0 +1,34 @@
+{
+  "window": "2016-2020 NAS100 (proxy, unlevered)",
+  "note": "user's fixed-20bps+gates replicates at Sharpe 1.51 (reported 1.40). Lee sigma-band hurts; day-vol-adaptive band is a marginal wash.",
+  "configs": {
+    "A_fixed_gates": {
+      "sharpe": 1.51,
+      "mdd": -7.3,
+      "win": 42,
+      "avg_bps": 9.6,
+      "trades": 522
+    },
+    "fixed_no_gates": {
+      "sharpe": 0.31,
+      "mdd": -10.9
+    },
+    "B_sigma_k1.0": {
+      "sharpe": 0.92,
+      "mdd": -5.1,
+      "win": 20
+    },
+    "B_sigma_k1.5": {
+      "sharpe": 0.72,
+      "mdd": -5.7,
+      "win": 18
+    },
+    "C_dayvol_adaptive": {
+      "sharpe": 1.45,
+      "mdd": -6.8,
+      "win": 44,
+      "avg_bps": 10.1,
+      "trades": 526
+    }
+  }
+}

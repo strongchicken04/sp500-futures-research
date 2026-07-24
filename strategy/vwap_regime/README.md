@@ -78,3 +78,32 @@ It is plausibly useful not as a signal but to *condition* another strategy — e
 only take ORB longs when `R_t = +1`, fade only when `R_t = 0`. That is a legitimate
 follow-up (and mirrors what actually worked for the ORB regime filter), but it is
 **our** addition, not the paper's.
+
+## Combining it with a real VWAP-band strategy
+
+Tested against a working user strategy — *NQ VWAP Trend*: session-VWAP hysteresis
+band (fixed **20 bps**), 1 trade/day, exit on close beyond the opposite band or EOD,
+plus a **gap gate** and a **post-trend-day gate**, VT15 sizing. The one idea worth
+borrowing from Lee is his **volatility-scaled band** (`k·σ`) in place of the fixed
+band. `vwap_band_combo.py` replicates the strategy and tests it (NAS100 2016–2020,
+unlevered):
+
+| config | trades | win% | avg bps | Sharpe | MaxDD |
+|---|---|---|---|---|---|
+| **A — fixed 20 bps + gates (user's)** | 522 | 42% | 9.6 | **1.51** | −7.3% |
+| fixed 20 bps, **no gates** | 1055 | 37% | 1.2 | 0.31 | −10.9% |
+| B — Lee **σ-band** k=1.0 / 1.5 / 2.0 | ~548 | 18–25% | 2.7–4.1 | 0.47–0.92 | −5 to −13% |
+| C — **day-vol-adaptive** 20 bps band | 526 | 44% | 10.1 | 1.45 | −6.8% |
+
+The user's fixed-band config replicates at **Sharpe 1.51** (they reported 1.40 on
+2018–2025) and the **gates do most of the work** (Sharpe 1.51 → 0.31 without them).
+
+- **Naive Lee σ-band (B) hurts a lot** — the intraday VWAP-variance σ grows from ~0
+  at the open, so the band is too tight early → whipsaw → win-rate collapses 42% → ~20%.
+- **The "smart" version (C)** — scale the 20 bps band by *daily* realised vol — is a
+  **marginal wash** (Sharpe 1.45 vs 1.51, MaxDD −6.8% vs −7.3%): no real gain, added
+  complexity and overfitting risk.
+
+**Answer: don't combine.** The fixed-band + gates design is already at the sweet
+spot; Lee's volatility-scaled band either degrades it (naive) or matches it (smart).
+Test: `python3 strategy/vwap_regime/vwap_band_combo.py --data-dir <NAS100> --start-year 2016 --end-year 2020`.
