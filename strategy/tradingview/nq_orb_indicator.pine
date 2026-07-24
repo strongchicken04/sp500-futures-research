@@ -3,23 +3,25 @@
 //  NQ 5-minute Opening Range Breakout - regime-filtered (paper-trading levels)
 //  Companion to strongchicken04/sp500-futures-research
 //
-//  Draws THREE clear horizontal lines for the qualifying day's trade, each
-//  extended to the right edge with a live price tag:
-//        ENTRY (blue) - STOP-LOSS (red) - TAKE-PROFIT = 10R (green)
+//  For each qualifying day it draws the tradeable levels:
+//     ENTRY (blue)  ·  STOP-LOSS (red)  ·  1R/2R/3R partial targets (faint green)
+//     ·  10R target (faint, rarely hit)  ·  EOD EXIT marker at 16:00 ET
 //
-//  Opening range = first 5-min candle of the US cash session (09:30-09:35 ET).
-//  Entry = 09:35 price in the OR direction. Stop = opposite OR extreme. Target = 10R.
-//  The day only trades when the regime filter passes (decided automatically).
+//  How the strategy actually manages a trade: enter at 09:35 in the opening-range
+//  direction, stop at the opposite OR extreme, and CLOSE AT 16:00 ET if the 10R
+//  target has not been hit (it almost never is - median winner exits at EOD).
 //  Use on an NQ 5-minute (or 1-minute) chart.
 // =============================================================================
-indicator("NQ ORB levels (Entry / SL / TP)", overlay=true, max_lines_count=100, max_labels_count=200, max_boxes_count=60)
+indicator("NQ ORB levels (Entry / SL / TP)", overlay=true, max_lines_count=200, max_labels_count=300, max_boxes_count=60)
 
 // ---------------- inputs ----------------
-tz        = input.string("America/New_York", "Session timezone")
-orMins    = input.int(5,      "Opening-range minutes", minval=1)
-targetR   = input.float(10.0, "Target (R multiples)")
-mode      = input.string("Best (v3)", "Filter mode", options=["Best (v3)", "Re-fit (v4)"])
-showBox   = input.bool(true,  "Show opening-range box")
+tz          = input.string("America/New_York", "Session timezone")
+orMins      = input.int(5,      "Opening-range minutes", minval=1)
+targetR     = input.float(10.0, "Full target (R)")
+mode        = input.string("Best (v3)", "Filter mode", options=["Best (v3)", "Re-fit (v4)"])
+showBox     = input.bool(true,  "Show opening-range box")
+showPartial = input.bool(true,  "Show 1R / 2R / 3R partial targets")
+showEod     = input.bool(true,  "Show 16:00 EOD-exit marker")
 
 v3_rvolHi = input.float(0.156,  "v3: rvol20 high", group="Best (v3) filter")
 v3_gapMin = input.float(0.003,  "v3: |gap| min",   group="Best (v3) filter")
@@ -38,9 +40,11 @@ trend50   = prevClose > 0 and sma50 > 0 ? prevClose / sma50 - 1.0 : na
 tod      = hour(time, tz) * 60 + minute(time, tz)
 orStart  = 9 * 60 + 30
 orEnd    = orStart + orMins
+sessEnd  = 16 * 60
 isOR     = tod >= orStart and tod < orEnd
 justOpen = tod >= orStart and (na(tod[1]) or tod[1] < orStart)
 isEntry  = tod >= orEnd   and (na(tod[1]) or tod[1] < orEnd)
+isEod    = tod >= sessEnd and (na(tod[1]) or tod[1] < sessEnd)
 
 var float orOpen  = na
 var float orHigh  = na
@@ -52,13 +56,29 @@ var bool  traded  = false
 var line  eLine = na
 var line  sLine = na
 var line  tLine = na
+var line  r1Line = na
+var line  r2Line = na
+var line  r3Line = na
 var label eLab  = na
 var label sLab  = na
 var label tLab  = na
 var bool  active = false
 var int   dirn   = 0
+var float entPxV = na
 var float slPx   = na
 var float tpPx   = na
+var float rrV    = na
+
+f_del() =>
+    line.delete(eLine)
+    line.delete(sLine)
+    line.delete(tLine)
+    line.delete(r1Line)
+    line.delete(r2Line)
+    line.delete(r3Line)
+    label.delete(eLab)
+    label.delete(sLab)
+    label.delete(tLab)
 
 // reset at the cash open
 if justOpen
@@ -72,12 +92,7 @@ if justOpen
     dirn    := 0
     slPx    := na
     tpPx    := na
-    line.delete(eLine)
-    line.delete(sLine)
-    line.delete(tLine)
-    label.delete(eLab)
-    label.delete(sLab)
-    label.delete(tLab)
+    f_del()
 else if isOR
     orHigh  := math.max(orHigh, high)
     orLow   := math.min(orLow, low)
@@ -108,21 +123,27 @@ if isEntry and not traded and not na(orOpen)
         rr     = math.abs(entPx - stopPx)
         if rr > 0
             tpVal  = entPx + d * targetR * rr
+            entPxV := entPx
             slPx   := stopPx
             tpPx   := tpVal
+            rrV    := rr
             dirn   := d
             active := true
             eLine := line.new(bar_index, entPx,  bar_index + 1, entPx,  extend=extend.right, color=color.blue,  width=2)
             sLine := line.new(bar_index, stopPx, bar_index + 1, stopPx, extend=extend.right, color=color.red,   width=2)
-            tLine := line.new(bar_index, tpVal,  bar_index + 1, tpVal,  extend=extend.right, color=color.green, width=2)
-            eTxt = (d == 1 ? "LONG entry " : "SHORT entry ") + str.tostring(entPx, "#.##")
+            tLine := line.new(bar_index, tpVal,  bar_index + 1, tpVal,  extend=extend.right, color=color.new(color.green, 55), width=1, style=line.style_dotted)
+            if showPartial
+                r1Line := line.new(bar_index, entPx + d * rr, bar_index + 1, entPx + d * rr, extend=extend.right, color=color.new(color.green, 30), width=1)
+                r2Line := line.new(bar_index, entPx + d * 2 * rr, bar_index + 1, entPx + d * 2 * rr, extend=extend.right, color=color.new(color.green, 45), width=1)
+                r3Line := line.new(bar_index, entPx + d * 3 * rr, bar_index + 1, entPx + d * 3 * rr, extend=extend.right, color=color.new(color.green, 60), width=1)
+            eTxt = (d == 1 ? "LONG entry " : "SHORT entry ") + str.tostring(entPx, "#.##") + "  (R=" + str.tostring(rr, "#.##") + " pts)"
             eLab := label.new(bar_index, entPx,  eTxt, style=label.style_label_left, color=color.blue,  textcolor=color.white, size=size.small)
-            sLab := label.new(bar_index, stopPx, "SL " + str.tostring(stopPx, "#.##"), style=label.style_label_left, color=color.red, textcolor=color.white, size=size.small)
-            tLab := label.new(bar_index, tpVal,  "TP " + str.tostring(tpVal, "#.##") + " (+" + str.tostring(targetR, "#") + "R)", style=label.style_label_left, color=color.green, textcolor=color.white, size=size.small)
+            sLab := label.new(bar_index, stopPx, "SL " + str.tostring(stopPx, "#.##") + "  (-1R)", style=label.style_label_left, color=color.red, textcolor=color.white, size=size.small)
+            tLab := label.new(bar_index, tpVal,  "10R target " + str.tostring(tpVal, "#.##") + " (rare - usually exit at 16:00)", style=label.style_label_left, color=color.new(color.green, 20), textcolor=color.white, size=size.small)
             if showBox
                 box.new(orBar0, orHigh, bar_index, orLow, border_color=color.new(color.gray, 40), bgcolor=color.new(color.gray, 90))
 
-// ---------------- pin the price tags to the right edge; flag TP/SL hit ----------
+// ---------------- pin tags to right edge; TP/SL hit; EOD exit --------------------
 if active
     label.set_x(eLab, bar_index)
     label.set_x(sLab, bar_index)
@@ -130,8 +151,15 @@ if active
     hitSL = dirn == 1 ? low <= slPx : high >= slPx
     hitTP = dirn == 1 ? high >= tpPx : low <= tpPx
     if hitSL
-        label.new(bar_index, slPx, "SL hit", style=label.style_label_up, color=color.red, textcolor=color.white, size=size.small)
+        label.new(bar_index, slPx, "SL hit (-1R)", style=label.style_label_up, color=color.red, textcolor=color.white, size=size.small)
         active := false
     else if hitTP
-        label.new(bar_index, tpPx, "TP hit", style=label.style_label_down, color=color.green, textcolor=color.white, size=size.small)
+        label.new(bar_index, tpPx, "10R hit", style=label.style_label_down, color=color.green, textcolor=color.white, size=size.small)
         active := false
+    else if isEod and showEod
+        rMult = dirn * (close - entPxV) / rrV
+        label.new(bar_index, close, "EOD exit " + str.tostring(close, "#.##") + "  (" + (rMult >= 0 ? "+" : "") + str.tostring(rMult, "#.##") + "R)", style=label.style_label_left, color=color.new(color.orange, 0), textcolor=color.white, size=size.small)
+        active := false
+
+// mark the 16:00 EOD bar for context
+bgcolor(isEod and showEod ? color.new(color.orange, 88) : na, title="EOD (16:00) exit")
