@@ -1,0 +1,68 @@
+{
+  "2008-2025": {
+    "base": {
+      "label": "puvodni",
+      "n": 2066,
+      "avg_pts": 6.86,
+      "win": 38.8,
+      "sharpe": 1.01,
+      "cagr": 7.26,
+      "mdd": -9.48,
+      "tp_hit_pct": 13.2
+    },
+    "tp100": {
+      "label": "TP100",
+      "n": 2066,
+      "avg_pts": 5.16,
+      "win": 40.7,
+      "sharpe": 0.89,
+      "cagr": 5.74,
+      "mdd": -9.48,
+      "tp_hit_pct": 13.2
+    }
+  },
+  "2018-2025": {
+    "base": {
+      "label": "puvodni",
+      "n": 913,
+      "avg_pts": 12.99,
+      "win": 38.7,
+      "sharpe": 1.22,
+      "cagr": 9.04,
+      "mdd": -6.98,
+      "tp_hit_pct": 29.4
+    },
+    "tp100": {
+      "label": "TP100",
+      "n": 913,
+      "avg_pts": 9.18,
+      "win": 42.8,
+      "sharpe": 1.02,
+      "cagr": 5.71,
+      "mdd": -5.11,
+      "tp_hit_pct": 29.4
+    }
+  },
+  "2023-2025": {
+    "base": {
+      "label": "puvodni",
+      "n": 345,
+      "avg_pts": 16.19,
+      "win": 39.4,
+      "sharpe": 1.22,
+      "cagr": 8.0,
+      "mdd": -6.98,
+      "tp_hit_pct": 40.6
+    },
+    "tp100": {
+      "label": "TP100",
+      "n": 345,
+      "avg_pts": 12.37,
+      "win": 48.7,
+      "sharpe": 1.11,
+      "cagr": 5.12,
+      "mdd": -5.07,
+      "tp_hit_pct": 40.6
+    }
+  }
+}
