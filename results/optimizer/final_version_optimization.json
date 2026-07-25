@@ -1,0 +1,201 @@
+{
+  "window": "2005-2017",
+  "n_configs": 1152,
+  "grid": {
+    "band_bps": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0,
+      35.0
+    ],
+    "gap_pct": [
+      0.0,
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0,
+      35.0,
+      40.0
+    ],
+    "trend_pct": [
+      40.0,
+      50.0,
+      60.0,
+      70.0,
+      80.0,
+      100.0
+    ],
+    "vt_target": [
+      0.0,
+      10.0,
+      15.0,
+      20.0
+    ]
+  },
+  "vt_model": "L_t=clip(target/sigma20(own past rets,shift1),0,3.0); L=1 first 20d",
+  "recommended": {
+    "band_bps": 25.0,
+    "gap_pct": 40.0,
+    "trend_pct": 40.0,
+    "vt_target": 20.0
+  },
+  "recommended_is_sharpe": 0.952,
+  "raw_peak": {
+    "band_bps": 25.0,
+    "gap_pct": 40.0,
+    "trend_pct": 40.0,
+    "vt_target": 20.0
+  },
+  "raw_peak_is_sharpe": 0.952,
+  "user_config": {
+    "band_bps": 20.0,
+    "gap_pct": 25.0,
+    "trend_pct": 60.0,
+    "vt_target": 15.0
+  },
+  "user_is_sharpe": 0.542,
+  "user_rank_sharpe": 290,
+  "user_rank_plateau": 459,
+  "user_full_is": {
+    "sharpe": 0.542,
+    "cagr": 7.49,
+    "mdd": -29.79,
+    "tot": 161.9,
+    "calmar": 0.25
+  },
+  "user_fixed_wf_window": {
+    "sharpe": 0.595,
+    "cagr": 8.18,
+    "mdd": -29.79,
+    "tot": 106.6,
+    "calmar": 0.27
+  },
+  "rec_fixed_wf_window": {
+    "sharpe": 0.993,
+    "cagr": 13.54,
+    "mdd": -20.32,
+    "tot": 222.8,
+    "calmar": 0.67
+  },
+  "wf_plateau": {
+    "sharpe": 0.67,
+    "cagr": 7.93,
+    "mdd": -21.27,
+    "tot": 102.2,
+    "calmar": 0.37
+  },
+  "wf_argmax": {
+    "sharpe": 0.666,
+    "cagr": 6.63,
+    "mdd": -14.27,
+    "tot": 80.8,
+    "calmar": 0.46
+  },
+  "wf_picks": [
+    [
+      2009,
+      {
+        "band_bps": 30.0,
+        "gap_pct": 40.0,
+        "trend_pct": 100.0,
+        "vt_target": 0.0
+      }
+    ],
+    [
+      2010,
+      {
+        "band_bps": 30.0,
+        "gap_pct": 40.0,
+        "trend_pct": 70.0,
+        "vt_target": 20.0
+      }
+    ],
+    [
+      2011,
+      {
+        "band_bps": 30.0,
+        "gap_pct": 40.0,
+        "trend_pct": 100.0,
+        "vt_target": 0.0
+      }
+    ],
+    [
+      2012,
+      {
+        "band_bps": 25.0,
+        "gap_pct": 40.0,
+        "trend_pct": 40.0,
+        "vt_target": 20.0
+      }
+    ],
+    [
+      2013,
+      {
+        "band_bps": 25.0,
+        "gap_pct": 40.0,
+        "trend_pct": 40.0,
+        "vt_target": 20.0
+      }
+    ],
+    [
+      2014,
+      {
+        "band_bps": 35.0,
+        "gap_pct": 40.0,
+        "trend_pct": 40.0,
+        "vt_target": 15.0
+      }
+    ],
+    [
+      2015,
+      {
+        "band_bps": 25.0,
+        "gap_pct": 40.0,
+        "trend_pct": 40.0,
+        "vt_target": 20.0
+      }
+    ],
+    [
+      2016,
+      {
+        "band_bps": 35.0,
+        "gap_pct": 40.0,
+        "trend_pct": 100.0,
+        "vt_target": 15.0
+      }
+    ],
+    [
+      2017,
+      {
+        "band_bps": 35.0,
+        "gap_pct": 40.0,
+        "trend_pct": 100.0,
+        "vt_target": 20.0
+      }
+    ]
+  ],
+  "pbo_argmax": 0.132,
+  "pbo_plateau": 0.054,
+  "noise_wf_sharpes": [
+    -0.273,
+    -0.298,
+    -0.401
+  ],
+  "noise_best_is_sharpes": [
+    0.135,
+    0.202,
+    0.42
+  ],
+  "verdict": {
+    "pass_all": true,
+    "wf_sharpe_ok": true,
+    "pbo_ok": true,
+    "above_noise": true,
+    "noise_max_wf_sharpe": -0.273,
+    "rule": "PASS iff WF Sharpe > 0.3 AND PBO < 50% AND WF Sharpe > max(noise WF Sharpe)"
+  },
+  "note": "Journal cfg was fitted on 2018-2025; this 2005-2017 window is out-of-era for it. True OOS 2018-2020/05 remains locked."
+}
