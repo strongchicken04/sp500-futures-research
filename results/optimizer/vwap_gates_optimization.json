@@ -1,0 +1,164 @@
+{
+  "window": "2005-2017",
+  "n_days": 3357,
+  "n_configs": 288,
+  "grid": {
+    "band_bps": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0,
+      35.0
+    ],
+    "gap_pct": [
+      0.0,
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0,
+      35.0,
+      40.0
+    ],
+    "trend_pct": [
+      40.0,
+      50.0,
+      60.0,
+      70.0,
+      80.0,
+      100.0
+    ]
+  },
+  "recommended": {
+    "band_bps": 25.0,
+    "gap_pct": 40.0,
+    "trend_pct": 50.0
+  },
+  "recommended_is_sharpe": 0.864,
+  "raw_peak": {
+    "band_bps": 25.0,
+    "gap_pct": 40.0,
+    "trend_pct": 40.0
+  },
+  "raw_peak_is_sharpe": 0.938,
+  "journal_config_is_sharpe": 0.692,
+  "journal_config_plateau_rank": 125,
+  "wf_plateau": {
+    "sharpe": 0.834,
+    "cagr": 5.27,
+    "mdd": -7.24,
+    "tot": 60.7,
+    "calmar": 0.73
+  },
+  "wf_argmax": {
+    "sharpe": 0.94,
+    "cagr": 5.71,
+    "mdd": -5.85,
+    "tot": 66.9,
+    "calmar": 0.98
+  },
+  "is_fixed_rec_same_window": {
+    "sharpe": 0.958,
+    "cagr": 5.06,
+    "mdd": -9.14,
+    "tot": 57.7,
+    "calmar": 0.55
+  },
+  "wf_picks_plateau": [
+    [
+      2009,
+      {
+        "band_bps": 30.0,
+        "gap_pct": 40.0,
+        "trend_pct": 70.0
+      }
+    ],
+    [
+      2010,
+      {
+        "band_bps": 30.0,
+        "gap_pct": 40.0,
+        "trend_pct": 70.0
+      }
+    ],
+    [
+      2011,
+      {
+        "band_bps": 25.0,
+        "gap_pct": 40.0,
+        "trend_pct": 100.0
+      }
+    ],
+    [
+      2012,
+      {
+        "band_bps": 25.0,
+        "gap_pct": 40.0,
+        "trend_pct": 100.0
+      }
+    ],
+    [
+      2013,
+      {
+        "band_bps": 25.0,
+        "gap_pct": 40.0,
+        "trend_pct": 40.0
+      }
+    ],
+    [
+      2014,
+      {
+        "band_bps": 25.0,
+        "gap_pct": 40.0,
+        "trend_pct": 40.0
+      }
+    ],
+    [
+      2015,
+      {
+        "band_bps": 25.0,
+        "gap_pct": 40.0,
+        "trend_pct": 40.0
+      }
+    ],
+    [
+      2016,
+      {
+        "band_bps": 35.0,
+        "gap_pct": 40.0,
+        "trend_pct": 100.0
+      }
+    ],
+    [
+      2017,
+      {
+        "band_bps": 35.0,
+        "gap_pct": 40.0,
+        "trend_pct": 100.0
+      }
+    ]
+  ],
+  "pbo_argmax": 0.12,
+  "pbo_plateau": 0.065,
+  "noise_wf_sharpes": [
+    -0.801,
+    -0.334,
+    -0.82
+  ],
+  "noise_best_is_sharpes": [
+    -0.046,
+    0.091,
+    0.131
+  ],
+  "verdict": {
+    "pass_all": true,
+    "wf_sharpe_ok": true,
+    "pbo_ok": true,
+    "above_noise": true,
+    "noise_max_wf_sharpe": -0.334,
+    "rule": "PASS iff WF Sharpe > 0.3 AND PBO < 50% AND WF Sharpe > max(noise WF Sharpe)"
+  },
+  "cost_bps_per_side": 1.0,
+  "note": "True OOS 2018-2020/05 untouched. WF numbers are the honest expectation."
+}
