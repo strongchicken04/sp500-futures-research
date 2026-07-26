@@ -1,8 +1,18 @@
-# NQVwapTrendSC — NinjaTrader 8 automatizace (Lucid Trading)
+# VWAP Trend — NinjaTrader 8 automatizace (Lucid Trading)
 
-NinjaScript port finální konfigurace **VWAP Trend** (pásmo 20 bps + gap gate 25 +
-trend gate 60, 1 obchod/den, exit opačné pásmo / EOD, fixní SL 150 b jako
-katastrofická pojistka — resting stop u brokera, chrání i při výpadku spojení).
+Dvě verze NinjaScript portu finální konfigurace (pásmo 20 bps + gap gate 25 +
+trend gate 60, vstup od 9:31, 1 obchod/den):
+
+| verze | soubor | exit | čísla 2018–2025 (reálné NQ) |
+|---|---|---|---|
+| **Pásmo (finální)** | `NQVwapTrendSC.cs` | opačné pásmo / EOD, SL 150 b pojistka | avg 13,0 b · win 39 % · **Sharpe 1,23** · +105 % · MDD −7,0 % |
+| **TP/SL bracket** | `NQVwapTrendScTp.cs` | **TP +100 b / SL −75 b** (bracket u brokera) + band exit / EOD | avg 9,3 b · win 42 % · Sharpe 1,02 · +59 % · **MDD −5,2 %** |
+
+Pásmo = víc peněz (nech vítěze běžet). TP/SL = hladší křivka a nižší drawdown —
+může dávat smysl na prop challenge s těsným trailing DD. Pozn.: přínos SL 75 vs
+bez SL byl v bootstrapu v pásmu šumu; TP/SL verzi ber jako operační volbu pro
+prop pravidla, ne jako výkonnostní upgrade. TP i SL jsou v bodech (éra 2018–2025,
+revidovat s růstem indexu). Oba brackety drží broker (resting orders).
 
 ## Instalace
 
