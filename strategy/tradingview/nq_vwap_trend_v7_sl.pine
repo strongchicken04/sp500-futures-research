@@ -1,0 +1,290 @@
+// This Pine Script® code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © janklimsa
+
+//@version=5
+// =====================================================================
+// NQ VWAP Trend (hysterezní pásmo) — Strong Chicken, Projekt 3, v7
+// FINÁLNÍ KONFIGURACE z výzkumu (fáze A–E, IS 2018–2025):
+//   vstup od 9:31, session VWAP RTH, pásmo b = 20 bps, 1 obchod/den,
+//   exit = close za opačným pásmem / EOD 16:00, BEZ TP (mód Pásmo),
+//   + DVA GATY (IS: Sharpe 1,40, MDD −6,4 %, kladná všech 8 let):
+//     GAP GATE:   neobchoduj, když |overnight gap| < 25. percentil
+//                 posledních 250 dní (malý gap = den bez energie)
+//     TREND GATE: neobchoduj den PO silně trendovém dni — když včerejší
+//                 |close−open|/(high−low) > 60. percentil 250 dní
+//
+// v7: PŘIDÁN VOLITELNÝ FIXNÍ SL (intrabar dotek entry ± slPoints).
+//   Kalibrace z reálných NQ dat 2018–2025 (QC, finální konfigurace):
+//   vítězové TP100 šli v průměru jen 22 b proti pozici (p90 = 49, max 102).
+//   Mřížka SL × exit-verze ukázala:
+//     * mód Pásmo (finální): SL 150 b = IDENTICKÝ výkon jako bez SL
+//       (tot 104,9 % vs 104,8 %, Sharpe 1,23 vs 1,23) -> čistá pojistka
+//       proti katastrofickému dni ZDARMA. SL < 75 b výkon ubírá.
+//     * mód TP100: optimum SL 75 b (Sharpe 0,98 -> 1,02).
+//   DEFAULT = 150 b (disaster stop pro finální konfiguraci).
+//   POZOR: kalibrace v BODECH na éře 2018–2025 — MAE roste s úrovní
+//   indexu (2018: ~12 b, 2025: ~33 b). Revidovat ročně, nebo myslet v %.
+//   Stop se plní bez skluzu jen v backtestu; živě počítej s 1–2 ticky.
+//
+// v6: percentily bran se počítají PŘÍMO z 1-min RTH barů grafu (přesně
+//   jako QC backtest), NE přes request.security — odstraněna session
+//   dvojznačnost. Gap = 9:30 open vs včerejší 16:00 RTH close;
+//   trendovost = |close−open|/(high−low) včerejška. Percentil z MINULÝCH
+//   dní (okno 250), brány aktivní od 60 dní historie.
+//
+// DVA MÓDY EXITU: default = "Pásmo (bez TP)" (finální konfig).
+// POZNÁMKY: 1-MIN chart NQ (NQ1!). Sizing VT15 na úrovni účtu.
+// =====================================================================
+indicator("NQ VWAP Trend (b=20bps) — Strong Chicken v7", overlay=true, max_lines_count=500, max_labels_count=500)
+
+mode       = input.string("Pásmo (bez TP)", "Mód exitu", options=["Pásmo (bez TP)", "TP (fixní cíl)"],
+     tooltip="Pásmo = finální konfigurace z výzkumu (bez TP, vítězové běží). TP = fixní cíl, vyšší win-rate, nižší výnos.")
+bandBps    = input.float(20.0, "Hysterezní pásmo (bps)", minval=0.0, step=2.5,
+     tooltip="Zamrazená hodnota strategie = 20 bps. Neměň bez nové validace.")
+tpPoints   = input.float(74.375, "TP vzdálenost (body) — jen mód TP", minval=0.0, step=0.25)
+useSL      = input.bool(true,  "Fixní SL (katastrofická pojistka)",
+     tooltip="Tvrdý intrabar stop na entry ± slPoints. Z mřížky SL na reálném NQ 2018–2025: 150 b má u finální konfigurace NULOVOU cenu (výkon identický s bez-SL) a chrání před dnem, jaký v datech ještě nebyl. SL pod 75 b výkon prokazatelně ubírá.")
+slPoints   = input.float(150.0, "SL vzdálenost (body)", minval=0.0, step=5.0,
+     tooltip="Default 150 b = disaster stop pro mód Pásmo (zdarma). Pro mód TP100 je datové optimum 75 b. Kalibrováno v bodech na 2018–2025 — revidovat s růstem indexu (MAE vítězů: 2018 ~12 b, 2025 ~33 b).")
+useGate    = input.bool(true,  "Gap gate (vynech nízko-gap dny)",
+     tooltip="Neobchoduj dny s |overnight gap| pod percentilem posledních 250 dní.")
+gatePct    = input.float(25.0, "Gap gate percentil", minval=0.0, maxval=90.0, step=5.0,
+     tooltip="Doporučený střed plošiny = 25 (funguje 15–30).")
+usePtGate  = input.bool(true,  "Trend gate (vynech dny po trendovém včerejšku)",
+     tooltip="Neobchoduj den po silně trendovém dni: včerejší |close−open|/(high−low) nad percentilem. Z uzavíracího běhu: MDD −15,7 → −6,4 %.")
+ptPct      = input.float(60.0, "Trend gate percentil", minval=10.0, maxval=95.0, step=5.0)
+showBands  = input.bool(true,  "Zobrazit pásma VWAP±b")
+showSigma  = input.bool(false, "Zobrazit σ-deviation bandy VWAP (±1σ, ±2σ) — jen kontext")
+showInfo   = input.bool(true,  "Info panel")
+
+useTP = mode == "TP (fixní cíl)"
+
+TZ   = "America/New_York"
+SESS = "0930-1600"
+
+inSess  = not na(time(timeframe.period, SESS, TZ))
+newSess = inSess and not inSess[1]
+eodBar  = inSess and hour(time, TZ) == 15 and minute(time, TZ) == 59
+
+// ---- GATY v6: počítáno z 1-MIN RTH barů grafu (PŘESNĚ jako backtest) ----
+f_rank(arr, val) =>
+    n = array.size(arr)
+    r = float(na)
+    if not na(val) and n >= 60
+        below = 0
+        for i = 0 to n - 1
+            if array.get(arr, i) <= val
+                below += 1
+        r := below / n
+    r
+
+var float   prevSessClose = na
+var float[] gapHist = array.new_float()
+var float[] ptHist  = array.new_float()
+var float   dOpen = na
+var float   dHi   = na
+var float   dLo   = na
+var float   todayGapBps = na
+var float   gapRank = na
+var float   ptRank  = na
+var bool    allowedToday = true
+var bool    prevAllowed = true
+var string  gateReason = ""
+var int     sessStartBar = na
+var float   sessStartHigh = na
+
+if newSess
+    if (useGate or usePtGate) and not prevAllowed and not na(sessStartBar)
+        label.new(sessStartBar, sessStartHigh, "NO TRADE DAY",
+             color=color.new(color.red, 10), textcolor=color.white,
+             style=label.style_label_down, size=size.small)
+    yptrend = not na(dOpen) and not na(dHi) and not na(dLo) and not na(prevSessClose) and dHi > dLo ? math.abs(prevSessClose - dOpen) / (dHi - dLo) : na
+    todayGapBps := not na(prevSessClose) and prevSessClose > 0 ? math.abs(open / prevSessClose - 1) * 10000 : na
+    gapRank := f_rank(gapHist, todayGapBps)
+    ptRank  := f_rank(ptHist, yptrend)
+    gapOK = not useGate or na(gapRank) or gapRank >= gatePct / 100.0
+    ptOK  = not usePtGate or na(ptRank) or ptRank <= ptPct / 100.0
+    allowedToday := gapOK and ptOK
+    gateReason := not gapOK and not ptOK ? "gap+trend" : not gapOK ? "gap" : not ptOK ? "trend" : ""
+    if not na(todayGapBps)
+        array.push(gapHist, todayGapBps)
+        if array.size(gapHist) > 250
+            array.shift(gapHist)
+    if not na(yptrend)
+        array.push(ptHist, yptrend)
+        if array.size(ptHist) > 250
+            array.shift(ptHist)
+    prevAllowed := allowedToday
+    sessStartBar := bar_index
+    sessStartHigh := high
+    dOpen := open
+    dHi := high
+    dLo := low
+
+if inSess
+    prevSessClose := close
+    dHi := math.max(nz(dHi, high), high)
+    dLo := math.min(nz(dLo, low), low)
+
+// ---- session VWAP (RTH-only, HLC3, reset denně) + rozptyl pro σ bandy ----
+var float cumPV  = na
+var float cumV   = na
+var float cumPV2 = na
+if newSess
+    cumPV  := 0.0
+    cumV   := 0.0
+    cumPV2 := 0.0
+if inSess
+    cumPV  += hlc3 * volume
+    cumV   += volume
+    cumPV2 += hlc3 * hlc3 * volume
+vwap = inSess and cumV > 0 ? cumPV / cumV : na
+varv = inSess and cumV > 0 ? math.max(cumPV2 / cumV - vwap * vwap, 0.0) : na
+sd   = na(varv) ? na : math.sqrt(varv)
+
+b  = bandBps / 10000.0
+up = vwap * (1 + b)
+dn = vwap * (1 - b)
+
+// ---- poziční stav (jen 1 trade/den; exit dle módu; gaty; v7: fixní SL) ----
+var int   pos = 0
+var bool  tradedToday = false
+var float entryPx = na
+var float slFix   = na
+var float tpFix   = na
+longSig  = false
+shortSig = false
+exitSig  = false          // exit na opačném pásmu nebo EOD
+tpSig    = false          // exit na TP (jen mód TP)
+slSig    = false          // v7: exit na fixním SL (intrabar dotek)
+
+if newSess
+    pos := 0
+    tradedToday := false
+
+if inSess and not na(vwap)
+    if eodBar
+        if pos != 0
+            exitSig := true
+            pos := 0
+    else
+        if pos == 0
+            if not tradedToday and allowedToday       // 1 vstup/den + gaty
+                if close > up
+                    pos := 1
+                    longSig := true
+                    tradedToday := true
+                    entryPx := close
+                else if close < dn
+                    pos := -1
+                    shortSig := true
+                    tradedToday := true
+                    entryPx := close
+        else
+            // v7: SL kontrola PRVNÍ (konzervativně — když by ve stejné svíčce
+            // byl dotek SL i TP, počítá se stop)
+            slLevel = pos == 1 ? entryPx - slPoints : entryPx + slPoints
+            slHit = useSL and not na(entryPx) and (pos == 1 ? low <= slLevel : high >= slLevel)
+            tpHit = useTP and not na(tpFix) and (pos == 1 ? high >= tpFix : low <= tpFix)
+            if slHit
+                slSig := true   // fixní SL zasažen — exit
+                pos := 0
+            else if tpHit
+                tpSig := true   // TP dotek = reálný exit (jen mód TP)
+                pos := 0
+            else if pos == 1 and close < dn
+                exitSig := true  // zavřít (bez otočení — 1 trade/den)
+                pos := 0
+            else if pos == -1 and close > up
+                exitSig := true  // zavřít (bez otočení — 1 trade/den)
+                pos := 0
+
+// ---- vykreslení ----
+plot(vwap, "VWAP (RTH)", color=color.new(color.orange, 0), linewidth=2)
+
+slUpActive = not useTP and pos == -1
+slDnActive = not useTP and pos == 1
+tpUpActive = not useTP and pos == 1
+tpDnActive = not useTP and pos == -1
+pUp  = plot(showBands ? up : na, "VWAP + b", color=slUpActive ? color.new(color.red, 20) : tpUpActive ? color.new(color.green, 20) : color.new(color.teal, 55), linewidth=2)
+pDn  = plot(showBands ? dn : na, "VWAP − b", color=slDnActive ? color.new(color.red, 20) : tpDnActive ? color.new(color.green, 20) : color.new(color.teal, 55), linewidth=2)
+fill(pUp, pDn, color=color.new(color.teal, 95))
+
+// ---- KRÁTKÉ čáry entry/SL/TP — mód TP a/nebo zapnutý fixní SL ----
+var line   enLine  = na
+var line   slLine  = na
+var line   tpLine  = na
+var bool   trActive = false
+
+if trActive and not na(enLine)
+    line.set_x2(enLine, bar_index)
+    if not na(slLine)
+        line.set_x2(slLine, bar_index)
+    if not na(tpLine)
+        line.set_x2(tpLine, bar_index)
+
+if (longSig or shortSig) and (useTP or useSL)
+    dir     = longSig ? 1 : -1
+    slFix   := useSL ? entryPx - dir * slPoints : (dir == 1 ? dn : up)
+    tpFix   := useTP ? entryPx + dir * tpPoints : na
+    enLine  := line.new(bar_index, entryPx, bar_index, entryPx, color=color.new(color.blue, 0),  width=1)
+    slLine  := line.new(bar_index, slFix,   bar_index, slFix,   color=color.new(color.red, 0),   width=2)
+    tpLine  := useTP ? line.new(bar_index, tpFix, bar_index, tpFix, color=color.new(color.green, 0), width=2) : na
+    trActive := true
+
+if (exitSig or tpSig or slSig) and trActive
+    line.set_x2(enLine, bar_index)
+    if not na(slLine)
+        line.set_x2(slLine, bar_index)
+    if not na(tpLine)
+        line.set_x2(tpLine, bar_index)
+    trActive := false
+    entryPx := na
+    slFix   := na
+    tpFix   := na
+
+// volitelné σ-deviation bandy (JEN kontext — strategie je nepoužívá)
+plot(showSigma ? vwap + sd     : na, "VWAP +1σ", color=color.new(color.purple, 65))
+plot(showSigma ? vwap - sd     : na, "VWAP −1σ", color=color.new(color.purple, 65))
+plot(showSigma ? vwap + 2 * sd : na, "VWAP +2σ", color=color.new(color.purple, 80))
+plot(showSigma ? vwap - 2 * sd : na, "VWAP −2σ", color=color.new(color.purple, 80))
+
+// vstupy + výstupy u KAŽDÉHO trade (oba módy)
+plotshape(longSig,  "BUY",  shape.triangleup,   location.belowbar, color.new(color.green, 0), size=size.small, text="BUY")
+plotshape(shortSig, "SELL", shape.triangledown, location.abovebar, color.new(color.red, 0),   size=size.small, text="SELL")
+plotshape(tpSig,    "TP EXIT", shape.diamond,   location.abovebar, color.new(color.green, 0), size=size.small, text="TP")
+plotshape(slSig,    "SL EXIT", shape.xcross,    location.belowbar, color.new(color.red, 0),   size=size.small, text="SL")
+plotshape(exitSig,  "EXIT", shape.xcross,       location.abovebar, color.new(color.gray, 0),  size=size.small, text="EXIT")
+
+bgcolor(pos == 1 ? color.new(color.green, 94) : pos == -1 ? color.new(color.red, 94) : na)
+
+// ---- ČERVENÝ NÁPIS v rohu pro DNEŠNÍ no-trade den (s důvodem) ----
+var table ntT = table.new(position.top_left, 1, 1)
+if barstate.islast
+    if (useGate or usePtGate) and not allowedToday
+        table.cell(ntT, 0, 0, "  NO TRADE DAY (" + gateReason + ")  ", text_color=color.white,
+             bgcolor=color.new(color.red, 10), text_size=size.normal)
+    else
+        table.cell(ntT, 0, 0, "", bgcolor=color.new(color.white, 100), text_size=size.tiny)
+
+// ---- info panel ----
+slShow = useSL and pos != 0 ? (pos == 1 ? entryPx - slPoints : entryPx + slPoints) : useTP ? slFix : (pos == 1 ? dn : pos == -1 ? up : na)
+var table t = table.new(position.top_right, 2, 9, border_width=1)
+if showInfo and barstate.islast
+    table.cell(t, 0, 0, "Mód",      text_size=size.small), table.cell(t, 1, 0, (useTP ? "TP" : "Pásmo") + (useSL ? " + SL" + str.tostring(slPoints, "#") : ""), text_size=size.small)
+    table.cell(t, 0, 1, "Gaty",     text_size=size.small), table.cell(t, 1, 1, not (useGate or usePtGate) ? "vypnuté" : allowedToday ? "OK — obchoduj" : "NO TRADE (" + gateReason + ")", text_size=size.small, text_color=not (useGate or usePtGate) ? color.gray : allowedToday ? color.green : color.red)
+    table.cell(t, 0, 2, "Gap dnes", text_size=size.small), table.cell(t, 1, 2, na(todayGapBps) ? "—" : str.tostring(todayGapBps, "#.0") + " bps" + (na(gapRank) ? " (načítám…)" : " → " + str.tostring(gapRank * 100, "#.0") + ". pct"), text_size=size.small)
+    table.cell(t, 0, 3, "Trend včera", text_size=size.small), table.cell(t, 1, 3, na(ptRank) ? "—" : str.tostring(ptRank * 100, "#.0") + ". pct", text_size=size.small)
+    table.cell(t, 0, 4, "Pozice",   text_size=size.small), table.cell(t, 1, 4, pos == 1 ? "LONG" : pos == -1 ? "SHORT" : "FLAT", text_size=size.small, text_color=pos == 1 ? color.green : pos == -1 ? color.red : color.gray)
+    table.cell(t, 0, 5, "VWAP",     text_size=size.small), table.cell(t, 1, 5, na(vwap) ? "—" : str.tostring(vwap, format.mintick), text_size=size.small)
+    table.cell(t, 0, 6, useSL ? "SL (fixní " + str.tostring(slPoints, "#") + " b)" : useTP ? "SL (pevný)" : "SL (pásmo)", text_size=size.small), table.cell(t, 1, 6, na(slShow) ? "—" : str.tostring(slShow, format.mintick), text_size=size.small, text_color=color.red)
+    table.cell(t, 0, 7, "TP",       text_size=size.small), table.cell(t, 1, 7, not useTP ? "— (mód Pásmo)" : na(tpFix) ? "—" : str.tostring(tpFix, format.mintick) + "  (±" + str.tostring(tpPoints) + "b)", text_size=size.small, text_color=color.green)
+    table.cell(t, 0, 8, "Sizing",   text_size=size.small), table.cell(t, 1, 8, "VT15 (mimo chart)", text_size=size.small)
+
+// ---- alerty ----
+alertcondition(longSig,  "VWAP Trend BUY",      "NQ VWAP Trend: BUY (vstup na open další svíčky)")
+alertcondition(shortSig, "VWAP Trend SELL",     "NQ VWAP Trend: SELL (vstup na open další svíčky)")
+alertcondition(tpSig,    "VWAP Trend TP EXIT",  "NQ VWAP Trend: TP zasažen — exit")
+alertcondition(slSig,    "VWAP Trend SL EXIT",  "NQ VWAP Trend: fixní SL zasažen — exit")
+alertcondition(exitSig,  "VWAP Trend EXIT",     "NQ VWAP Trend: exit (opačné pásmo / 16:00 ET)")
+alertcondition(newSess and not allowedToday, "VWAP Trend NO TRADE DAY", "NQ VWAP Trend: dnes NO TRADE DAY (gap/trend gate)")

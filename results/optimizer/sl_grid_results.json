@@ -1,0 +1,105 @@
+{
+  "noTP_plus_SL": {
+    "25": {
+      "avg_pts": 7.45,
+      "win": 27.1,
+      "sharpe": 0.88,
+      "tot": 49.3,
+      "mdd": -7.73
+    },
+    "35": {
+      "avg_pts": 9.49,
+      "win": 31.8,
+      "sharpe": 1.05,
+      "tot": 71.1,
+      "mdd": -7.16
+    },
+    "50": {
+      "avg_pts": 11.17,
+      "win": 35.9,
+      "sharpe": 1.17,
+      "tot": 91.0,
+      "mdd": -6.19
+    },
+    "75": {
+      "avg_pts": 12.81,
+      "win": 38.3,
+      "sharpe": 1.23,
+      "tot": 103.3,
+      "mdd": -6.78
+    },
+    "100": {
+      "avg_pts": 12.66,
+      "win": 38.6,
+      "sharpe": 1.2,
+      "tot": 101.6,
+      "mdd": -6.98
+    },
+    "150": {
+      "avg_pts": 13.0,
+      "win": 38.7,
+      "sharpe": 1.23,
+      "tot": 104.9,
+      "mdd": -6.98
+    },
+    "None": {
+      "avg_pts": 12.99,
+      "win": 38.7,
+      "sharpe": 1.23,
+      "tot": 104.8,
+      "mdd": -6.98
+    }
+  },
+  "TP100_plus_SL": {
+    "25": {
+      "avg_pts": 5.66,
+      "win": 29.0,
+      "sharpe": 0.72,
+      "tot": 31.1,
+      "mdd": -6.13
+    },
+    "35": {
+      "avg_pts": 7.02,
+      "win": 34.4,
+      "sharpe": 0.85,
+      "tot": 41.5,
+      "mdd": -5.52
+    },
+    "50": {
+      "avg_pts": 8.46,
+      "win": 39.1,
+      "sharpe": 1.01,
+      "tot": 55.9,
+      "mdd": -5.15
+    },
+    "75": {
+      "avg_pts": 9.31,
+      "win": 42.0,
+      "sharpe": 1.02,
+      "tot": 59.3,
+      "mdd": -5.15
+    },
+    "100": {
+      "avg_pts": 8.91,
+      "win": 42.4,
+      "sharpe": 0.97,
+      "tot": 56.1,
+      "mdd": -5.15
+    },
+    "150": {
+      "avg_pts": 8.98,
+      "win": 42.5,
+      "sharpe": 0.98,
+      "tot": 56.8,
+      "mdd": -5.15
+    },
+    "None": {
+      "avg_pts": 8.97,
+      "win": 42.5,
+      "sharpe": 0.98,
+      "tot": 56.8,
+      "mdd": -5.15
+    }
+  },
+  "note": "final-config days, real NQ 2018-2025, 1bp/side, stop fills assumed exact (no gap slippage)"
+}
