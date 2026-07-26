@@ -1,0 +1,137 @@
+//@version=5
+// =====================================================================
+// NQ VWAP Trend — Strong Chicken AUTO v1  (strategy() verze finální konfigurace)
+// Band 20 bps + gap gate 25 + trend gate 60, 1 obchod/den, exit opačné pásmo/EOD.
+// Určeno pro 1-MIN graf NQ/MNQ. Vstupy/exity kreslí Strategy Tester, equity
+// křivku vidíš v záložce Strategy Tester -> Performance.
+//
+// AUTOMATIZACE: strategy.entry/close nesou alert_message (JSON pro webhook,
+// TradersPost/PickMyTrade formát). V TV vytvoř alert na tuto strategii s textem
+// {{strategy.order.alert_message}} a nasměruj na svůj webhook.
+//
+// POZN. VĚRNOSTI: TV plní vstup i exit na OPEN následující svíčky (výzkumný
+// backtest plnil exit na close signální svíčky) — drobný, realistický rozdíl.
+// Slippage 1 tick + komise per kontrakt nastavitelné níže.
+// =====================================================================
+strategy("NQ VWAP Trend — Strong Chicken AUTO v1", overlay=true,
+     initial_capital=100000,
+     default_qty_type=strategy.fixed, default_qty_value=1, pyramiding=0,
+     commission_type=strategy.commission.cash_per_contract, commission_value=0.62,
+     slippage=1, max_labels_count=500)
+
+// ---------------- inputs ----------------
+TZ   = "America/New_York"
+SESS = "0930-1600"
+bandBps   = input.float(20.0, "Hysterezní pásmo (bps)", step=2.5)
+useGate   = input.bool(true,  "Gap gate (vynech nízko-gap dny)")
+gatePct   = input.float(25.0, "Gap gate percentil", minval=0.0, maxval=90.0, step=5.0)
+usePtGate = input.bool(true,  "Trend gate (vynech dny po trendovém včerejšku)")
+ptPct     = input.float(60.0, "Trend gate percentil", minval=10.0, maxval=95.0, step=5.0)
+qtyIn     = input.int(1, "Počet kontraktů", minval=1)
+buyMsg    = input.string('{"ticker":"MNQ1!","action":"buy","orderType":"market","quantity":1}',  "Alert JSON — LONG vstup")
+sellMsg   = input.string('{"ticker":"MNQ1!","action":"sell","orderType":"market","quantity":1}', "Alert JSON — SHORT vstup")
+exitMsg   = input.string('{"ticker":"MNQ1!","action":"exit","orderType":"market"}',              "Alert JSON — výstup")
+showBands = input.bool(true, "Zobrazit pásma")
+
+// ---------------- session ----------------
+inSess  = not na(time(timeframe.period, SESS, TZ))
+newSess = inSess and not inSess[1]
+eodBar  = inSess and hour(time, TZ) == 15 and minute(time, TZ) == 59
+
+// ---------------- gaty (v6 logika: percentily z 1m RTH barů, past-only) ------
+f_rank(arr, val) =>
+    n = array.size(arr)
+    r = float(na)
+    if not na(val) and n >= 60
+        below = 0
+        for i = 0 to n - 1
+            if array.get(arr, i) <= val
+                below += 1
+        r := below / n
+    r
+
+var float   prevSessClose = na
+var float[] gapHist = array.new_float()
+var float[] ptHist  = array.new_float()
+var float   dOpen = na
+var float   dHi   = na
+var float   dLo   = na
+var bool    allowedToday = true
+var string  gateReason = ""
+
+if newSess
+    yptrend = not na(dOpen) and not na(dHi) and not na(dLo) and not na(prevSessClose) and dHi > dLo ? math.abs(prevSessClose - dOpen) / (dHi - dLo) : na
+    todayGapBps = not na(prevSessClose) and prevSessClose > 0 ? math.abs(open / prevSessClose - 1) * 10000 : na
+    gapRank = f_rank(gapHist, todayGapBps)
+    ptRank  = f_rank(ptHist, yptrend)
+    gapOK = not useGate or na(gapRank) or gapRank >= gatePct / 100.0
+    ptOK  = not usePtGate or na(ptRank) or ptRank <= ptPct / 100.0
+    allowedToday := gapOK and ptOK
+    gateReason := not gapOK and not ptOK ? "gap+trend" : not gapOK ? "gap" : not ptOK ? "trend" : ""
+    if not na(todayGapBps)
+        array.push(gapHist, todayGapBps)
+        if array.size(gapHist) > 250
+            array.shift(gapHist)
+    if not na(yptrend)
+        array.push(ptHist, yptrend)
+        if array.size(ptHist) > 250
+            array.shift(ptHist)
+    dOpen := open
+    dHi := high
+    dLo := low
+
+if inSess
+    prevSessClose := close
+    dHi := math.max(nz(dHi, high), high)
+    dLo := math.min(nz(dLo, low), low)
+
+// ---------------- session VWAP + pásma ----------------
+var float cumPV = na
+var float cumV  = na
+if newSess
+    cumPV := 0.0
+    cumV  := 0.0
+if inSess
+    cumPV += hlc3 * volume
+    cumV  += volume
+vwap = inSess and cumV > 0 ? cumPV / cumV : na
+b  = bandBps / 10000.0
+up = vwap * (1 + b)
+dn = vwap * (1 - b)
+
+// ---------------- obchodní logika (1 vstup/den) ----------------
+var bool tradedToday = false
+if newSess
+    tradedToday := false
+
+canEnter = inSess and not na(vwap) and strategy.position_size == 0 and not tradedToday and allowedToday and not eodBar and not newSess
+if canEnter
+    if close > up
+        strategy.entry("L", strategy.long, qtyIn, alert_message=buyMsg)
+        tradedToday := true
+    else if close < dn
+        strategy.entry("S", strategy.short, qtyIn, alert_message=sellMsg)
+        tradedToday := true
+
+if strategy.position_size > 0 and inSess and not na(vwap) and close < dn
+    strategy.close("L", comment="band exit", alert_message=exitMsg)
+if strategy.position_size < 0 and inSess and not na(vwap) and close > up
+    strategy.close("S", comment="band exit", alert_message=exitMsg)
+if eodBar and strategy.position_size != 0
+    strategy.close_all(comment="EOD 15:59", alert_message=exitMsg)
+
+// ---------------- vykreslení ----------------
+plot(vwap, "VWAP (RTH)", color=color.new(color.orange, 0), linewidth=2)
+pUp = plot(showBands and inSess ? up : na, "VWAP + b", color=color.new(color.teal, 40))
+pDn = plot(showBands and inSess ? dn : na, "VWAP − b", color=color.new(color.teal, 40))
+fill(pUp, pDn, color=color.new(color.teal, 95))
+bgcolor(inSess and not allowedToday and (useGate or usePtGate) ? color.new(color.red, 92) : na, title="NO TRADE DAY")
+
+var table t = table.new(position.top_right, 2, 3, border_width=1)
+if barstate.islast
+    table.cell(t, 0, 0, "Gaty", text_size=size.small)
+    table.cell(t, 1, 0, not (useGate or usePtGate) ? "vypnuté" : allowedToday ? "OK — obchoduj" : "NO TRADE (" + gateReason + ")", text_size=size.small, text_color=allowedToday ? color.green : color.red)
+    table.cell(t, 0, 1, "Pozice", text_size=size.small)
+    table.cell(t, 1, 1, strategy.position_size > 0 ? "LONG" : strategy.position_size < 0 ? "SHORT" : "FLAT", text_size=size.small)
+    table.cell(t, 0, 2, "Obchodů dnes", text_size=size.small)
+    table.cell(t, 1, 2, tradedToday ? "1 (limit vyčerpán)" : "0", text_size=size.small)

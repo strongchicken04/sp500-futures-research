@@ -1,0 +1,212 @@
+{
+  "table": [
+    {
+      "cfg": "OR15 stop=opp TP=0.25R",
+      "n": 3314,
+      "win": 77.6,
+      "avg": -0.81,
+      "sharpe": -0.37
+    },
+    {
+      "cfg": "OR15 stop=opp TP=0.5R",
+      "n": 3314,
+      "win": 63.5,
+      "avg": -0.67,
+      "sharpe": -0.23
+    },
+    {
+      "cfg": "OR15 stop=opp TP=1.0R",
+      "n": 3314,
+      "win": 50.0,
+      "avg": -0.44,
+      "sharpe": -0.12
+    },
+    {
+      "cfg": "OR15 stop=opp TP=2.0R",
+      "n": 3314,
+      "win": 43.3,
+      "avg": -0.64,
+      "sharpe": -0.14
+    },
+    {
+      "cfg": "OR15 stop=opp TP=3.0R",
+      "n": 3314,
+      "win": 42.3,
+      "avg": -0.6,
+      "sharpe": -0.13
+    },
+    {
+      "cfg": "OR15 stop=mid TP=0.25R",
+      "n": 3314,
+      "win": 79.8,
+      "avg": -0.45,
+      "sharpe": -0.33
+    },
+    {
+      "cfg": "OR15 stop=mid TP=0.5R",
+      "n": 3314,
+      "win": 65.9,
+      "avg": -0.03,
+      "sharpe": -0.01
+    },
+    {
+      "cfg": "OR15 stop=mid TP=1.0R",
+      "n": 3314,
+      "win": 50.4,
+      "avg": 0.4,
+      "sharpe": 0.15
+    },
+    {
+      "cfg": "OR15 stop=mid TP=2.0R",
+      "n": 3314,
+      "win": 38.3,
+      "avg": 0.35,
+      "sharpe": 0.1
+    },
+    {
+      "cfg": "OR15 stop=mid TP=3.0R",
+      "n": 3314,
+      "win": 34.8,
+      "avg": 0.29,
+      "sharpe": 0.08
+    },
+    {
+      "cfg": "OR30 stop=opp TP=0.25R",
+      "n": 3250,
+      "win": 74.5,
+      "avg": -1.93,
+      "sharpe": -0.75
+    },
+    {
+      "cfg": "OR30 stop=opp TP=0.5R",
+      "n": 3250,
+      "win": 60.9,
+      "avg": -1.36,
+      "sharpe": -0.41
+    },
+    {
+      "cfg": "OR30 stop=opp TP=1.0R",
+      "n": 3250,
+      "win": 49.9,
+      "avg": -0.67,
+      "sharpe": -0.16
+    },
+    {
+      "cfg": "OR30 stop=opp TP=2.0R",
+      "n": 3250,
+      "win": 46.3,
+      "avg": -1.71,
+      "sharpe": -0.37
+    },
+    {
+      "cfg": "OR30 stop=opp TP=3.0R",
+      "n": 3250,
+      "win": 46.0,
+      "avg": -1.39,
+      "sharpe": -0.29
+    },
+    {
+      "cfg": "OR30 stop=mid TP=0.25R",
+      "n": 3250,
+      "win": 78.8,
+      "avg": -0.94,
+      "sharpe": -0.58
+    },
+    {
+      "cfg": "OR30 stop=mid TP=0.5R",
+      "n": 3250,
+      "win": 65.0,
+      "avg": -0.7,
+      "sharpe": -0.31
+    },
+    {
+      "cfg": "OR30 stop=mid TP=1.0R",
+      "n": 3250,
+      "win": 51.0,
+      "avg": 0.16,
+      "sharpe": 0.05
+    },
+    {
+      "cfg": "OR30 stop=mid TP=2.0R",
+      "n": 3250,
+      "win": 40.9,
+      "avg": -0.36,
+      "sharpe": -0.1
+    },
+    {
+      "cfg": "OR30 stop=mid TP=3.0R",
+      "n": 3250,
+      "win": 39.3,
+      "avg": -0.23,
+      "sharpe": -0.06
+    }
+  ],
+  "plateau_pick": "OR15 stop=opp TP=2.0R",
+  "plateau_is_sharpe": -0.144,
+  "wf": {
+    "sharpe": -0.376,
+    "cagr": -3.78,
+    "mdd": -39.67,
+    "tot": -29.9,
+    "calmar": -0.1
+  },
+  "pbo": 0.57,
+  "noise_wf": [
+    -0.733,
+    -1.063,
+    0.282
+  ],
+  "verdict": {
+    "pass_all": false,
+    "wf_sharpe_ok": false,
+    "pbo_ok": false,
+    "above_noise": false,
+    "noise_max_wf_sharpe": 0.282,
+    "rule": "PASS iff WF Sharpe > 0.3 AND PBO < 50% AND WF Sharpe > max(noise WF Sharpe)"
+  },
+  "corner_profile": {
+    "win": 77.6,
+    "avg_bps": -0.81,
+    "sharpe": -0.375,
+    "tot": -25.0
+  },
+  "best_sharpe_at_1bp": -0.19,
+  "wf_picks": [
+    [
+      2009,
+      "OR15 stop=opp TP=1.0R"
+    ],
+    [
+      2010,
+      "OR15 stop=opp TP=2.0R"
+    ],
+    [
+      2011,
+      "OR15 stop=opp TP=1.0R"
+    ],
+    [
+      2012,
+      "OR15 stop=opp TP=1.0R"
+    ],
+    [
+      2013,
+      "OR15 stop=opp TP=2.0R"
+    ],
+    [
+      2014,
+      "OR15 stop=opp TP=2.0R"
+    ],
+    [
+      2015,
+      "OR15 stop=opp TP=3.0R"
+    ],
+    [
+      2016,
+      "OR15 stop=opp TP=3.0R"
+    ],
+    [
+      2017,
+      "OR15 stop=opp TP=3.0R"
+    ]
+  ]
+}
