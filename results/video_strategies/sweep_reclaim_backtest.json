@@ -1,0 +1,43 @@
+{
+  "projectId": 34560719,
+  "backtestId": "35e820f53a039f6b8c7ff0703ef0e359",
+  "statistics": {
+    "Total Orders": "5614",
+    "Average Win": "1.92%",
+    "Average Loss": "-1.09%",
+    "Compounding Annual Return": "-16.247%",
+    "Drawdown": "78.800%",
+    "Expectancy": "-0.052",
+    "Start Equity": "100000",
+    "End Equity": "24187.6",
+    "Net Profit": "-75.812%",
+    "Sharpe Ratio": "-0.403",
+    "Sortino Ratio": "-0.529",
+    "Probabilistic Sharpe Ratio": "0.000%",
+    "Loss Rate": "66%",
+    "Win Rate": "34%",
+    "Profit-Loss Ratio": "1.75",
+    "Alpha": "-0.104",
+    "Beta": "-0.091",
+    "Annual Standard Deviation": "0.277",
+    "Annual Variance": "0.077",
+    "Information Ratio": "-0.586",
+    "Tracking Error": "0.328",
+    "Treynor Ratio": "1.225",
+    "Total Fees": "$7387.40",
+    "Estimated Strategy Capacity": "$210000000.00",
+    "Lowest Capacity Asset": "NQ YTG30NVEFCW1",
+    "Portfolio Turnover": "633.88%",
+    "Drawdown Recovery": "17"
+  },
+  "runtimeStatistics": {
+    "Equity": "$24,187.60",
+    "Fees": "-$7,387.40",
+    "Holdings": "$0.00",
+    "Net Profit": "$-75,812.40",
+    "Probabilistic Sharpe Ratio": "0.000%",
+    "Return": "-75.81 %",
+    "Unrealized": "$0.00",
+    "Volume": "$867,119,305.00"
+  }
+}
