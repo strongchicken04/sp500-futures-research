@@ -1,0 +1,33 @@
+{
+  "projectId": 34580983,
+  "backtestId": "0c94b75f930271bb0708a2d92eb24642",
+  "statistics": {
+    "Total Orders": "3478",
+    "Average Win": "1.53%",
+    "Average Loss": "-0.57%",
+    "Compounding Annual Return": "-10.213%",
+    "Drawdown": "62.300%",
+    "Expectancy": "-0.169",
+    "Start Equity": "100000",
+    "End Equity": "42214.9",
+    "Net Profit": "-57.785%",
+    "Sharpe Ratio": "-1.249",
+    "Sortino Ratio": "-1.784",
+    "Probabilistic Sharpe Ratio": "0.000%",
+    "Loss Rate": "77%",
+    "Win Rate": "23%",
+    "Profit-Loss Ratio": "2.69",
+    "Alpha": "-0.099",
+    "Beta": "-0.001",
+    "Annual Standard Deviation": "0.079",
+    "Annual Variance": "0.006",
+    "Information Ratio": "-0.996",
+    "Tracking Error": "0.18",
+    "Treynor Ratio": "80.15",
+    "Total Fees": "$3685.10",
+    "Estimated Strategy Capacity": "$43000000.00",
+    "Lowest Capacity Asset": "NQ YYFADOG4CO3L",
+    "Portfolio Turnover": "321.08%",
+    "Drawdown Recovery": "0"
+  }
+}
