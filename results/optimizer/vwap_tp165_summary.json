@@ -1,0 +1,17 @@
+{
+  "config": "final VWAP (band 20bps, gap 25, trend 60, 1 trade/day) + TP 16.5 / SL 75 bracket",
+  "period": "2018-2025",
+  "n_trades": 948,
+  "win_rate_pct": 81.5,
+  "random_baseline_pct": 82.0,
+  "exits": {
+    "TP": 0.809,
+    "SL": 0.127,
+    "EOD": 0.064
+  },
+  "avg_pnl_pts_gross": 2.3,
+  "total_pts_gross": 2178,
+  "note": "Win rate equals mechanical RR baseline -> zero informational content; edge shows only in +2.3pt gross EV, wiped by ~2.6pt costs. EOD tail: n=61, win 9.8%, avg -24.2pt.",
+  "project": 34649661,
+  "backtest": "ed4b5466964b4d41f87f08944e40ba11"
+}
