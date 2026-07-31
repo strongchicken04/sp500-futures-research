@@ -65,3 +65,26 @@ Obchodně: nejlepší buňka (α=5 % + filtr) ≈ +13,5 bps/obchod po nákladech
 ~31 obchodů/rok → roční přínos ~4 % nominálu. Satelit, ne jádro portfolia;
 proti VWAP strategii (Sharpe 1,23) doplněk s nízkou korelací (breakoutové
 dny vs pásmové dny), nikoli náhrada.
+
+
+## Dodatek 2: Parameter Optimization Machine — VERDIKT FAIL
+
+Grid 160 konfiguraci (alpha x vol_gate x gap_gate x trend_cap), obchody
+2018-2025, naklady 2 bps, WF foldy 2022-2025, PBO S=12, noise = plna pipeline
+na 3 GBM svetech (vol-clustering, nulovy drift).
+
+| kriterium | hodnota | prah | vysledek |
+|---|---|---|---|
+| WF Sharpe (plateau) | 0,38 | > 0,3 | OK (tesne) |
+| PBO (plateau) | 59 % | < 50 % | FAIL |
+| nad noise floorem | 0,38 vs max sum 0,82 | WF > sum | FAIL |
+
+Zero-edge svet umi z teto pipeline vyrobit WF Sharpe 0,82 - vic nez realna
+data. Pri ~31 obchodech/rok neni vyber konfigurace statisticky ukotveny.
+
+**Zaver: do portfolia NEZARAZOVAT.** Efekt zustava zapsany jako konfirmace
+regime hypotezy (blocked days zaporne 5/5), ne jako obchodni system. Jedina
+legitimni cesta dal: prodlouzit data (QC export 2010-2025 -> 8 WF foldu),
+zadne dalsi ladeni parametru.
+Soubory: holmberg_optimization.json, holmberg_heatmap/walkforward/pbo/
+noise_floor.png v results/optimizer/.
