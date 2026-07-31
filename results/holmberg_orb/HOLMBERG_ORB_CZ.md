@@ -42,3 +42,26 @@ Long vs short: longy nesou většinu efektu (5 %: +20,0 vs +9,4 bps; 0,5 %:
 **Verdikt:** metodologicky nejpoctivější materiál z celé série testů; efekt
 směrově potvrzen, obchodně no-go standalone — konzistentní se Zarattini ORB
 závěrem. α=5% práh si zapisujeme jako kandidátní feature pro regime přístupy.
+
+
+## Dodatek: kombinace s regime filtrem (OOS)
+
+Filtr z našeho regime výzkumu — `(rvol20 > medián) ∨ (|gap| > medián) ∧
+trend50 ≤ q75` — prahy fitované na reálném NQ **2009–2017**, aplikované na
+obchody 2018–2025 (plně out-of-sample; vzorec filtru pochází z dřívější
+výzkumné linie, panenské jsou prahy a aplikace).
+
+| α=5 % | N | win % | avg bps | boot p |
+|---|---|---|---|---|
+| bez filtru | 303 | 53,1 | +12,1 | 0,060 |
+| s filtrem | 249 | 55,8 | **+15,5** | 0,052 |
+| zablokované dny | 54 | 40,7 | **−3,2** | — |
+
+**Zablokované dny jsou záporné ve všech 5 α-knihách** (−4,5/−3,2/−24,9/−24,0/
+−75,5 bps) — 5/5 shoda znaménka; filtr systematicky odřezává dny bez paliva,
+nejen šum. Čtvrtá nezávislá konfirmace: ORB = long volatilita.
+
+Obchodně: nejlepší buňka (α=5 % + filtr) ≈ +13,5 bps/obchod po nákladech,
+~31 obchodů/rok → roční přínos ~4 % nominálu. Satelit, ne jádro portfolia;
+proti VWAP strategii (Sharpe 1,23) doplněk s nízkou korelací (breakoutové
+dny vs pásmové dny), nikoli náhrada.
