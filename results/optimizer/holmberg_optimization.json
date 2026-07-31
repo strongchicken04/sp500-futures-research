@@ -1,5 +1,5 @@
 {
-  "window": "2018-2025 (trades era; WF folds 2022-2025)",
+  "window": "2010-2025 (full era; WF folds 2014-2025)",
   "n_configs": 160,
   "grid": {
     "alpha": [
@@ -29,47 +29,119 @@
   "cost_bps_per_trade": 2.0,
   "recommended": {
     "alpha": 10.0,
-    "vol_gate": 50.0,
+    "vol_gate": 60.0,
     "gap_gate": 60.0,
     "trend_cap": 100.0
   },
-  "recommended_is_sharpe": 0.339,
+  "recommended_is_sharpe": 0.099,
   "raw_peak": {
     "alpha": 5.0,
-    "vol_gate": 40.0,
-    "gap_gate": 0.0,
+    "vol_gate": 60.0,
+    "gap_gate": 60.0,
     "trend_cap": 100.0
   },
-  "raw_peak_is_sharpe": 0.6,
+  "raw_peak_is_sharpe": 0.298,
   "ref_config": {
     "alpha": 5.0,
     "vol_gate": 50.0,
     "gap_gate": 50.0,
     "trend_cap": 75.0
   },
-  "ref_is_sharpe": 0.492,
+  "ref_is_sharpe": 0.232,
   "ref_fixed_wf_window": {
-    "sharpe": 0.936,
-    "cagr": 8.0,
-    "mdd": -6.35,
-    "tot": 31.7,
-    "calmar": 1.26
+    "sharpe": 0.27,
+    "cagr": 1.83,
+    "mdd": -18.41,
+    "tot": 23.8,
+    "calmar": 0.1
   },
   "wf_plateau": {
-    "sharpe": 0.376,
-    "cagr": 3.53,
-    "mdd": -12.81,
-    "tot": 13.2,
-    "calmar": 0.28
+    "sharpe": 0.003,
+    "cagr": -0.29,
+    "mdd": -31.27,
+    "tot": -3.3,
+    "calmar": -0.01
   },
   "wf_argmax": {
-    "sharpe": 0.824,
-    "cagr": 6.76,
-    "mdd": -8.71,
-    "tot": 26.4,
-    "calmar": 0.78
+    "sharpe": -0.054,
+    "cagr": -0.69,
+    "mdd": -30.99,
+    "tot": -7.8,
+    "calmar": -0.02
   },
   "wf_picks": [
+    [
+      2014,
+      {
+        "alpha": 10.0,
+        "vol_gate": 0.0,
+        "gap_gate": 60.0,
+        "trend_cap": 100.0
+      }
+    ],
+    [
+      2015,
+      {
+        "alpha": 5.0,
+        "vol_gate": 0.0,
+        "gap_gate": 60.0,
+        "trend_cap": 100.0
+      }
+    ],
+    [
+      2016,
+      {
+        "alpha": 0.1,
+        "vol_gate": 60.0,
+        "gap_gate": 0.0,
+        "trend_cap": 100.0
+      }
+    ],
+    [
+      2017,
+      {
+        "alpha": 0.1,
+        "vol_gate": 60.0,
+        "gap_gate": 0.0,
+        "trend_cap": 100.0
+      }
+    ],
+    [
+      2018,
+      {
+        "alpha": 0.1,
+        "vol_gate": 60.0,
+        "gap_gate": 0.0,
+        "trend_cap": 100.0
+      }
+    ],
+    [
+      2019,
+      {
+        "alpha": 0.1,
+        "vol_gate": 60.0,
+        "gap_gate": 60.0,
+        "trend_cap": 100.0
+      }
+    ],
+    [
+      2020,
+      {
+        "alpha": 0.1,
+        "vol_gate": 60.0,
+        "gap_gate": 60.0,
+        "trend_cap": 100.0
+      }
+    ],
+    [
+      2021,
+      {
+        "alpha": 10.0,
+        "vol_gate": 50.0,
+        "gap_gate": 60.0,
+        "trend_cap": 100.0
+      }
+    ],
     [
       2022,
       {
@@ -107,24 +179,24 @@
       }
     ]
   ],
-  "pbo_argmax": 0.38,
-  "pbo_plateau": 0.593,
+  "pbo_argmax": 0.463,
+  "pbo_plateau": 0.57,
   "noise_wf_sharpes": [
-    -0.3,
-    0.818,
-    0.075
+    -0.027,
+    -0.059,
+    0.737
   ],
   "noise_best_is_sharpes": [
-    0.207,
-    0.773,
-    0.493
+    0.228,
+    0.279,
+    0.894
   ],
   "verdict": {
     "pass_all": false,
-    "wf_sharpe_ok": true,
+    "wf_sharpe_ok": false,
     "pbo_ok": false,
     "above_noise": false,
-    "noise_max_wf_sharpe": 0.818,
+    "noise_max_wf_sharpe": 0.737,
     "rule": "PASS iff WF Sharpe > 0.3 AND PBO < 50% AND WF Sharpe > max(noise WF Sharpe)"
   },
   "note": "Trades exist only 2018-2025 (QC real NQ, rolling thresholds, gap-safe fills, 2bps cost). Grid IS = same era; honest number is the WF stitch. Noise = full pipeline on GBM worlds with vol clustering, zero drift."

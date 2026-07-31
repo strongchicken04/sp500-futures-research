@@ -9,7 +9,7 @@ Grid (4 osy, 160 konfiguraci):
   Gaty kombinovane jako v regime vyzkumu: (vol OR gap) AND trend.
 
 DR[cfg, day] = bps obchodu / 1e4 (net 2 bps costs), 0 kdyz kniha neobchodovala
-nebo filtr den zablokoval. Data: obchody 2018-2025 z QC (hb_trades.json),
+nebo filtr den zablokoval. Data: obchody 2018-2025 z QC (hb_trades_full.json),
 featury z realneho NQ panelu (nq_panel_real.csv), ranky past-only 250d.
 
 POZOR (poctivost): obchody existuji jen 2018-2025, takze grid IS = stejna era.
@@ -31,7 +31,7 @@ from machine import (sharpe_daily, perf_stats, neighborhood_score, pick_plateau,
 
 ROOT = "/home/user/sp500-futures-research"
 OUT = f"{ROOT}/results/optimizer"
-TRADES = "/tmp/claude-0/-home-user-sp500-futures-research/53c3bf28-8c3c-5400-8ec7-9c6a782819be/scratchpad/hb_trades.json"
+TRADES = "/tmp/claude-0/-home-user-sp500-futures-research/53c3bf28-8c3c-5400-8ec7-9c6a782819be/scratchpad/hb_trades_full.json"
 PANEL = f"{ROOT}/results/nq_panel_real.csv"
 
 ALPHAS = [10.0, 5.0, 1.0, 0.5, 0.1]
@@ -70,7 +70,7 @@ def build_DR_real():
     for t in trades:
         tmap[(t["date"], t["ai"])] = t["bps"]
 
-    days = panel[(panel.index.year >= 2018)
+    days = panel[(panel.index.year >= 2010)
                  & panel["rank_vol"].notna() & panel["rank_gap"].notna()
                  & panel["rank_trend"].notna()]
     dd = [d.strftime("%Y-%m-%d") for d in days.index]
@@ -223,7 +223,7 @@ def main():
 
     ver = verdict(st_wf["sharpe"], pbo_pla, noise_wf)
     res = dict(
-        window="2018-2025 (trades era; WF folds 2022-2025)",
+        window="2010-2025 (full era; WF folds 2014-2025)",
         n_configs=int(DR.shape[0]), grid={n: v for n, v in grid},
         cost_bps_per_trade=COST_BPS,
         recommended=rec, recommended_is_sharpe=round(float(sh[j_plat]), 3),

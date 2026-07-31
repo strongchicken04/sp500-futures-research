@@ -88,3 +88,24 @@ legitimni cesta dal: prodlouzit data (QC export 2010-2025 -> 8 WF foldu),
 zadne dalsi ladeni parametru.
 Soubory: holmberg_optimization.json, holmberg_heatmap/walkforward/pbo/
 noise_floor.png v results/optimizer/.
+
+
+## Dodatek 3: Finální test na plné éře 2010–2025 — FAIL potvrzen, případ uzavřen
+
+Prodloužený export (QC, 2009-06 až 2025, 2 557 obchodů, stejná mřížka beze
+změn) → mašina s 12 walk-forward foldy (2014–2025):
+
+| kritérium | 2018–2025 | 2010–2025 | práh |
+|---|---|---|---|
+| WF Sharpe (plateau) | 0,38 | **0,003** | > 0,3 |
+| PBO (plateau) | 59 % | **57 %** | < 50 % |
+| max noise WF | 0,82 | **0,74** | pod WF |
+
+Walk-forward přes 12 let = nula (tot −3,3 %, MDD −31 %). Hraniční výsledek
+z éry 2018–2025 byl artefakt jedné éry; delší data slabý signál nezachránila,
+ale odhalila. **Případ uzavřen: Holmberg ORB (i s regime gaty) do portfolia
+nepatří.** Vědecká hodnota zůstává: blocked-days asymetrie potvrzuje regime
+hypotézu, ale nositelný edge z ní na NQ nevzniká.
+
+Backtest `a08a09018c56c6c8841c75ec7929e4db`, obchody v
+holmberg_orb_trades_full.json, mašina: results/optimizer/holmberg_*.{json,png}.
