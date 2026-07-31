@@ -42,3 +42,22 @@ Sekundární (pro portfoliovou hodnotu, nerozhoduje o PASS/FAIL):
 - PASS → následuje (a) optimalizační mašina na plných datech s mřížkou
   definovanou před spuštěním, (b) validace na reálném NQ přes QC exporter,
   (c) teprve pak úvaha o zařazení. OOS okno se už nikdy znovu nepoužije.
+
+
+---
+
+# VÝSLEDEK (doplněno po jednorázovém běhu, tentýž den)
+
+| kritérium | s16 Overnight | s14 Gap fade |
+|---|---|---|
+| OOS Sharpe ≥ 0,30 | **0,20** ✗ | **−0,36** ✗ |
+| avg net > 0 bps | +1,39 ✓ | −1,43 ✗ |
+| **PASS** | **NE** | **NE** |
+
+Detaily: s16 roky 2018 +7,3 % / 2019 +6,6 % / 2020(do 05) −8,3 %, MDD −28,8 %
+(COVID); s14 2018 −2,8 % / 2019 −10,1 % / 2020 +6,5 %, MDD −18,8 %.
+
+**Rodina overnight/gap-fade uzavřena dle závazku.** COVID v OOS okně není
+polehčující okolnost — okno bylo definováno včetně něj a overnight prémie
+se platí právě expozicí na noční chvosty. OOS okno 2018–2020/05 je tímto
+SPOTŘEBOVÁNO a nesmí být použito pro žádný další výběr.
