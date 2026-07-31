@@ -27,7 +27,7 @@ MIN_HIST = 60
 class NQHolmbergORB(QCAlgorithm):
 
     def Initialize(self):
-        self.SetStartDate(2018, 1, 1)
+        self.SetStartDate(2009, 6, 1)
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
         f = self.AddFuture(
