@@ -1,0 +1,65 @@
+name: Build Zuzanky deník APK
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: zviratkovy-denik
+    env:
+      EXPO_NO_TELEMETRY: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: zviratkovy-denik/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate the native Android project
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Use the persistent signing key
+        # The Expo template signs release builds with android/app/debug.keystore.
+        # We swap in the committed keystore so every future build can update the
+        # installed app in place (same signature) without losing her data.
+        run: cp credentials/android.keystore android/app/debug.keystore
+
+      - name: Build only phone ABIs
+        run: echo "reactNativeArchitectures=armeabi-v7a,arm64-v8a" >> android/gradle.properties
+
+      - name: Build release APK
+        run: cd android && ./gradlew assembleRelease --no-daemon
+
+      - name: Collect APK
+        run: cp android/app/build/outputs/apk/release/app-release.apk zuzanky-denik.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zuzanky-denik-apk
+          path: zviratkovy-denik/zuzanky-denik.apk
+
+      - name: Publish GitHub release with the APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="zuzanky-denik-v1.0.0-build${{ github.run_number }}"
+          gh release create "$TAG" zuzanky-denik.apk \
+            --title "Zuzanky deník — Android APK (build ${{ github.run_number }})" \
+            --notes "Instalační balíček aplikace **Zuzanky deník** pro Android. Stáhni \`zuzanky-denik.apk\` do telefonu, povol instalaci z neznámých zdrojů a nainstaluj." \
+            --target "${{ github.sha }}"

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Zvířátkový deník",
+    "name": "Zuzanky deník",
     "slug": "zviratkovy-denik",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,15 +8,12 @@
     "scheme": "zviratkovydenik",
     "userInterfaceStyle": "light",
     "backgroundColor": "#FFF7EC",
-    "ios": {
-      "icon": "./assets/expo.icon"
-    },
     "android": {
+      "package": "cz.zuzanka.denik",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#FFF7EC",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/android-icon-foreground.png"
       },
       "predictiveBackGestureEnabled": false
     },
@@ -27,7 +24,7 @@
         {
           "backgroundColor": "#FFF7EC",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 130
         }
       ],
       [

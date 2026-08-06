@@ -1,4 +1,4 @@
-# 🐹 Zvířátkový deník
+# 🐹 Zuzanky deník
 
 Malý útulný deníček, ve kterém žije jeden mazlíček. Zapisuješ si svoje dny —
 jídlo, zásilky, školu, judo, spánek a fotky — a každý zápisek tvého mazlíčka
@@ -9,7 +9,24 @@ krásná kočka… a pak? To se uvidí. ✨
 
 ---
 
-## 📱 Jak si appku spustím na mobilu
+## 📦 Instalace na Android (hotová APK — nejjednodušší)
+
+Appka se dá nainstalovat naostro, bez počítače:
+
+1. Na GitHubu otevři **Releases** tohoto repozitáře a u nejnovějšího vydání
+   „Zuzanky deník — Android APK" stáhni soubor **`zuzanky-denik.apk`**
+   (klidně rovnou v telefonu, nebo ho do telefonu pošli např. messengerem).
+2. Ťukni na stažený soubor. Android se zeptá, jestli povolit **instalaci
+   z neznámých zdrojů** (u prohlížeče/aplikace, ze které instaluješ) — povol to.
+3. Nainstaluj — na ploše se objeví ikonka křečka **Zuzanky deník**. 🐹
+
+> Novou verzi APK kdykoli sestavíš na GitHubu: záložka **Actions** →
+> workflow **Build Zuzanky deník APK** → **Run workflow** (větev
+> `claude/zviraatkovy-denik-app-x0gmd7`). Hotová APK se objeví v Releases.
+> Podepisuje se klíčem `credentials/android.keystore`, takže nová verze
+> jde nainstalovat **přes** starou a všechna data v deníčku zůstanou.
+
+## 📱 Jak appku spustím přes Expo Go (pro vývoj a zkoušení)
 
 Appka běží přes **Expo Go** — nic se nikam neinstaluje „naostro“, stačí telefon
 a počítač na stejné Wi‑Fi.
@@ -44,7 +61,9 @@ přihlašování, žádný cloud. Appka funguje úplně offline.
 
 - Fotky, které do deníku přidáš, si appka zkopíruje k sobě, takže zůstanou
   i kdybys je smazala z galerie.
-- Když aplikaci (Expo Go) smažeš, smažou se i data deníčku — tak pozor na to. 💛
+- Když aplikaci smažeš (nebo v Expo Go smažeš projekt), smažou se i data
+  deníčku — tak pozor na to. 💛 Obyčejná aktualizace na novější verzi appky
+  data nemaže.
 
 ## 🐾 Malý návod
 
@@ -78,4 +97,12 @@ přihlašování, žádný cloud. Appka funguje úplně offline.
 - **Personalization:** everything personal (her name, pet default name, the
   love note) lives in `src/config/personal.ts`. Islands are config-driven in
   `src/config/activities.ts` — adding a new island is adding one object there.
+- **Standalone APK:** built by the repo-root GitHub Actions workflow
+  (`.github/workflows/build-apk.yml`): `expo prebuild` + Gradle
+  `assembleRelease`, ABIs limited to `armeabi-v7a`/`arm64-v8a`, published as a
+  GitHub Release. App id `cz.zuzanka.denik`, display name "Zuzanky deník".
+  Release builds are signed with the committed `credentials/android.keystore`
+  (alias `androiddebugkey`, password `android` — a personal-gift key, not a
+  store key), so newer builds install over older ones without losing data.
+  Bump `android.versionCode` in `app.json` when shipping an update.
 - **Scripts:** `npm start` (Expo dev server), `npm run typecheck`.

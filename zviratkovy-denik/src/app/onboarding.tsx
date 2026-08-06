@@ -37,8 +37,8 @@ export default function OnboardingScreen() {
                 Ahoj, {PERSONAL.herNameVocative}!
               </T>
               <T v="body" center color={C.inkSoft} style={styles.paragraph}>
-                Vítej ve svém Zvířátkovém deníku. Je to malý útulný svět jen pro tebe — pro tvoje
-                dny, radosti, vzpomínky i fotky.
+                Vítej ve svém deníčku. Je to malý útulný svět jen pro tebe — pro tvoje dny,
+                radosti, vzpomínky i fotky.
               </T>
               <PrimaryButton label="Ukaž mi víc ✨" onPress={() => setStep(1)} style={styles.btn} />
             </Animated.View>
