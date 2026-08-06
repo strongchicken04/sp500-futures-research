@@ -46,3 +46,25 @@ Robustnost: distribuce 2022–2025 dává tatáž čísla (±1 p.b.).
 Zdroje pravidel: phidiaspropfirm.com/education/lucidflex-review,
 proptradingvibes.com/blog/lucid-trading-lucidflex-account,
 lunefi.com/blog/lucid-trading-complete-guide-to-rules-and-payouts
+
+
+## Dodatek: TP 100 / SL 75 verze — vyšší pass rate na každé velikosti
+
+Rekonstrukce bracketu z MAE záznamů (TP100 exporter; konzervativně: TP i SL
+v téže minutě = SL). 942 obchodů 2018–2025, win 42 %, avg +6,65 b net,
+SL rate 9,8 %, TP rate 28,6 %.
+
+| velikost | pásmová | TP/SL | medián dní (TP/SL) |
+|---|---|---|---|
+| 1 MNQ | 69 % | **87 %** | 369 |
+| 2 MNQ | 48 % | **66 %** | 131 |
+| 3 MNQ | 39 % | **55 %** | 65 |
+| 5 MNQ | 30 % | **47 %** | 27 |
+| 10 MNQ | 21 % | **39 %** | 13 |
+
+Éra 2022–2025: stejná čísla (−2 p.b.). Mechanismus: EOD trailing trestá
+volatilitu, ne nízký výnos — bracket ořezává oba chvosty → hladší schody
+→ floor se posouvá bezpečněji. Doporučení: **eval s TP/SL verzí (2–3 MNQ)**,
+po fundingu zvážit přepnutí na pásmovou (vyšší dlouhodobý výnos). Výhrada:
+fixní body → éra-závislost; kontrola na 2022–2025 konzistentní.
+Graf: lucid_pass_rate_comparison.png.
