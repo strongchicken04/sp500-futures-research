@@ -1,3 +1,4 @@
+# Builds the standalone Android APK for Zuzanky deník.
 name: Build Zuzanky deník APK
 
 on:
