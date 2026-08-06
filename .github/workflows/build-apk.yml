@@ -2,6 +2,12 @@ name: Build Zuzanky deník APK
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - claude/zviraatkovy-denik-app-x0gmd7
+    paths:
+      - 'zviratkovy-denik/**'
+      - '.github/workflows/build-apk.yml'
 
 permissions:
   contents: write
