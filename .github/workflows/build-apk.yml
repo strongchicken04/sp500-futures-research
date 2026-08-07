@@ -50,8 +50,11 @@ jobs:
       - name: Build only phone ABIs
         run: echo "reactNativeArchitectures=armeabi-v7a,arm64-v8a" >> android/gradle.properties
 
+      - name: Sanity-check the JS bundle (readable error if Metro fails)
+        run: npx expo export --platform android --output-dir /tmp/export-canary
+
       - name: Build release APK
-        run: cd android && ./gradlew assembleRelease --no-daemon
+        run: cd android && ./gradlew assembleRelease --no-daemon --stacktrace
 
       - name: Collect APK
         run: cp android/app/build/outputs/apk/release/app-release.apk zuzanky-denik.apk
