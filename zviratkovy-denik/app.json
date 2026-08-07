@@ -8,6 +8,10 @@
     "scheme": "zviratkovydenik",
     "userInterfaceStyle": "light",
     "backgroundColor": "#FFF7EC",
+    "ios": {
+      "bundleIdentifier": "cz.zuzanka.denik",
+      "supportsTablet": false
+    },
     "android": {
       "package": "cz.zuzanka.denik",
       "versionCode": 1,

@@ -26,6 +26,29 @@ Appka se dá nainstalovat naostro, bez počítače:
 > Podepisuje se klíčem `credentials/android.keystore`, takže nová verze
 > jde nainstalovat **přes** starou a všechna data v deníčku zůstanou.
 
+## 🍏 Instalace na iPhone (TestFlight)
+
+iOS nedovoluje instalaci „ze souboru" — potřebuješ [Apple Developer Program](https://developer.apple.com/programs/)
+(99 USD/rok) a appka se pak instaluje přes **TestFlight**:
+
+1. Zaplať a aktivuj členství (nejsnáz přes aplikaci „Apple Developer" v iPhonu).
+2. Na počítači ve složce `zviratkovy-denik`:
+
+   ```bash
+   npm install -g eas-cli
+   eas login                      # účet z expo.dev
+   eas build -p ios --profile production   # build v cloudu, ptá se na Apple ID
+   eas submit -p ios --latest              # nahraje build do TestFlightu
+   ```
+
+3. Na [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → aplikace
+   → **TestFlight** přidej testerku (její Apple ID e-mail) — přijde jí pozvánka.
+4. Ona si z App Storu nainstaluje **TestFlight**, přijme pozvánku a appku má.
+
+> ⏳ TestFlight buildy platí **90 dní** — před vypršením stačí znovu spustit ty
+> dva příkazy (`eas build` + `eas submit`); číslo buildu se zvedá samo a data
+> v telefonu zůstávají.
+
 ## 📱 Jak appku spustím přes Expo Go (pro vývoj a zkoušení)
 
 Appka běží přes **Expo Go** — nic se nikam neinstaluje „naostro“, stačí telefon
