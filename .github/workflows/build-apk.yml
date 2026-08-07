@@ -48,24 +48,15 @@ jobs:
         run: cp credentials/android.keystore android/app/debug.keystore
 
       - name: Build only phone ABIs
-        run: echo "reactNativeArchitectures=armeabi-v7a,arm64-v8a" >> android/gradle.properties
+        # printf with a leading newline — the generated gradle.properties has no
+        # trailing newline, so a bare `echo >>` would corrupt its last property.
+        run: printf '\nreactNativeArchitectures=armeabi-v7a,arm64-v8a\n' >> android/gradle.properties
 
       - name: Sanity-check the JS bundle (readable error if Metro fails)
         run: npx expo export --platform android --output-dir /tmp/export-canary
 
-      - name: Probe the autolinking exec that fails inside gradle
-        continue-on-error: true
-        working-directory: zviratkovy-denik/android
-        run: |
-          node --version
-          node --no-warnings --eval "require('expo/bin/autolinking')" expo-modules-autolinking mirror-kotlin-inline-modules \
-            --kotlin-files-mirror-directory "$GITHUB_WORKSPACE/zviratkovy-denik/node_modules/expo/android/src/main/java/inline/modules" \
-            --inline-modules-list-directory "$GITHUB_WORKSPACE/zviratkovy-denik/node_modules/expo/android/build/inline/modules" \
-            --watched-directories-serialized "[]"
-          echo "probe exit code: $?"
-
       - name: Build release APK
-        run: cd android && ./gradlew assembleRelease --no-daemon --stacktrace --info
+        run: cd android && ./gradlew assembleRelease --no-daemon
 
       - name: Collect APK
         run: cp android/app/build/outputs/apk/release/app-release.apk zuzanky-denik.apk
