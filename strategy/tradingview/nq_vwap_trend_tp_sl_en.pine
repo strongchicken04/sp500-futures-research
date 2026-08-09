@@ -1,0 +1,148 @@
+//@version=5
+// =====================================================================
+// NQ VWAP Trend - TP/SL edition (English, simplified)
+// Core idea: session VWAP (RTH only, HLC3) with a hysteresis band of
+// +/- 20 bps. First 1-min close outside the band takes a trade in that
+// direction. One trade per day. Fixed bracket: TP +100 pts / SL -75 pts,
+// plus band exit (close back through the opposite band) and EOD flat
+// at 15:59 ET.
+// Chart: NQ or MNQ futures, 1-minute timeframe.
+// Note: this simplified version has NO day filters and NO info panel.
+// =====================================================================
+indicator("NQ VWAP Trend TP/SL (100/75)", overlay=true, max_lines_count=500, max_labels_count=500)
+
+bandBps   = input.float(20.0,  "Hysteresis band (bps)", minval=0.0, step=2.5)
+tpPoints  = input.float(100.0, "Take profit (points)",  minval=0.0, step=5.0)
+slPoints  = input.float(75.0,  "Stop loss (points)",    minval=0.0, step=5.0)
+showBands = input.bool(true,   "Show VWAP +/- band")
+
+TZ   = "America/New_York"
+SESS = "0930-1600"
+
+inSess  = not na(time(timeframe.period, SESS, TZ))
+newSess = inSess and not inSess[1]
+eodBar  = inSess and hour(time, TZ) == 15 and minute(time, TZ) == 59
+
+// ---- session VWAP (RTH only, HLC3, daily reset) ----
+var float cumPV = na
+var float cumV  = na
+if newSess
+    cumPV := 0.0
+    cumV  := 0.0
+if inSess
+    cumPV += hlc3 * volume
+    cumV  += volume
+vwap = inSess and cumV > 0 ? cumPV / cumV : na
+
+b  = bandBps / 10000.0
+up = vwap * (1 + b)
+dn = vwap * (1 - b)
+
+// ---- position state (1 trade/day, TP/SL bracket + band exit + EOD) ----
+var int   pos = 0
+var bool  tradedToday = false
+var float entryPx = na
+var float slFix = na
+var float tpFix = na
+longSig  = false
+shortSig = false
+exitSig  = false
+tpSig    = false
+slSig    = false
+
+if newSess
+    pos := 0
+    tradedToday := false
+
+if inSess and not na(vwap)
+    if eodBar
+        if pos != 0
+            exitSig := true
+            pos := 0
+    else
+        if pos == 0
+            if not tradedToday
+                if close > up
+                    pos := 1
+                    longSig := true
+                    tradedToday := true
+                    entryPx := close
+                else if close < dn
+                    pos := -1
+                    shortSig := true
+                    tradedToday := true
+                    entryPx := close
+        else
+            // SL checked FIRST (conservative: if SL and TP touch in the
+            // same candle, the stop counts)
+            slLevel = pos == 1 ? entryPx - slPoints : entryPx + slPoints
+            tpLevel = pos == 1 ? entryPx + tpPoints : entryPx - tpPoints
+            slHit = not na(entryPx) and (pos == 1 ? low <= slLevel : high >= slLevel)
+            tpHit = not na(entryPx) and (pos == 1 ? high >= tpLevel : low <= tpLevel)
+            if slHit
+                slSig := true
+                pos := 0
+            else if tpHit
+                tpSig := true
+                pos := 0
+            else if pos == 1 and close < dn
+                exitSig := true
+                pos := 0
+            else if pos == -1 and close > up
+                exitSig := true
+                pos := 0
+
+// ---- drawing ----
+plot(vwap, "VWAP (RTH)", color=color.new(color.orange, 0), linewidth=2)
+pUp = plot(showBands ? up : na, "VWAP + band", color=color.new(color.teal, 55), linewidth=2)
+pDn = plot(showBands ? dn : na, "VWAP - band", color=color.new(color.teal, 55), linewidth=2)
+fill(pUp, pDn, color=color.new(color.teal, 95))
+
+// ---- entry / SL / TP lines for the active trade ----
+var line enLine = na
+var line slLine = na
+var line tpLine = na
+var bool trActive = false
+
+if trActive and not na(enLine)
+    line.set_x2(enLine, bar_index)
+    if not na(slLine)
+        line.set_x2(slLine, bar_index)
+    if not na(tpLine)
+        line.set_x2(tpLine, bar_index)
+
+if longSig or shortSig
+    dir = longSig ? 1 : -1
+    slFix := entryPx - dir * slPoints
+    tpFix := entryPx + dir * tpPoints
+    enLine := line.new(bar_index, entryPx, bar_index, entryPx, color=color.new(color.blue, 0), width=1)
+    slLine := line.new(bar_index, slFix, bar_index, slFix, color=color.new(color.red, 0), width=2)
+    tpLine := line.new(bar_index, tpFix, bar_index, tpFix, color=color.new(color.green, 0), width=2)
+    trActive := true
+
+if (exitSig or tpSig or slSig) and trActive
+    line.set_x2(enLine, bar_index)
+    if not na(slLine)
+        line.set_x2(slLine, bar_index)
+    if not na(tpLine)
+        line.set_x2(tpLine, bar_index)
+    trActive := false
+    entryPx := na
+    slFix := na
+    tpFix := na
+
+// ---- signals on chart ----
+plotshape(longSig,  "BUY",     shape.triangleup,   location.belowbar, color.new(color.green, 0), size=size.small, text="BUY")
+plotshape(shortSig, "SELL",    shape.triangledown, location.abovebar, color.new(color.red, 0),   size=size.small, text="SELL")
+plotshape(tpSig,    "TP EXIT", shape.diamond,      location.abovebar, color.new(color.green, 0), size=size.small, text="TP")
+plotshape(slSig,    "SL EXIT", shape.xcross,       location.belowbar, color.new(color.red, 0),   size=size.small, text="SL")
+plotshape(exitSig,  "EXIT",    shape.xcross,       location.abovebar, color.new(color.gray, 0),  size=size.small, text="EXIT")
+
+bgcolor(pos == 1 ? color.new(color.green, 94) : pos == -1 ? color.new(color.red, 94) : na)
+
+// ---- alerts ----
+alertcondition(longSig,  "VWAP Trend BUY",     "NQ VWAP Trend: BUY (enter at next candle open)")
+alertcondition(shortSig, "VWAP Trend SELL",    "NQ VWAP Trend: SELL (enter at next candle open)")
+alertcondition(tpSig,    "VWAP Trend TP EXIT", "NQ VWAP Trend: take profit hit - exit")
+alertcondition(slSig,    "VWAP Trend SL EXIT", "NQ VWAP Trend: stop loss hit - exit")
+alertcondition(exitSig,  "VWAP Trend EXIT",    "NQ VWAP Trend: exit (opposite band / 16:00 ET)")
