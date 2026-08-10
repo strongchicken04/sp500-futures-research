@@ -87,7 +87,7 @@ export default function OnboardingScreen() {
                 Jak to funguje?
               </T>
               <T v="body" center color={C.inkSoft} style={styles.paragraph}>
-                Na každém ostrůvku si zapisuješ jednu činnost — jídlo, zásilky, školu, judo, spánek
+                Na každém ostrůvku si zapisuješ jednu činnost — jídlo, Vinted, školu, judo, spánek
                 i fotky. Každý zápisek {name.trim() || PERSONAL.defaultPetName} nakrmí a posune o
                 kousíček dál. 🌱
               </T>

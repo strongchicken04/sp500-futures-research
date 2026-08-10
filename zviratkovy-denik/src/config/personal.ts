@@ -14,7 +14,7 @@ export const PERSONAL = {
   /** The love note itself — paragraphs separated by blank lines */
   loveNote: [
     'Milá Zuzanko,',
-    'tenhle malý deník vznikl jen a jen pro tebe. Piš si sem svoje dny — co dobrého jsi jedla, co ti přišlo poštou, co bylo ve škole i na judu, jak se ti spalo a co hezkého jsi vyfotila.',
+    'tenhle malý deník vznikl jen a jen pro tebe. Piš si sem svoje dny — co dobrého jsi jedla, co se urodilo na Vintedu, co bylo ve škole i na judu, jak se ti spalo a co hezkého jsi vyfotila.',
     'S každým tvým slovem tu poroste někdo, kdo má z tebe stejně velkou radost jako já.',
     'Ať ti dělá radost každý den. 💛',
   ].join('\n\n'),
