@@ -93,7 +93,12 @@ export const ACTIVITIES: Activity[] = [
     notePlaceholder: 'Napiš pár slov jen pro sebe…',
     fields: [
       { key: 'delka', label: 'Jak dlouho?', type: 'text', placeholder: 'třeba 1,5 hodiny' },
-      { key: 'co', label: 'Co jste trénovali?', type: 'text', placeholder: 'chvaty, pády, randori…' },
+      {
+        key: 'co',
+        label: 'Co jsi měla za trénink?',
+        type: 'picker',
+        options: ['🥋 Randori', '🎯 Technika', '🏃 Běhy', '💪 Posilka'],
+      },
     ],
   },
   {
