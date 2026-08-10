@@ -2,6 +2,8 @@
  * 🏝️ Activity islands — the whole home screen is driven by this array.
  * Adding a new island = adding one object here (plus nothing else).
  */
+/** 'zasilka' is legacy — its island was removed, the id stays only so any
+ * previously stored entries still parse. */
 export type ActivityId = 'jidlo' | 'zasilka' | 'skola' | 'judo' | 'spanek' | 'fotky';
 
 export type ActivityField =
@@ -52,29 +54,6 @@ export const ACTIVITIES: Activity[] = [
     fields: [
       { key: 'co', label: 'Co sis dala dobrého?', type: 'text', placeholder: 'třeba palačinky s borůvkami' },
       { key: 'hodnoceni', label: 'A jaké to bylo?', type: 'picker', options: ['😋 Mňamka', '🙂 Dobré', '😕 Nic moc'] },
-    ],
-  },
-  {
-    // id stays 'zasilka' so older entries keep working (the island used to be
-    // "Poštovní zásilka" — only its face changed to Vinted).
-    id: 'zasilka',
-    name: 'Vinted',
-    emoji: '👗',
-    accent: '#23A69A',
-    accentDark: '#147268',
-    soft: '#C5EAE3',
-    pale: '#EDF8F5',
-    tagline: 'Přidáno i prodáno',
-    emptyTitle: 'Šatník na Vintedu zatím spí',
-    emptyText: 'Přidala jsi něco nového, nebo se něco prodalo? 🛍️',
-    foodEmoji: '🛍️',
-    addLabel: '+ Přidat zápisek',
-    noteLabel: 'Důležité věci k Vintedu 💭',
-    notePlaceholder: 'Napiš pár slov jen pro sebe…',
-    fields: [
-      { key: 'typ', label: 'Co se stalo?', type: 'picker', options: ['🛍️ Přidáno', '💸 Prodáno'] },
-      { key: 'co', label: 'Co to bylo?', type: 'text', placeholder: 'třeba šaty, mikina, kabelka…' },
-      { key: 'cena', label: 'Za kolik?', type: 'text', placeholder: 'třeba 250 Kč' },
     ],
   },
   {

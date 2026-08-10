@@ -1,7 +1,7 @@
 # 🐹 Zuzanky deník
 
 Malý útulný deníček, ve kterém žije jeden mazlíček. Zapisuješ si svoje dny —
-jídlo, Vinted, školu, judo, spánek a fotky — a každý zápisek tvého mazlíčka
+jídlo, školu, judo, spánek a fotky — a každý zápisek tvého mazlíčka
 nakrmí. On pak pomaličku roste a proměňuje se: z malinkého křečka bude jednou
 krásná kočka… a pak? To se uvidí. ✨
 

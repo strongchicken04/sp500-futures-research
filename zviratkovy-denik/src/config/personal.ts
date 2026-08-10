@@ -8,13 +8,13 @@ export const PERSONAL = {
   /** Her name in vocative case, used in greetings ("Ahoj, Zuzanko!") */
   herNameVocative: 'Zuzanko',
   /** Default pet name suggested during onboarding (she can change it) */
-  defaultPetName: 'Ňufík',
+  defaultPetName: 'Říša',
   /** Title of the little love note (first launch + the ♡ button) */
   loveNoteTitle: 'Malý vzkaz pro tebe',
   /** The love note itself — paragraphs separated by blank lines */
   loveNote: [
     'Milá Zuzanko,',
-    'tenhle malý deník vznikl jen a jen pro tebe. Piš si sem svoje dny — co dobrého jsi jedla, co se urodilo na Vintedu, co bylo ve škole i na judu, jak se ti spalo a co hezkého jsi vyfotila.',
+    'tenhle malý deník vznikl jen a jen pro tebe. Piš si sem svoje dny — co dobrého jsi jedla, co bylo ve škole i na judu, jak se ti spalo a co hezkého jsi vyfotila.',
     'S každým tvým slovem tu poroste někdo, kdo má z tebe stejně velkou radost jako já.',
     'Ať ti dělá radost každý den. 💛',
   ].join('\n\n'),
