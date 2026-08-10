@@ -1,10 +1,11 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
+import { AppImage } from '@/components/AppImage';
 import { GhostButton, IconButton, Screen, T } from '@/components/ui';
+import { confirmAction } from '@/lib/confirm';
 import { C } from '@/config/theme';
 import { formatDateTime } from '@/lib/czech';
 import { useApp } from '@/state/AppContext';
@@ -21,20 +22,14 @@ export default function PhotoViewScreen() {
   }
 
   const confirmDelete = () => {
-    Alert.alert(
+    confirmAction(
       'Smazat vzpomínku?',
       'Zmizí z deníku, ale všechno nakrmení tvému mazlíčkovi zůstane. 💛',
-      [
-        { text: 'Nechat', style: 'cancel' },
-        {
-          text: 'Smazat',
-          style: 'destructive',
-          onPress: async () => {
-            await deleteEntry(entry.id);
-            router.back();
-          },
-        },
-      ]
+      'Smazat',
+      async () => {
+        await deleteEntry(entry.id);
+        router.back();
+      }
     );
   };
 
@@ -48,7 +43,7 @@ export default function PhotoViewScreen() {
         </IconButton>
       </View>
 
-      <Image source={{ uri: entry.photoUri }} style={styles.photo} contentFit="contain" transition={200} />
+      <AppImage uri={entry.photoUri} style={styles.photo} contentFit="contain" transition={200} />
 
       <View style={styles.captionCard}>
         <T v="body" style={{ fontSize: 16, lineHeight: 23 }}>

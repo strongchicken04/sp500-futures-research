@@ -1,9 +1,10 @@
-import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import React from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { AppImage } from '@/components/AppImage';
 import { T } from '@/components/ui';
+import { notify } from '@/lib/confirm';
 import { C } from '@/config/theme';
 
 /** Photo attachment field: pick from the camera roll, preview, remove. */
@@ -22,7 +23,7 @@ export function PhotoPickerField({
     try {
       const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!perm.granted) {
-        Alert.alert(
+        notify(
           'Potřebuju přístup k fotkám',
           'Povol prosím přístup k fotkám v nastavení telefonu, ať si sem můžeš přidávat vzpomínky. 📸'
         );
@@ -45,7 +46,7 @@ export function PhotoPickerField({
     return (
       <View style={styles.previewWrap}>
         <Pressable accessibilityRole="button" accessibilityLabel="Vyměnit fotku" onPress={pick}>
-          <Image source={{ uri }} style={styles.preview} contentFit="cover" transition={150} />
+          <AppImage uri={uri} style={styles.preview} contentFit="cover" transition={150} />
         </Pressable>
         <Pressable
           accessibilityRole="button"

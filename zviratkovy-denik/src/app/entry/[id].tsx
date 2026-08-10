@@ -1,9 +1,10 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { AppImage } from '@/components/AppImage';
 import { BackButton, Card, GhostButton, IconButton, Screen, T } from '@/components/ui';
+import { confirmAction } from '@/lib/confirm';
 import { getActivity } from '@/config/activities';
 import { C } from '@/config/theme';
 import { formatDateTime } from '@/lib/czech';
@@ -21,20 +22,14 @@ export default function EntryDetailScreen() {
   if (!entry || !activity) return <Screen bg={C.bg}><View /></Screen>;
 
   const confirmDelete = () => {
-    Alert.alert(
+    confirmAction(
       'Smazat zápisek?',
       'Zmizí z deníku, ale všechno nakrmení tvému mazlíčkovi zůstane. 💛',
-      [
-        { text: 'Nechat', style: 'cancel' },
-        {
-          text: 'Smazat',
-          style: 'destructive',
-          onPress: async () => {
-            await deleteEntry(entry.id);
-            router.back();
-          },
-        },
-      ]
+      'Smazat',
+      async () => {
+        await deleteEntry(entry.id);
+        router.back();
+      }
     );
   };
 
@@ -62,7 +57,7 @@ export default function EntryDetailScreen() {
             accessibilityRole="button"
             accessibilityLabel="Zobrazit fotku"
             onPress={() => router.push({ pathname: '/photo/[id]', params: { id: entry.id } })}>
-            <Image source={{ uri: entry.photoUri }} style={styles.photo} contentFit="cover" transition={180} />
+            <AppImage uri={entry.photoUri} style={styles.photo} contentFit="cover" transition={180} />
           </Pressable>
         )}
 

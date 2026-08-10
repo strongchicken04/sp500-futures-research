@@ -1,6 +1,7 @@
-import { Image } from 'expo-image';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+
+import { AppImage } from '@/components/AppImage';
 
 import { T } from '@/components/ui';
 import type { Activity } from '@/config/activities';
@@ -50,7 +51,7 @@ export function EntryCard({
           </T>
         </View>
         {entry.photoUri ? (
-          <Image source={{ uri: entry.photoUri }} style={styles.thumb} contentFit="cover" transition={150} />
+          <AppImage uri={entry.photoUri} style={styles.thumb} contentFit="cover" transition={150} />
         ) : null}
       </View>
     </Pressable>

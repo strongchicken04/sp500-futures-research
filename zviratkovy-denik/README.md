@@ -49,6 +49,24 @@ iOS nedovoluje instalaci „ze souboru" — potřebuješ [Apple Developer Progra
 > dva příkazy (`eas build` + `eas submit`); číslo buildu se zvedá samo a data
 > v telefonu zůstávají.
 
+## 🌐 Webová verze (PWA) — „Přidat na plochu" na iPhonu
+
+Appka umí běžet i jako webová aplikace: v Safari se otevře adresa, dá se
+**Sdílet → Přidat na plochu** a chová se jako nainstalovaná aplikace (ikona,
+celá obrazovka, offline, data v telefonu — zápisky v localStorage, fotky
+v IndexedDB).
+
+- Build: `node scripts/build-web.mjs` → statický web ve složce `dist/`
+  (obsahuje service worker pro offline režim a `404.html` pro GitHub Pages).
+- Hostuje se na GitHub Pages z veřejného repozitáře `zuzanky-denik`
+  (adresa `https://<účet>.github.io/zuzanky-denik/` — musí sedět s
+  `experiments.baseUrl` v `app.json`).
+- Nasazení nové verze = spustit build a pushnout obsah `dist/` do toho
+  repozitáře.
+
+> ⚠️ Ať si smaže Safari data jen s rozmyslem — „Vymazat historii a data webů"
+> by smazalo i deníček. Aplikace přidaná na plochu má úložiště trvalé.
+
 ## 📱 Jak appku spustím přes Expo Go (pro vývoj a zkoušení)
 
 Appka běží přes **Expo Go** — nic se nikam neinstaluje „naostro“, stačí telefon

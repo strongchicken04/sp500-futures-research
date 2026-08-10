@@ -37,3 +37,11 @@ export function deletePhotoFile(uri?: string): void {
     console.warn('deletePhotoFile failed', e);
   }
 }
+
+/** Web (see photos.web.ts) stores photos in IndexedDB behind idb:// uris — on
+ * native the file uri is already directly renderable. */
+export const IDB_SCHEME = 'idb://';
+
+export async function resolvePhotoUri(uri: string): Promise<string> {
+  return uri;
+}

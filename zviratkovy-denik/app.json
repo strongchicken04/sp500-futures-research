@@ -21,6 +21,10 @@
       },
       "predictiveBackGestureEnabled": false
     },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/images/icon.png"
+    },
     "plugins": [
       "expo-router",
       [
@@ -40,7 +44,8 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": true,
+      "baseUrl": "/zuzanky-denik/"
     }
   }
 }

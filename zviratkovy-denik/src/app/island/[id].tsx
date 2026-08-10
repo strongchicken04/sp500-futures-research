@@ -1,8 +1,8 @@
-import { Image } from 'expo-image';
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { AppImage } from '@/components/AppImage';
 import { EntryCard } from '@/components/EntryCard';
 import { BackButton, EmptyState, PrimaryButton, Screen, T } from '@/components/ui';
 import { getActivity } from '@/config/activities';
@@ -96,7 +96,7 @@ function PhotoTile({ entry, onPress }: { entry: Entry; onPress: () => void }) {
   return (
     <Pressable accessibilityRole="button" onPress={onPress} style={styles.tileSlot}>
       <View style={styles.tile}>
-        <Image source={{ uri: entry.photoUri }} style={styles.tileImage} contentFit="cover" transition={180} />
+        <AppImage uri={entry.photoUri} style={styles.tileImage} contentFit="cover" transition={180} />
         <View style={{ padding: 10 }}>
           <T v="small" numberOfLines={2}>
             {entry.note}
