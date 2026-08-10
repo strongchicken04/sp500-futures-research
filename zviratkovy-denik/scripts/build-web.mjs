@@ -75,9 +75,16 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
   if (req.mode === 'navigate') {
-    // The app is a single-page app — every navigation serves the cached shell.
+    // Network-first for the app shell: online opens always get the newest
+    // version; the cached copy only serves when offline.
     event.respondWith(
-      caches.match('./index.html').then((cached) => cached || fetch(req))
+      fetch('./index.html')
+        .then((res) => {
+          const clone = res.clone();
+          caches.open(CACHE).then((c) => c.put('./index.html', clone));
+          return res;
+        })
+        .catch(() => caches.match('./index.html'))
     );
     return;
   }
