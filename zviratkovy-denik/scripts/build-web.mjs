@@ -38,6 +38,22 @@ const headExtras = `
     <link rel="icon" type="image/png" href="icon-192.png" />
     <style>html,body{background:#FFF7EC;overscroll-behavior-y:none}</style>
     <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+    <script>
+    // Boot watchdog: if the app fails to mount (e.g. a stale cached bundle
+    // after an update), clear caches + service workers ONCE and reload.
+    // Diary data lives in localStorage/IndexedDB and is untouched by this.
+    setTimeout(function(){
+      try{
+        var root=document.getElementById('root');
+        var booted=!!(root&&root.children&&root.children.length>0);
+        if(booted){sessionStorage.removeItem('zd-recovered');return;}
+        if(sessionStorage.getItem('zd-recovered'))return;
+        sessionStorage.setItem('zd-recovered','1');
+        var unreg=(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations)?navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister()}))}):Promise.resolve();
+        unreg.then(function(){return (typeof caches!=='undefined'&&caches.keys)?caches.keys():[]}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k)}))}).catch(function(){}).then(function(){location.reload()});
+      }catch(e){}
+    },6000);
+    </script>
   </head>`;
 html = html.replace('</head>', headExtras);
 fs.writeFileSync(indexPath, html);
