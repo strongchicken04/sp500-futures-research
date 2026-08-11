@@ -1,7 +1,9 @@
+import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Redirect, useRouter } from 'expo-router';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { IslandCard } from '@/components/IslandCard';
@@ -24,6 +26,45 @@ const PET_MOOD_LINES = [
   '{name} má dnes chlupatou náladu 🌱',
 ];
 
+/** Little emoji sets that fly up when she pets the hamster. */
+const PET_TAP_BURSTS = [
+  ['💛', '✨', '🩷'],
+  ['✨', '⭐️', '💫'],
+  ['🌸', '💛', '🌷'],
+  ['🫶', '💛', '✨'],
+];
+
+function TapHeart({ emoji, dx, delay, drift }: { emoji: string; dx: number; delay: number; drift: number }) {
+  const t = useSharedValue(0);
+  useEffect(() => {
+    t.value = withDelay(delay, withTiming(1, { duration: 950, easing: Easing.out(Easing.quad) }));
+  }, [delay, t]);
+  const style = useAnimatedStyle(() => ({
+    opacity: interpolate(t.value, [0, 0.12, 0.7, 1], [0, 1, 1, 0]),
+    transform: [
+      { translateY: interpolate(t.value, [0, 1], [0, -85]) },
+      { translateX: interpolate(t.value, [0, 1], [0, drift]) },
+      { scale: interpolate(t.value, [0, 0.25, 1], [0.5, 1.1, 0.9]) },
+    ],
+  }));
+  return (
+    <Animated.Text style={[styles.tapHeart, { marginLeft: dx }, style]} pointerEvents="none">
+      {emoji}
+    </Animated.Text>
+  );
+}
+
+function TapBurst({ round }: { round: number }) {
+  const set = PET_TAP_BURSTS[round % PET_TAP_BURSTS.length];
+  return (
+    <>
+      <TapHeart emoji={set[0]} dx={-52} delay={0} drift={-16} />
+      <TapHeart emoji={set[1]} dx={-6} delay={110} drift={8} />
+      <TapHeart emoji={set[2]} dx={40} delay={50} drift={18} />
+    </>
+  );
+}
+
 export default function HomeScreen() {
   const router = useRouter();
   const { settings, pet, entries } = useApp();
@@ -39,6 +80,19 @@ export default function HomeScreen() {
     () => pickForToday(PET_MOOD_LINES).replace('{name}', pet.name),
     [pet.name]
   );
+
+  // Petting the hamster: happy wiggle + a little burst of hearts.
+  const [happyTick, setHappyTick] = useState(0);
+  const [mood, setMood] = useState<'idle' | 'happy'>('idle');
+  const moodTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(moodTimer.current), []);
+  const petThePet = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    setHappyTick((t) => t + 1);
+    setMood('happy');
+    clearTimeout(moodTimer.current);
+    moodTimer.current = setTimeout(() => setMood('idle'), 1500);
+  };
 
   if (!settings.onboarded) return <Redirect href="/onboarding" />;
 
@@ -70,13 +124,23 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* pet hero */}
+          {/* pet hero — tapping pets the hamster (the 🐾 button opens his screen) */}
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`Otevřít mazlíčka ${pet.name}`}
-            onPress={() => router.push('/pet')}
+            accessibilityLabel="Pohladit mazlíčka"
+            onPress={petThePet}
             style={styles.petZone}>
-            <PetAvatar level={levelInfo.level} cosmetics={cosmetics} size={205} animate />
+            <View>
+              <PetAvatar
+                level={levelInfo.level}
+                cosmetics={cosmetics}
+                size={205}
+                animate
+                mood={mood}
+                happyTick={happyTick}
+              />
+              {happyTick > 0 && <TapBurst key={happyTick} round={happyTick} />}
+            </View>
             <View style={styles.petMeta}>
               <XpRing size={46} stroke={6} progress={levelInfo.progress}>
                 <Text style={{ fontSize: 15 }}>✨</Text>
@@ -128,6 +192,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   petZone: { alignItems: 'center', marginTop: 6 },
+  tapHeart: { position: 'absolute', top: 40, left: '50%', fontSize: 24, zIndex: 5 },
   petMeta: {
     flexDirection: 'row',
     alignItems: 'center',
