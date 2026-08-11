@@ -5,6 +5,7 @@ export const STORAGE_KEYS = {
   entries: 'zviratkovy-denik.entries.v1',
   pet: 'zviratkovy-denik.pet.v1',
   settings: 'zviratkovy-denik.settings.v1',
+  cycle: 'zviratkovy-denik.cycle.v1',
 } as const;
 
 export async function loadJSON<T>(key: string, fallback: T): Promise<T> {

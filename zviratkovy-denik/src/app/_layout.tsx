@@ -62,6 +62,7 @@ function RootStack({ fontsReady }: { fontsReady: boolean }) {
       <Stack.Screen name="index" />
       <Stack.Screen name="onboarding" options={{ animation: 'fade', gestureEnabled: false }} />
       <Stack.Screen name="pet" />
+      <Stack.Screen name="cycle" />
       <Stack.Screen
         name="love-note"
         options={{ presentation: 'modal', animation: 'slide_from_bottom' }}

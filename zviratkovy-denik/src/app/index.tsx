@@ -115,6 +115,9 @@ export default function HomeScreen() {
               </T>
             </View>
             <View style={{ flexDirection: 'row', gap: 10 }}>
+              <IconButton accessibilityLabel="Můj cyklus" onPress={() => router.push('/cycle')}>
+                <Text style={{ fontSize: 19 }}>🌸</Text>
+              </IconButton>
               <IconButton accessibilityLabel="Můj mazlíček" onPress={() => router.push('/pet')}>
                 <Text style={{ fontSize: 19 }}>🐾</Text>
               </IconButton>
