@@ -7,7 +7,7 @@ import { T } from '@/components/ui';
 import type { Activity } from '@/config/activities';
 import { C, shadowTiny } from '@/config/theme';
 import { formatDayBubble, formatTime } from '@/lib/czech';
-import type { Entry } from '@/lib/types';
+import { entryPhotos, type Entry } from '@/lib/types';
 
 /** One row in an island's entry list. */
 export function EntryCard({
@@ -20,6 +20,7 @@ export function EntryCard({
   onPress: () => void;
 }) {
   const bubble = formatDayBubble(entry.createdAt);
+  const photos = entryPhotos(entry);
   const fieldValues = entry.fields
     ? activity.fields
         .map((f) => entry.fields?.[f.key])
@@ -50,8 +51,17 @@ export function EntryCard({
             {formatTime(entry.createdAt)}
           </T>
         </View>
-        {entry.photoUri ? (
-          <AppImage uri={entry.photoUri} style={styles.thumb} contentFit="cover" transition={150} />
+        {photos.length > 0 ? (
+          <View>
+            <AppImage uri={photos[0]} style={styles.thumb} contentFit="cover" transition={150} />
+            {photos.length > 1 && (
+              <View style={styles.moreBadge}>
+                <T v="tiny" color={C.white}>
+                  +{photos.length - 1}
+                </T>
+              </View>
+            )}
+          </View>
         ) : null}
       </View>
     </Pressable>
@@ -76,4 +86,13 @@ const styles = StyleSheet.create({
   },
   middle: { flex: 1 },
   thumb: { width: 56, height: 56, borderRadius: 16, backgroundColor: C.line },
+  moreBadge: {
+    position: 'absolute',
+    right: -4,
+    bottom: -4,
+    backgroundColor: C.ink,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+  },
 });

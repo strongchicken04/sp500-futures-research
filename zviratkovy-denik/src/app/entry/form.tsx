@@ -20,6 +20,7 @@ import { C, F } from '@/config/theme';
 import { formatDateTime } from '@/lib/czech';
 import { genId } from '@/lib/id';
 import { persistPhoto } from '@/lib/photos';
+import { entryPhotos } from '@/lib/types';
 import type { FeedResult } from '@/lib/xp';
 import { useApp } from '@/state/AppContext';
 
@@ -35,18 +36,20 @@ export default function EntryFormScreen() {
 
   const [note, setNote] = useState(existing?.note ?? '');
   const [fields, setFields] = useState<Record<string, string>>(existing?.fields ?? {});
-  const [photo, setPhoto] = useState<string | undefined>(existing?.photoUri);
+  const [photos, setPhotos] = useState<string[]>(existing ? entryPhotos(existing) : []);
   const [saving, setSaving] = useState(false);
   const [feed, setFeed] = useState<FeedResult | null>(null);
   const newIdRef = useRef(genId());
   const nowRef = useRef(Date.now());
+  // Photos the entry already had — these are persisted, everything else is new.
+  const initialPhotosRef = useRef<Set<string>>(new Set(existing ? entryPhotos(existing) : []));
 
   const canSave = useMemo(() => {
     if (saving) return false;
     if (note.trim().length === 0) return false;
-    if (activity?.photoRequired && !photo) return false;
+    if (activity?.photoRequired && photos.length === 0) return false;
     return true;
-  }, [note, photo, activity?.photoRequired, saving]);
+  }, [note, photos.length, activity?.photoRequired, saving]);
 
   if (!activity) return <Redirect href="/" />;
 
@@ -65,16 +68,16 @@ export default function EntryFormScreen() {
     Keyboard.dismiss();
     try {
       const id = existing?.id ?? newIdRef.current;
-      let storedUri = photo;
-      if (photo && photo !== existing?.photoUri) {
-        storedUri = await persistPhoto(photo, id);
+      const storedUris: string[] = [];
+      for (const p of photos) {
+        storedUris.push(initialPhotosRef.current.has(p) ? p : await persistPhoto(p, id));
       }
       const cleanFields: Record<string, string> = {};
       for (const [k, v] of Object.entries(fields)) {
         if (v.trim().length > 0) cleanFields[k] = v.trim();
       }
       if (isEdit && existing) {
-        await updateEntry(existing.id, { note, photoUri: storedUri, fields: cleanFields });
+        await updateEntry(existing.id, { note, photoUris: storedUris, fields: cleanFields });
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
         router.back();
       } else {
@@ -82,7 +85,7 @@ export default function EntryFormScreen() {
           id,
           activityId: activity.id,
           note,
-          photoUri: storedUri,
+          photoUris: storedUris,
           fields: cleanFields,
         });
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
@@ -95,8 +98,8 @@ export default function EntryFormScreen() {
 
   const hint = !note.trim()
     ? `Nejdřív napiš pár slov — právě ta ${pet.name} živí 💛`
-    : activity.photoRequired && !photo
-      ? 'Ještě vyber fotku 📸'
+    : activity.photoRequired && photos.length === 0
+      ? 'Ještě vyber aspoň jednu fotku 📸'
       : null;
 
   return (
@@ -167,14 +170,9 @@ export default function EntryFormScreen() {
           ))}
 
           <T v="heading" style={styles.label}>
-            {activity.photoRequired ? 'Fotka 📸' : 'Fotka (nepovinná) 📸'}
+            {activity.photoRequired ? 'Fotky 📸' : 'Fotky (nepovinné) 📸'}
           </T>
-          <PhotoPickerField
-            uri={photo}
-            accent={activity.accent}
-            onPick={setPhoto}
-            onRemove={() => setPhoto(undefined)}
-          />
+          <PhotoPickerField uris={photos} accent={activity.accent} onChange={setPhotos} />
 
           <View style={{ marginTop: 26 }}>
             <PrimaryButton

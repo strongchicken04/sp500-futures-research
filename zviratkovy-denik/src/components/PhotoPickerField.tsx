@@ -5,20 +5,24 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { AppImage } from '@/components/AppImage';
 import { T } from '@/components/ui';
 import { notify } from '@/lib/confirm';
-import { C } from '@/config/theme';
+import { C, F } from '@/config/theme';
 
-/** Photo attachment field: pick from the camera roll, preview, remove. */
+export const MAX_PHOTOS_PER_ENTRY = 5;
+
+/** Photo attachment grid: pick several from the camera roll, preview, remove. */
 export function PhotoPickerField({
-  uri,
-  onPick,
-  onRemove,
+  uris,
+  onChange,
   accent,
+  max = MAX_PHOTOS_PER_ENTRY,
 }: {
-  uri?: string;
-  onPick: (uri: string) => void;
-  onRemove: () => void;
+  uris: string[];
+  onChange: (uris: string[]) => void;
   accent: string;
+  max?: number;
 }) {
+  const remaining = max - uris.length;
+
   const pick = async () => {
     try {
       const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -32,73 +36,72 @@ export function PhotoPickerField({
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images'],
         quality: 0.85,
-        selectionLimit: 1,
+        allowsMultipleSelection: true,
+        selectionLimit: remaining,
       });
-      if (!result.canceled && result.assets[0]) {
-        onPick(result.assets[0].uri);
+      if (!result.canceled && result.assets.length > 0) {
+        const picked = result.assets.map((a) => a.uri).slice(0, remaining);
+        onChange([...uris, ...picked]);
       }
     } catch (e) {
       console.warn('photo pick failed', e);
     }
   };
 
-  if (uri) {
-    return (
-      <View style={styles.previewWrap}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Vyměnit fotku" onPress={pick}>
-          <AppImage uri={uri} style={styles.preview} contentFit="cover" transition={150} />
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Odebrat fotku"
-          onPress={onRemove}
-          style={styles.removeBtn}
-          hitSlop={8}>
-          <Text style={styles.removeText}>✕</Text>
-        </Pressable>
-        <T v="tiny" color={C.inkSoft} style={{ marginTop: 6 }}>
-          ťukni na fotku pro výměnu
-        </T>
-      </View>
-    );
-  }
-
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel="Vybrat fotku" onPress={pick}>
-      <View style={[styles.pickButton, { borderColor: accent }]}>
-        <Text style={{ fontSize: 22 }}>📸</Text>
-        <T v="bodyBold" color={accent}>
-          Vybrat fotku
-        </T>
-      </View>
-    </Pressable>
+    <View style={styles.grid}>
+      {uris.map((uri, i) => (
+        <View key={`${uri}-${i}`} style={styles.cell}>
+          <AppImage uri={uri} style={styles.preview} contentFit="cover" transition={150} />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Odebrat fotku ${i + 1}`}
+            onPress={() => onChange(uris.filter((_, j) => j !== i))}
+            style={styles.removeBtn}
+            hitSlop={8}>
+            <Text style={styles.removeText}>✕</Text>
+          </Pressable>
+        </View>
+      ))}
+      {remaining > 0 && (
+        <Pressable accessibilityRole="button" accessibilityLabel="Přidat fotku" onPress={pick}>
+          <View style={[styles.addTile, { borderColor: accent }]}>
+            <Text style={{ fontSize: 20 }}>📸</Text>
+            <T v="small" color={accent} style={{ fontFamily: F.bodyBold }}>
+              {uris.length === 0 ? 'Vybrat' : 'Přidat'}
+            </T>
+          </View>
+        </Pressable>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  pickButton: {
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    borderRadius: 20,
-    paddingVertical: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    gap: 10,
-    backgroundColor: '#FFFFFF88',
-  },
-  previewWrap: { alignItems: 'flex-start' },
-  preview: { width: 110, height: 110, borderRadius: 20, backgroundColor: C.line },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  cell: { width: 96, height: 96 },
+  preview: { width: 96, height: 96, borderRadius: 18, backgroundColor: C.line },
   removeBtn: {
     position: 'absolute',
     top: -8,
-    left: 92,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    right: -8,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     backgroundColor: C.ink,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  removeText: { color: '#FFF', fontSize: 13, fontWeight: '700' },
+  removeText: { color: '#FFF', fontSize: 12, fontWeight: '700' },
+  addTile: {
+    width: 96,
+    height: 96,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    backgroundColor: '#FFFFFF88',
+  },
 });

@@ -5,7 +5,7 @@ import { PERSONAL } from '@/config/personal';
 import { genId } from '@/lib/id';
 import { deletePhotoFile } from '@/lib/photos';
 import { loadJSON, saveJSON, STORAGE_KEYS } from '@/lib/storage';
-import type { Entry, PetState, Settings } from '@/lib/types';
+import { entryPhotos, type Entry, type PetState, type Settings } from '@/lib/types';
 import { computeFeed, cosmeticsForLevel, levelFromXp, XP_PER_ENTRY, type FeedResult } from '@/lib/xp';
 
 const DEFAULT_PET: PetState = {
@@ -21,13 +21,13 @@ export type NewEntryInput = {
   id?: string;
   activityId: ActivityId;
   note: string;
-  photoUri?: string;
+  photoUris?: string[];
   fields?: Record<string, string>;
 };
 
 export type EntryPatch = {
   note: string;
-  photoUri?: string;
+  photoUris?: string[];
   fields?: Record<string, string>;
 };
 
@@ -113,11 +113,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const addEntry = useCallback(
     async (input: NewEntryInput): Promise<FeedResult> => {
+      const photoUris = input.photoUris && input.photoUris.length > 0 ? input.photoUris : undefined;
       const entry: Entry = {
         id: input.id ?? genId(),
         activityId: input.activityId,
         note: input.note.trim(),
-        photoUri: input.photoUri,
+        photoUris,
+        photoUri: photoUris?.[0],
         fields: input.fields && Object.keys(input.fields).length > 0 ? input.fields : undefined,
         createdAt: Date.now(),
       };
@@ -140,13 +142,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     async (id: string, patch: EntryPatch): Promise<void> => {
       const old = entriesRef.current.find((e) => e.id === id);
       if (!old) return;
-      if (old.photoUri && old.photoUri !== patch.photoUri) deletePhotoFile(old.photoUri);
+      const nextPhotos = patch.photoUris ?? [];
+      for (const p of entryPhotos(old)) {
+        if (!nextPhotos.includes(p)) deletePhotoFile(p);
+      }
       const next = entriesRef.current.map((e) =>
         e.id === id
           ? {
               ...e,
               note: patch.note.trim(),
-              photoUri: patch.photoUri,
+              photoUris: nextPhotos.length > 0 ? nextPhotos : undefined,
+              photoUri: nextPhotos[0],
               fields: patch.fields && Object.keys(patch.fields).length > 0 ? patch.fields : undefined,
             }
           : e
@@ -159,7 +165,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const deleteEntry = useCallback(
     async (id: string): Promise<void> => {
       const old = entriesRef.current.find((e) => e.id === id);
-      if (old?.photoUri) deletePhotoFile(old.photoUri);
+      if (old) entryPhotos(old).forEach((p) => deletePhotoFile(p));
       commitEntries(entriesRef.current.filter((e) => e.id !== id));
       // XP stays with the pet on purpose — deleting a memory never punishes her.
     },

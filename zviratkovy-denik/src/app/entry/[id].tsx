@@ -5,6 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { AppImage } from '@/components/AppImage';
 import { BackButton, Card, GhostButton, IconButton, Screen, T } from '@/components/ui';
 import { confirmAction } from '@/lib/confirm';
+import { entryPhotos } from '@/lib/types';
 import { getActivity } from '@/config/activities';
 import { C } from '@/config/theme';
 import { formatDateTime } from '@/lib/czech';
@@ -33,6 +34,7 @@ export default function EntryDetailScreen() {
     );
   };
 
+  const photos = entryPhotos(entry);
   const fieldRows = activity.fields
     .map((f) => ({ label: f.label, value: entry.fields?.[f.key] }))
     .filter((r): r is { label: string; value: string } => !!r.value);
@@ -52,13 +54,37 @@ export default function EntryDetailScreen() {
           </IconButton>
         </View>
 
-        {entry.photoUri && (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Zobrazit fotku"
-            onPress={() => router.push({ pathname: '/photo/[id]', params: { id: entry.id } })}>
-            <AppImage uri={entry.photoUri} style={styles.photo} contentFit="cover" transition={180} />
-          </Pressable>
+        {photos.length > 0 && (
+          <>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Zobrazit fotku"
+              onPress={() =>
+                router.push({ pathname: '/photo/[id]', params: { id: entry.id, index: '0' } })
+              }>
+              <AppImage uri={photos[0]} style={styles.photo} contentFit="cover" transition={180} />
+            </Pressable>
+            {photos.length > 1 && (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10 }}>
+                <View style={{ flexDirection: 'row', gap: 10 }}>
+                  {photos.slice(1).map((u, i) => (
+                    <Pressable
+                      key={`${u}-${i}`}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Zobrazit fotku ${i + 2}`}
+                      onPress={() =>
+                        router.push({
+                          pathname: '/photo/[id]',
+                          params: { id: entry.id, index: String(i + 1) },
+                        })
+                      }>
+                      <AppImage uri={u} style={styles.thumb} contentFit="cover" transition={150} />
+                    </Pressable>
+                  ))}
+                </View>
+              </ScrollView>
+            )}
+          </>
         )}
 
         <Card style={{ marginTop: 14, paddingVertical: 10 }}>
@@ -116,5 +142,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   photo: { width: '100%', height: 270, borderRadius: 24, backgroundColor: C.line },
+  thumb: { width: 72, height: 72, borderRadius: 16, backgroundColor: C.line },
   buttons: { flexDirection: 'row', gap: 12, marginTop: 22 },
 });

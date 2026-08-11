@@ -5,13 +5,22 @@ export type Entry = {
   activityId: ActivityId;
   /** required note for activity entries; caption for photo entries */
   note: string;
-  /** persisted local file uri (inside the app's document directory) */
+  /** legacy single photo — newer builds keep it mirrored to photoUris[0] so
+   * older app versions can still read entries */
   photoUri?: string;
+  /** all persisted photo uris of the entry (newer builds) */
+  photoUris?: string[];
   /** activity-specific optional fields */
   fields?: Record<string, string>;
   /** epoch ms */
   createdAt: number;
 };
+
+/** Photos of an entry regardless of which format it was saved in. */
+export function entryPhotos(entry: Pick<Entry, 'photoUri' | 'photoUris'>): string[] {
+  if (entry.photoUris && entry.photoUris.length > 0) return entry.photoUris;
+  return entry.photoUri ? [entry.photoUri] : [];
+}
 
 export type PetState = {
   name: string;

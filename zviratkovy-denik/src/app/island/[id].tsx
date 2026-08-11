@@ -8,7 +8,7 @@ import { BackButton, EmptyState, PrimaryButton, Screen, T } from '@/components/u
 import { getActivity } from '@/config/activities';
 import { C, shadowTiny } from '@/config/theme';
 import { formatDateLong } from '@/lib/czech';
-import type { Entry } from '@/lib/types';
+import { entryPhotos, type Entry } from '@/lib/types';
 import { useApp } from '@/state/AppContext';
 
 export default function IslandScreen() {
@@ -93,10 +93,18 @@ export default function IslandScreen() {
 }
 
 function PhotoTile({ entry, onPress }: { entry: Entry; onPress: () => void }) {
+  const photos = entryPhotos(entry);
   return (
     <Pressable accessibilityRole="button" onPress={onPress} style={styles.tileSlot}>
       <View style={styles.tile}>
-        <AppImage uri={entry.photoUri} style={styles.tileImage} contentFit="cover" transition={180} />
+        <AppImage uri={photos[0]} style={styles.tileImage} contentFit="cover" transition={180} />
+        {photos.length > 1 && (
+          <View style={styles.tileBadge}>
+            <T v="tiny" color={C.white}>
+              +{photos.length - 1}
+            </T>
+          </View>
+        )}
         <View style={{ padding: 10 }}>
           <T v="small" numberOfLines={2}>
             {entry.note}
@@ -126,4 +134,13 @@ const styles = StyleSheet.create({
     ...shadowTiny,
   },
   tileImage: { width: '100%', aspectRatio: 1, backgroundColor: C.line },
+  tileBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: '#00000088',
+    borderRadius: 10,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+  },
 });
