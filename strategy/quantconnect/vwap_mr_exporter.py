@@ -10,9 +10,12 @@ from AlgorithmImports import *
 #   hitO = dosla az na opacne pasmo -X (full cross)?
 #   eod  = PnL fade obchodu (vstup na urovni pasma pri doteku) do close, bps
 #   tmin = minuta doteku po 9:30
-# Tag na dotknute pasmo: MR,date,X,side,tmin,adv,hitV,hitO,eod
+#   r{S} = SEKVENCOVANE rozhodnuti fade obchodu s TP na VWAPu a stopem S bps
+#          za pasmem: 1 = TP driv, 0 = stop driv, 2 = ani jedno do EOD
+# Tag: M2,date,X,side,tmin,adv,hitV,hitO,eod,r20,r40,r60
 
 BANDS = (20.0, 30.0, 40.0, 60.0, 80.0, 100.0)
+STOPS = (20.0, 40.0, 60.0)
 
 
 class NQVwapMR(QCAlgorithm):
@@ -87,7 +90,8 @@ class NQVwapMR(QCAlgorithm):
                 if side != 0:
                     entry = up if side == 1 else dn
                     self.st[x] = dict(side=side, entry=entry, tmin=mend - 570,
-                                      adv=0.0, hitV=False, hitO=False)
+                                      adv=0.0, hitV=False, hitO=False,
+                                      res={s2: 2 for s2 in STOPS})
             elif s != "done":
                 side = s["side"]
                 if side == 1:
@@ -104,10 +108,20 @@ class NQVwapMR(QCAlgorithm):
                         s["hitO"] = True
                 if ext > s["adv"]:
                     s["adv"] = ext
+                # sekvencovane rozhodnuti TP-na-VWAP vs stop (konzervativne:
+                # kdyz v jedne minute padne stop i TP, pocita se stop)
+                hitv_now = (bar.Low <= vwap) if side == 1 else (bar.High >= vwap)
+                for s2 in STOPS:
+                    if s["res"][s2] == 2:
+                        if ext >= s2:
+                            s["res"][s2] = 0
+                        elif hitv_now:
+                            s["res"][s2] = 1
                 if mend == 960:
                     eod = (s["entry"] - bar.Close) / s["entry"] * 1e4 * side
-                    self._emit(f"MR,{d.strftime('%Y-%m-%d')},{x:.0f},{side},{s['tmin']},"
-                               f"{s['adv']:.1f},{int(s['hitV'])},{int(s['hitO'])},{eod:.1f}")
+                    self._emit(f"M2,{d.strftime('%Y-%m-%d')},{x:.0f},{side},{s['tmin']},"
+                               f"{s['adv']:.1f},{int(s['hitV'])},{int(s['hitO'])},{eod:.1f},"
+                               f"{s['res'][20.0]},{s['res'][40.0]},{s['res'][60.0]}")
                     self.st[x] = "done"
 
     def OnEndOfAlgorithm(self):
