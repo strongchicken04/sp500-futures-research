@@ -43,3 +43,21 @@ adverse selection pasivních fillů (dotek bez průrazu tě nenaplní; průraz
    falešných MR edge v retail backtestech. Vždy přepočítat close-based.
 3. MR nohu portfolia hledat jinde (jiný mechanismus/instrument), ne na
    intradenním NQ kolem VWAP.
+
+
+## Dodatek: NQ/ES intradenní spread reverze — MRTVÁ
+
+Spread s(t) = (NQ/NQ_930)/(ES/ES_930) − 1; prahy 10–60 bps, close-based,
+náklady 4 bps (obě nohy). Projekt `NQ_ES_Spread` (35168865), backtest
+`1cecbbcb...`, 7 048 obchodů.
+
+Všech 15 buněk (práh × stop/EOD) záporných: −4,2 až −7,1 bps net,
+z −2,8 až −13,2; všech 8 let záporných; obě strany záporné. Klíč:
+P(návrat spreadu na 0) klesá 61 % → 10 % s prahem — intradenní divergence
+NQ/ES je faktorový pohyb (tech vs broad), který PERZISTUJE, ne šum.
+Beta se ve spreadu vyruší, faktorový trend ne. Zrcadlové momentum na
+spreadu ≈ 0 po nákladech.
+
+**Uzávěr MR kampaně:** intradenní indexový komplex 2018–2025 je trendově
+dominantní ve všech měřených podobách (outright, VWAP pásma, cross-market
+spread). MR hledat na delších horizontech / jiných aktivech, ne zde.
