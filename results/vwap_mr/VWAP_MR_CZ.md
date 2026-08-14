@@ -81,3 +81,24 @@ intradenně divergence perzistuje (faktorový trend), denně konverguje
 příliš líně na náklady dvou nohou. Literaturní edge (akciové páry
 1962–2002) je post-2002 z velké části vytěžený; NQ/ES relativní hodnotu
 drží HFT. Akciové páry = jiná infrastruktura, mimo futures prop rámec.
+
+
+## Dodatek 3: Poslední dva kandidáti — crash bounce a noční fade — MRTVÉ
+
+**Crash bounce** (long na −k·σ20 intradenním propadu, exit 15:59, 229
+eventů): k=2,0: +8,1 bps (z=+0,7); k=2,5: −3,0 (z=−0,3); k=3,0: +3,1
+(z=+0,2). Roky ±90 bps. Holmbergův chvostový náznak (−51 bps shorty) se
+do pravidla nepřenesl — jiná definice prahu, hrstka extrémů, šum.
+
+**Noční VWAP fade** (18:00–03:00, close-based, 5 726 eventů, náklady
+2,5 bps): stopové varianty z −4 až −10 (noční extenze = kroky globálního
+trendu), hold do 2:55 na nule (+0,3 bps, z=+0,2).
+
+## UZÁVĚR MR KAPITOLY
+
+Proměřeno na NQ futures: RTH VWAP pásma (touch i close), noční seance,
+crash chvosty, NQ/ES spread (intraday + denní pairs), gap fade, lunch
+fade, odpolední reverze, Bollinger, RSI(2). Jednotný výsledek: reverzní
+edge dostupný z minutových dat na tomto trhu NEEXISTUJE. Je to tatáž
+vlastnost trhu, která živí trend jádro. Další MR testy na NQ = p-hacking;
+kapitola uzavřena. Projekt `NQ_MR_Duo` (35169641).
