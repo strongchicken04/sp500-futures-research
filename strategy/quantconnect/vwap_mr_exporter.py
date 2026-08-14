@@ -10,9 +10,12 @@ from AlgorithmImports import *
 #   hitO = dosla az na opacne pasmo -X (full cross)?
 #   eod  = PnL fade obchodu (vstup na urovni pasma pri doteku) do close, bps
 #   tmin = minuta doteku po 9:30
-#   r{S} = SEKVENCOVANE rozhodnuti fade obchodu s TP na VWAPu a stopem S bps
-#          za pasmem: 1 = TP driv, 0 = stop driv, 2 = ani jedno do EOD
-# Tag: M2,date,X,side,tmin,adv,hitV,hitO,eod,r20,r40,r60
+#   r{S} = CLOSE-BASED rozhodnuti fade obchodu: vstup na CLOSE prvni svicky
+#          s close za pasmem; TP = close svicky zpet za VWAPem (exit na tom
+#          close); stop = close extenze >= S bps za pasmem (exit na tom
+#          close); jinak EOD. Zadne knotove filly. r: 1=TP,0=stop,2=EOD.
+#          eod{S} pole nese realny exit PnL v bps vuci entry-close.
+# Tag: M3,date,X,side,tmin,adv,hitV,hitO,p20,p40,p60  (p = PnL bps net-of-nothing)
 
 BANDS = (20.0, 30.0, 40.0, 60.0, 80.0, 100.0)
 STOPS = (20.0, 40.0, 60.0)
@@ -87,41 +90,40 @@ class NQVwapMR(QCAlgorithm):
                     side = 1
                 elif bar.Low <= dn:
                     side = -1
+                # close-based vstup: close svicky za pasmem
+                if bar.Close >= up:
+                    side = 1
+                elif bar.Close <= dn:
+                    side = -1
+                else:
+                    side = 0
                 if side != 0:
-                    entry = up if side == 1 else dn
-                    self.st[x] = dict(side=side, entry=entry, tmin=mend - 570,
+                    self.st[x] = dict(side=side, entry=bar.Close, tmin=mend - 570,
                                       adv=0.0, hitV=False, hitO=False,
-                                      res={s2: 2 for s2 in STOPS})
+                                      pnl={s2: None for s2 in STOPS})
             elif s != "done":
                 side = s["side"]
-                if side == 1:
-                    ext = (bar.High / vwap - 1.0) * 1e4 - x
-                    if bar.Low <= vwap:
-                        s["hitV"] = True
-                    if bar.Low <= dn:
-                        s["hitO"] = True
-                else:
-                    ext = (1.0 - bar.Low / vwap) * 1e4 - x
-                    if bar.High >= vwap:
-                        s["hitV"] = True
-                    if bar.High >= up:
-                        s["hitO"] = True
-                if ext > s["adv"]:
-                    s["adv"] = ext
-                # sekvencovane rozhodnuti TP-na-VWAP vs stop (konzervativne:
-                # kdyz v jedne minute padne stop i TP, pocita se stop)
-                hitv_now = (bar.Low <= vwap) if side == 1 else (bar.High >= vwap)
+                # vse na CLOSE svicky
+                ext_c = (bar.Close / vwap - 1.0) * 1e4 - x if side == 1 else (1.0 - bar.Close / vwap) * 1e4 - x
+                tp_now = (bar.Close <= vwap) if side == 1 else (bar.Close >= vwap)
+                if ext_c > s["adv"]:
+                    s["adv"] = ext_c
+                if tp_now:
+                    s["hitV"] = True
+                fade_pnl = (s["entry"] - bar.Close) / s["entry"] * 1e4 * side
                 for s2 in STOPS:
-                    if s["res"][s2] == 2:
-                        if ext >= s2:
-                            s["res"][s2] = 0
-                        elif hitv_now:
-                            s["res"][s2] = 1
+                    if s["pnl"][s2] is None:
+                        if ext_c >= s2:
+                            s["pnl"][s2] = fade_pnl          # stop exit na close
+                        elif tp_now:
+                            s["pnl"][s2] = fade_pnl          # TP exit na close
                 if mend == 960:
-                    eod = (s["entry"] - bar.Close) / s["entry"] * 1e4 * side
-                    self._emit(f"M2,{d.strftime('%Y-%m-%d')},{x:.0f},{side},{s['tmin']},"
-                               f"{s['adv']:.1f},{int(s['hitV'])},{int(s['hitO'])},{eod:.1f},"
-                               f"{s['res'][20.0]},{s['res'][40.0]},{s['res'][60.0]}")
+                    for s2 in STOPS:
+                        if s["pnl"][s2] is None:
+                            s["pnl"][s2] = fade_pnl          # EOD exit
+                    self._emit(f"M3,{d.strftime('%Y-%m-%d')},{x:.0f},{side},{s['tmin']},"
+                               f"{s['adv']:.1f},{int(s['hitV'])},{int(s['hitO'])},"
+                               f"{s['pnl'][20.0]:.1f},{s['pnl'][40.0]:.1f},{s['pnl'][60.0]:.1f}")
                     self.st[x] = "done"
 
     def OnEndOfAlgorithm(self):
