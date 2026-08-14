@@ -61,3 +61,23 @@ spreadu ≈ 0 po nákladech.
 **Uzávěr MR kampaně:** intradenní indexový komplex 2018–2025 je trendově
 dominantní ve všech měřených podobách (outright, VWAP pásma, cross-market
 spread). MR hledat na delších horizontech / jiných aktivech, ne zde.
+
+
+## Dodatek 2: Z-score pairs NQ/ES (denní horizont) — NULA
+
+Uživatelova myšlenka „korelované assety se po rozchodu vrací k sobě"
+refinovaná do standardní podoby (Gatev et al.): spread = kumulativní
+(ret NQ − ret ES), z-score vs rolling L dní (past-only), vstup |z| ≥ Z na
+close, exit z přes 0 / |z| ≥ 3,5 / time-stop H dní, náklady 4 bps.
+Data: denní closes 2010–2025 (4 097 dní), projekt `NQ_ES_DailyCloses`
+(35169190). Předregistrovaná mřížka L{20,60} × Z{1,5;2;2,5} × H{5,10}.
+
+Výsledek: z-staty −1,3 až +0,8 napříč 12 buňkami, win 46–52 %. Nejlepší
+buňka n=80/16 let, roky ±140 bps. Jediná asymetrie = long-NQ strana
+(+26 bps, n=32) — sekulární tech drift, ne konvergence.
+
+**MR na indexovém páru NQ/ES definitivně uzavřeno v obou patrech:**
+intradenně divergence perzistuje (faktorový trend), denně konverguje
+příliš líně na náklady dvou nohou. Literaturní edge (akciové páry
+1962–2002) je post-2002 z velké části vytěžený; NQ/ES relativní hodnotu
+drží HFT. Akciové páry = jiná infrastruktura, mimo futures prop rámec.
