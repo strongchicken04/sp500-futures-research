@@ -41,3 +41,22 @@ tentokrát s obráceným znaménkem.
 Mechanické jádro nulové až záporné → případné zisky autora sedí celé
 v diskreci a výběrové paměti. Nestavíme. Skóre „respektovaných úrovní":
 0/6 (wickless 4H, 10pm open, golden zone, Hougaard, 10am open, midnight).
+
+
+## KOREKCE + anti varianta (doplněno po exaktním přeměření)
+
+Původní mřížka počítala každý nevýherní obchod jako plný stop — pesimistické
+zjednodušení, které vyrobilo zdánlivý anti-signál (z až −8). Exaktní
+tříkanálové vyhodnocení (win / stop / EOD s reálným EOD PnL):
+
+| směr | gross/obchod | net (1 b RT) |
+|---|---|---|
+| původní (exaktně) | +0,4 až +1,7 b | ≈ 0, z < 1 |
+| anti (fade retestu, 10 buněk) | −0,2 až −1,7 b | −1,2 až −2,7 b |
+
+Anti varianta: záporná ve VŠECH buňkách (nejlepší target15/stop150:
+−1,36 b net, ~−180 b/rok, žádný rok stabilně kladný). Mechanika je mince
+s driftovým nádechem — obě strany po nákladech prodělávají. Verdikt
+NESTAVĚT platí pro oba směry; „nejsilnější negativní signál" z původního
+textu se opravuje na „nulový signál + náklady". EOD dny (11–21 %) nesou
+kladný drift, který rychlá mřížka připisovala stopům.
