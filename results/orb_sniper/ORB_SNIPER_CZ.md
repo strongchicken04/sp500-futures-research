@@ -68,3 +68,74 @@ SL/TP měřeny **od vstupní ceny**. Pokud vendor umisťuje stop na hranu range
 nebo na opačnou stranu range, je to jiná geometrie (tento export ji
 nepokrývá) — strukturální závěr (vstup bez směrové informace, MAE ~1,0R) ale
 platí nezávisle na umístění stopu.
+
+---
+
+# Druhá iterace: rekonstrukce jejich SKUTEČNÉ konfigurace
+
+Nová data: vendor report (Oct 2022 – Sep 7 2025, **888 obchodů, win 75,23 %,
+PF 1,256**, P&L +89 960 USD, MaxDD 13,32 %) + popis V3 ("ATR volatility
+framework", VWAP confluence, minimum 11 bodů, "prioritizes win rate").
+
+Z PF a win rate plyne **avgWin/avgLoss = 0,41** → stop je ~2,4× širší než TP.
+To je **mimo mřížku první iterace** (ta končila na SL 0,5R). Druhý export
+proto pokryl stopy 0,6–2,0 × R a zaznamenal MFE dvěma způsoby, aby šla
+izolovat intrabar konvence. Projekt `NQ_ORB_Sniper_V2` (35872201),
+backtest `aee6ec73...`, 2 707 obchodů.
+
+## 1. Moje hypotéza o intrabar fillech byla ŠPATNÁ
+
+Předpokládal jsem, že jejich edge vyrábí TradingView tím, jak hádá pořadí
+TP/SL uvnitř svíčky. **Není to tak:** u širokých stopů (0,9R+) jsou obě
+konvence identické na dvě desetinná místa — stop a TP jsou příliš daleko
+od sebe, aby padly do téže minuty. Rozdíl se objevuje až u SL 0,6R
+(0,1 p.b.). Hypotéza zamítnuta.
+
+## 2. Rekonstrukce sedí na jejich čísla — v jejich okně
+
+| | jejich report | naše rekonstrukce (Oct22–Sep25) |
+|---|---|---|
+| obchodů | 888 | 1 001 |
+| win rate | 75,23 % | 72–75 % |
+| profit factor | 1,256 | 1,124–1,131 |
+
+Rozdíl (1 001 → 888 obchodů, +2 p.b. win rate) odpovídá jejich přídavným
+filtrům (VWAP confluence, range efficiency, volume). Substance rekonstrukce
+je tedy nejspíš správná.
+
+## 3. Jenže mimo jejich okno je to záporné
+
+Geometrie SL 1,5R / TP 0,5R (min 11 b), éra-neutrálně v bps:
+
+| období | n | win % | bps/obchod | z |
+|---|---|---|---|---|
+| **jejich okno (Oct22–Sep25)** | 1 001 | 73,2 | **+1,99** | +1,6 |
+| **mimo (2018 – Sep 2022)** | 1 706 | 68,5 | **−2,03** | −1,5 |
+| **celých 8 let** | 2 707 | 70,3 | **−0,55** | −0,6 |
+
+Hrubě (bez nákladů) za 8 let: **+0,10 bps, z = +0,1** → hrubá hrana je nula.
+Náhodná win rate pro tuto geometrii je **75,0 %**; skutečná 70,3 % (v jejich
+okně 73,2 %) — tedy **na úrovni náhody nebo pod ní**.
+
+Po letech (čistě, bps): 2018 −1,75 · 2019 −0,76 · 2020 −2,77 · 2021 −0,00 ·
+2022 −0,43 · 2023 −0,13 · **2024 +1,35** · 2025 +0,11.
+
+## 4. Proč jejich křivka začíná právě v říjnu 2022
+
+Selektor v reportu ukazuje "Dec 31, 1799 – Sep 7, 2025", tedy *všechna
+dostupná data*. Křivka nezačíná v říjnu 2022 volbou, ale protože **tam končí
+historie 5m dat v TradingView**. Jejich track record tak celý leží v jediné
+éře — v té, kde naše rekonstrukce vychází +2 bps, zatímco předchozích
+4,75 roku dává −2 bps.
+
+## 5. Co zůstává neotestované
+
+Jejich přídavné vrstvy (VWAP confluence, intraday range efficiency,
+microstructure volume). Ty vysvětlují rozdíl mezi naší rekonstrukcí a jejich
+reportem (+2 p.b. win rate). Jestli jde o skutečnou informaci nebo o fit na
+tutéž éru, se nedá rozhodnout bez samostatného testu — VWAP confluence umíme
+otestovat, zbylé dvě vrstvy nejsou veřejně definované.
+
+**Verdikt zatím:** základní mechanika (15min ORB + range-násobkové TP/SL)
+nemá přes 8 let hrubou hranu; kladný výsledek existuje jen v okně, které se
+kryje s limitem dat TradingView.
