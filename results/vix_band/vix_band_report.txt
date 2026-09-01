@@ -1,0 +1,25 @@
+n = 2063 dni
+stayed inside band (high<=upper AND low>=lower): 59.5 %
+closed inside (endpoint):                       77.9 %
+breach nahoru:  18.4 %
+breach dolu:    22.6 %
+avg band width: +/- 124 bps
+
+Po letech:
+  rok    n    stayed  pct
+  2018   256   132    51.6 %
+  2019   258   175    67.8 %
+  2020   259   172    66.4 %
+  2021   258   180    69.8 %
+  2022   258   112    43.4 %
+  2023   257   132    51.4 %
+  2024   259   150    57.9 %
+  2025   258   174    67.4 %
+
+Podle VIX kvintilu (prev-day close):
+  kv  rozsah VIX     n    stayed  pct
+  Q1   -inf-14.1    415   265    63.9 %
+  Q2   14.1-16.6    411   260    63.3 %
+  Q3   16.6-19.4    412   245    59.5 %
+  Q4   19.4-24.1    413   237    57.4 %
+  Q5   24.1-+inf    412   220    53.4 %
