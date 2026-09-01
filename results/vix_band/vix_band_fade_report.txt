@@ -1,0 +1,37 @@
+n dni: 2063
+
+=== CONTROL: EOD close only (no TP/SL, honest) ===
+  short EOD (touched upper -> hold to close): n= 379  avg=  -8.89 pts /  -6.85 bps  z=-1.34  win=43.3%  total=  -3370 pts
+  long  EOD (touched lower -> hold to close): n= 467  avg= -12.10 pts /  -8.01 bps  z=-1.67  win=47.8%  total=  -5653 pts
+  COMBINED EOD                             : n= 846  avg= -10.67 pts /  -7.49 bps  z=-2.15  win=45.7%  total=  -9023 pts
+
+=== SL = 0.3 x band (RR = 3.33:1) ===
+  short (fade top): n= 379  avg=+61.40 pts / +45.76 bps  z=+9.62  TP=49.9% SL=50.1% EOD= 0.0%  win=49.9%  total= +23269 pts
+  long  (fade bot): n= 467  avg=+38.42 pts / +30.02 bps  z=+7.18  TP=40.3% SL=59.7% EOD= 0.0%  win=40.3%  total= +17943 pts
+  COMBINED       : n= 846  avg=+48.71 pts / +37.07 bps  z=+11.77  TP=44.6% SL=55.4% EOD= 0.0%  win=44.6%  total= +41212 pts
+
+=== SL = 0.5 x band (RR = 2.00:1) ===
+  short (fade top): n= 379  avg=+100.50 pts / +75.52 bps  z=+15.32  TP=73.1% SL=26.9% EOD= 0.0%  win=73.1%  total= +38091 pts
+  long  (fade bot): n= 467  avg=+61.14 pts / +47.90 bps  z=+9.94  TP=57.4% SL=42.6% EOD= 0.0%  win=57.4%  total= +28552 pts
+  COMBINED       : n= 846  avg=+78.77 pts / +60.27 bps  z=+17.28  TP=64.4% SL=35.6% EOD= 0.0%  win=64.4%  total= +66642 pts
+
+=== SL = 0.75 x band (RR = 1.33:1) ===
+  short (fade top): n= 379  avg=+118.25 pts / +92.31 bps  z=+19.14  TP=85.0% SL=15.0% EOD= 0.0%  win=85.0%  total= +44815 pts
+  long  (fade bot): n= 467  avg=+78.63 pts / +58.93 bps  z=+11.26  TP=68.1% SL=31.9% EOD= 0.0%  win=68.1%  total= +36720 pts
+  COMBINED       : n= 846  avg=+96.38 pts / +73.88 bps  z=+20.24  TP=75.7% SL=24.3% EOD= 0.0%  win=75.7%  total= +81535 pts
+
+=== SL = 1.0 x band (RR = 1.00:1) ===
+  short (fade top): n= 379  avg=+134.30 pts / +104.40 bps  z=+23.03  TP=91.8% SL= 8.2% EOD= 0.0%  win=91.8%  total= +50900 pts
+  long  (fade bot): n= 467  avg=+106.09 pts / +80.67 bps  z=+15.92  TP=80.9% SL=19.1% EOD= 0.0%  win=80.9%  total= +49543 pts
+  COMBINED       : n= 846  avg=+118.73 pts / +91.30 bps  z=+26.25  TP=85.8% SL=14.2% EOD= 0.0%  win=85.8%  total=+100443 pts
+
+=== Best config: SL = 1.0 x band (COMBINED z = +26.25) ===
+Roky (COMBINED, bps net):
+  2018  n= 126  avg=+55.68 bps
+  2019  n=  84  avg=+66.42 bps
+  2020  n=  88  avg=+155.03 bps
+  2021  n=  79  avg=+112.85 bps
+  2022  n= 148  avg=+120.60 bps
+  2023  n= 126  avg=+85.32 bps
+  2024  n= 111  avg=+66.67 bps
+  2025  n=  84  avg=+72.51 bps
