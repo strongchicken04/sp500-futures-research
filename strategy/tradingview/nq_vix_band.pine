@@ -1,0 +1,44 @@
+//@version=5
+// =====================================================================
+// NQ VIX 1-sigma daily band
+// Each RTH session (9:30-16:00 ET) draws two horizontal levels around
+// the day's open, computed as:
+//   sigma_pct = VIX_prev_close / sqrt(252)         // daily 1-sigma in %
+//   band_pts  = open * sigma_pct / 100
+//   upper     = open + band_pts
+//   lower     = open - band_pts
+// VIX is pulled from CBOE:VIX daily, prior close, no lookahead.
+// Chart: NQ or MNQ futures, any intraday timeframe.
+// =====================================================================
+indicator("NQ VIX 1-sigma daily band", overlay=true, max_labels_count=500)
+
+TZ   = "America/New_York"
+SESS = "0930-1600"
+
+// prior daily VIX close, no repaint
+vixPrev = request.security("CBOE:VIX", "D", close[1], barmerge.gaps_off, barmerge.lookahead_off)
+
+inSess  = not na(time(timeframe.period, SESS, TZ))
+newSess = inSess and not inSess[1]
+
+var float openPx = na
+var float band   = na
+var float upper  = na
+var float lower  = na
+
+if newSess
+    openPx := open
+    sigmaPct = vixPrev / math.sqrt(252.0)
+    band     := openPx * sigmaPct / 100.0
+    upper    := openPx + band
+    lower    := openPx - band
+
+pUp = plot(inSess ? upper  : na, "Upper 1sigma", color=color.new(color.teal, 0),  linewidth=2, style=plot.style_linebr)
+pLo = plot(inSess ? lower  : na, "Lower 1sigma", color=color.new(color.teal, 0),  linewidth=2, style=plot.style_linebr)
+pOp = plot(inSess ? openPx : na, "Open",         color=color.new(color.gray, 30), linewidth=1, style=plot.style_linebr)
+fill(pUp, pLo, color=color.new(color.teal, 92))
+
+var label lb = na
+if newSess
+    txt = "1sigma = +/-" + str.tostring(band, "#.##") + " pts   VIX=" + str.tostring(vixPrev, "#.##")
+    lb := label.new(bar_index, upper, txt, style=label.style_label_down, color=color.new(color.teal, 70), textcolor=color.white, size=size.small)
