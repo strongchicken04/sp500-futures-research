@@ -84,11 +84,9 @@ class NQOnFirstTouch(QCAlgorithm):
         # RTH bars: 9:30 close bar = 571, ... 16:00 close = 960
         in_rth = 571 <= mend <= 960
 
-        # Detect ON session start (18:00 ET). We reset ON high/low there.
-        if mend == 1080:                    # first bar of Globex after CME break
-            self.on_h = bar.High
-            self.on_l = bar.Low
-        elif in_on:
+        # ON tracking: accumulate whenever inside ON window.
+        # Reset happens at 9:30 open freeze (below).
+        if in_on:
             if self.on_h is None:
                 self.on_h = bar.High
                 self.on_l = bar.Low
@@ -105,11 +103,14 @@ class NQOnFirstTouch(QCAlgorithm):
             self._reset_rth()
             self.cur_date = d
 
-        # RTH open snapshot at 9:30 bar (mend == 571 = 09:30 close)
+        # RTH open snapshot at 9:30 bar (mend == 571 = first RTH bar close).
+        # Freeze ON high/low for today, then reset for tonight's accumulation.
         if mend == 571 and self.rth_open is None:
-            self.rth_open = bar.Open        # opening print (9:30:00)
+            self.rth_open = bar.Open
             self.onh_frozen = self.on_h
             self.onl_frozen = self.on_l
+            self.on_h = None
+            self.on_l = None
 
         # First-touch detection during RTH
         if in_rth and self.rth_open is not None and self.onh_frozen is not None \
