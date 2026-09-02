@@ -5,10 +5,8 @@ from AlgorithmImports import *
 # Overnight range "first touch" test.
 #
 # Definice:
-#   ON session = 16:00 ET (prev day) az 9:30 ET (current day)
-#                = od RTH close (mend > 960) do RTH open (mend <= 570)
-#                (obsahuje 16:00-17:00 last hour + 17:00-18:00 CME break
-#                 kde nejsou bary + 18:00-9:30 Globex overnight)
+#   ON session = 18:00 ET (prev day) az 9:30 ET (current day)
+#                = Globex reopen po CME maintenance breaku
 #   ONH, ONL   = high/low tehle ON session
 #   ONM        = (ONH + ONL) / 2
 #   RTH        = 9:30 - 16:00 ET
@@ -80,14 +78,14 @@ class NQOnFirstTouch(QCAlgorithm):
         d = t.date()
         mend = t.hour * 60 + t.minute       # minute-of-day (bar close time)
 
-        # ON session = 16:01 (961) - 9:30 (570)  crosses midnight
-        # We treat "current ON session" as: bars with mend > 960 OR mend <= 570
-        in_on = (mend > 960) or (mend <= 570)
+        # ON session = 18:00 (1080) - 9:30 (570)  crosses midnight
+        # We treat "current ON session" as: bars with mend >= 1080 OR mend <= 570
+        in_on = (mend >= 1080) or (mend <= 570)
         # RTH bars: 9:30 close bar = 571, ... 16:00 close = 960
         in_rth = 571 <= mend <= 960
 
-        # Detect ON session start (16:01 ET). We reset ON high/low there.
-        if mend == 961:                     # first bar after RTH close
+        # Detect ON session start (18:00 ET). We reset ON high/low there.
+        if mend == 1080:                    # first bar of Globex after CME break
             self.on_h = bar.High
             self.on_l = bar.Low
         elif in_on:
