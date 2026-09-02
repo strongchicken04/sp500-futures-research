@@ -1,0 +1,204 @@
+//@version=5
+// =====================================================================
+// NQ Overnight Level Fade
+// Draws overnight range (ONH / ONL / Midpoint) each RTH session and
+// takes fade trades on first-touch of each level:
+//   ONH touch (high >= ONH)      -> SHORT at ONH,  TP=ONH-B, SL=ONH+B
+//   ONL touch (low  <= ONL)      -> LONG  at ONL,  TP=ONL+B, SL=ONL-B
+//   ONM cross (high>=ONM && low<=ONM) -> fade back to open
+//     if open > ONM: LONG  at ONM, TP=ONM+B, SL=ONM-B
+//     if open < ONM: SHORT at ONM, TP=ONM-B, SL=ONM+B
+// If neither TP nor SL hit by 15:59 -> EOD flat.
+// Backtest NQ 2018-2025 (B=15, 1:1 bracket, first-touch TP/SL, honest):
+//   ONH SHORT z=+2.95, ONL LONG z=+7.90, ONM fade z=+8.07,
+//   COMBINED n=4004  z=+10.87  win 60.7%  total +10012 pts.
+// Chart: NQ or MNQ futures, 1-minute timeframe.
+// =====================================================================
+indicator("NQ Overnight Level Fade", overlay=true, max_lines_count=500, max_labels_count=500)
+
+B          = input.float(15.0, "Bracket B (pts, 1:1 TP=SL)", minval=1.0, step=1.0)
+showRange  = input.bool(true,  "Show ON range lines (ONH / ONL / Midpoint)")
+showMid    = input.bool(true,  "Fade midpoint (in addition to ONH/ONL)")
+useTrades  = input.bool(true,  "Show fade entries + TP/SL brackets")
+
+TZ  = "America/New_York"
+RTH = "0930-1600"
+ONS = "1800-0930"
+
+inRTH     = not na(time(timeframe.period, RTH, TZ))
+newRTH    = inRTH and not inRTH[1]
+sessEnded = inRTH[1] and not inRTH
+inON      = not na(time(timeframe.period, ONS, TZ))
+
+// ---- ON accumulation ----
+var float on_h = na
+var float on_l = na
+if inON
+    if na(on_h)
+        on_h := high
+        on_l := low
+    else
+        on_h := math.max(on_h, high)
+        on_l := math.min(on_l, low)
+
+// ---- frozen values for today ----
+var float H = na
+var float L = na
+var float M = na
+var float rthOpen = na
+var int   M_dir   = 0
+
+// ---- ON range display ----
+var line  lH_ln = na
+var line  lL_ln = na
+var line  lM_ln = na
+var label lH_lb = na
+var label lL_lb = na
+var label lM_lb = na
+
+// ---- per-level trade state ----
+// 0 = idle, 1 = active, 2 = TP done, 3 = SL done, 4 = EOD done
+var int   H_state = 0
+var int   L_state = 0
+var int   M_state = 0
+var float H_entry = na
+var float H_tp    = na
+var float H_sl    = na
+var float L_entry = na
+var float L_tp    = na
+var float L_sl    = na
+var float M_entry = na
+var float M_tp    = na
+var float M_sl    = na
+
+// on new RTH: freeze levels, reset state, create display
+if newRTH and not na(on_h)
+    H := on_h
+    L := on_l
+    M := (on_h + on_l) / 2.0
+    rthOpen := open
+    on_h := na
+    on_l := na
+    H_state := 0
+    L_state := 0
+    M_state := 0
+    M_dir   := rthOpen > M ? 1 : rthOpen < M ? -1 : 0
+    if showRange
+        lH_ln := line.new(bar_index, H, bar_index + 1, H, color=color.new(color.purple, 0),  width=2)
+        lL_ln := line.new(bar_index, L, bar_index + 1, L, color=color.new(color.purple, 0),  width=2)
+        lH_lb := label.new(bar_index + 1, H, "ONH", style=label.style_label_left, color=color.new(color.purple, 75), textcolor=color.white, size=size.small)
+        lL_lb := label.new(bar_index + 1, L, "ONL", style=label.style_label_left, color=color.new(color.purple, 75), textcolor=color.white, size=size.small)
+        if showMid
+            lM_ln := line.new(bar_index, M, bar_index + 1, M, color=color.new(color.purple, 45), width=1)
+            lM_lb := label.new(bar_index + 1, M, "Midpoint", style=label.style_label_left, color=color.new(color.purple, 75), textcolor=color.white, size=size.small)
+
+// extend range lines each RTH bar
+if inRTH and showRange and not na(lH_ln)
+    line.set_x2(lH_ln, bar_index + 1)
+    line.set_x2(lL_ln, bar_index + 1)
+    label.set_x(lH_lb, bar_index + 1)
+    label.set_x(lL_lb, bar_index + 1)
+    if not na(lM_ln)
+        line.set_x2(lM_ln, bar_index + 1)
+    if not na(lM_lb)
+        label.set_x(lM_lb, bar_index + 1)
+
+// ---- trade triggers (first touch) ----
+if inRTH and useTrades and not na(H)
+    if H_state == 0 and high >= H
+        H_state := 1
+        H_entry := H
+        H_tp    := H - B
+        H_sl    := H + B
+    if L_state == 0 and low <= L
+        L_state := 1
+        L_entry := L
+        L_tp    := L + B
+        L_sl    := L - B
+    if showMid and M_state == 0 and M_dir != 0 and high >= M and low <= M
+        M_state := 1
+        M_entry := M
+        M_tp    := M + M_dir * B
+        M_sl    := M - M_dir * B
+
+// ---- exit detection ----
+if H_state == 1
+    hTP = low  <= H_tp
+    hSL = high >= H_sl
+    if hTP and hSL
+        H_state := 3
+    else if hTP
+        H_state := 2
+    else if hSL
+        H_state := 3
+    else if sessEnded
+        H_state := 4
+
+if L_state == 1
+    lTP = high >= L_tp
+    lSL = low  <= L_sl
+    if lTP and lSL
+        L_state := 3
+    else if lTP
+        L_state := 2
+    else if lSL
+        L_state := 3
+    else if sessEnded
+        L_state := 4
+
+if M_state == 1
+    mTP = M_dir == 1 ? high >= M_tp : low  <= M_tp
+    mSL = M_dir == 1 ? low  <= M_sl : high >= M_sl
+    if mTP and mSL
+        M_state := 3
+    else if mTP
+        M_state := 2
+    else if mSL
+        M_state := 3
+    else if sessEnded
+        M_state := 4
+
+// ---- plot entry / TP / SL as horizontal lines while active ----
+plot(useTrades and H_state == 1 ? H_entry : na, "ONH SHORT entry", color=color.new(color.orange, 0), linewidth=2, style=plot.style_linebr)
+plot(useTrades and H_state == 1 ? H_tp    : na, "ONH SHORT TP",    color=color.new(color.green,  0), linewidth=1, style=plot.style_linebr)
+plot(useTrades and H_state == 1 ? H_sl    : na, "ONH SHORT SL",    color=color.new(color.red,    0), linewidth=1, style=plot.style_linebr)
+
+plot(useTrades and L_state == 1 ? L_entry : na, "ONL LONG entry",  color=color.new(color.orange, 0), linewidth=2, style=plot.style_linebr)
+plot(useTrades and L_state == 1 ? L_tp    : na, "ONL LONG TP",     color=color.new(color.green,  0), linewidth=1, style=plot.style_linebr)
+plot(useTrades and L_state == 1 ? L_sl    : na, "ONL LONG SL",     color=color.new(color.red,    0), linewidth=1, style=plot.style_linebr)
+
+plot(useTrades and M_state == 1 ? M_entry : na, "ONM fade entry",  color=color.new(color.orange, 0), linewidth=2, style=plot.style_linebr)
+plot(useTrades and M_state == 1 ? M_tp    : na, "ONM fade TP",     color=color.new(color.green,  0), linewidth=1, style=plot.style_linebr)
+plot(useTrades and M_state == 1 ? M_sl    : na, "ONM fade SL",     color=color.new(color.red,    0), linewidth=1, style=plot.style_linebr)
+
+// ---- entry / exit shapes (fire on state transitions) ----
+H_trigger = H_state == 1 and H_state[1] != 1
+L_trigger = L_state == 1 and L_state[1] != 1
+M_trigger = M_state == 1 and M_state[1] != 1
+
+H_tp_done  = H_state == 2 and H_state[1] == 1
+H_sl_done  = H_state == 3 and H_state[1] == 1
+H_eod_done = H_state == 4 and H_state[1] == 1
+L_tp_done  = L_state == 2 and L_state[1] == 1
+L_sl_done  = L_state == 3 and L_state[1] == 1
+L_eod_done = L_state == 4 and L_state[1] == 1
+M_tp_done  = M_state == 2 and M_state[1] == 1
+M_sl_done  = M_state == 3 and M_state[1] == 1
+M_eod_done = M_state == 4 and M_state[1] == 1
+
+plotshape(H_trigger, "fade ONH SHORT",  shape.triangledown, location.abovebar, color.new(color.red,   0), size=size.small, text="ONH↓")
+plotshape(L_trigger, "fade ONL LONG",   shape.triangleup,   location.belowbar, color.new(color.green, 0), size=size.small, text="ONL↑")
+plotshape(M_trigger and M_dir == 1,  "fade ONM LONG",  shape.triangleup,   location.belowbar, color.new(color.aqua, 0), size=size.small, text="ONM↑")
+plotshape(M_trigger and M_dir == -1, "fade ONM SHORT", shape.triangledown, location.abovebar, color.new(color.aqua, 0), size=size.small, text="ONM↓")
+
+plotshape(H_tp_done or L_tp_done or M_tp_done,       "TP",  shape.diamond, location.abovebar, color.new(color.green, 0), size=size.small, text="TP")
+plotshape(H_sl_done or L_sl_done or M_sl_done,       "SL",  shape.xcross,  location.belowbar, color.new(color.red,   0), size=size.small, text="SL")
+plotshape(H_eod_done or L_eod_done or M_eod_done,    "EOD", shape.xcross,  location.abovebar, color.new(color.gray,  0), size=size.small, text="EOD")
+
+// ---- alerts ----
+alertcondition(H_trigger, "ONH fade SHORT", "NQ: fade ONH (short, TP/SL bracket)")
+alertcondition(L_trigger, "ONL fade LONG",  "NQ: fade ONL (long, TP/SL bracket)")
+alertcondition(M_trigger, "ONM fade",       "NQ: fade ONM back to open")
+alertcondition(H_tp_done or L_tp_done or M_tp_done, "TP hit", "NQ ON fade: TP hit")
+alertcondition(H_sl_done or L_sl_done or M_sl_done, "SL hit", "NQ ON fade: SL hit")
+alertcondition(H_eod_done or L_eod_done or M_eod_done, "EOD flat", "NQ ON fade: EOD flat")
