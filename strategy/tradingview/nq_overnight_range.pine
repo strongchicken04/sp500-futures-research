@@ -1,0 +1,69 @@
+//@version=5
+// =====================================================================
+// NQ Overnight Range (ONH / ONL / Midpoint)
+// Each RTH session (9:30-16:00 ET) draws three horizontal lines and
+// three labels ("ONH", "ONL", "Midpoint") from the overnight session
+// (18:00 ET prev day -> 9:30 ET today, Globex reopen). The lines extend
+// rightward as the RTH session progresses; the labels follow the right
+// end of each line so they always sit just past the current bar.
+// Chart: NQ or MNQ futures, any intraday timeframe.
+// =====================================================================
+indicator("NQ Overnight Range (ONH / ONL / Midpoint)", overlay=true, max_lines_count=500, max_labels_count=500)
+
+showMidpoint = input.bool(true, "Show midpoint line + label")
+
+TZ  = "America/New_York"
+RTH = "0930-1600"
+ONS = "1800-0930"
+
+inRTH  = not na(time(timeframe.period, RTH, TZ))
+newRTH = inRTH and not inRTH[1]
+inON   = not na(time(timeframe.period, ONS, TZ))
+
+// ---- accumulate ON high / low ----
+var float on_h = na
+var float on_l = na
+if inON
+    if na(on_h)
+        on_h := high
+        on_l := low
+    else
+        on_h := math.max(on_h, high)
+        on_l := math.min(on_l, low)
+
+// ---- per-day frozen values + line/label handles ----
+var float H = na
+var float L = na
+var float M = na
+var line  lH = na
+var line  lL = na
+var line  lM = na
+var label bH = na
+var label bL = na
+var label bM = na
+
+// At RTH open: freeze values, create new lines and labels
+if newRTH and not na(on_h)
+    H := on_h
+    L := on_l
+    M := (on_h + on_l) / 2.0
+    on_h := na
+    on_l := na
+    lH := line.new(bar_index, H, bar_index + 1, H, color=color.new(color.purple, 0),  width=2)
+    lL := line.new(bar_index, L, bar_index + 1, L, color=color.new(color.purple, 0),  width=2)
+    bH := label.new(bar_index + 1, H, "ONH",      style=label.style_label_left, color=color.new(color.purple, 75), textcolor=color.white, size=size.small)
+    bL := label.new(bar_index + 1, L, "ONL",      style=label.style_label_left, color=color.new(color.purple, 75), textcolor=color.white, size=size.small)
+    if showMidpoint
+        lM := line.new(bar_index, M, bar_index + 1, M, color=color.new(color.purple, 45), width=1)
+        bM := label.new(bar_index + 1, M, "Midpoint", style=label.style_label_left, color=color.new(color.purple, 75), textcolor=color.white, size=size.small)
+
+// During RTH: extend lines to current bar and move labels with them
+if inRTH and not na(lH)
+    line.set_x2(lH, bar_index + 1)
+    line.set_x2(lL, bar_index + 1)
+    label.set_x(bH, bar_index + 1)
+    label.set_x(bL, bar_index + 1)
+    if not na(lM)
+        line.set_x2(lM, bar_index + 1)
+    if not na(bM)
+        label.set_x(bM, bar_index + 1)
