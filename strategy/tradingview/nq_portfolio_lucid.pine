@@ -488,11 +488,6 @@ if useHAR and inRTH and tfOK and harReady and not na(hUp) and emove > 0
             rSt := 4
             rJustExited := true
 
-// reset the daily risk counter at the start of each session (after all
-// state resets so today's triggers accumulate cleanly)
-if newSess
-    dayRiskUsed := 0.0
-
 // ====================== PRE-TRADE SIZE PREVIEW ======================
 vCtPrev = f_size(vwapSLp)
 oCtPrev = f_size(onB)
