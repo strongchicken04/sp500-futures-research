@@ -1,44 +1,82 @@
 //@version=5
 // =====================================================================
-// NQ VIX 1-sigma daily band
-// Each RTH session (9:30-16:00 ET) draws two horizontal levels around
-// the day's open, computed as:
-//   sigma_pct = VIX_prev_close / sqrt(252)         // daily 1-sigma in %
-//   band_pts  = open * sigma_pct / 100
-//   upper     = open + band_pts
-//   lower     = open - band_pts
-// VIX is pulled from CBOE:VIX daily, prior close, no lookahead.
+// NQ VIX 1-sigma daily band + 0.85 median levels + overnight range
+// Every RTH session (9:30-16:00 ET) draws:
+//   - upper / lower 1 sigma band  (open +/- band)
+//   - upper / lower 0.85 band     (median excursion levels)
+//   - overnight high / low (18:00 ET prev day -> 9:30 ET today)
+//   - overnight midpoint
+//   - the day's open reference line
+// band = open * (VIX_prev_close / sqrt(252)) / 100.
+// VIX pulled from CBOE:VIX daily prior close (no lookahead).
 // Chart: NQ or MNQ futures, any intraday timeframe.
 // =====================================================================
-indicator("NQ VIX 1-sigma daily band", overlay=true, max_labels_count=500)
+indicator("NQ VIX 1-sigma daily band + ON range", overlay=true, max_labels_count=500)
 
-TZ   = "America/New_York"
-SESS = "0930-1600"
+TZ  = "America/New_York"
+RTH = "0930-1600"
+ONS = "1800-0930"
 
 // prior daily VIX close, no repaint
 vixPrev = request.security("CBOE:VIX", "D", close[1], barmerge.gaps_off, barmerge.lookahead_off)
 
-inSess  = not na(time(timeframe.period, SESS, TZ))
-newSess = inSess and not inSess[1]
+inRTH  = not na(time(timeframe.period, RTH, TZ))
+newRTH = inRTH and not inRTH[1]
 
-var float openPx = na
-var float band   = na
-var float upper  = na
-var float lower  = na
+inON   = not na(time(timeframe.period, ONS, TZ))
+newON  = inON and not inON[1]
 
-if newSess
-    openPx := open
+// --- overnight high / low tracking (updates during ETH, frozen at RTH open) ---
+var float onHigh = na
+var float onLow  = na
+if newON
+    onHigh := high
+    onLow  := low
+else if inON
+    onHigh := math.max(nz(onHigh, high), high)
+    onLow  := math.min(nz(onLow,  low),  low)
+
+var float onHiFrozen = na
+var float onLoFrozen = na
+if newRTH
+    onHiFrozen := onHigh
+    onLoFrozen := onLow
+
+// --- VIX band levels (fixed at RTH open) ---
+var float openPx  = na
+var float band    = na
+var float upper   = na
+var float lower   = na
+var float upper85 = na
+var float lower85 = na
+
+if newRTH
+    openPx   := open
     sigmaPct = vixPrev / math.sqrt(252.0)
-    band     := openPx * sigmaPct / 100.0
-    upper    := openPx + band
-    lower    := openPx - band
+    band    := openPx * sigmaPct / 100.0
+    upper   := openPx + band
+    lower   := openPx - band
+    upper85 := openPx + 0.85 * band
+    lower85 := openPx - 0.85 * band
 
-pUp = plot(inSess ? upper  : na, "Upper 1sigma", color=color.new(color.teal, 0),  linewidth=2, style=plot.style_linebr)
-pLo = plot(inSess ? lower  : na, "Lower 1sigma", color=color.new(color.teal, 0),  linewidth=2, style=plot.style_linebr)
-pOp = plot(inSess ? openPx : na, "Open",         color=color.new(color.gray, 30), linewidth=1, style=plot.style_linebr)
-fill(pUp, pLo, color=color.new(color.teal, 92))
+// --- plots (RTH only) ---
+pUp  = plot(inRTH ? upper      : na, "Upper 1sigma", color=color.new(color.teal,   0),  linewidth=2, style=plot.style_linebr)
+pLo  = plot(inRTH ? lower      : na, "Lower 1sigma", color=color.new(color.teal,   0),  linewidth=2, style=plot.style_linebr)
+pU85 = plot(inRTH ? upper85    : na, "Upper 0.85",   color=color.new(color.orange, 20), linewidth=1, style=plot.style_linebr)
+pL85 = plot(inRTH ? lower85    : na, "Lower 0.85",   color=color.new(color.orange, 20), linewidth=1, style=plot.style_linebr)
+pOp  = plot(inRTH ? openPx     : na, "Open",         color=color.new(color.gray,   30), linewidth=1, style=plot.style_linebr)
+fill(pUp, pLo, color=color.new(color.teal, 94))
 
+onMid = (onHiFrozen + onLoFrozen) / 2.0
+pONH = plot(inRTH ? onHiFrozen : na, "ON High", color=color.new(color.purple, 0),  linewidth=2, style=plot.style_linebr)
+pONL = plot(inRTH ? onLoFrozen : na, "ON Low",  color=color.new(color.purple, 0),  linewidth=2, style=plot.style_linebr)
+pONM = plot(inRTH ? onMid      : na, "ON Mid",  color=color.new(color.purple, 45), linewidth=1, style=plot.style_linebr)
+
+// info label at session open
 var label lb = na
-if newSess
-    txt = "1sigma = +/-" + str.tostring(band, "#.##") + " pts   VIX=" + str.tostring(vixPrev, "#.##")
+if newRTH
+    txt = "1s = +/-" + str.tostring(band,        "#.##") +
+          "   0.85 = +/-" + str.tostring(0.85 * band, "#.##") +
+          "   VIX=" + str.tostring(vixPrev,        "#.##") +
+          "   ON range=" + str.tostring(onHiFrozen - onLoFrozen, "#.##")
     lb := label.new(bar_index, upper, txt, style=label.style_label_down, color=color.new(color.teal, 70), textcolor=color.white, size=size.small)
