@@ -4,7 +4,7 @@
 // Every RTH session (9:30-16:00 ET) draws:
 //   - upper / lower 1 sigma band  (open +/- band)
 //   - upper / lower 0.85 band     (median excursion levels)
-//   - overnight high / low (18:00 ET prev day -> 9:30 ET today)
+//   - overnight high / low (16:00 ET prev day -> 9:30 ET today)
 //   - overnight midpoint
 //   - the day's open reference line
 // band = open * (VIX_prev_close / sqrt(252)) / 100.
@@ -15,7 +15,7 @@ indicator("NQ VIX 1-sigma daily band + ON range", overlay=true, max_labels_count
 
 TZ  = "America/New_York"
 RTH = "0930-1600"
-ONS = "1800-0930"
+ONS = "1600-0930"
 
 // prior daily VIX close, no repaint
 vixPrev = request.security("CBOE:VIX", "D", close[1], barmerge.gaps_off, barmerge.lookahead_off)
