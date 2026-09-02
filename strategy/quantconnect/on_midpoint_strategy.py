@@ -9,10 +9,13 @@ from AlgorithmImports import *
 # Track first-hit of TP vs SL during RTH (1-min bar granularity).
 # If neither hit -> EOD close.
 #
-# Tag: OM,date,dir,open,onh,onl,onm,tp,sl,close,result,pnl
+# Tag: OM,date,dir,open,onh,onl,onm,tp,sl,close,result,pnl,mae,mfe
 #   result = T (TP first) / S (SL first) / B (same minute -> SL conservatively) /
 #            E (EOD, no touch) / X (skipped, open on midpoint exactly)
 #   pnl in points (signed).
+#   mae = max adverse excursion in points (positive number, distance from
+#         entry against the trade direction) before the result was determined
+#   mfe = max favorable excursion in points (positive) before result
 
 
 class NQOnMidStrategy(QCAlgorithm):
@@ -45,6 +48,8 @@ class NQOnMidStrategy(QCAlgorithm):
         self.sl_lvl = None
         self.result = None            # T / S / B / E / X
         self.emitted_today = False
+        self.mae = 0.0                # max adverse excursion (pts, positive)
+        self.mfe = 0.0                # max favorable excursion (pts, positive)
 
     def _emit(self, tag):
         try:
@@ -111,16 +116,21 @@ class NQOnMidStrategy(QCAlgorithm):
             self.on_h = None
             self.on_l = None
 
-        # First-touch TP vs SL during RTH
+        # First-touch TP vs SL during RTH + MAE/MFE tracking
         if in_rth and self.dir != 0 and self.result is None:
+            # update MAE / MFE (positive distances from entry)
             if self.dir == 1:
+                self.mfe = max(self.mfe, bar.High - self.rth_open)
+                self.mae = max(self.mae, self.rth_open - bar.Low)
                 tp_hit = bar.High >= self.tp_lvl
                 sl_hit = bar.Low <= self.sl_lvl
             else:
+                self.mfe = max(self.mfe, self.rth_open - bar.Low)
+                self.mae = max(self.mae, bar.High - self.rth_open)
                 tp_hit = bar.Low <= self.tp_lvl
                 sl_hit = bar.High >= self.sl_lvl
             if tp_hit and sl_hit:
-                self.result = "B"        # ambivalent same-minute
+                self.result = "B"
             elif tp_hit:
                 self.result = "T"
             elif sl_hit:
@@ -152,7 +162,8 @@ class NQOnMidStrategy(QCAlgorithm):
         sl_s = f"{self.sl_lvl:.2f}" if self.sl_lvl is not None else "-"
         self._emit(f"OM,{self.cur_date.strftime('%Y-%m-%d')},{self.dir},"
                    f"{self.rth_open:.2f},{self.onh_frozen:.2f},{self.onl_frozen:.2f},"
-                   f"{onm:.2f},{tp_s},{sl_s},{bar_close:.2f},{self.result},{pnl:.2f}")
+                   f"{onm:.2f},{tp_s},{sl_s},{bar_close:.2f},{self.result},{pnl:.2f},"
+                   f"{self.mae:.2f},{self.mfe:.2f}")
 
     def OnEndOfAlgorithm(self):
         self.Log(f"OM_TAGS={self.n_tags}")
