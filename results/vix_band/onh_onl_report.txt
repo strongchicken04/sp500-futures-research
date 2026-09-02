@@ -1,0 +1,21 @@
+[open ABOVE ONM]  n = 1165
+  first-touch ONH  :  866  ( 74.3 %)
+  first-touch ONL  :  241  ( 20.7 %)
+  both same minute :    0  (  0.0 %)
+  neither          :   58  (  5.0 %)
+  --> conditional (only H or L hit, n=1107): H 78.2 %   L 21.8 %
+
+[open BELOW ONM]  n = 892
+  first-touch ONH  :  212  ( 23.8 %)
+  first-touch ONL  :  628  ( 70.4 %)
+  both same minute :    1  (  0.1 %)
+  neither          :   51  (  5.7 %)
+  --> conditional (only H or L hit, n=840): H 25.2 %   L 74.8 %
+
+[TOTAL]  n = 2064
+  first-touch ONH  : 1082  ( 52.4 %)
+  first-touch ONL  :  872  ( 42.2 %)
+  both same minute :    1  (  0.0 %)
+  neither          :  109  (  5.3 %)
+  --> conditional (only H or L hit, n=1954): H 55.4 %   L 44.6 %
+
