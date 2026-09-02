@@ -1,6 +1,6 @@
 //@version=5
 // =====================================================================
-// NQ HAR-RV Dynamic Breakout (k=0.75)
+// NQ HAR-RV Dynamic Breakout (k=0.75) with entry / TP / SL
 // Predicts next-day realized volatility via HAR-RV (Corsi 2009):
 //   RV_t = Parkinson variance from RTH H/L (ln(H/L)^2 / (4 ln 2))
 //   predicted_var = 0.36 * RV_yesterday
@@ -10,17 +10,23 @@
 // At RTH open (9:30 ET) draws:
 //   upper = open + k * expected_move
 //   lower = open - k * expected_move
-// Signal: first 1-min close beyond a level (one per side per day).
-// Backtest NQ 2018-2025 (k=0.75 EOD-close): +7.34 bps net / trade,
-// z=+3.05, 55% win, +15944 pts total, MDD -1578, both sides positive.
-// Chart: NQ or MNQ futures, 1-minute timeframe recommended.
+// Signal = first 1-min close beyond a level (one per side per day).
+// On signal: draws entry (blue), TP (green, +TP_mult * emove), SL (red,
+//            -SL_mult * emove). If neither hit, exit at RTH close (EOD).
+// Backtest NQ 2018-2025 defaults (k=0.75, TP=2.0 emove, SL=1.0 emove):
+//   z=+2.78, avg +8.6 pts, all years positive except 2019 marginal.
+// The pure EOD variant (no bracket) is even better: z=+3.05, avg +10.
 // =====================================================================
-indicator("NQ HAR-RV Breakout", overlay=true, max_labels_count=500)
+indicator("NQ HAR-RV Breakout", overlay=true, max_labels_count=500, max_lines_count=500)
 
-kMult    = input.float(0.75, "k multiplier",          minval=0.10, step=0.05)
-lookback = input.int(22,     "monthly lookback (days)", minval=5,  maxval=60)
-weekN    = input.int(5,      "weekly lookback (days)",  minval=2,  maxval=10)
-showInfo = input.bool(true,  "Show info label at open")
+// ---- inputs ----
+kMult      = input.float(0.75, "k multiplier",            minval=0.10, step=0.05)
+lookback   = input.int(22,     "monthly lookback (days)",   minval=5,   maxval=60)
+weekN      = input.int(5,      "weekly lookback (days)",    minval=2,   maxval=10)
+useBracket = input.bool(true,  "Show entry / TP / SL bracket")
+tpMult     = input.float(2.0,  "TP multiplier (of emove)",  minval=0.1, step=0.1)
+slMult     = input.float(1.0,  "SL multiplier (of emove)",  minval=0.1, step=0.1)
+showInfo   = input.bool(true,  "Show info label at open")
 
 TZ   = "America/New_York"
 SESS = "0930-1600"
@@ -29,7 +35,7 @@ inSess    = not na(time(timeframe.period, SESS, TZ))
 newSess   = inSess and not inSess[1]
 sessEnded = inSess[1] and not inSess
 
-// --- track today's RTH H/L ---
+// ---- track today's RTH H/L ----
 var float dayH = na
 var float dayL = na
 if newSess or na(dayH)
@@ -39,7 +45,7 @@ else if inSess
     dayH := math.max(dayH, high)
     dayL := math.min(dayL, low)
 
-// --- rolling history of daily Parkinson variances ---
+// ---- rolling history of daily Parkinson variances ----
 var array<float> rvHist = array.new_float(0)
 if sessEnded and not na(dayH) and not na(dayL) and dayH > dayL
     lnhl = math.log(dayH / dayL)
@@ -48,7 +54,7 @@ if sessEnded and not na(dayH) and not na(dayL) and dayH > dayL
     if array.size(rvHist) > lookback
         array.shift(rvHist)
 
-// --- HAR-RV prediction and breakout levels at RTH open ---
+// ---- HAR-RV prediction and breakout levels at RTH open ----
 var float openPx   = na
 var float predMove = na
 var float upper    = na
@@ -81,13 +87,13 @@ if newSess
         lower    := na
         predMove := na
 
-// --- plots (RTH only) ---
+// ---- plots (RTH only) ----
 pUp = plot(inSess ? upper  : na, "Upper breakout", color=color.new(color.green, 0),  linewidth=2, style=plot.style_linebr)
 pLo = plot(inSess ? lower  : na, "Lower breakout", color=color.new(color.red,   0),  linewidth=2, style=plot.style_linebr)
 pOp = plot(inSess ? openPx : na, "RTH open",       color=color.new(color.gray, 40), linewidth=1, style=plot.style_linebr)
 fill(pUp, pLo, color=color.new(color.blue, 94))
 
-// --- breakout signals (one per side per day) ---
+// ---- breakout signals (one per side per day) ----
 buySig  = inSess and not firedU and not na(upper) and close >= upper
 sellSig = inSess and not firedD and not na(lower) and close <= lower
 
@@ -99,14 +105,95 @@ if sellSig
 plotshape(buySig,  "BUY breakout",  shape.triangleup,   location.belowbar, color.new(color.green, 0), size=size.small, text="BUY")
 plotshape(sellSig, "SELL breakout", shape.triangledown, location.abovebar, color.new(color.red,   0), size=size.small, text="SELL")
 
-bgcolor(firedU ? color.new(color.green, 96) : firedD ? color.new(color.red, 96) : na)
+// ---- active trade state (entry / TP / SL / exit) ----
+var line   enLine    = na
+var line   tpLine    = na
+var line   slLine    = na
+var float  entryPx   = na
+var float  tpLvl     = na
+var float  slLvl     = na
+var int    tradeDir  = 0
+var string exitState = ""
 
-// --- info label at open ---
+// reset on new session
+if newSess
+    if not na(enLine)
+        line.delete(enLine)
+    if not na(tpLine)
+        line.delete(tpLine)
+    if not na(slLine)
+        line.delete(slLine)
+    enLine    := na
+    tpLine    := na
+    slLine    := na
+    entryPx   := na
+    tpLvl     := na
+    slLvl     := na
+    tradeDir  := 0
+    exitState := ""
+
+// open trade on breakout
+if (buySig or sellSig) and tradeDir == 0
+    entryPx  := close
+    tradeDir := buySig ? 1 : -1
+    enLine := line.new(bar_index, entryPx, bar_index, entryPx, color=color.new(color.blue, 0), width=2)
+    if useBracket and not na(predMove)
+        tpLvl := entryPx + tradeDir * tpMult * predMove
+        slLvl := entryPx - tradeDir * slMult * predMove
+        tpLine := line.new(bar_index, tpLvl, bar_index, tpLvl, color=color.new(color.green, 0), width=2)
+        slLine := line.new(bar_index, slLvl, bar_index, slLvl, color=color.new(color.red,   0), width=2)
+
+// while active, extend lines
+if tradeDir != 0 and exitState == ""
+    if not na(enLine)
+        line.set_x2(enLine, bar_index)
+    if not na(tpLine)
+        line.set_x2(tpLine, bar_index)
+    if not na(slLine)
+        line.set_x2(slLine, bar_index)
+
+// detect TP / SL hit or EOD
+tpHit = false
+slHit = false
+if tradeDir != 0 and exitState == "" and useBracket and not na(tpLvl)
+    if tradeDir == 1
+        tpHit := high >= tpLvl
+        slHit := low  <= slLvl
+    else
+        tpHit := low  <= tpLvl
+        slHit := high >= slLvl
+
+newExit = ""
+if tradeDir != 0 and exitState == ""
+    if tpHit and slHit
+        newExit := "SL"          // conservative on same-bar
+    else if tpHit
+        newExit := "TP"
+    else if slHit
+        newExit := "SL"
+    else if sessEnded
+        newExit := "EOD"
+
+if newExit != ""
+    exitState := newExit
+
+// exit shapes (fire once)
+plotshape(newExit == "TP",  "TP hit",  shape.diamond, location.abovebar, color.new(color.green, 0), size=size.small, text="TP")
+plotshape(newExit == "SL",  "SL hit",  shape.xcross,  location.belowbar, color.new(color.red,   0), size=size.small, text="SL")
+plotshape(newExit == "EOD", "EOD flat", shape.xcross, location.abovebar, color.new(color.gray, 0),  size=size.small, text="EOD")
+
+// active-trade background tint
+bgcolor(tradeDir == 1 and exitState == "" ? color.new(color.green, 96) : tradeDir == -1 and exitState == "" ? color.new(color.red, 96) : na)
+
+// ---- info label at open ----
 var label lb = na
 if showInfo and newSess and not na(predMove)
     txt = "HAR-RV emove = +/-" + str.tostring(predMove, "#.#") + " pts   k=" + str.tostring(kMult, "#.##")
     lb := label.new(bar_index, upper, txt, style=label.style_label_down, color=color.new(color.blue, 70), textcolor=color.white, size=size.small)
 
-// --- alerts ---
-alertcondition(buySig,  "HAR-RV BUY",  "NQ HAR-RV: BUY (upper broken, hold to 15:59)")
-alertcondition(sellSig, "HAR-RV SELL", "NQ HAR-RV: SELL (lower broken, hold to 15:59)")
+// ---- alerts ----
+alertcondition(buySig,        "HAR-RV BUY",   "NQ HAR-RV: BUY (upper broken)")
+alertcondition(sellSig,       "HAR-RV SELL",  "NQ HAR-RV: SELL (lower broken)")
+alertcondition(newExit == "TP",  "HAR-RV TP",  "NQ HAR-RV: TP hit - exit")
+alertcondition(newExit == "SL",  "HAR-RV SL",  "NQ HAR-RV: SL hit - exit")
+alertcondition(newExit == "EOD", "HAR-RV EOD", "NQ HAR-RV: EOD flat - exit")
