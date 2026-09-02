@@ -40,11 +40,28 @@ rvFrom(i) =>
     h > l ? (math.log(h / l) * math.log(h / l)) / (4.0 * math.log(2.0)) : 0.0
 
 // ---- pull last 22 daily RVs (22 separate request.security calls) ----
-rv01 = rvFrom(1);  rv02 = rvFrom(2);  rv03 = rvFrom(3);  rv04 = rvFrom(4);  rv05 = rvFrom(5)
-rv06 = rvFrom(6);  rv07 = rvFrom(7);  rv08 = rvFrom(8);  rv09 = rvFrom(9);  rv10 = rvFrom(10)
-rv11 = rvFrom(11); rv12 = rvFrom(12); rv13 = rvFrom(13); rv14 = rvFrom(14); rv15 = rvFrom(15)
-rv16 = rvFrom(16); rv17 = rvFrom(17); rv18 = rvFrom(18); rv19 = rvFrom(19); rv20 = rvFrom(20)
-rv21 = rvFrom(21); rv22 = rvFrom(22)
+rv01 = rvFrom(1)
+rv02 = rvFrom(2)
+rv03 = rvFrom(3)
+rv04 = rvFrom(4)
+rv05 = rvFrom(5)
+rv06 = rvFrom(6)
+rv07 = rvFrom(7)
+rv08 = rvFrom(8)
+rv09 = rvFrom(9)
+rv10 = rvFrom(10)
+rv11 = rvFrom(11)
+rv12 = rvFrom(12)
+rv13 = rvFrom(13)
+rv14 = rvFrom(14)
+rv15 = rvFrom(15)
+rv16 = rvFrom(16)
+rv17 = rvFrom(17)
+rv18 = rvFrom(18)
+rv19 = rvFrom(19)
+rv20 = rvFrom(20)
+rv21 = rvFrom(21)
+rv22 = rvFrom(22)
 
 rvD = rv01
 rvW = (rv01 + rv02 + rv03 + rv04 + rv05) / 5.0
