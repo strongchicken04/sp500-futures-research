@@ -1,0 +1,112 @@
+//@version=5
+// =====================================================================
+// NQ HAR-RV Dynamic Breakout (k=0.75)
+// Predicts next-day realized volatility via HAR-RV (Corsi 2009):
+//   RV_t = Parkinson variance from RTH H/L (ln(H/L)^2 / (4 ln 2))
+//   predicted_var = 0.36 * RV_yesterday
+//                 + 0.28 * mean(RV last 5 days)
+//                 + 0.28 * mean(RV last 22 days)
+//   expected_move (pts) = open * sqrt(predicted_var)
+// At RTH open (9:30 ET) draws:
+//   upper = open + k * expected_move
+//   lower = open - k * expected_move
+// Signal: first 1-min close beyond a level (one per side per day).
+// Backtest NQ 2018-2025 (k=0.75 EOD-close): +7.34 bps net / trade,
+// z=+3.05, 55% win, +15944 pts total, MDD -1578, both sides positive.
+// Chart: NQ or MNQ futures, 1-minute timeframe recommended.
+// =====================================================================
+indicator("NQ HAR-RV Breakout", overlay=true, max_labels_count=500)
+
+kMult    = input.float(0.75, "k multiplier",          minval=0.10, step=0.05)
+lookback = input.int(22,     "monthly lookback (days)", minval=5,  maxval=60)
+weekN    = input.int(5,      "weekly lookback (days)",  minval=2,  maxval=10)
+showInfo = input.bool(true,  "Show info label at open")
+
+TZ   = "America/New_York"
+SESS = "0930-1600"
+
+inSess    = not na(time(timeframe.period, SESS, TZ))
+newSess   = inSess and not inSess[1]
+sessEnded = inSess[1] and not inSess
+
+// --- track today's RTH H/L ---
+var float dayH = na
+var float dayL = na
+if newSess or na(dayH)
+    dayH := high
+    dayL := low
+else if inSess
+    dayH := math.max(dayH, high)
+    dayL := math.min(dayL, low)
+
+// --- rolling history of daily Parkinson variances ---
+var array<float> rvHist = array.new_float(0)
+if sessEnded and not na(dayH) and not na(dayL) and dayH > dayL
+    lnhl = math.log(dayH / dayL)
+    rv   = (lnhl * lnhl) / (4.0 * math.log(2.0))
+    array.push(rvHist, rv)
+    if array.size(rvHist) > lookback
+        array.shift(rvHist)
+
+// --- HAR-RV prediction and breakout levels at RTH open ---
+var float openPx   = na
+var float predMove = na
+var float upper    = na
+var float lower    = na
+var bool  firedU   = false
+var bool  firedD   = false
+
+if newSess
+    firedU := false
+    firedD := false
+    openPx := open
+    if array.size(rvHist) >= lookback
+        n    = array.size(rvHist)
+        rvD  = array.get(rvHist, n - 1)
+        sumW = 0.0
+        for i = n - weekN to n - 1
+            sumW += array.get(rvHist, i)
+        rvW  = sumW / weekN
+        sumM = 0.0
+        for i = 0 to n - 1
+            sumM += array.get(rvHist, i)
+        rvM  = sumM / n
+        predVar   = 0.36 * rvD + 0.28 * rvW + 0.28 * rvM
+        predSigma = math.sqrt(math.max(predVar, 0.0))
+        predMove := openPx * predSigma
+        upper    := openPx + kMult * predMove
+        lower    := openPx - kMult * predMove
+    else
+        upper    := na
+        lower    := na
+        predMove := na
+
+// --- plots (RTH only) ---
+pUp = plot(inSess ? upper  : na, "Upper breakout", color=color.new(color.green, 0),  linewidth=2, style=plot.style_linebr)
+pLo = plot(inSess ? lower  : na, "Lower breakout", color=color.new(color.red,   0),  linewidth=2, style=plot.style_linebr)
+pOp = plot(inSess ? openPx : na, "RTH open",       color=color.new(color.gray, 40), linewidth=1, style=plot.style_linebr)
+fill(pUp, pLo, color=color.new(color.blue, 94))
+
+// --- breakout signals (one per side per day) ---
+buySig  = inSess and not firedU and not na(upper) and close >= upper
+sellSig = inSess and not firedD and not na(lower) and close <= lower
+
+if buySig
+    firedU := true
+if sellSig
+    firedD := true
+
+plotshape(buySig,  "BUY breakout",  shape.triangleup,   location.belowbar, color.new(color.green, 0), size=size.small, text="BUY")
+plotshape(sellSig, "SELL breakout", shape.triangledown, location.abovebar, color.new(color.red,   0), size=size.small, text="SELL")
+
+bgcolor(firedU ? color.new(color.green, 96) : firedD ? color.new(color.red, 96) : na)
+
+// --- info label at open ---
+var label lb = na
+if showInfo and newSess and not na(predMove)
+    txt = "HAR-RV emove = +/-" + str.tostring(predMove, "#.#") + " pts   k=" + str.tostring(kMult, "#.##")
+    lb := label.new(bar_index, upper, txt, style=label.style_label_down, color=color.new(color.blue, 70), textcolor=color.white, size=size.small)
+
+// --- alerts ---
+alertcondition(buySig,  "HAR-RV BUY",  "NQ HAR-RV: BUY (upper broken, hold to 15:59)")
+alertcondition(sellSig, "HAR-RV SELL", "NQ HAR-RV: SELL (lower broken, hold to 15:59)")
