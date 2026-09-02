@@ -755,7 +755,10 @@ if showTable and barstate.islast
     table.cell(T, 1, 8, "left " + f_money(remainUSD), bgcolor = CH, text_color = TXT, text_size = size.tiny)
     table.cell(T, 2, 8, str.tostring(daysLeft) + " days", bgcolor = CH, text_color = TXT, text_size = size.tiny)
     table.cell(T, 3, 8, "need " + f_money(needPerDay) + "/d", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 4, 8, "DD room " + f_money(2000.0 - dayRiskUsed), bgcolor = CH, text_color = TXT, text_size = size.tiny)
+    // remaining *planned* risk budget for today (not realized P/L — the
+    // indicator cannot see the account, so it never claims to know DD left)
+    riskLeft = math.max(0.0, maxDayRisk - dayRiskUsed)
+    table.cell(T, 4, 8, "risk left " + f_money(riskLeft), bgcolor = riskLeft <= 0 ? color.new(color.red, 40) : CH, text_color = TXT, text_size = size.tiny)
 
 // =========================== LEVEL LABELS ===========================
 var label labONH = na
