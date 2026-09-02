@@ -15,7 +15,7 @@
 // mapped bar-for-bar to the backtest; other timeframes shift it.
 // =====================================================================
 indicator("NQ Portfolio — VWAP + ON Fade + HAR-RV", overlay=true,
-     max_lines_count=500, max_labels_count=100)
+     max_labels_count=100)
 
 // ============================== INPUTS ==============================
 gA = "Account / risk sizing"
@@ -512,102 +512,39 @@ plot(showLevels and useHAR and harReady and inSess ? hUp : na, "HAR up",  color 
 plot(showLevels and useHAR and harReady and inSess ? hDn : na, "HAR dn",  color = color.new(color.teal, 10), linewidth = 2, style = plot.style_linebr)
 
 // ======================= ACTIVE-TRADE BRACKETS ======================
-var line vLnE = na
-var line vLnT = na
-var line vLnS = na
-var line hLnE = na
-var line hLnT = na
-var line hLnS = na
-var line lLnE = na
-var line lLnT = na
-var line lLnS = na
-var line mLnE = na
-var line mLnT = na
-var line mLnS = na
-var line rLnE = na
-var line rLnT = na
-var line rLnS = na
-
-if newSess
-    line.delete(vLnE)
-    line.delete(vLnT)
-    line.delete(vLnS)
-    line.delete(hLnE)
-    line.delete(hLnT)
-    line.delete(hLnS)
-    line.delete(lLnE)
-    line.delete(lLnT)
-    line.delete(lLnS)
-    line.delete(mLnE)
-    line.delete(mLnT)
-    line.delete(mLnS)
-    line.delete(rLnE)
-    line.delete(rLnT)
-    line.delete(rLnS)
+// Drawn as plots rather than line objects: nothing to create, extend or
+// delete, so there is no drawing-object lifecycle that can leak or drop
+// a bracket. Each set shows only while that specific trade is open.
+vAct = showBrackets and vPos != 0
+hAct = showBrackets and hSt == 1
+lAct = showBrackets and lSt == 1
+mAct = showBrackets and mSt == 1
+rAct = showBrackets and rSt == 1
 
 CE = color.new(color.blue,  0)
 CT = color.new(color.green, 0)
 CS = color.new(color.red,   0)
 
-if showBrackets and vJustEntered
-    vLnE := line.new(bar_index, vEntry, bar_index + 1, vEntry, color = CE, width = 2, extend = extend.right)
-    vLnT := line.new(bar_index, vTPl,   bar_index + 1, vTPl,   color = CT, width = 1, extend = extend.right)
-    vLnS := line.new(bar_index, vSLl,   bar_index + 1, vSLl,   color = CS, width = 1, extend = extend.right)
-if showBrackets and vJustExited and not na(vLnE)
-    line.set_extend(vLnE, extend.none)
-    line.set_x2(vLnE, bar_index)
-    line.set_extend(vLnT, extend.none)
-    line.set_x2(vLnT, bar_index)
-    line.set_extend(vLnS, extend.none)
-    line.set_x2(vLnS, bar_index)
+plot(vAct ? vEntry : na, "VWAP entry",  color = CE, linewidth = 2, style = plot.style_linebr)
+plot(vAct ? vTPl   : na, "VWAP TP",     color = CT, linewidth = 1, style = plot.style_linebr)
+plot(vAct ? vSLl   : na, "VWAP SL",     color = CS, linewidth = 1, style = plot.style_linebr)
 
-if showBrackets and hJustEntered
-    hLnE := line.new(bar_index, hEn, bar_index + 1, hEn, color = CE, width = 2, extend = extend.right)
-    hLnT := line.new(bar_index, hTP, bar_index + 1, hTP, color = CT, width = 1, extend = extend.right)
-    hLnS := line.new(bar_index, hSL, bar_index + 1, hSL, color = CS, width = 1, extend = extend.right)
-if showBrackets and hJustExited and not na(hLnE)
-    line.set_extend(hLnE, extend.none)
-    line.set_x2(hLnE, bar_index)
-    line.set_extend(hLnT, extend.none)
-    line.set_x2(hLnT, bar_index)
-    line.set_extend(hLnS, extend.none)
-    line.set_x2(hLnS, bar_index)
+plot(hAct ? hEn : na, "ON-H entry", color = CE, linewidth = 2, style = plot.style_linebr)
+plot(hAct ? hTP : na, "ON-H TP",    color = CT, linewidth = 1, style = plot.style_linebr)
+plot(hAct ? hSL : na, "ON-H SL",    color = CS, linewidth = 1, style = plot.style_linebr)
 
-if showBrackets and lJustEntered
-    lLnE := line.new(bar_index, lEn, bar_index + 1, lEn, color = CE, width = 2, extend = extend.right)
-    lLnT := line.new(bar_index, lTP, bar_index + 1, lTP, color = CT, width = 1, extend = extend.right)
-    lLnS := line.new(bar_index, lSL, bar_index + 1, lSL, color = CS, width = 1, extend = extend.right)
-if showBrackets and lJustExited and not na(lLnE)
-    line.set_extend(lLnE, extend.none)
-    line.set_x2(lLnE, bar_index)
-    line.set_extend(lLnT, extend.none)
-    line.set_x2(lLnT, bar_index)
-    line.set_extend(lLnS, extend.none)
-    line.set_x2(lLnS, bar_index)
+plot(lAct ? lEn : na, "ON-L entry", color = CE, linewidth = 2, style = plot.style_linebr)
+plot(lAct ? lTP : na, "ON-L TP",    color = CT, linewidth = 1, style = plot.style_linebr)
+plot(lAct ? lSL : na, "ON-L SL",    color = CS, linewidth = 1, style = plot.style_linebr)
 
-if showBrackets and mJustEntered
-    mLnE := line.new(bar_index, mEn, bar_index + 1, mEn, color = CE, width = 2, extend = extend.right)
-    mLnT := line.new(bar_index, mTP, bar_index + 1, mTP, color = CT, width = 1, extend = extend.right)
-    mLnS := line.new(bar_index, mSL, bar_index + 1, mSL, color = CS, width = 1, extend = extend.right)
-if showBrackets and mJustExited and not na(mLnE)
-    line.set_extend(mLnE, extend.none)
-    line.set_x2(mLnE, bar_index)
-    line.set_extend(mLnT, extend.none)
-    line.set_x2(mLnT, bar_index)
-    line.set_extend(mLnS, extend.none)
-    line.set_x2(mLnS, bar_index)
+plot(mAct ? mEn : na, "ON-M entry", color = CE, linewidth = 2, style = plot.style_linebr)
+plot(mAct ? mTP : na, "ON-M TP",    color = CT, linewidth = 1, style = plot.style_linebr)
+plot(mAct ? mSL : na, "ON-M SL",    color = CS, linewidth = 1, style = plot.style_linebr)
 
-if showBrackets and rJustEntered
-    rLnE := line.new(bar_index, rEn, bar_index + 1, rEn, color = CE, width = 2, extend = extend.right)
-    rLnT := line.new(bar_index, rTP, bar_index + 1, rTP, color = CT, width = 1, extend = extend.right)
-    rLnS := line.new(bar_index, rSL, bar_index + 1, rSL, color = CS, width = 1, extend = extend.right)
-if showBrackets and rJustExited and not na(rLnE)
-    line.set_extend(rLnE, extend.none)
-    line.set_x2(rLnE, bar_index)
-    line.set_extend(rLnT, extend.none)
-    line.set_x2(rLnT, bar_index)
-    line.set_extend(rLnS, extend.none)
-    line.set_x2(rLnS, bar_index)
+plot(rAct ? rEn : na, "HAR entry",  color = CE, linewidth = 2, style = plot.style_linebr)
+plot(rAct ? rTP : na, "HAR TP",     color = CT, linewidth = 1, style = plot.style_linebr)
+plot(rAct ? rSL : na, "HAR SL",     color = CS, linewidth = 1, style = plot.style_linebr)
+
 
 // ============================== SHAPES ==============================
 plotshape(vJustEntered and vPos ==  1, "VWAP long",  shape.triangleup,   location.belowbar, color.new(color.orange, 0), size = size.tiny,  text = "VW")
