@@ -740,15 +740,15 @@ showBanner = bHead != "" and bar_index <= bUntil
 // ---- LIVE line: every position currently open ----
 liveTxt = ""
 if vPos != 0
-    liveTxt := f_join(liveTxt, "VWAP " + (vPos == 1 ? "LONG " : "SHORT ") + str.tostring(vCt) + instr + "  TP " + str.tostring(vTPl, "#.##") + "  SL " + str.tostring(vSLl, "#.##"))
+    liveTxt := f_join(liveTxt, "VWAP " + (vPos == 1 ? "LONG " : "SHORT ") + str.tostring(vCt) + " " + instr + "  TP " + str.tostring(vTPl, "#.##") + "  SL " + str.tostring(vSLl, "#.##"))
 if hSt == 1
-    liveTxt := f_join(liveTxt, "ON-H SHORT " + str.tostring(hCt) + instr + "  TP " + str.tostring(hTP, "#.##") + "  SL " + str.tostring(hSL, "#.##"))
+    liveTxt := f_join(liveTxt, "ON-H SHORT " + str.tostring(hCt) + " " + instr + "  TP " + str.tostring(hTP, "#.##") + "  SL " + str.tostring(hSL, "#.##"))
 if lSt == 1
-    liveTxt := f_join(liveTxt, "ON-L LONG " + str.tostring(lCt) + instr + "  TP " + str.tostring(lTP, "#.##") + "  SL " + str.tostring(lSL, "#.##"))
+    liveTxt := f_join(liveTxt, "ON-L LONG " + str.tostring(lCt) + " " + instr + "  TP " + str.tostring(lTP, "#.##") + "  SL " + str.tostring(lSL, "#.##"))
 if mSt == 1
-    liveTxt := f_join(liveTxt, "ON-M " + (mDir == 1 ? "LONG " : "SHORT ") + str.tostring(mCt) + instr + "  TP " + str.tostring(mTP, "#.##") + "  SL " + str.tostring(mSL, "#.##"))
+    liveTxt := f_join(liveTxt, "ON-M " + (mDir == 1 ? "LONG " : "SHORT ") + str.tostring(mCt) + " " + instr + "  TP " + str.tostring(mTP, "#.##") + "  SL " + str.tostring(mSL, "#.##"))
 if rSt == 1
-    liveTxt := f_join(liveTxt, "HAR-RV " + (rDir == 1 ? "LONG " : "SHORT ") + str.tostring(rCt) + instr + "  TP " + str.tostring(rTP, "#.##") + "  SL " + str.tostring(rSL, "#.##"))
+    liveTxt := f_join(liveTxt, "HAR-RV " + (rDir == 1 ? "LONG " : "SHORT ") + str.tostring(rCt) + " " + instr + "  TP " + str.tostring(rTP, "#.##") + "  SL " + str.tostring(rSL, "#.##"))
 
 // ---- banner table ----
 bPos = bannerPosIn == "bottom_center" ? position.bottom_center : bannerPosIn == "middle_center" ? position.middle_center : position.top_center
@@ -767,21 +767,21 @@ bgcolor(not bannerFlash ? na : nEnt > 0 ? color.new(color.blue, 82) : anyNear ? 
 
 // ---- per-signal labels carrying the contract size ----
 if bannerMarks and vJustEntered
-    label.new(bar_index, vPos == 1 ? low : high, "VWAP " + (vPos == 1 ? "LONG " : "SHORT ") + str.tostring(vCt) + instr,
+    label.new(bar_index, vPos == 1 ? low : high, "VWAP " + (vPos == 1 ? "LONG " : "SHORT ") + str.tostring(vCt) + " " + instr,
          style = vPos == 1 ? label.style_label_up : label.style_label_down,
          color = vPos == 1 ? color.new(color.green, 15) : color.new(color.red, 15), textcolor = color.white, size = size.small)
 if bannerMarks and hJustEntered
-    label.new(bar_index, high, "ON-H SHORT " + str.tostring(hCt) + instr, style = label.style_label_down,
+    label.new(bar_index, high, "ON-H SHORT " + str.tostring(hCt) + " " + instr, style = label.style_label_down,
          color = color.new(color.red, 15), textcolor = color.white, size = size.small)
 if bannerMarks and lJustEntered
-    label.new(bar_index, low, "ON-L LONG " + str.tostring(lCt) + instr, style = label.style_label_up,
+    label.new(bar_index, low, "ON-L LONG " + str.tostring(lCt) + " " + instr, style = label.style_label_up,
          color = color.new(color.green, 15), textcolor = color.white, size = size.small)
 if bannerMarks and mJustEntered
-    label.new(bar_index, mDir == 1 ? low : high, "ON-M " + (mDir == 1 ? "LONG " : "SHORT ") + str.tostring(mCt) + instr,
+    label.new(bar_index, mDir == 1 ? low : high, "ON-M " + (mDir == 1 ? "LONG " : "SHORT ") + str.tostring(mCt) + " " + instr,
          style = mDir == 1 ? label.style_label_up : label.style_label_down,
          color = mDir == 1 ? color.new(color.green, 15) : color.new(color.red, 15), textcolor = color.white, size = size.small)
 if bannerMarks and rJustEntered
-    label.new(bar_index, rDir == 1 ? low : high, "HAR-RV " + (rDir == 1 ? "LONG " : "SHORT ") + str.tostring(rCt) + instr,
+    label.new(bar_index, rDir == 1 ? low : high, "HAR-RV " + (rDir == 1 ? "LONG " : "SHORT ") + str.tostring(rCt) + " " + instr,
          style = rDir == 1 ? label.style_label_up : label.style_label_down,
          color = rDir == 1 ? color.new(color.green, 15) : color.new(color.red, 15), textcolor = color.white, size = size.small)
 
