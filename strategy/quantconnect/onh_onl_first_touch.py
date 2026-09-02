@@ -96,12 +96,13 @@ class NQOnFirstTouch(QCAlgorithm):
                 self.on_h = max(self.on_h, bar.High)
                 self.on_l = min(self.on_l, bar.Low)
 
-        # Date change (new UTC date passing) -> if RTH-hotova a nevyemitovana, emit
-        if self.cur_date is not None and d != self.cur_date and not self.emitted_today:
-            self._emit_prev_day()
-            self._reset_rth()
+        # Date change -> safety emit if RTH-hotova a nevyemitovana, pak reset a advance
+        if self.cur_date is None:
             self.cur_date = d
-        elif self.cur_date is None:
+        elif d != self.cur_date:
+            if not self.emitted_today:
+                self._emit_prev_day()
+            self._reset_rth()
             self.cur_date = d
 
         # RTH open snapshot at 9:30 bar (mend == 571 = 09:30 close)
