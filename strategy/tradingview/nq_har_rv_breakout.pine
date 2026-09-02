@@ -35,22 +35,22 @@ inSess    = not na(time(timeframe.period, SESS, TZ))
 newSess   = inSess and not inSess[1]
 sessEnded = inSess[1] and not inSess
 
-// ---- track today's RTH H/L ----
-var float dayH = na
-var float dayL = na
-if newSess or na(dayH)
-    dayH := high
-    dayL := low
-else if inSess
-    dayH := math.max(dayH, high)
-    dayL := math.min(dayL, low)
+// ---- pull previous completed daily H/L (works from any intraday TF) ----
+//     Uses request.security so RV history builds from daily bars (deep
+//     history) instead of on-chart RTH tracking (limited to intraday
+//     bars visible on the chart, ~14 days on 1-min charts).
+//     Note: daily bar is full-session (ETH+RTH), so RV is slightly larger
+//     than pure RTH Parkinson — strategy behavior preserved, levels
+//     slightly wider than backtest.
+[dH_prev, dL_prev] = request.security(syminfo.tickerid, "D", [high[1], low[1]], barmerge.gaps_off, barmerge.lookahead_off)
 
 // ---- rolling history of daily Parkinson variances ----
 var array<float> rvHist = array.new_float(0)
-if sessEnded and not na(dayH) and not na(dayL) and dayH > dayL
-    lnhl = math.log(dayH / dayL)
-    rv   = (lnhl * lnhl) / (4.0 * math.log(2.0))
-    array.push(rvHist, rv)
+// push on first bar of a NEW day
+if ta.change(time("D")) != 0 and not na(dH_prev) and not na(dL_prev) and dH_prev > dL_prev
+    lnhl_d = math.log(dH_prev / dL_prev)
+    rv_d_val = (lnhl_d * lnhl_d) / (4.0 * math.log(2.0))
+    array.push(rvHist, rv_d_val)
     if array.size(rvHist) > lookback
         array.shift(rvHist)
 
