@@ -1,24 +1,33 @@
 //@version=5
 // =====================================================================
-// NQ PORTFOLIO — SIGNAL VERIFICATION STRATEGY
+// NQ PORTFOLIO — SIGNAL VERIFICATION STRATEGY  (v2)
 //
-// Bare-bones strategy version used ONLY to check that TradingView
-// reproduces the same trades as the QuantConnect backtest. No risk
-// management, no sizing, no cosmetics — 1 contract, one leg at a time.
+// Bare-bones strategy used ONLY to check that TradingView reproduces the
+// same trades as the QuantConnect backtest. No risk management, no
+// sizing, no cosmetics — 1 contract, one leg at a time.
+//
+// v2 FIX — the v1 bracket never existed.
+//   v1 called strategy.exit() once, at 09:30, while the ON entry limit
+//   was still unfilled. Pine ignores an exit whose entry has not filled
+//   yet, and v1 never called it again, so the trade ran naked until the
+//   15:59 close_all(). An unbracketed ON-L long is close to a coin flip,
+//   which is exactly what came back: 45.8% wins, PF 0.94, instead of the
+//   63.5% / +3.35 pts the +/-15 bracket produces.
+//   v2 re-issues strategy.exit() on EVERY bar while a position is open,
+//   which is the documented way to keep a bracket attached.
 //
 // ONE LEG AT A TIME on purpose: Pine nets positions, so an ON-L long
-// would cancel an ON-H short and the per-leg statistics would be
-// meaningless. Pick the leg in the settings and run it, then switch.
+// would cancel an ON-H short and per-leg statistics would be meaningless.
 //
 // Expected on NQ 1-min, 2018-2025 (QuantConnect, 0.75 pts cost):
-//   ON-L long        avg +3.35 pts   win 63.5%   z=+7.90
-//   ON-M fade-to-open avg +2.97 pts  win 62.2%   z=+8.07
-//   ON-H short       avg +1.20 pts   win 56.3%   z=+2.95
-//   VWAP TP100/SL75  avg +8.11 pts   win ~42%    z=+3.29
-//   HAR-RV breakout  avg +10.08 pts  (EOD exit variant)  z=+3.10
+//   ON-L long         avg +3.35 pts   win 63.5%   z=+7.90
+//   ON-M fade-to-open avg +3.02 pts   win 62.6%   z=+8.21
+//   ON-H short        avg +1.20 pts   win 56.3%   z=+2.95
+//   VWAP TP100/SL75   avg +8.11 pts   win ~42%    z=+3.29
+//   HAR-RV breakout   avg +10.08 pts  (tick "Exit at EOD only")  z=+3.10
 //
-// USE A 1-MINUTE CHART. Set Properties -> Commission to about 0.75 pts
-// equivalent if you want the net numbers above.
+// USE A 1-MINUTE CHART. Properties -> Commission about 0.75 pts.
+// Premium accounts: turn Bar Magnifier ON for honest intrabar fills.
 // =====================================================================
 strategy("NQ Portfolio — signal test", overlay = true,
      default_qty_type = strategy.fixed, default_qty_value = 1,
@@ -41,10 +50,10 @@ trendPctl = input.float(60.0,  "Trend gate: rank <=", step = 5, group = gV)
 useGates  = input.bool(true,   "Apply gap / trend gates", group = gV)
 
 gH = "HAR-RV"
-harK    = input.float(0.65, "k multiplier", minval = 0.1, step = 0.05, group = gH)
-harTPm  = input.float(2.0,  "TP (x emove)", minval = 0.1, step = 0.1,  group = gH)
-harSLm  = input.float(1.0,  "SL (x emove)", minval = 0.1, step = 0.1,  group = gH)
-harEOD  = input.bool(false, "Exit at EOD only (the z=+3.10 variant)", group = gH)
+harK   = input.float(0.65, "k multiplier", minval = 0.1, step = 0.05, group = gH)
+harTPm = input.float(2.0,  "TP (x emove)", minval = 0.1, step = 0.1,  group = gH)
+harSLm = input.float(1.0,  "SL (x emove)", minval = 0.1, step = 0.1,  group = gH)
+harEOD = input.bool(false, "Exit at EOD only (the z=+3.10 variant)", group = gH)
 
 isONL = leg == "ON-L long"
 isONH = leg == "ON-H short"
@@ -218,45 +227,67 @@ if newSess
     rTaken := false
 
 // ============================== ORDERS ==============================
-// ON legs rest a limit order at the level from the RTH open, which is
-// exactly how the backtest fills them (touch of ONH / ONL / ONM).
-if tfOK and newSess and onRangeOK and not na(ONH)
-    if isONH
-        strategy.entry("ONH", strategy.short, limit = ONH)
-        strategy.exit("ONHx", from_entry = "ONH", limit = ONH - onB, stop = ONH + onB)
-    if isONL
-        strategy.entry("ONL", strategy.long, limit = ONL)
-        strategy.exit("ONLx", from_entry = "ONL", limit = ONL + onB, stop = ONL - onB)
-    if isONM and mDir != 0
-        strategy.entry("ONM", mDir == 1 ? strategy.long : strategy.short, limit = ONM)
-        strategy.exit("ONMx", from_entry = "ONM",
-             limit = ONM + mDir * onB, stop = ONM - mDir * onB)
+// One entry id for every leg — only one leg runs at a time.
+var float tpPx = na
+var float slPx = na
 
-// VWAP: close-based break of the band, one trade per day.
+if newSess
+    tpPx := na
+    slPx := na
+
+// --- ON legs: rest a limit order at the level from the RTH open, which
+// --- is how the backtest fills them (touch of ONH / ONL / ONM).
+// --- Guard: a buy limit must sit BELOW the market and a sell limit
+// --- ABOVE it, otherwise it fills instantly at the open and the stop
+// --- lands on the wrong side of the fill.
+if tfOK and newSess and onRangeOK and not na(ONH)
+    if isONH and open < ONH
+        tpPx := ONH - onB
+        slPx := ONH + onB
+        strategy.entry("L", strategy.short, limit = ONH)
+    if isONL and open > ONL
+        tpPx := ONL + onB
+        slPx := ONL - onB
+        strategy.entry("L", strategy.long, limit = ONL)
+    if isONM and mDir != 0
+        tpPx := ONM + mDir * onB
+        slPx := ONM - mDir * onB
+        strategy.entry("L", mDir == 1 ? strategy.long : strategy.short, limit = ONM)
+
+// --- VWAP: close-based break of the band, one trade per day.
 if tfOK and isVW and inSess and canEnterVwap and not vTraded and vGate and not na(vUp) and strategy.position_size == 0
     if close > vUp
-        strategy.entry("VW", strategy.long)
-        strategy.exit("VWx", from_entry = "VW", limit = close + vwapTPp, stop = close - vwapSLp)
+        tpPx := close + vwapTPp
+        slPx := close - vwapSLp
+        strategy.entry("L", strategy.long)
         vTraded := true
     else if close < vDn
-        strategy.entry("VW", strategy.short)
-        strategy.exit("VWx", from_entry = "VW", limit = close - vwapTPp, stop = close + vwapSLp)
+        tpPx := close - vwapTPp
+        slPx := close + vwapSLp
+        strategy.entry("L", strategy.short)
         vTraded := true
 
-// HAR-RV: close-based break of the vol-scaled band, one trade per day.
+// --- HAR-RV: close-based break of the vol-scaled band, one trade / day.
 if tfOK and isHAR and inSess and harReady and not rTaken and not na(hUp) and emove > 0 and strategy.position_size == 0
     if close >= hUp
-        strategy.entry("HAR", strategy.long)
-        if not harEOD
-            strategy.exit("HARx", from_entry = "HAR", limit = close + harTPm * emove, stop = close - harSLm * emove)
+        tpPx := harEOD ? na : close + harTPm * emove
+        slPx := harEOD ? na : close - harSLm * emove
+        strategy.entry("L", strategy.long)
         rTaken := true
     else if close <= hDn
-        strategy.entry("HAR", strategy.short)
-        if not harEOD
-            strategy.exit("HARx", from_entry = "HAR", limit = close - harTPm * emove, stop = close + harSLm * emove)
+        tpPx := harEOD ? na : close - harTPm * emove
+        slPx := harEOD ? na : close + harSLm * emove
+        strategy.entry("L", strategy.short)
         rTaken := true
 
-// Flat at 15:59 ET and drop any unfilled resting order.
+// --- THE v2 FIX ---------------------------------------------------
+// Re-issue the bracket on every bar while the position is open. Calling
+// strategy.exit once at 09:30 does nothing, because the entry limit has
+// not filled yet and Pine drops an exit with no matching open entry.
+if strategy.position_size != 0 and not na(tpPx) and not na(slPx)
+    strategy.exit("X", from_entry = "L", limit = tpPx, stop = slPx)
+
+// --- Flat at 15:59 ET, drop any resting order.
 if isEOD
     strategy.close_all(comment = "EOD")
     strategy.cancel_all()
@@ -269,3 +300,7 @@ plot(inSess and isVW  ? vUp : na, "VWAP +band", color = color.new(color.orange, 
 plot(inSess and isVW  ? vDn : na, "VWAP -band", color = color.new(color.orange, 40), style = plot.style_linebr)
 plot(inSess and isHAR and harReady ? hUp : na, "HAR up", color = color.new(color.teal, 20), style = plot.style_linebr)
 plot(inSess and isHAR and harReady ? hDn : na, "HAR dn", color = color.new(color.teal, 20), style = plot.style_linebr)
+
+// Live bracket, so a wrong TP/SL is visible instead of silent.
+plot(strategy.position_size != 0 ? tpPx : na, "active TP", color = color.new(color.green, 0), style = plot.style_linebr)
+plot(strategy.position_size != 0 ? slPx : na, "active SL", color = color.new(color.red, 0),   style = plot.style_linebr)
