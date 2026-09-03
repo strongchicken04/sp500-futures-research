@@ -1,0 +1,271 @@
+//@version=5
+// =====================================================================
+// NQ PORTFOLIO — SIGNAL VERIFICATION STRATEGY
+//
+// Bare-bones strategy version used ONLY to check that TradingView
+// reproduces the same trades as the QuantConnect backtest. No risk
+// management, no sizing, no cosmetics — 1 contract, one leg at a time.
+//
+// ONE LEG AT A TIME on purpose: Pine nets positions, so an ON-L long
+// would cancel an ON-H short and the per-leg statistics would be
+// meaningless. Pick the leg in the settings and run it, then switch.
+//
+// Expected on NQ 1-min, 2018-2025 (QuantConnect, 0.75 pts cost):
+//   ON-L long        avg +3.35 pts   win 63.5%   z=+7.90
+//   ON-M fade-to-open avg +2.97 pts  win 62.2%   z=+8.07
+//   ON-H short       avg +1.20 pts   win 56.3%   z=+2.95
+//   VWAP TP100/SL75  avg +8.11 pts   win ~42%    z=+3.29
+//   HAR-RV breakout  avg +10.08 pts  (EOD exit variant)  z=+3.10
+//
+// USE A 1-MINUTE CHART. Set Properties -> Commission to about 0.75 pts
+// equivalent if you want the net numbers above.
+// =====================================================================
+strategy("NQ Portfolio — signal test", overlay = true,
+     default_qty_type = strategy.fixed, default_qty_value = 1,
+     pyramiding = 0, calc_on_every_tick = false,
+     process_orders_on_close = true, initial_capital = 100000)
+
+leg = input.string("ON-L long", "Leg to test",
+     options = ["ON-L long", "ON-H short", "ON-M fade to open", "VWAP 100/75", "HAR-RV breakout"])
+
+gO = "ON fade"
+onB        = input.float(15.0, "Bracket B (pts, TP = SL)", step = 1, group = gO)
+onMinRange = input.float(65.0, "Min ON range (pts)", step = 5, group = gO)
+
+gV = "VWAP"
+bandBps   = input.float(20.0,  "Band (bps)", step = 2.5, group = gV)
+vwapTPp   = input.float(100.0, "TP (pts)",   step = 5,   group = gV)
+vwapSLp   = input.float(75.0,  "SL (pts)",   step = 5,   group = gV)
+gapPctl   = input.float(25.0,  "Gap gate: rank >=",   step = 5, group = gV)
+trendPctl = input.float(60.0,  "Trend gate: rank <=", step = 5, group = gV)
+useGates  = input.bool(true,   "Apply gap / trend gates", group = gV)
+
+gH = "HAR-RV"
+harK    = input.float(0.65, "k multiplier", minval = 0.1, step = 0.05, group = gH)
+harTPm  = input.float(2.0,  "TP (x emove)", minval = 0.1, step = 0.1,  group = gH)
+harSLm  = input.float(1.0,  "SL (x emove)", minval = 0.1, step = 0.1,  group = gH)
+harEOD  = input.bool(false, "Exit at EOD only (the z=+3.10 variant)", group = gH)
+
+isONL = leg == "ON-L long"
+isONH = leg == "ON-H short"
+isONM = leg == "ON-M fade to open"
+isVW  = leg == "VWAP 100/75"
+isHAR = leg == "HAR-RV breakout"
+
+// ============================== SESSION =============================
+TZ   = "America/New_York"
+SESS = "0930-1600"
+
+inSess  = not na(time(timeframe.period, SESS, TZ))
+newSess = inSess and not inSess[1]
+
+minOfDay = hour(time, TZ) * 60 + minute(time, TZ)
+qcMend   = minOfDay + 1
+tfOK     = timeframe.in_seconds() == 60
+
+canEnterVwap = inSess and qcMend >= 572 and qcMend <= 959
+isEOD        = inSess and qcMend == 960
+inON         = qcMend >= 1080 or qcMend <= 570
+
+// ============================ ON RANGE ==============================
+var float onAccH = na
+var float onAccL = na
+if inON
+    if na(onAccH)
+        onAccH := high
+        onAccL := low
+    else
+        onAccH := math.max(onAccH, high)
+        onAccL := math.min(onAccL, low)
+
+var float ONH = na
+var float ONL = na
+var float ONM = na
+var float onRange = na
+var int   mDir = 0
+
+if newSess
+    ONH     := onAccH
+    ONL     := onAccL
+    ONM     := na(onAccH) or na(onAccL) ? na : (onAccH + onAccL) / 2.0
+    onRange := na(onAccH) or na(onAccL) ? na : onAccH - onAccL
+    rthOpen = open
+    onAccH  := na
+    onAccL  := na
+    mDir    := na(ONM) ? 0 : (rthOpen > ONM ? 1 : rthOpen < ONM ? -1 : 0)
+
+onRangeOK = not na(onRange) and onRange >= onMinRange
+
+// ============================= VWAP =================================
+var float dOpen  = na
+var float dHigh  = na
+var float dLow   = na
+var float dClose = na
+var float pOpen  = na
+var float pHigh  = na
+var float pLow   = na
+var float pClose = na
+var array<float> trendHist = array.new_float(0)
+var array<float> gapHist   = array.new_float(0)
+
+f_rank(arr, v) =>
+    n = array.size(arr)
+    cnt = 0
+    if n >= 60 and not na(v)
+        for i = 0 to n - 1
+            if array.get(arr, i) <= v
+                cnt += 1
+    n >= 60 and not na(v) ? 100.0 * cnt / n : na
+
+var bool  gapOK   = true
+var bool  trendOK = true
+var float cpv = 0.0
+var float cv  = 0.0
+
+if newSess
+    pOpen  := dOpen
+    pHigh  := dHigh
+    pLow   := dLow
+    pClose := dClose
+    dOpen  := open
+    dHigh  := high
+    dLow   := low
+    dClose := close
+    cpv := 0.0
+    cv  := 0.0
+    gapOK   := true
+    trendOK := true
+    if not na(pClose)
+        ytr = pHigh > pLow ? math.abs(pClose - pOpen) / (pHigh - pLow) : na
+        r1  = f_rank(trendHist, ytr)
+        trendOK := na(r1) ? true : (r1 <= trendPctl)
+        if not na(ytr)
+            array.push(trendHist, ytr)
+            if array.size(trendHist) > 250
+                array.shift(trendHist)
+        gp = pClose > 0 ? math.abs(dOpen / pClose - 1.0) : na
+        r2 = f_rank(gapHist, gp)
+        gapOK := na(r2) ? true : (r2 >= gapPctl)
+        if not na(gp)
+            array.push(gapHist, gp)
+            if array.size(gapHist) > 250
+                array.shift(gapHist)
+else if inSess
+    dHigh  := math.max(dHigh, high)
+    dLow   := math.min(dLow, low)
+    dClose := close
+
+if inSess
+    cpv += ((high + low + close) / 3.0) * volume
+    cv  += volume
+
+vwapV = inSess and cv > 0 ? cpv / cv : na
+bFrac = bandBps / 10000.0
+vUp   = na(vwapV) ? na : vwapV * (1.0 + bFrac)
+vDn   = na(vwapV) ? na : vwapV * (1.0 - bFrac)
+vGate = useGates ? (gapOK and trendOK) : true
+
+var bool vTraded = false
+if newSess
+    vTraded := false
+
+// ============================= HAR-RV ===============================
+f_rvAt(i) =>
+    [h, l] = request.security(syminfo.tickerid, "D", [high[i], low[i]], barmerge.gaps_off, barmerge.lookahead_off)
+    h > l and not na(h) and not na(l) ? (math.log(h / l) * math.log(h / l)) / (4.0 * math.log(2.0)) : 0.0
+
+rv01 = f_rvAt(1)
+rv02 = f_rvAt(2)
+rv03 = f_rvAt(3)
+rv04 = f_rvAt(4)
+rv05 = f_rvAt(5)
+rv06 = f_rvAt(6)
+rv07 = f_rvAt(7)
+rv08 = f_rvAt(8)
+rv09 = f_rvAt(9)
+rv10 = f_rvAt(10)
+rv11 = f_rvAt(11)
+rv12 = f_rvAt(12)
+rv13 = f_rvAt(13)
+rv14 = f_rvAt(14)
+rv15 = f_rvAt(15)
+rv16 = f_rvAt(16)
+rv17 = f_rvAt(17)
+rv18 = f_rvAt(18)
+rv19 = f_rvAt(19)
+rv20 = f_rvAt(20)
+rv21 = f_rvAt(21)
+rv22 = f_rvAt(22)
+
+rvD = rv01
+rvW = (rv01 + rv02 + rv03 + rv04 + rv05) / 5.0
+rvM = (rv01 + rv02 + rv03 + rv04 + rv05 + rv06 + rv07 + rv08 + rv09 + rv10 +
+       rv11 + rv12 + rv13 + rv14 + rv15 + rv16 + rv17 + rv18 + rv19 + rv20 + rv21 + rv22) / 22.0
+
+harReady = rv22 > 0
+
+var float emove = na
+var float hUp = na
+var float hDn = na
+var bool  rTaken = false
+
+if newSess
+    predVar   = 0.36 * rvD + 0.28 * rvW + 0.28 * rvM
+    predSigma = math.sqrt(math.max(predVar, 0.0))
+    emove := open * predSigma
+    hUp   := open + harK * emove
+    hDn   := open - harK * emove
+    rTaken := false
+
+// ============================== ORDERS ==============================
+// ON legs rest a limit order at the level from the RTH open, which is
+// exactly how the backtest fills them (touch of ONH / ONL / ONM).
+if tfOK and newSess and onRangeOK and not na(ONH)
+    if isONH
+        strategy.entry("ONH", strategy.short, limit = ONH)
+        strategy.exit("ONHx", from_entry = "ONH", limit = ONH - onB, stop = ONH + onB)
+    if isONL
+        strategy.entry("ONL", strategy.long, limit = ONL)
+        strategy.exit("ONLx", from_entry = "ONL", limit = ONL + onB, stop = ONL - onB)
+    if isONM and mDir != 0
+        strategy.entry("ONM", mDir == 1 ? strategy.long : strategy.short, limit = ONM)
+        strategy.exit("ONMx", from_entry = "ONM",
+             limit = ONM + mDir * onB, stop = ONM - mDir * onB)
+
+// VWAP: close-based break of the band, one trade per day.
+if tfOK and isVW and inSess and canEnterVwap and not vTraded and vGate and not na(vUp) and strategy.position_size == 0
+    if close > vUp
+        strategy.entry("VW", strategy.long)
+        strategy.exit("VWx", from_entry = "VW", limit = close + vwapTPp, stop = close - vwapSLp)
+        vTraded := true
+    else if close < vDn
+        strategy.entry("VW", strategy.short)
+        strategy.exit("VWx", from_entry = "VW", limit = close - vwapTPp, stop = close + vwapSLp)
+        vTraded := true
+
+// HAR-RV: close-based break of the vol-scaled band, one trade per day.
+if tfOK and isHAR and inSess and harReady and not rTaken and not na(hUp) and emove > 0 and strategy.position_size == 0
+    if close >= hUp
+        strategy.entry("HAR", strategy.long)
+        if not harEOD
+            strategy.exit("HARx", from_entry = "HAR", limit = close + harTPm * emove, stop = close - harSLm * emove)
+        rTaken := true
+    else if close <= hDn
+        strategy.entry("HAR", strategy.short)
+        if not harEOD
+            strategy.exit("HARx", from_entry = "HAR", limit = close - harTPm * emove, stop = close + harSLm * emove)
+        rTaken := true
+
+// Flat at 15:59 ET and drop any unfilled resting order.
+if isEOD
+    strategy.close_all(comment = "EOD")
+    strategy.cancel_all()
+
+// ============================= REFERENCE ============================
+plot(inSess and (isONH or isONL or isONM) ? ONH : na, "ONH", color = color.new(color.purple, 0), style = plot.style_linebr)
+plot(inSess and (isONH or isONL or isONM) ? ONL : na, "ONL", color = color.new(color.purple, 0), style = plot.style_linebr)
+plot(inSess and isONM ? ONM : na, "ONM", color = color.new(color.fuchsia, 0), style = plot.style_linebr)
+plot(inSess and isVW  ? vUp : na, "VWAP +band", color = color.new(color.orange, 40), style = plot.style_linebr)
+plot(inSess and isVW  ? vDn : na, "VWAP -band", color = color.new(color.orange, 40), style = plot.style_linebr)
+plot(inSess and isHAR and harReady ? hUp : na, "HAR up", color = color.new(color.teal, 20), style = plot.style_linebr)
+plot(inSess and isHAR and harReady ? hDn : na, "HAR dn", color = color.new(color.teal, 20), style = plot.style_linebr)

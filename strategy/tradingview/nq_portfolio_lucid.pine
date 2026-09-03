@@ -1,116 +1,91 @@
 //@version=5
 // =====================================================================
 // NQ PORTFOLIO — VWAP TP100/SL75 + ON Fade + HAR-RV Breakout
-// Live cockpit for the Lucid Flex 50k evaluation.
+// Live cockpit for the Lucid Flex 50k evaluation.  1-MINUTE CHART ONLY.
 //
-// Backtested NQ 2018-2025 (QuantConnect, real futures data, 1-min,
-// close-based, 0.75 pts cost per trade):
-//   VWAP TP100/SL75  n=940   avg +8.11 pts  z=+3.29
-//   ON fade B=15     n=4004  avg +2.50 pts  z=+10.87  (best)
-//   HAR-RV breakout  n=1581  avg +10.08 pts z=+3.10
-//   Pairwise correlations all |rho| < 0.2 -> full diversification
-//   Portfolio total +33584 pts, MDD -1529 pts, Return/MDD = 22:1
-//
-// REQUIRES A 1-MINUTE CHART on NQ/MNQ futures. Entry-window timing is
-// mapped bar-for-bar to the backtest; other timeframes shift it.
+// Backtested NQ 2018-2025 (QuantConnect, real futures, close-based,
+// 0.75 pts cost):  VWAP z=+3.29 | ON fade z=+10.87 | HAR-RV z=+3.10
+// Pairwise correlations all |rho| < 0.2.
 // =====================================================================
-indicator("NQ Portfolio — VWAP + ON Fade + HAR-RV", overlay=true,
-     max_labels_count=500)
+indicator("NQ Portfolio — VWAP + ON Fade + HAR-RV", overlay = true,
+     max_lines_count = 500, max_labels_count = 500)
 
 // ============================== INPUTS ==============================
 gA = "Account / risk sizing"
 instr        = input.string("MNQ", "Instrument", options = ["MNQ", "NQ"], group = gA)
-riskPerTrade = input.float(200.0, "Risk per trade ($)",  minval = 10,  step = 10, group = gA)
-maxDayRisk   = input.float(800.0, "Max daily risk ($)",  minval = 50,  step = 50, group = gA)
+riskPerTrade = input.float(200.0, "Risk per trade ($)", minval = 10, step = 10, group = gA)
+maxDayRisk   = input.float(800.0, "Max daily risk ($)", minval = 50, step = 50, group = gA)
 allowMinOne  = input.bool(false,  "Allow 1 contract even if over budget", group = gA)
 
-gP = "Pass plan (Lucid Flex 50k)"
-targetUSD   = input.float(3000.0, "Profit target ($)",   step = 100, group = gP)
-profitSoFar = input.float(0.0,    "Profit so far ($)",   step = 50,  group = gP)
-daysTarget  = input.int(7,        "Target days to pass", minval = 1, group = gP)
-daysUsed    = input.int(0,        "Trading days used",   minval = 0, group = gP)
-
-gS = "Strategies on/off"
-useVWAP = input.bool(true, "1) VWAP band  TP100 / SL75", group = gS)
-useON   = input.bool(true, "2) ON fade  ONH / ONL / ONM", group = gS)
-useHAR  = input.bool(true, "3) HAR-RV breakout",          group = gS)
+gS = "Strategies"
+useVWAP = input.bool(true, "1) VWAP band TP100 / SL75", group = gS)
+useON   = input.bool(true, "2) ON fade ONH / ONL / ONM", group = gS)
+useHAR  = input.bool(true, "3) HAR-RV breakout", group = gS)
 
 gV = "VWAP settings"
-bandBps   = input.float(20.0,  "Band (bps)",              step = 2.5, group = gV)
-vwapTPp   = input.float(100.0, "TP (pts)",                step = 5,   group = gV)
-vwapSLp   = input.float(75.0,  "SL (pts)",                step = 5,   group = gV)
-gapPctl   = input.float(25.0,  "Gap gate: rank >= (pctl)",  step = 5, group = gV)
-trendPctl = input.float(60.0,  "Trend gate: rank <= (pctl)", step = 5, group = gV)
+bandBps   = input.float(20.0,  "Band (bps)", step = 2.5, group = gV)
+vwapTPp   = input.float(100.0, "TP (pts)",   step = 5,   group = gV)
+vwapSLp   = input.float(75.0,  "SL (pts)",   step = 5,   group = gV)
+gapPctl   = input.float(25.0,  "Gap gate: rank >=",   step = 5, group = gV)
+trendPctl = input.float(60.0,  "Trend gate: rank <=", step = 5, group = gV)
 
 gO = "ON fade settings"
 onB        = input.float(15.0, "Bracket B (pts, TP = SL)", step = 1, group = gO)
-onMinRange = input.float(65.0, "Min ON range filter (pts)", step = 5, group = gO)
+onMinRange = input.float(65.0, "Min ON range (pts)", step = 5, group = gO)
 onUseH     = input.bool(true,  "Fade ONH (short)", group = gO)
 onUseL     = input.bool(true,  "Fade ONL (long)",  group = gO)
 onUseM     = input.bool(true,  "Fade ONM (toward RTH open)", group = gO)
 
 gH = "HAR-RV settings"
-harK      = input.float(0.65, "k multiplier",     minval = 0.1, step = 0.05, group = gH)
-harTPm    = input.float(2.0,  "TP (x emove)",     minval = 0.1, step = 0.1,  group = gH)
-harSLm    = input.float(1.0,  "SL (x emove)",     minval = 0.1, step = 0.1,  group = gH)
-
-gN = "On-screen notification"
-bannerBars  = input.int(15, "Keep banner on screen for N bars", minval = 1, maxval = 240, group = gN)
-bannerPosIn = input.string("top_center", "Banner position",
-     options = ["top_center", "bottom_center", "middle_center"], group = gN)
-bannerFlash = input.bool(true, "Flash chart background on signal", group = gN)
-bannerMarks = input.bool(true, "Label every signal with contract size", group = gN)
+harK   = input.float(0.65, "k multiplier", minval = 0.1, step = 0.05, group = gH)
+harTPm = input.float(2.0,  "TP (x emove)", minval = 0.1, step = 0.1,  group = gH)
+harSLm = input.float(1.0,  "SL (x emove)", minval = 0.1, step = 0.1,  group = gH)
 
 gD = "Display"
-minimalMode  = input.bool(false, "MINIMAL — only banner, table and entry/TP/SL", group = gD)
-proxPts      = input.float(10.0, "Approach distance (pts)", minval = 1, step = 1, group = gD)
-showLevels   = input.bool(true,  "Level lines",            group = gD)
-showLabels   = input.bool(true,  "Level labels (right edge)", group = gD)
-showBrackets = input.bool(true,  "Trade brackets (entry / TP / SL)", group = gD)
-showTable    = input.bool(true,  "Info table",             group = gD)
-tblPosIn     = input.string("top_right", "Table position",
+minimalMode = input.bool(false, "MINIMAL — banner + table + brackets only", group = gD)
+proxPts     = input.float(15.0, "Warning distance floor (pts)", minval = 1, step = 1, group = gD)
+proxAtrMult = input.float(2.0,  "...or N x recent 1-min range (bigger wins)", minval = 0.0, step = 0.25, group = gD)
+brkMinBars  = input.int(25,     "Minimum bracket length (bars)", minval = 3, group = gD)
+bannerBars  = input.int(15,     "Banner visible for N bars", minval = 1, maxval = 240, group = gD)
+bannerPosIn = input.string("top_center", "Banner position",
+     options = ["top_center", "bottom_center", "middle_center"], group = gD)
+tblPosIn    = input.string("top_right", "Table position",
      options = ["top_right", "top_left", "bottom_right", "bottom_left", "middle_right"], group = gD)
+showLevels  = input.bool(true, "Level lines (VWAP band, ON, HAR)", group = gD)
+showBrk     = input.bool(true, "Trade brackets (entry / TP / SL)", group = gD)
+showTable   = input.bool(true, "Status table", group = gD)
 
-// MINIMAL keeps exactly what the user trades from: the banner, the table
-// and the entry/TP/SL brackets. Everything decorative is switched off.
+// MINIMAL only strips decoration. Banner, table and brackets survive.
 showLevelsEff = showLevels and not minimalMode
-showLabelsEff = showLabels and not minimalMode
-showShapesEff = not minimalMode
-flashEff      = bannerFlash and not minimalMode
-markEff       = bannerMarks and not minimalMode
+flashEff      = not minimalMode
 
 // ============================ CONSTANTS =============================
-TZ   = "America/New_York"
-SESS = "0930-1600"
+TZ    = "America/New_York"
+SESS  = "0930-1600"
 ptVal = instr == "NQ" ? 20.0 : 2.0
 
 inSess  = not na(time(timeframe.period, SESS, TZ))
 newSess = inSess and not inSess[1]
 
-// QC bar-end minute. On a 1-min chart `time` is the bar OPEN, so the
-// backtest's "mend" (bar close minute) is minute-of-day + 1.
+// On a 1-min chart `time` is the bar OPEN, so the backtest's bar-close
+// minute ("mend") is minute-of-day + 1.
 minOfDay = hour(time, TZ) * 60 + minute(time, TZ)
 qcMend   = minOfDay + 1
+tfOK     = timeframe.in_seconds() == 60
 
-tfOK = timeframe.in_seconds() == 60
-
-// RTH windows, matched to the backtest exactly:
-//   VWAP entries  : mend 572..959   (09:31..15:58 bar opens)
-//   ON / HAR entry: mend 571..960   (09:30..15:59 bar opens)
-//   EOD flat      : mend 960        (15:59 bar)
-inRTH        = inSess
 canEnterVwap = inSess and qcMend >= 572 and qcMend <= 959
 isEOD        = inSess and qcMend == 960
 
+// Warning distance: at least the floor, but scaled to how far price
+// actually travels in a minute, so the heads-up really is ~1 bar early.
+atr1     = ta.atr(14)
+proxDist = math.max(proxPts, na(atr1) ? 0.0 : atr1 * proxAtrMult)
+
 // ========================= POSITION SIZING ==========================
 var float dayRiskUsed = 0.0
-
-// reset the daily risk budget at the very start of each session, BEFORE
-// any strategy can trigger (the 09:30 bar can already open ON/HAR trades)
 if newSess
     dayRiskUsed := 0.0
 
-// contracts for a given stop distance, respecting per-trade and daily budget
 f_size(stopPts) =>
     ok     = not na(stopPts) and stopPts > 0
     perCt  = ok ? stopPts * ptVal : 1.0
@@ -120,22 +95,22 @@ f_size(stopPts) =>
     ok ? (raw < 1 and allowMinOne and remain >= perCt ? 1 : raw) : 0
 
 f_riskOf(ct, stopPts) => na(stopPts) ? 0.0 : ct * stopPts * ptVal
+f_money(x) => "$" + str.tostring(na(x) ? 0.0 : x, "#")
+f_px(x)    => na(x) ? "-" : str.tostring(x, "#.##")
 
 // =========================== VWAP STRATEGY ==========================
-// previous / current RTH session OHLC (used by the percentile gates)
-var float dOpen = na
-var float dHigh = na
-var float dLow  = na
+var float dOpen  = na
+var float dHigh  = na
+var float dLow   = na
 var float dClose = na
-var float pOpen = na
-var float pHigh = na
-var float pLow  = na
+var float pOpen  = na
+var float pHigh  = na
+var float pLow   = na
 var float pClose = na
 
 var array<float> trendHist = array.new_float(0)
 var array<float> gapHist   = array.new_float(0)
 
-// percentile rank of v inside arr (past-only); na until 60 samples
 f_rank(arr, v) =>
     n = array.size(arr)
     cnt = 0
@@ -151,7 +126,6 @@ var float cpv = 0.0
 var float cv  = 0.0
 
 if newSess
-    // roll yesterday's RTH OHLC
     pOpen  := dOpen
     pHigh  := dHigh
     pLow   := dLow
@@ -192,8 +166,7 @@ vwapV = inSess and cv > 0 ? cpv / cv : na
 bFrac = bandBps / 10000.0
 vUp   = na(vwapV) ? na : vwapV * (1.0 + bFrac)
 vDn   = na(vwapV) ? na : vwapV * (1.0 - bFrac)
-
-vwapGatesOK = gapOK and trendOK
+vGate = gapOK and trendOK
 
 var int    vPos    = 0
 var bool   vTraded = false
@@ -202,6 +175,7 @@ var float  vTPl    = na
 var float  vSLl    = na
 var int    vCt     = 0
 var string vRes    = ""
+var float  pnlV    = 0.0
 
 if newSess
     vPos    := 0
@@ -211,33 +185,28 @@ if newSess
     vSLl    := na
     vCt     := 0
     vRes    := ""
+    pnlV    := 0.0
 
 vJustEntered = false
-vJustExited  = false
 
 if useVWAP and inSess and tfOK
-    // 1) manage open position first (mirrors the backtest ordering)
     if vPos != 0
-        hitTP = vPos == 1 ? high >= vTPl : low  <= vTPl
-        hitSL = vPos == 1 ? low  <= vSLl : high >= vSLl
-        if hitTP and hitSL
+        dirn  = vPos
+        hitTP = dirn == 1 ? high >= vTPl : low  <= vTPl
+        hitSL = dirn == 1 ? low  <= vSLl : high >= vSLl
+        if hitSL
+            pnlV += -vwapSLp * vCt * ptVal
             vRes := "SL"
             vPos := 0
-            vJustExited := true
-        else if hitSL
-            vRes := "SL"
-            vPos := 0
-            vJustExited := true
         else if hitTP
+            pnlV += vwapTPp * vCt * ptVal
             vRes := "TP"
             vPos := 0
-            vJustExited := true
         else if isEOD
+            pnlV += dirn * (close - vEntry) * vCt * ptVal
             vRes := "EOD"
             vPos := 0
-            vJustExited := true
-    // 2) entry
-    if vPos == 0 and not vTraded and vwapGatesOK and canEnterVwap and not na(vUp)
+    if vPos == 0 and not vTraded and vGate and canEnterVwap and not na(vUp)
         if close > vUp
             vPos    := 1
             vEntry  := close
@@ -258,7 +227,6 @@ if useVWAP and inSess and tfOK
             vJustEntered := true
 
 // ========================= ON FADE STRATEGY =========================
-// ON window = 18:00 ET prev day -> 09:30 ET today (mend >= 1080 or <= 570)
 inON = qcMend >= 1080 or qcMend <= 570
 
 var float onAccH = na
@@ -276,8 +244,6 @@ var float ONL = na
 var float ONM = na
 var float onRange = na
 var int   mDir = 0
-var float rthOpen = na
-
 var int   hSt = 0
 var int   lSt = 0
 var int   mSt = 0
@@ -293,13 +259,16 @@ var float mSL = na
 var int   hCt = 0
 var int   lCt = 0
 var int   mCt = 0
+var float pnlH = 0.0
+var float pnlL = 0.0
+var float pnlM = 0.0
 
 if newSess
     ONH     := onAccH
     ONL     := onAccL
     ONM     := na(onAccH) or na(onAccL) ? na : (onAccH + onAccL) / 2.0
     onRange := na(onAccH) or na(onAccL) ? na : onAccH - onAccL
-    rthOpen := open
+    rthOpen = open
     onAccH  := na
     onAccL  := na
     mDir    := na(ONM) ? 0 : (rthOpen > ONM ? 1 : rthOpen < ONM ? -1 : 0)
@@ -310,26 +279,25 @@ if newSess
     lCt := 0
     mCt := 0
     hEn := na
-    lEn := na
-    mEn := na
     hTP := na
     hSL := na
+    lEn := na
     lTP := na
     lSL := na
+    mEn := na
     mTP := na
     mSL := na
+    pnlH := 0.0
+    pnlL := 0.0
+    pnlM := 0.0
 
 onRangeOK = not na(onRange) and onRange >= onMinRange
 
 hJustEntered = false
 lJustEntered = false
 mJustEntered = false
-hJustExited  = false
-lJustExited  = false
-mJustExited  = false
 
-if useON and inRTH and tfOK and onRangeOK and not na(ONH)
-    // ---- ONH : fade short ----
+if useON and inSess and tfOK and onRangeOK and not na(ONH)
     if onUseH
         if hSt == 0 and high >= ONH
             hSt := 1
@@ -342,19 +310,15 @@ if useON and inRTH and tfOK and onRangeOK and not na(ONH)
         if hSt == 1
             tp = low  <= hTP
             sl = high >= hSL
-            if tp and sl
+            if sl
+                pnlH += -onB * hCt * ptVal
                 hSt := 3
-                hJustExited := true
             else if tp
+                pnlH += onB * hCt * ptVal
                 hSt := 2
-                hJustExited := true
-            else if sl
-                hSt := 3
-                hJustExited := true
             else if isEOD
+                pnlH += (hEn - close) * hCt * ptVal
                 hSt := 4
-                hJustExited := true
-    // ---- ONL : fade long ----
     if onUseL
         if lSt == 0 and low <= ONL
             lSt := 1
@@ -367,19 +331,15 @@ if useON and inRTH and tfOK and onRangeOK and not na(ONH)
         if lSt == 1
             tp = high >= lTP
             sl = low  <= lSL
-            if tp and sl
+            if sl
+                pnlL += -onB * lCt * ptVal
                 lSt := 3
-                lJustExited := true
             else if tp
+                pnlL += onB * lCt * ptVal
                 lSt := 2
-                lJustExited := true
-            else if sl
-                lSt := 3
-                lJustExited := true
             else if isEOD
+                pnlL += (close - lEn) * lCt * ptVal
                 lSt := 4
-                lJustExited := true
-    // ---- ONM : fade toward RTH open ----
     if onUseM and mDir != 0
         if mSt == 0 and high >= ONM and low <= ONM
             mSt := 1
@@ -392,23 +352,17 @@ if useON and inRTH and tfOK and onRangeOK and not na(ONH)
         if mSt == 1
             tp = mDir == 1 ? high >= mTP : low  <= mTP
             sl = mDir == 1 ? low  <= mSL : high >= mSL
-            if tp and sl
+            if sl
+                pnlM += -onB * mCt * ptVal
                 mSt := 3
-                mJustExited := true
             else if tp
+                pnlM += onB * mCt * ptVal
                 mSt := 2
-                mJustExited := true
-            else if sl
-                mSt := 3
-                mJustExited := true
             else if isEOD
+                pnlM += mDir * (close - mEn) * mCt * ptVal
                 mSt := 4
-                mJustExited := true
 
 // ========================= HAR-RV STRATEGY ==========================
-// Parkinson daily variance from the daily chart (deep history, works on
-// any intraday timeframe). Daily bar is full-session, so RV runs a bit
-// hot vs the RTH-only backtest -> default k = 0.65 compensates.
 f_rvAt(i) =>
     [h, l] = request.security(syminfo.tickerid, "D", [high[i], low[i]], barmerge.gaps_off, barmerge.lookahead_off)
     h > l and not na(h) and not na(l) ? (math.log(h / l) * math.log(h / l)) / (4.0 * math.log(2.0)) : 0.0
@@ -441,20 +395,19 @@ rvW = (rv01 + rv02 + rv03 + rv04 + rv05) / 5.0
 rvM = (rv01 + rv02 + rv03 + rv04 + rv05 + rv06 + rv07 + rv08 + rv09 + rv10 +
        rv11 + rv12 + rv13 + rv14 + rv15 + rv16 + rv17 + rv18 + rv19 + rv20 + rv21 + rv22) / 22.0
 
-// full 22-day history present? (oldest sample non-zero). Without this the
-// average is diluted by zeros, emove comes out too small and the levels
-// would fire spurious breakouts on a short chart history.
+// oldest sample non-zero => the full 22-day history really is present
 harReady = rv22 > 0
 
 var float emove = na
-var float hUp   = na
-var float hDn   = na
-var int   rSt   = 0
-var int   rDir  = 0
-var float rEn   = na
-var float rTP   = na
-var float rSL   = na
-var int   rCt   = 0
+var float hUp = na
+var float hDn = na
+var int   rSt = 0
+var int   rDir = 0
+var float rEn = na
+var float rTP = na
+var float rSL = na
+var int   rCt = 0
+var float pnlR = 0.0
 
 if newSess
     predVar   = 0.36 * rvD + 0.28 * rvW + 0.28 * rvM
@@ -468,13 +421,12 @@ if newSess
     rTP   := na
     rSL   := na
     rCt   := 0
+    pnlR  := 0.0
 
-harStopPts = na(emove) ? na : harSLm * emove
-
+harStop = na(emove) ? na : harSLm * emove
 rJustEntered = false
-rJustExited  = false
 
-if useHAR and inRTH and tfOK and harReady and not na(hUp) and emove > 0
+if useHAR and inSess and tfOK and harReady and not na(hUp) and emove > 0
     if rSt == 0
         if close >= hUp
             rSt  := 1
@@ -482,8 +434,8 @@ if useHAR and inRTH and tfOK and harReady and not na(hUp) and emove > 0
             rEn  := close
             rTP  := close + harTPm * emove
             rSL  := close - harSLm * emove
-            rCt  := f_size(harStopPts)
-            dayRiskUsed += f_riskOf(rCt, harStopPts)
+            rCt  := f_size(harStop)
+            dayRiskUsed += f_riskOf(rCt, harStop)
             rJustEntered := true
         else if close <= hDn
             rSt  := 1
@@ -491,99 +443,133 @@ if useHAR and inRTH and tfOK and harReady and not na(hUp) and emove > 0
             rEn  := close
             rTP  := close - harTPm * emove
             rSL  := close + harSLm * emove
-            rCt  := f_size(harStopPts)
-            dayRiskUsed += f_riskOf(rCt, harStopPts)
+            rCt  := f_size(harStop)
+            dayRiskUsed += f_riskOf(rCt, harStop)
             rJustEntered := true
     if rSt == 1
         tp = rDir == 1 ? high >= rTP : low  <= rTP
         sl = rDir == 1 ? low  <= rSL : high >= rSL
-        if tp and sl
+        if sl
+            pnlR += -harSLm * emove * rCt * ptVal
             rSt := 3
-            rJustExited := true
         else if tp
+            pnlR += harTPm * emove * rCt * ptVal
             rSt := 2
-            rJustExited := true
-        else if sl
-            rSt := 3
-            rJustExited := true
         else if isEOD
+            pnlR += rDir * (close - rEn) * rCt * ptVal
             rSt := 4
-            rJustExited := true
 
 // ====================== PRE-TRADE SIZE PREVIEW ======================
 vCtPrev = f_size(vwapSLp)
 oCtPrev = f_size(onB)
-rCtPrev = na(harStopPts) ? 0 : f_size(harStopPts)
+rCtPrev = na(harStop) ? 0 : f_size(harStop)
 
-// ============================== PLOTS ===============================
-pV  = plot(showLevelsEff and useVWAP and inSess ? vwapV : na, "VWAP",        color = color.new(color.orange, 20), linewidth = 1, style = plot.style_linebr)
-pVu = plot(showLevelsEff and useVWAP and inSess ? vUp   : na, "VWAP +band",  color = color.new(color.orange, 55), linewidth = 1, style = plot.style_linebr)
-pVd = plot(showLevelsEff and useVWAP and inSess ? vDn   : na, "VWAP -band",  color = color.new(color.orange, 55), linewidth = 1, style = plot.style_linebr)
+// ============================ LEVEL PLOTS ===========================
+pVu = plot(showLevelsEff and useVWAP and inSess ? vUp : na, "VWAP +band", color = color.new(color.orange, 55), style = plot.style_linebr)
+pVd = plot(showLevelsEff and useVWAP and inSess ? vDn : na, "VWAP -band", color = color.new(color.orange, 55), style = plot.style_linebr)
 fill(pVu, pVd, color = color.new(color.orange, 95))
+plot(showLevelsEff and useON and inSess ? ONH : na, "ONH",    color = color.new(color.purple, 0),  linewidth = 2, style = plot.style_linebr)
+plot(showLevelsEff and useON and inSess ? ONL : na, "ONL",    color = color.new(color.purple, 0),  linewidth = 2, style = plot.style_linebr)
+plot(showLevelsEff and useON and inSess ? ONM : na, "ON mid", color = color.new(color.purple, 45), style = plot.style_linebr)
+plot(showLevelsEff and useHAR and harReady and inSess ? hUp : na, "HAR up", color = color.new(color.teal, 10), linewidth = 2, style = plot.style_linebr)
+plot(showLevelsEff and useHAR and harReady and inSess ? hDn : na, "HAR dn", color = color.new(color.teal, 10), linewidth = 2, style = plot.style_linebr)
 
-plot(showLevelsEff and useON and inSess ? ONH : na, "ONH",      color = color.new(color.purple, 0),  linewidth = 2, style = plot.style_linebr)
-plot(showLevelsEff and useON and inSess ? ONL : na, "ONL",      color = color.new(color.purple, 0),  linewidth = 2, style = plot.style_linebr)
-plot(showLevelsEff and useON and inSess ? ONM : na, "ON mid",   color = color.new(color.purple, 45), linewidth = 1, style = plot.style_linebr)
-
-plot(showLevelsEff and useHAR and harReady and inSess ? hUp : na, "HAR up",  color = color.new(color.teal, 10), linewidth = 2, style = plot.style_linebr)
-plot(showLevelsEff and useHAR and harReady and inSess ? hDn : na, "HAR dn",  color = color.new(color.teal, 10), linewidth = 2, style = plot.style_linebr)
-
-// ========================== TRADE BRACKETS ==========================
-// Shown from the entry bar to the end of the session, NOT only while the
-// trade is open. An ON fade can enter and exit inside the same 1-min bar
-// (that is how the backtest resolves it), so an "only while open" test
-// would render nothing at all for those trades and would also erase the
-// levels the moment a trade closed.
-vAct = showBrackets and inSess and vTraded
-hAct = showBrackets and inSess and hSt != 0
-lAct = showBrackets and inSess and lSt != 0
-mAct = showBrackets and inSess and mSt != 0
-rAct = showBrackets and inSess and rSt != 0
-
+// ====================== PERSISTENT TRADE BRACKETS ===================
+// Line objects, never deleted, so EVERY past trade keeps its entry / TP
+// / SL on the chart. Each bracket is at least brkMinBars long, so a
+// trade that opens and closes inside one minute is still visible.
 CE = color.new(color.blue,  0)
 CT = color.new(color.green, 0)
 CS = color.new(color.red,   0)
 
-plot(vAct ? vEntry : na, "VWAP entry",  color = CE, linewidth = 2, style = plot.style_linebr)
-plot(vAct ? vTPl   : na, "VWAP TP",     color = CT, linewidth = 1, style = plot.style_linebr)
-plot(vAct ? vSLl   : na, "VWAP SL",     color = CS, linewidth = 1, style = plot.style_linebr)
+var line vE = na
+var line vT = na
+var line vS = na
+var int  vB = 0
+var line hE = na
+var line hT = na
+var line hS = na
+var int  hB = 0
+var line lE = na
+var line lT = na
+var line lS = na
+var int  lB = 0
+var line mE = na
+var line mT = na
+var line mS = na
+var int  mB = 0
+var line rE = na
+var line rT = na
+var line rS = na
+var int  rB = 0
 
-plot(hAct ? hEn : na, "ON-H entry", color = CE, linewidth = 2, style = plot.style_linebr)
-plot(hAct ? hTP : na, "ON-H TP",    color = CT, linewidth = 1, style = plot.style_linebr)
-plot(hAct ? hSL : na, "ON-H SL",    color = CS, linewidth = 1, style = plot.style_linebr)
+if showBrk and vJustEntered
+    vB := bar_index
+    vE := line.new(vB, vEntry, vB + brkMinBars, vEntry, color = CE, width = 2)
+    vT := line.new(vB, vTPl,   vB + brkMinBars, vTPl,   color = CT, width = 1)
+    vS := line.new(vB, vSLl,   vB + brkMinBars, vSLl,   color = CS, width = 1)
+    label.new(vB, vPos == 1 ? low : high, "VWAP " + (vPos == 1 ? "L " : "S ") + str.tostring(vCt) + " " + instr,
+         style = vPos == 1 ? label.style_label_up : label.style_label_down,
+         color = vPos == 1 ? color.new(color.green, 20) : color.new(color.red, 20),
+         textcolor = color.white, size = size.small)
+if showBrk and vPos != 0 and not na(vE)
+    line.set_x2(vE, math.max(bar_index, vB + brkMinBars))
+    line.set_x2(vT, math.max(bar_index, vB + brkMinBars))
+    line.set_x2(vS, math.max(bar_index, vB + brkMinBars))
 
-plot(lAct ? lEn : na, "ON-L entry", color = CE, linewidth = 2, style = plot.style_linebr)
-plot(lAct ? lTP : na, "ON-L TP",    color = CT, linewidth = 1, style = plot.style_linebr)
-plot(lAct ? lSL : na, "ON-L SL",    color = CS, linewidth = 1, style = plot.style_linebr)
+if showBrk and hJustEntered
+    hB := bar_index
+    hE := line.new(hB, hEn, hB + brkMinBars, hEn, color = CE, width = 2)
+    hT := line.new(hB, hTP, hB + brkMinBars, hTP, color = CT, width = 1)
+    hS := line.new(hB, hSL, hB + brkMinBars, hSL, color = CS, width = 1)
+    label.new(hB, high, "ON-H S " + str.tostring(hCt) + " " + instr, style = label.style_label_down,
+         color = color.new(color.red, 20), textcolor = color.white, size = size.small)
+if showBrk and hSt == 1 and not na(hE)
+    line.set_x2(hE, math.max(bar_index, hB + brkMinBars))
+    line.set_x2(hT, math.max(bar_index, hB + brkMinBars))
+    line.set_x2(hS, math.max(bar_index, hB + brkMinBars))
 
-plot(mAct ? mEn : na, "ON-M entry", color = CE, linewidth = 2, style = plot.style_linebr)
-plot(mAct ? mTP : na, "ON-M TP",    color = CT, linewidth = 1, style = plot.style_linebr)
-plot(mAct ? mSL : na, "ON-M SL",    color = CS, linewidth = 1, style = plot.style_linebr)
+if showBrk and lJustEntered
+    lB := bar_index
+    lE := line.new(lB, lEn, lB + brkMinBars, lEn, color = CE, width = 2)
+    lT := line.new(lB, lTP, lB + brkMinBars, lTP, color = CT, width = 1)
+    lS := line.new(lB, lSL, lB + brkMinBars, lSL, color = CS, width = 1)
+    label.new(lB, low, "ON-L L " + str.tostring(lCt) + " " + instr, style = label.style_label_up,
+         color = color.new(color.green, 20), textcolor = color.white, size = size.small)
+if showBrk and lSt == 1 and not na(lE)
+    line.set_x2(lE, math.max(bar_index, lB + brkMinBars))
+    line.set_x2(lT, math.max(bar_index, lB + brkMinBars))
+    line.set_x2(lS, math.max(bar_index, lB + brkMinBars))
 
-plot(rAct ? rEn : na, "HAR entry",  color = CE, linewidth = 2, style = plot.style_linebr)
-plot(rAct ? rTP : na, "HAR TP",     color = CT, linewidth = 1, style = plot.style_linebr)
-plot(rAct ? rSL : na, "HAR SL",     color = CS, linewidth = 1, style = plot.style_linebr)
+if showBrk and mJustEntered
+    mB := bar_index
+    mE := line.new(mB, mEn, mB + brkMinBars, mEn, color = CE, width = 2)
+    mT := line.new(mB, mTP, mB + brkMinBars, mTP, color = CT, width = 1)
+    mS := line.new(mB, mSL, mB + brkMinBars, mSL, color = CS, width = 1)
+    label.new(mB, mDir == 1 ? low : high, "ON-M " + (mDir == 1 ? "L " : "S ") + str.tostring(mCt) + " " + instr,
+         style = mDir == 1 ? label.style_label_up : label.style_label_down,
+         color = mDir == 1 ? color.new(color.green, 20) : color.new(color.red, 20),
+         textcolor = color.white, size = size.small)
+if showBrk and mSt == 1 and not na(mE)
+    line.set_x2(mE, math.max(bar_index, mB + brkMinBars))
+    line.set_x2(mT, math.max(bar_index, mB + brkMinBars))
+    line.set_x2(mS, math.max(bar_index, mB + brkMinBars))
 
+if showBrk and rJustEntered
+    rB := bar_index
+    rE := line.new(rB, rEn, rB + brkMinBars, rEn, color = CE, width = 2)
+    rT := line.new(rB, rTP, rB + brkMinBars, rTP, color = CT, width = 1)
+    rS := line.new(rB, rSL, rB + brkMinBars, rSL, color = CS, width = 1)
+    label.new(rB, rDir == 1 ? low : high, "HAR " + (rDir == 1 ? "L " : "S ") + str.tostring(rCt) + " " + instr,
+         style = rDir == 1 ? label.style_label_up : label.style_label_down,
+         color = rDir == 1 ? color.new(color.green, 20) : color.new(color.red, 20),
+         textcolor = color.white, size = size.small)
+if showBrk and rSt == 1 and not na(rE)
+    line.set_x2(rE, math.max(bar_index, rB + brkMinBars))
+    line.set_x2(rT, math.max(bar_index, rB + brkMinBars))
+    line.set_x2(rS, math.max(bar_index, rB + brkMinBars))
 
-// ============================== SHAPES ==============================
-plotshape(showShapesEff and vJustEntered and vPos ==  1, "VWAP long",  shape.triangleup,   location.belowbar, color.new(color.orange, 0), size = size.tiny,  text = "VW")
-plotshape(showShapesEff and vJustEntered and vPos == -1, "VWAP short", shape.triangledown, location.abovebar, color.new(color.orange, 0), size = size.tiny,  text = "VW")
-plotshape(showShapesEff and lJustEntered,               "ONL long",   shape.triangleup,   location.belowbar, color.new(color.purple, 0), size = size.tiny,  text = "ONL")
-plotshape(showShapesEff and hJustEntered,               "ONH short",  shape.triangledown, location.abovebar, color.new(color.purple, 0), size = size.tiny,  text = "ONH")
-plotshape(showShapesEff and mJustEntered and mDir ==  1, "ONM long",   shape.triangleup,   location.belowbar, color.new(color.fuchsia, 0), size = size.tiny, text = "ONM")
-plotshape(showShapesEff and mJustEntered and mDir == -1, "ONM short",  shape.triangledown, location.abovebar, color.new(color.fuchsia, 0), size = size.tiny, text = "ONM")
-plotshape(showShapesEff and rJustEntered and rDir ==  1, "HAR long",   shape.triangleup,   location.belowbar, color.new(color.teal, 0),   size = size.tiny,  text = "HAR")
-plotshape(showShapesEff and rJustEntered and rDir == -1, "HAR short",  shape.triangledown, location.abovebar, color.new(color.teal, 0),   size = size.tiny,  text = "HAR")
-
-anyExitTP = (vJustExited and vRes == "TP") or (hJustExited and hSt == 2) or (lJustExited and lSt == 2) or (mJustExited and mSt == 2) or (rJustExited and rSt == 2)
-anyExitSL = (vJustExited and vRes == "SL") or (hJustExited and hSt == 3) or (lJustExited and lSt == 3) or (mJustExited and mSt == 3) or (rJustExited and rSt == 3)
-anyExitEOD = (vJustExited and vRes == "EOD") or (hJustExited and hSt == 4) or (lJustExited and lSt == 4) or (mJustExited and mSt == 4) or (rJustExited and rSt == 4)
-
-plotshape(showShapesEff and anyExitTP, "TP",  shape.diamond, location.abovebar, color.new(color.green, 0), size = size.tiny, text = "TP")
-plotshape(showShapesEff and anyExitSL, "SL",  shape.xcross,  location.belowbar, color.new(color.red,   0), size = size.tiny, text = "SL")
-plotshape(showShapesEff and anyExitEOD, "EOD", shape.xcross,  location.abovebar, color.new(color.gray,  0), size = size.tiny, text = "EOD")
-
-// ========================= APPROACH ALERTS ==========================
+// ========================== APPROACH WATCH ==========================
 var bool nearV = false
 var bool nearH = false
 var bool nearL = false
@@ -596,366 +582,176 @@ if newSess
     nearM := false
     nearR := false
 
-vNearNow = useVWAP and inSess and tfOK and vPos == 0 and not vTraded and vwapGatesOK and canEnterVwap and not na(vUp) and (math.abs(close - vUp) <= proxPts or math.abs(close - vDn) <= proxPts)
-hNearNow = useON and onUseH and inRTH and tfOK and onRangeOK and hSt == 0 and not na(ONH) and math.abs(close - ONH) <= proxPts
-lNearNow = useON and onUseL and inRTH and tfOK and onRangeOK and lSt == 0 and not na(ONL) and math.abs(close - ONL) <= proxPts
-mNearNow = useON and onUseM and inRTH and tfOK and onRangeOK and mSt == 0 and mDir != 0 and not na(ONM) and math.abs(close - ONM) <= proxPts
-rNearNow = useHAR and inRTH and tfOK and harReady and rSt == 0 and not na(hUp) and (math.abs(close - hUp) <= proxPts or math.abs(close - hDn) <= proxPts)
+vNear = useVWAP and inSess and tfOK and vPos == 0 and not vTraded and vGate and canEnterVwap and not na(vUp) and (math.abs(close - vUp) <= proxDist or math.abs(close - vDn) <= proxDist)
+hNear = useON and onUseH and inSess and tfOK and onRangeOK and hSt == 0 and not na(ONH) and math.abs(close - ONH) <= proxDist
+lNear = useON and onUseL and inSess and tfOK and onRangeOK and lSt == 0 and not na(ONL) and math.abs(close - ONL) <= proxDist
+mNear = useON and onUseM and inSess and tfOK and onRangeOK and mSt == 0 and mDir != 0 and not na(ONM) and math.abs(close - ONM) <= proxDist
+rNear = useHAR and inSess and tfOK and harReady and rSt == 0 and not na(hUp) and (math.abs(close - hUp) <= proxDist or math.abs(close - hDn) <= proxDist)
 
-vFireNear = vNearNow and not nearV
-hFireNear = hNearNow and not nearH
-lFireNear = lNearNow and not nearL
-mFireNear = mNearNow and not nearM
-rFireNear = rNearNow and not nearR
-
-if vFireNear
+vFire = vNear and not nearV
+hFire = hNear and not nearH
+lFire = lNear and not nearL
+mFire = mNear and not nearM
+rFire = rNear and not nearR
+if vFire
     nearV := true
-if hFireNear
+if hFire
     nearH := true
-if lFireNear
+if lFire
     nearL := true
-if mFireNear
+if mFire
     nearM := true
-if rFireNear
+if rFire
     nearR := true
 
-plotshape(showShapesEff and (vFireNear or hFireNear or lFireNear or mFireNear or rFireNear), "Approaching",
-     shape.circle, location.belowbar, color.new(color.yellow, 20), size = size.tiny)
+// ============================== BANNER ==============================
+f_join(a, b) => a == "" ? b : a + "\n" + b
 
-// ============================== ALERTS ==============================
-f_money(x) => "$" + str.tostring(na(x) ? 0.0 : x, "#")
-
-if vFireNear
-    alert("NEAR  VWAP band  |  " + str.tostring(vCtPrev) + " " + instr +
-      "  |  SL " + str.tostring(vwapSLp, "#") + " pts  risk " + f_money(f_riskOf(vCtPrev, vwapSLp)) +
-      "  |  up " + str.tostring(vUp, "#.##") + "  dn " + str.tostring(vDn, "#.##"), alert.freq_once_per_bar_close)
-if hFireNear
-    alert("NEAR  ONH short @ " + str.tostring(ONH, "#.##") + "  |  " + str.tostring(oCtPrev) + " " + instr +
-      "  |  TP " + str.tostring(ONH - onB, "#.##") + "  SL " + str.tostring(ONH + onB, "#.##") +
-      "  risk " + f_money(f_riskOf(oCtPrev, onB)), alert.freq_once_per_bar_close)
-if lFireNear
-    alert("NEAR  ONL long @ " + str.tostring(ONL, "#.##") + "  |  " + str.tostring(oCtPrev) + " " + instr +
-      "  |  TP " + str.tostring(ONL + onB, "#.##") + "  SL " + str.tostring(ONL - onB, "#.##") +
-      "  risk " + f_money(f_riskOf(oCtPrev, onB)), alert.freq_once_per_bar_close)
-if mFireNear
-    alert("NEAR  ONM " + (mDir == 1 ? "long" : "short") + " @ " + str.tostring(ONM, "#.##") +
-      "  |  " + str.tostring(oCtPrev) + " " + instr +
-      "  |  TP " + str.tostring(ONM + mDir * onB, "#.##") + "  SL " + str.tostring(ONM - mDir * onB, "#.##") +
-      "  risk " + f_money(f_riskOf(oCtPrev, onB)), alert.freq_once_per_bar_close)
-if rFireNear
-    alert("NEAR  HAR-RV breakout  |  " + str.tostring(rCtPrev) + " " + instr +
-      "  |  SL " + str.tostring(harStopPts, "#") + " pts  risk " + f_money(f_riskOf(rCtPrev, harStopPts)) +
-      "  |  up " + str.tostring(hUp, "#.##") + "  dn " + str.tostring(hDn, "#.##"), alert.freq_once_per_bar_close)
-
-if vJustEntered
-    alert("ENTRY  VWAP " + (vPos == 1 ? "LONG" : "SHORT") + " @ " + str.tostring(vEntry, "#.##") +
-      "  |  " + str.tostring(vCt) + " " + instr +
-      "  |  TP " + str.tostring(vTPl, "#.##") + "  SL " + str.tostring(vSLl, "#.##") +
-      "  |  risk " + f_money(f_riskOf(vCt, vwapSLp)), alert.freq_once_per_bar_close)
-if hJustEntered
-    alert("ENTRY  ONH SHORT @ " + str.tostring(hEn, "#.##") + "  |  " + str.tostring(hCt) + " " + instr +
-      "  |  TP " + str.tostring(hTP, "#.##") + "  SL " + str.tostring(hSL, "#.##") +
-      "  |  risk " + f_money(f_riskOf(hCt, onB)), alert.freq_once_per_bar_close)
-if lJustEntered
-    alert("ENTRY  ONL LONG @ " + str.tostring(lEn, "#.##") + "  |  " + str.tostring(lCt) + " " + instr +
-      "  |  TP " + str.tostring(lTP, "#.##") + "  SL " + str.tostring(lSL, "#.##") +
-      "  |  risk " + f_money(f_riskOf(lCt, onB)), alert.freq_once_per_bar_close)
-if mJustEntered
-    alert("ENTRY  ONM " + (mDir == 1 ? "LONG" : "SHORT") + " @ " + str.tostring(mEn, "#.##") +
-      "  |  " + str.tostring(mCt) + " " + instr +
-      "  |  TP " + str.tostring(mTP, "#.##") + "  SL " + str.tostring(mSL, "#.##") +
-      "  |  risk " + f_money(f_riskOf(mCt, onB)), alert.freq_once_per_bar_close)
-if rJustEntered
-    alert("ENTRY  HAR-RV " + (rDir == 1 ? "LONG" : "SHORT") + " @ " + str.tostring(rEn, "#.##") +
-      "  |  " + str.tostring(rCt) + " " + instr +
-      "  |  TP " + str.tostring(rTP, "#.##") + "  SL " + str.tostring(rSL, "#.##") +
-      "  |  risk " + f_money(f_riskOf(rCt, harStopPts)), alert.freq_once_per_bar_close)
-
-if anyExitTP
-    alert("EXIT  TP hit", alert.freq_once_per_bar_close)
-if anyExitSL
-    alert("EXIT  SL hit", alert.freq_once_per_bar_close)
-if anyExitEOD
-    alert("EXIT  EOD flat 15:59 ET", alert.freq_once_per_bar_close)
-
-// ==================== ON-SCREEN NOTIFICATION ========================
-// Everything below works with no TradingView alert configured: a large
-// banner, a background flash, per-signal labels carrying the contract
-// count, and a persistent LIVE line listing every open position.
-
-f_join(base, add) => base == "" ? add : base + "\n" + add
-
-// ---- build this bar's event text ----
-nEnt    = 0
-nLong   = 0
-nShort  = 0
-evtHead = ""
-evtBody = ""
+nEnt   = 0
+nLong  = 0
+nShort = 0
+eHead  = ""
+eBody  = ""
 
 if vJustEntered
     nEnt += 1
-    nLong := nLong + (vPos == 1 ? 1 : 0)
+    nLong  := nLong  + (vPos ==  1 ? 1 : 0)
     nShort := nShort + (vPos == -1 ? 1 : 0)
-    evtHead := f_join(evtHead, "ENTER  VWAP " + (vPos == 1 ? "LONG" : "SHORT") + "   ->   " + str.tostring(vCt) + " " + instr)
-    evtBody := f_join(evtBody, "entry " + str.tostring(vEntry, "#.##") + "    TP " + str.tostring(vTPl, "#.##") + "    SL " + str.tostring(vSLl, "#.##") + "    risk " + f_money(f_riskOf(vCt, vwapSLp)))
+    eHead := f_join(eHead, "ENTER  VWAP " + (vPos == 1 ? "LONG" : "SHORT") + "   ->   " + str.tostring(vCt) + " " + instr)
+    eBody := f_join(eBody, "entry " + f_px(vEntry) + "    TP " + f_px(vTPl) + "    SL " + f_px(vSLl) + "    risk " + f_money(f_riskOf(vCt, vwapSLp)))
 if hJustEntered
     nEnt += 1
     nShort += 1
-    evtHead := f_join(evtHead, "ENTER  ON-H SHORT   ->   " + str.tostring(hCt) + " " + instr)
-    evtBody := f_join(evtBody, "entry " + str.tostring(hEn, "#.##") + "    TP " + str.tostring(hTP, "#.##") + "    SL " + str.tostring(hSL, "#.##") + "    risk " + f_money(f_riskOf(hCt, onB)))
+    eHead := f_join(eHead, "ENTER  ON-H SHORT   ->   " + str.tostring(hCt) + " " + instr)
+    eBody := f_join(eBody, "entry " + f_px(hEn) + "    TP " + f_px(hTP) + "    SL " + f_px(hSL) + "    risk " + f_money(f_riskOf(hCt, onB)))
 if lJustEntered
     nEnt += 1
     nLong += 1
-    evtHead := f_join(evtHead, "ENTER  ON-L LONG   ->   " + str.tostring(lCt) + " " + instr)
-    evtBody := f_join(evtBody, "entry " + str.tostring(lEn, "#.##") + "    TP " + str.tostring(lTP, "#.##") + "    SL " + str.tostring(lSL, "#.##") + "    risk " + f_money(f_riskOf(lCt, onB)))
+    eHead := f_join(eHead, "ENTER  ON-L LONG   ->   " + str.tostring(lCt) + " " + instr)
+    eBody := f_join(eBody, "entry " + f_px(lEn) + "    TP " + f_px(lTP) + "    SL " + f_px(lSL) + "    risk " + f_money(f_riskOf(lCt, onB)))
 if mJustEntered
     nEnt += 1
-    nLong := nLong + (mDir == 1 ? 1 : 0)
+    nLong  := nLong  + (mDir ==  1 ? 1 : 0)
     nShort := nShort + (mDir == -1 ? 1 : 0)
-    evtHead := f_join(evtHead, "ENTER  ON-M " + (mDir == 1 ? "LONG" : "SHORT") + "   ->   " + str.tostring(mCt) + " " + instr)
-    evtBody := f_join(evtBody, "entry " + str.tostring(mEn, "#.##") + "    TP " + str.tostring(mTP, "#.##") + "    SL " + str.tostring(mSL, "#.##") + "    risk " + f_money(f_riskOf(mCt, onB)))
+    eHead := f_join(eHead, "ENTER  ON-M " + (mDir == 1 ? "LONG" : "SHORT") + "   ->   " + str.tostring(mCt) + " " + instr)
+    eBody := f_join(eBody, "entry " + f_px(mEn) + "    TP " + f_px(mTP) + "    SL " + f_px(mSL) + "    risk " + f_money(f_riskOf(mCt, onB)))
 if rJustEntered
     nEnt += 1
-    nLong := nLong + (rDir == 1 ? 1 : 0)
+    nLong  := nLong  + (rDir ==  1 ? 1 : 0)
     nShort := nShort + (rDir == -1 ? 1 : 0)
-    evtHead := f_join(evtHead, "ENTER  HAR-RV " + (rDir == 1 ? "LONG" : "SHORT") + "   ->   " + str.tostring(rCt) + " " + instr)
-    evtBody := f_join(evtBody, "entry " + str.tostring(rEn, "#.##") + "    TP " + str.tostring(rTP, "#.##") + "    SL " + str.tostring(rSL, "#.##") + "    risk " + f_money(f_riskOf(rCt, harStopPts)))
+    eHead := f_join(eHead, "ENTER  HAR-RV " + (rDir == 1 ? "LONG" : "SHORT") + "   ->   " + str.tostring(rCt) + " " + instr)
+    eBody := f_join(eBody, "entry " + f_px(rEn) + "    TP " + f_px(rTP) + "    SL " + f_px(rSL) + "    risk " + f_money(f_riskOf(rCt, harStop)))
 
-// approach messages only when nothing actually triggered this bar
-anyNear = vFireNear or hFireNear or lFireNear or mFireNear or rFireNear
+anyNear = vFire or hFire or lFire or mFire or rFire
 if nEnt == 0
-    if vFireNear
-        evtHead := f_join(evtHead, "GETTING CLOSE  VWAP band   ->   " + str.tostring(vCtPrev) + " " + instr)
-        evtBody := f_join(evtBody, "up " + str.tostring(vUp, "#.##") + "   dn " + str.tostring(vDn, "#.##") + "    SL " + str.tostring(vwapSLp, "#") + " pts    risk " + f_money(f_riskOf(vCtPrev, vwapSLp)))
-    if hFireNear
-        evtHead := f_join(evtHead, "GETTING CLOSE  ON-H SHORT   ->   " + str.tostring(oCtPrev) + " " + instr)
-        evtBody := f_join(evtBody, "entry " + str.tostring(ONH, "#.##") + "    TP " + str.tostring(ONH - onB, "#.##") + "    SL " + str.tostring(ONH + onB, "#.##") + "    risk " + f_money(f_riskOf(oCtPrev, onB)))
-    if lFireNear
-        evtHead := f_join(evtHead, "GETTING CLOSE  ON-L LONG   ->   " + str.tostring(oCtPrev) + " " + instr)
-        evtBody := f_join(evtBody, "entry " + str.tostring(ONL, "#.##") + "    TP " + str.tostring(ONL + onB, "#.##") + "    SL " + str.tostring(ONL - onB, "#.##") + "    risk " + f_money(f_riskOf(oCtPrev, onB)))
-    if mFireNear
-        evtHead := f_join(evtHead, "GETTING CLOSE  ON-M " + (mDir == 1 ? "LONG" : "SHORT") + "   ->   " + str.tostring(oCtPrev) + " " + instr)
-        evtBody := f_join(evtBody, "entry " + str.tostring(ONM, "#.##") + "    TP " + str.tostring(ONM + mDir * onB, "#.##") + "    SL " + str.tostring(ONM - mDir * onB, "#.##") + "    risk " + f_money(f_riskOf(oCtPrev, onB)))
-    if rFireNear
-        evtHead := f_join(evtHead, "GETTING CLOSE  HAR-RV   ->   " + str.tostring(rCtPrev) + " " + instr)
-        evtBody := f_join(evtBody, "up " + str.tostring(hUp, "#.##") + "   dn " + str.tostring(hDn, "#.##") + "    SL " + str.tostring(harStopPts, "#") + " pts    risk " + f_money(f_riskOf(rCtPrev, harStopPts)))
+    if vFire
+        eHead := f_join(eHead, "GET READY  VWAP band   ->   " + str.tostring(vCtPrev) + " " + instr)
+        eBody := f_join(eBody, "trigger " + f_px(vUp) + " / " + f_px(vDn) + "    TP +/-" + str.tostring(vwapTPp, "#") + "    SL +/-" + str.tostring(vwapSLp, "#") + "    risk " + f_money(f_riskOf(vCtPrev, vwapSLp)))
+    if hFire
+        eHead := f_join(eHead, "GET READY  ON-H SHORT   ->   " + str.tostring(oCtPrev) + " " + instr)
+        eBody := f_join(eBody, "entry " + f_px(ONH) + "    TP " + f_px(ONH - onB) + "    SL " + f_px(ONH + onB) + "    risk " + f_money(f_riskOf(oCtPrev, onB)))
+    if lFire
+        eHead := f_join(eHead, "GET READY  ON-L LONG   ->   " + str.tostring(oCtPrev) + " " + instr)
+        eBody := f_join(eBody, "entry " + f_px(ONL) + "    TP " + f_px(ONL + onB) + "    SL " + f_px(ONL - onB) + "    risk " + f_money(f_riskOf(oCtPrev, onB)))
+    if mFire
+        eHead := f_join(eHead, "GET READY  ON-M " + (mDir == 1 ? "LONG" : "SHORT") + "   ->   " + str.tostring(oCtPrev) + " " + instr)
+        eBody := f_join(eBody, "entry " + f_px(ONM) + "    TP " + f_px(ONM + mDir * onB) + "    SL " + f_px(ONM - mDir * onB) + "    risk " + f_money(f_riskOf(oCtPrev, onB)))
+    if rFire
+        eHead := f_join(eHead, "GET READY  HAR-RV breakout   ->   " + str.tostring(rCtPrev) + " " + instr)
+        eBody := f_join(eBody, "trigger " + f_px(hUp) + " / " + f_px(hDn) + "    TP +/-" + str.tostring(harTPm * emove, "#") + "    SL +/-" + str.tostring(harStop, "#") + "    risk " + f_money(f_riskOf(rCtPrev, harStop)))
 
-// ---- latch the message so it stays readable for a while ----
-var string bHead  = ""
-var string bBody  = ""
-var color  bCol   = color.new(color.gray, 0)
-var int    bUntil = 0
+var string bHead = ""
+var string bBody = ""
+var color  bCol  = color.new(color.gray, 0)
+var int    bTill = 0
+if eHead != ""
+    bHead := eHead
+    bBody := eBody
+    bCol  := nEnt == 0 ? color.new(color.orange, 0) : nShort == 0 ? color.new(color.green, 0) : nLong == 0 ? color.new(color.red, 0) : color.new(color.blue, 0)
+    bTill := bar_index + bannerBars
 
-if evtHead != ""
-    bHead  := evtHead
-    bBody  := evtBody
-    bCol   := nEnt == 0 ? color.new(color.orange, 0) : nShort == 0 ? color.new(color.green, 0) : nLong == 0 ? color.new(color.red, 0) : color.new(color.blue, 0)
-    bUntil := bar_index + bannerBars
-
-showBanner = bHead != "" and bar_index <= bUntil
-
-// ---- LIVE line: every position currently open ----
 liveTxt = ""
 if vPos != 0
-    liveTxt := f_join(liveTxt, "VWAP " + (vPos == 1 ? "LONG " : "SHORT ") + str.tostring(vCt) + " " + instr + "  TP " + str.tostring(vTPl, "#.##") + "  SL " + str.tostring(vSLl, "#.##"))
+    liveTxt := f_join(liveTxt, "VWAP " + (vPos == 1 ? "L " : "S ") + str.tostring(vCt) + " " + instr + "  TP " + f_px(vTPl) + "  SL " + f_px(vSLl))
 if hSt == 1
-    liveTxt := f_join(liveTxt, "ON-H SHORT " + str.tostring(hCt) + " " + instr + "  TP " + str.tostring(hTP, "#.##") + "  SL " + str.tostring(hSL, "#.##"))
+    liveTxt := f_join(liveTxt, "ON-H S " + str.tostring(hCt) + " " + instr + "  TP " + f_px(hTP) + "  SL " + f_px(hSL))
 if lSt == 1
-    liveTxt := f_join(liveTxt, "ON-L LONG " + str.tostring(lCt) + " " + instr + "  TP " + str.tostring(lTP, "#.##") + "  SL " + str.tostring(lSL, "#.##"))
+    liveTxt := f_join(liveTxt, "ON-L L " + str.tostring(lCt) + " " + instr + "  TP " + f_px(lTP) + "  SL " + f_px(lSL))
 if mSt == 1
-    liveTxt := f_join(liveTxt, "ON-M " + (mDir == 1 ? "LONG " : "SHORT ") + str.tostring(mCt) + " " + instr + "  TP " + str.tostring(mTP, "#.##") + "  SL " + str.tostring(mSL, "#.##"))
+    liveTxt := f_join(liveTxt, "ON-M " + (mDir == 1 ? "L " : "S ") + str.tostring(mCt) + " " + instr + "  TP " + f_px(mTP) + "  SL " + f_px(mSL))
 if rSt == 1
-    liveTxt := f_join(liveTxt, "HAR-RV " + (rDir == 1 ? "LONG " : "SHORT ") + str.tostring(rCt) + " " + instr + "  TP " + str.tostring(rTP, "#.##") + "  SL " + str.tostring(rSL, "#.##"))
+    liveTxt := f_join(liveTxt, "HAR " + (rDir == 1 ? "L " : "S ") + str.tostring(rCt) + " " + instr + "  TP " + f_px(rTP) + "  SL " + f_px(rSL))
 
-// ---- banner table ----
 bPos = bannerPosIn == "bottom_center" ? position.bottom_center : bannerPosIn == "middle_center" ? position.middle_center : position.top_center
 var table BAN = table.new(bPos, 1, 3, border_width = 2, frame_width = 2, frame_color = color.new(color.white, 40))
 
 if barstate.islast
     table.clear(BAN, 0, 0, 0, 2)
-    if showBanner
+    if bHead != "" and bar_index <= bTill
         table.cell(BAN, 0, 0, bHead, bgcolor = bCol, text_color = color.white, text_size = size.large)
         table.cell(BAN, 0, 1, bBody, bgcolor = color.new(bCol, 65), text_color = color.white, text_size = size.normal)
     if liveTxt != ""
         table.cell(BAN, 0, 2, "LIVE   " + liveTxt, bgcolor = color.new(color.blue, 55), text_color = color.white, text_size = size.small)
 
-// ---- background flash ----
 bgcolor(not flashEff ? na : nEnt > 0 ? color.new(color.blue, 82) : anyNear ? color.new(color.yellow, 90) : na)
 
-// ---- per-signal labels carrying the contract size ----
-if markEff and vJustEntered
-    label.new(bar_index, vPos == 1 ? low : high, "VWAP " + (vPos == 1 ? "LONG " : "SHORT ") + str.tostring(vCt) + " " + instr,
-         style = vPos == 1 ? label.style_label_up : label.style_label_down,
-         color = vPos == 1 ? color.new(color.green, 15) : color.new(color.red, 15), textcolor = color.white, size = size.small)
-if markEff and hJustEntered
-    label.new(bar_index, high, "ON-H SHORT " + str.tostring(hCt) + " " + instr, style = label.style_label_down,
-         color = color.new(color.red, 15), textcolor = color.white, size = size.small)
-if markEff and lJustEntered
-    label.new(bar_index, low, "ON-L LONG " + str.tostring(lCt) + " " + instr, style = label.style_label_up,
-         color = color.new(color.green, 15), textcolor = color.white, size = size.small)
-if markEff and mJustEntered
-    label.new(bar_index, mDir == 1 ? low : high, "ON-M " + (mDir == 1 ? "LONG " : "SHORT ") + str.tostring(mCt) + " " + instr,
-         style = mDir == 1 ? label.style_label_up : label.style_label_down,
-         color = mDir == 1 ? color.new(color.green, 15) : color.new(color.red, 15), textcolor = color.white, size = size.small)
-if markEff and rJustEntered
-    label.new(bar_index, rDir == 1 ? low : high, "HAR-RV " + (rDir == 1 ? "LONG " : "SHORT ") + str.tostring(rCt) + " " + instr,
-         style = rDir == 1 ? label.style_label_up : label.style_label_down,
-         color = rDir == 1 ? color.new(color.green, 15) : color.new(color.red, 15), textcolor = color.white, size = size.small)
-
-// ============================ INFO TABLE ============================
+// ============================ STATUS TABLE ==========================
+// Deliberately minimal: what each leg is doing, and what it made today.
 tPos = tblPosIn == "top_left" ? position.top_left : tblPosIn == "bottom_right" ? position.bottom_right : tblPosIn == "bottom_left" ? position.bottom_left : tblPosIn == "middle_right" ? position.middle_right : position.top_right
+var table T = table.new(tPos, 3, 7, border_width = 1, frame_width = 1, frame_color = color.new(color.gray, 40))
 
-var table T = table.new(tPos, 7, 9, border_width = 1, frame_width = 1, frame_color = color.new(color.gray, 40))
+CH = color.new(color.gray, 85)
+CW = color.new(color.gray, 70)
+CN = color.new(color.yellow, 55)
+CG = color.new(color.green, 60)
+CR = color.new(color.red, 60)
+CB = color.new(color.blue, 70)
+TX = color.white
 
-CH  = color.new(color.gray, 85)
-CW  = color.new(color.gray, 70)
-CN  = color.new(color.yellow, 60)
-CL  = color.new(color.green, 65)
-CSh = color.new(color.red, 65)
-CD  = color.new(color.blue, 75)
-CTP = color.new(color.green, 78)
-CSL = color.new(color.red, 78)
-TXT = color.white
+f_st(st, dirn, isNear) =>
+    st == 0 ? (isNear ? "NEAR" : "wait") : st == 1 ? (dirn == 1 ? "LONG" : "SHORT") : st == 2 ? "TP" : st == 3 ? "SL" : "EOD"
 
-f_stStr(st, dirn) =>
-    st == 0 ? "WAIT" : st == 1 ? (dirn == 1 ? "LONG" : "SHORT") : st == 2 ? "TP" : st == 3 ? "SL" : "EOD"
+f_stC(st, dirn, isNear) =>
+    st == 0 ? (isNear ? CN : CW) : st == 1 ? (dirn == 1 ? CG : CR) : CB
 
-f_stCol(st, dirn, isNear) =>
-    st == 0 ? (isNear ? CN : CW) : st == 1 ? (dirn == 1 ? CL : CSh) : CD
-
-f_px(x) => na(x) ? "-" : str.tostring(x, "#.##")
+f_pnl(x) => (x >= 0 ? "+" : "") + f_money(x)
 
 if showTable and barstate.islast
-    table.clear(T, 0, 0, 6, 8)
-    // ---- header ----
-    table.cell(T, 0, 0, "NQ PORTFOLIO", bgcolor = CH, text_color = TXT, text_size = size.small)
-    table.cell(T, 1, 0, instr + " $" + str.tostring(ptVal, "#") + "/pt", bgcolor = CH, text_color = TXT, text_size = size.small)
-    table.cell(T, 2, 0, "risk " + f_money(riskPerTrade) + "/tr", bgcolor = CH, text_color = TXT, text_size = size.small)
-    table.cell(T, 3, 0, "day " + f_money(dayRiskUsed) + "/" + f_money(maxDayRisk), bgcolor = CH, text_color = TXT, text_size = size.small)
-    riskLeft = math.max(0.0, maxDayRisk - dayRiskUsed)
-    table.cell(T, 4, 0, "left " + f_money(riskLeft), bgcolor = riskLeft <= 0 ? color.new(color.red, 40) : CH, text_color = TXT, text_size = size.small)
-    table.cell(T, 5, 0, "ON rng " + (na(onRange) ? "-" : str.tostring(onRange, "#")), bgcolor = onRangeOK ? CH : color.new(color.red, 60), text_color = TXT, text_size = size.small)
-    table.cell(T, 6, 0, tfOK ? "1m OK" : "WRONG TF!", bgcolor = tfOK ? CH : color.new(color.red, 20), text_color = TXT, text_size = size.small)
+    table.clear(T, 0, 0, 2, 6)
+    dayPnl = pnlV + pnlH + pnlL + pnlM + pnlR
+    table.cell(T, 0, 0, tfOK ? "PORTFOLIO" : "WRONG TF!", bgcolor = tfOK ? CH : color.new(color.red, 20), text_color = TX, text_size = size.small)
+    table.cell(T, 1, 0, "status", bgcolor = CH, text_color = TX, text_size = size.small)
+    table.cell(T, 2, 0, "day P/L", bgcolor = CH, text_color = TX, text_size = size.small)
 
-    // ---- column headers ----
-    table.cell(T, 0, 1, "strategy", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 1, 1, "status",   bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 2, 1, "entry",    bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 3, 1, "TP",       bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 4, 1, "SL",       bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 5, 1, "size",     bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 6, 1, "risk $",   bgcolor = CH, text_color = TXT, text_size = size.tiny)
+    vS2 = not useVWAP ? "off" : not vGate ? "gated" : vPos != 0 ? (vPos == 1 ? "LONG" : "SHORT") : vTraded ? vRes : (vNear ? "NEAR" : "wait")
+    vC2 = not useVWAP or not vGate ? CW : vPos == 1 ? CG : vPos == -1 ? CR : vTraded ? CB : (vNear ? CN : CW)
+    table.cell(T, 0, 1, "VWAP", bgcolor = CW, text_color = TX, text_size = size.small)
+    table.cell(T, 1, 1, vS2, bgcolor = vC2, text_color = TX, text_size = size.small)
+    table.cell(T, 2, 1, f_pnl(pnlV), bgcolor = pnlV >= 0 ? CG : CR, text_color = TX, text_size = size.small)
 
-    // ---- VWAP row ----
-    vStat = not useVWAP ? "OFF" : not vwapGatesOK ? "GATED" : vPos != 0 ? (vPos == 1 ? "LONG" : "SHORT") : vTraded ? vRes : (vNearNow ? "NEAR" : "WAIT")
-    vBg   = not useVWAP ? CW : not vwapGatesOK ? CW : vPos == 1 ? CL : vPos == -1 ? CSh : vTraded ? CD : (vNearNow ? CN : CW)
-    vEnS  = vTraded ? f_px(vEntry) : na(vUp) ? "-" : f_px(vUp) + " / " + f_px(vDn)
-    vTpS  = vTraded ? f_px(vTPl) : "+/-" + str.tostring(vwapTPp, "#")
-    vSlS  = vTraded ? f_px(vSLl) : "+/-" + str.tostring(vwapSLp, "#")
-    vShowCt = vTraded ? vCt : vCtPrev
-    table.cell(T, 0, 2, "VWAP 100/75", bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 1, 2, vStat, bgcolor = vBg, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 2, 2, vEnS,  bgcolor = CW,  text_color = TXT, text_size = size.tiny)
-    table.cell(T, 3, 2, vTpS,  bgcolor = CTP, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 4, 2, vSlS,  bgcolor = CSL, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 5, 2, str.tostring(vShowCt), bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 6, 2, f_money(f_riskOf(vShowCt, vwapSLp)), bgcolor = CW, text_color = TXT, text_size = size.tiny)
+    hS2 = not useON or not onUseH ? "off" : not onRangeOK ? "gated" : f_st(hSt, -1, hNear)
+    table.cell(T, 0, 2, "ON-H", bgcolor = CW, text_color = TX, text_size = size.small)
+    table.cell(T, 1, 2, hS2, bgcolor = not useON or not onUseH or not onRangeOK ? CW : f_stC(hSt, -1, hNear), text_color = TX, text_size = size.small)
+    table.cell(T, 2, 2, f_pnl(pnlH), bgcolor = pnlH >= 0 ? CG : CR, text_color = TX, text_size = size.small)
 
-    // ---- ON-H row (levels known before the trade) ----
-    hStat = not useON or not onUseH ? "OFF" : not onRangeOK ? "GATED" : (hSt == 0 and hNearNow ? "NEAR" : f_stStr(hSt, -1))
-    hBg   = not useON or not onUseH ? CW : not onRangeOK ? CW : f_stCol(hSt, -1, hNearNow)
-    hShowCt = hSt == 0 ? oCtPrev : hCt
-    table.cell(T, 0, 3, "ON-H short", bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 1, 3, hStat, bgcolor = hBg, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 2, 3, f_px(ONH), bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 3, 3, na(ONH) ? "-" : f_px(ONH - onB), bgcolor = CTP, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 4, 3, na(ONH) ? "-" : f_px(ONH + onB), bgcolor = CSL, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 5, 3, str.tostring(hShowCt), bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 6, 3, f_money(f_riskOf(hShowCt, onB)), bgcolor = CW, text_color = TXT, text_size = size.tiny)
+    lS2 = not useON or not onUseL ? "off" : not onRangeOK ? "gated" : f_st(lSt, 1, lNear)
+    table.cell(T, 0, 3, "ON-L", bgcolor = CW, text_color = TX, text_size = size.small)
+    table.cell(T, 1, 3, lS2, bgcolor = not useON or not onUseL or not onRangeOK ? CW : f_stC(lSt, 1, lNear), text_color = TX, text_size = size.small)
+    table.cell(T, 2, 3, f_pnl(pnlL), bgcolor = pnlL >= 0 ? CG : CR, text_color = TX, text_size = size.small)
 
-    // ---- ON-L row ----
-    lStat = not useON or not onUseL ? "OFF" : not onRangeOK ? "GATED" : (lSt == 0 and lNearNow ? "NEAR" : f_stStr(lSt, 1))
-    lBg   = not useON or not onUseL ? CW : not onRangeOK ? CW : f_stCol(lSt, 1, lNearNow)
-    lShowCt = lSt == 0 ? oCtPrev : lCt
-    table.cell(T, 0, 4, "ON-L long", bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 1, 4, lStat, bgcolor = lBg, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 2, 4, f_px(ONL), bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 3, 4, na(ONL) ? "-" : f_px(ONL + onB), bgcolor = CTP, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 4, 4, na(ONL) ? "-" : f_px(ONL - onB), bgcolor = CSL, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 5, 4, str.tostring(lShowCt), bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 6, 4, f_money(f_riskOf(lShowCt, onB)), bgcolor = CW, text_color = TXT, text_size = size.tiny)
+    mS2 = not useON or not onUseM ? "off" : not onRangeOK ? "gated" : mDir == 0 ? "skip" : f_st(mSt, mDir, mNear)
+    table.cell(T, 0, 4, "ON-M", bgcolor = CW, text_color = TX, text_size = size.small)
+    table.cell(T, 1, 4, mS2, bgcolor = not useON or not onUseM or not onRangeOK ? CW : f_stC(mSt, mDir, mNear), text_color = TX, text_size = size.small)
+    table.cell(T, 2, 4, f_pnl(pnlM), bgcolor = pnlM >= 0 ? CG : CR, text_color = TX, text_size = size.small)
 
-    // ---- ON-M row ----
-    mStat = not useON or not onUseM ? "OFF" : not onRangeOK ? "GATED" : mDir == 0 ? "SKIP" : (mSt == 0 and mNearNow ? "NEAR" : f_stStr(mSt, mDir))
-    mBg   = not useON or not onUseM ? CW : not onRangeOK ? CW : f_stCol(mSt, mDir, mNearNow)
-    mShowCt = mSt == 0 ? oCtPrev : mCt
-    table.cell(T, 0, 5, "ON-M " + (mDir == 1 ? "long" : mDir == -1 ? "short" : "-"), bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 1, 5, mStat, bgcolor = mBg, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 2, 5, f_px(ONM), bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 3, 5, na(ONM) or mDir == 0 ? "-" : f_px(ONM + mDir * onB), bgcolor = CTP, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 4, 5, na(ONM) or mDir == 0 ? "-" : f_px(ONM - mDir * onB), bgcolor = CSL, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 5, 5, str.tostring(mShowCt), bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 6, 5, f_money(f_riskOf(mShowCt, onB)), bgcolor = CW, text_color = TXT, text_size = size.tiny)
+    rS2 = not useHAR ? "off" : not harReady ? "warmup" : f_st(rSt, rDir, rNear)
+    table.cell(T, 0, 5, "HAR-RV", bgcolor = CW, text_color = TX, text_size = size.small)
+    table.cell(T, 1, 5, rS2, bgcolor = not useHAR or not harReady ? CW : f_stC(rSt, rDir, rNear), text_color = TX, text_size = size.small)
+    table.cell(T, 2, 5, f_pnl(pnlR), bgcolor = pnlR >= 0 ? CG : CR, text_color = TX, text_size = size.small)
 
-    // ---- HAR-RV row ----
-    rStat = not useHAR ? "OFF" : not harReady or na(emove) ? "WARMUP" : (rSt == 0 and rNearNow ? "NEAR" : f_stStr(rSt, rDir))
-    rBg   = not useHAR ? CW : not harReady or na(emove) ? CW : f_stCol(rSt, rDir, rNearNow)
-    rShowCt = rSt == 0 ? rCtPrev : rCt
-    rRisk = na(harStopPts) ? 0.0 : f_riskOf(rShowCt, harStopPts)
-    rEnS  = rSt != 0 ? f_px(rEn) : na(hUp) ? "-" : f_px(hUp) + " / " + f_px(hDn)
-    rTpS  = rSt != 0 ? f_px(rTP) : na(emove) ? "-" : "+/-" + str.tostring(harTPm * emove, "#")
-    rSlS  = rSt != 0 ? f_px(rSL) : na(emove) ? "-" : "+/-" + str.tostring(harSLm * emove, "#")
-    table.cell(T, 0, 6, "HAR-RV brk", bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 1, 6, rStat, bgcolor = rBg, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 2, 6, rEnS, bgcolor = CW,  text_color = TXT, text_size = size.tiny)
-    table.cell(T, 3, 6, rTpS, bgcolor = CTP, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 4, 6, rSlS, bgcolor = CSL, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 5, 6, str.tostring(rShowCt), bgcolor = CW, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 6, 6, f_money(rRisk) + (rRisk > riskPerTrade ? " !" : ""), bgcolor = rRisk > riskPerTrade ? color.new(color.red, 60) : CW, text_color = TXT, text_size = size.tiny)
-
-    // ---- context row ----
-    table.cell(T, 0, 7, "context", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 1, 7, onRangeOK ? "ON ok" : "ON <min", bgcolor = onRangeOK ? CH : color.new(color.red, 60), text_color = TXT, text_size = size.tiny)
-    table.cell(T, 2, 7, "emove " + (na(emove) ? "-" : str.tostring(emove, "#")), bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 3, 7, "gap " + (gapOK ? "ok" : "no"), bgcolor = gapOK ? CH : color.new(color.red, 60), text_color = TXT, text_size = size.tiny)
-    table.cell(T, 4, 7, "trend " + (trendOK ? "ok" : "no"), bgcolor = trendOK ? CH : color.new(color.red, 60), text_color = TXT, text_size = size.tiny)
-    table.cell(T, 5, 7, "B " + str.tostring(onB, "#") + "p", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 6, 7, "k " + str.tostring(harK, "#.##"), bgcolor = CH, text_color = TXT, text_size = size.tiny)
-
-    // ---- pass plan row ----
-    remainUSD  = math.max(0.0, targetUSD - profitSoFar)
-    daysLeft   = math.max(1, daysTarget - daysUsed)
-    needPerDay = remainUSD / daysLeft
-    table.cell(T, 0, 8, "PASS PLAN", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 1, 8, "left " + f_money(remainUSD), bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 2, 8, str.tostring(daysLeft) + " days", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 3, 8, "need " + f_money(needPerDay) + "/d", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 4, 8, "", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 5, 8, "", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-    table.cell(T, 6, 8, "", bgcolor = CH, text_color = TXT, text_size = size.tiny)
-
-
-// =========================== LEVEL LABELS ===========================
-var label labONH = na
-var label labONL = na
-var label labONM = na
-var label labHU  = na
-var label labHD  = na
-
-if showLabelsEff and barstate.islast and inSess
-    label.delete(labONH)
-    label.delete(labONL)
-    label.delete(labONM)
-    label.delete(labHU)
-    label.delete(labHD)
-    if useON and not na(ONH)
-        labONH := label.new(bar_index + 2, ONH, "ONH", style = label.style_label_left, color = color.new(color.purple, 70), textcolor = TXT, size = size.tiny)
-        labONL := label.new(bar_index + 2, ONL, "ONL", style = label.style_label_left, color = color.new(color.purple, 70), textcolor = TXT, size = size.tiny)
-        if onUseM
-            labONM := label.new(bar_index + 2, ONM, "ONM", style = label.style_label_left, color = color.new(color.fuchsia, 70), textcolor = TXT, size = size.tiny)
-    if useHAR and harReady and not na(hUp)
-        labHU := label.new(bar_index + 2, hUp, "HAR+", style = label.style_label_left, color = color.new(color.teal, 70), textcolor = TXT, size = size.tiny)
-        labHD := label.new(bar_index + 2, hDn, "HAR-", style = label.style_label_left, color = color.new(color.teal, 70), textcolor = TXT, size = size.tiny)
+    table.cell(T, 0, 6, "TOTAL", bgcolor = CH, text_color = TX, text_size = size.normal)
+    table.cell(T, 1, 6, "risk " + f_money(dayRiskUsed), bgcolor = CH, text_color = TX, text_size = size.small)
+    table.cell(T, 2, 6, f_pnl(dayPnl), bgcolor = dayPnl >= 0 ? color.new(color.green, 40) : color.new(color.red, 40), text_color = TX, text_size = size.normal)
 
 // =========================== TF WARNING =============================
 var label warnLab = na
@@ -964,11 +760,3 @@ if barstate.islast
     if not tfOK
         warnLab := label.new(bar_index, high, "SWITCH TO 1-MINUTE CHART\nsignals are disabled",
              style = label.style_label_down, color = color.new(color.red, 10), textcolor = color.white, size = size.large)
-
-// ======================= STATIC ALERTCONDITIONS =====================
-alertcondition(vJustEntered, "VWAP entry",   "NQ portfolio: VWAP entry")
-alertcondition(hJustEntered, "ONH entry",    "NQ portfolio: ONH fade short")
-alertcondition(lJustEntered, "ONL entry",    "NQ portfolio: ONL fade long")
-alertcondition(mJustEntered, "ONM entry",    "NQ portfolio: ONM fade")
-alertcondition(rJustEntered, "HAR-RV entry", "NQ portfolio: HAR-RV breakout")
-alertcondition(vFireNear or hFireNear or lFireNear or mFireNear or rFireNear, "Any approach", "NQ portfolio: price approaching a trigger level")
