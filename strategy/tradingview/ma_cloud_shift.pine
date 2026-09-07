@@ -1,87 +1,175 @@
 // @version=5
-indicator("MA Cloud SHIFT — HMA / SSL / EMA", overlay=true, max_lines_count=500)
+indicator("MA Cloud SHIFT — HMA / SSL / EMA (filtered)", overlay=true, max_lines_count=500)
 
 // -----------------------------------------------------------------------------
 // MA "cloud" SHIFT vizualizace ze screenshotu (TikTok kanal). Tri varianty,
 // vsechny prepinatelne, s cloud fillem mezi fast a slow linii.
 //
-// !!! POZOR: testovano na NQ 1min RTH 2018-2025 (per-trade flip, bez SL/TP):
-//    HMA(9/21):    n=102443  avg=-0.20 pt  z=-3.28  win 40.0%  PF 0.967
-//    SSL Ch (10):  n= 65652  avg=-0.19 pt  z=-2.00  win 35.3%  PF 0.974
-//    EMA(9/21):    n= 34993  avg=+0.15 pt  z=+0.82  win 30.5%  PF 1.016
-// Zadna varianta neprosla Bonferroni prahem. Cist edge tam neni.
-// Indikator je pouze pro vizualni referenci na chartu.
+// !! FILTR PROTI SUMU !!
+//  - Flip trendu (UP <-> DN) plati AZ KDYZ:
+//      1) |fast - slow|  >  atrMult * ATR(atrLen)     (dostatecna separace)
+//      2) uplynulo aspon holdBars barov od posledniho flipu (dead time)
+//  - Mezi tim se cloud drzi POSLEDNIHO potvrzeneho trendu; kdyz je separace
+//    mala nebo v dead-time, cloud ma slabsi/neutralni odstin.
+//  - Volitelne pasmo (dead zone) okolo slow MA se da zobrazit taky.
+//
+// !!! POZOR: raw crossover (bez filtru) na NQ 1min RTH 2018-2025 nemel edge
+// (HMA z=-3.28, SSL z=-2.00, EMA z=+0.82). Tenhle filtr sig. redukuje pocet
+// signalu ale nezmerene, jestli edge vznikne — pouzivat jen jako vizual.
 // -----------------------------------------------------------------------------
 
 // ---- inputs ----
-showHMA  = input.bool(true,  "HMA cloud (9/21)",       group="Cloud switches")
-showSSL  = input.bool(true,  "SSL Channel (10)",       group="Cloud switches")
-showEMA  = input.bool(false, "EMA cloud (9/21)",       group="Cloud switches")
-showFlip = input.bool(true,  "Mark trend flips (X)",   group="Cloud switches")
+showHMA  = input.bool(true,  "HMA cloud",              group="Cloud switches")
+showSSL  = input.bool(true,  "SSL Channel",            group="Cloud switches")
+showEMA  = input.bool(false, "EMA cloud",              group="Cloud switches")
+showFlip = input.bool(true,  "Mark confirmed flips",   group="Cloud switches")
+showBand = input.bool(false, "Show dead-zone band",    group="Cloud switches")
 
-hmaFast  = input.int(9,  "HMA fast", minval=2, group="Lengths")
-hmaSlow  = input.int(21, "HMA slow", minval=3, group="Lengths")
-sslLen   = input.int(10, "SSL length", minval=2, group="Lengths")
-emaFast  = input.int(9,  "EMA fast", minval=2, group="Lengths")
-emaSlow  = input.int(21, "EMA slow", minval=3, group="Lengths")
+hmaFast  = input.int(9,  "HMA fast",   minval=2, group="Lengths")
+hmaSlow  = input.int(34, "HMA slow",   minval=3, group="Lengths")
+sslLen   = input.int(20, "SSL length", minval=2, group="Lengths")
+emaFast  = input.int(12, "EMA fast",   minval=2, group="Lengths")
+emaSlow  = input.int(48, "EMA slow",   minval=3, group="Lengths")
 
-colUp    = input.color(color.new(color.green, 78), "Cloud UP color",   group="Style")
-colDn    = input.color(color.new(color.red,   78), "Cloud DOWN color", group="Style")
+atrLen   = input.int(14,   "ATR length",              minval=1,  group="Filter")
+atrMult  = input.float(0.75, "Min separation (× ATR)", minval=0.0, step=0.05, group="Filter")
+holdBars = input.int(8,    "Min bars between flips",  minval=0,  group="Filter")
+
+colUp    = input.color(color.new(color.green, 78), "Cloud UP color",        group="Style")
+colDn    = input.color(color.new(color.red,   78), "Cloud DOWN color",      group="Style")
+colUpW   = input.color(color.new(color.green, 90), "Cloud UP (unconfirm.)", group="Style")
+colDnW   = input.color(color.new(color.red,   90), "Cloud DN (unconfirm.)", group="Style")
 lineW    = input.int(1, "Line width", minval=1, maxval=4, group="Style")
 
-// ---- HMA cross ----
+// ---- shared ----
+atrv = ta.atr(atrLen)
+minSep = atrMult * atrv
+
+// ---- helper: filtered trend state ----
+//   returns [trend, barsSinceFlip]  where trend is +1/-1/0
+//   trend flips only if |fast-slow| > minSep AND enough bars since last flip
+f_trend(fast, slow) =>
+    var int st = 0
+    var int bsf = 100000
+    diff = fast - slow
+    can_flip = (bsf >= holdBars) and (math.abs(diff) > minSep)
+    new_st = st
+    if can_flip
+        if diff > 0 and st != 1
+            new_st := 1
+        else if diff < 0 and st != -1
+            new_st := -1
+    if new_st != st
+        bsf := 0
+    else
+        bsf += 1
+    st := new_st
+    [st, bsf]
+
+// ---- HMA ----
 hmaF = ta.hma(close, hmaFast)
 hmaS = ta.hma(close, hmaSlow)
-hmaUp = hmaF > hmaS
+[hmaSt, hmaBsf] = f_trend(hmaF, hmaS)
+hmaRaw = hmaF > hmaS ? 1 : hmaF < hmaS ? -1 : 0
+hmaConfirmed = hmaSt == hmaRaw and hmaSt != 0
 
 pHmaF = plot(showHMA ? hmaF : na, "HMA fast", color=color.new(color.aqua,    0), linewidth=lineW)
 pHmaS = plot(showHMA ? hmaS : na, "HMA slow", color=color.new(color.orange,  0), linewidth=lineW)
-fill(pHmaF, pHmaS, color = showHMA ? (hmaUp ? colUp : colDn) : na, title="HMA cloud")
+hmaFill = showHMA ? (hmaSt == 1 ? (hmaConfirmed ? colUp : colUpW) : hmaSt == -1 ? (hmaConfirmed ? colDn : colDnW) : na) : na
+fill(pHmaF, pHmaS, color=hmaFill, title="HMA cloud")
 
-// ---- SSL Channel ----
+// ---- SSL ----
 sslU = ta.sma(high, sslLen)
 sslL = ta.sma(low,  sslLen)
-var int sslDir = 0
-sslDir := close > sslU ? 1 : close < sslL ? -1 : sslDir
-sslLine = sslDir == 1 ? sslU : sslL
-sslOther = sslDir == 1 ? sslL : sslU
+var int sslRaw = 0
+sslRaw := close > sslU ? 1 : close < sslL ? -1 : sslRaw
+// separation for SSL = |close - centerline|, centerline = midpoint of upper/lower
+sslMid = (sslU + sslL) / 2.0
+sslDiff = close - sslMid
+// use same filter logic but with (close, sslMid)
+f_trend_price(price, mid) =>
+    var int st2 = 0
+    var int bsf2 = 100000
+    diff2 = price - mid
+    can_flip2 = (bsf2 >= holdBars) and (math.abs(diff2) > minSep)
+    new_st2 = st2
+    if can_flip2
+        if diff2 > 0 and st2 != 1
+            new_st2 := 1
+        else if diff2 < 0 and st2 != -1
+            new_st2 := -1
+    if new_st2 != st2
+        bsf2 := 0
+    else
+        bsf2 += 1
+    st2 := new_st2
+    [st2, bsf2]
+
+[sslSt, sslBsf] = f_trend_price(close, sslMid)
+sslConfirmed = sslSt == sslRaw and sslSt != 0
 
 pSslA = plot(showSSL ? sslU : na, "SSL upper", color=color.new(color.lime,   0), linewidth=lineW)
 pSslB = plot(showSSL ? sslL : na, "SSL lower", color=color.new(color.fuchsia,0), linewidth=lineW)
-fill(pSslA, pSslB, color = showSSL ? (sslDir == 1 ? colUp : sslDir == -1 ? colDn : na) : na, title="SSL cloud")
+sslFill = showSSL ? (sslSt == 1 ? (sslConfirmed ? colUp : colUpW) : sslSt == -1 ? (sslConfirmed ? colDn : colDnW) : na) : na
+fill(pSslA, pSslB, color=sslFill, title="SSL cloud")
 
-// ---- EMA cross ----
+// ---- EMA ----
 emaF = ta.ema(close, emaFast)
 emaS = ta.ema(close, emaSlow)
-emaUp = emaF > emaS
+[emaSt, emaBsf] = f_trend(emaF, emaS)
+emaRaw = emaF > emaS ? 1 : emaF < emaS ? -1 : 0
+emaConfirmed = emaSt == emaRaw and emaSt != 0
 
 pEmaF = plot(showEMA ? emaF : na, "EMA fast", color=color.new(color.yellow, 0), linewidth=lineW)
 pEmaS = plot(showEMA ? emaS : na, "EMA slow", color=color.new(color.blue,   0), linewidth=lineW)
-fill(pEmaF, pEmaS, color = showEMA ? (emaUp ? colUp : colDn) : na, title="EMA cloud")
+emaFill = showEMA ? (emaSt == 1 ? (emaConfirmed ? colUp : colUpW) : emaSt == -1 ? (emaConfirmed ? colDn : colDnW) : na) : na
+fill(pEmaF, pEmaS, color=emaFill, title="EMA cloud")
 
-// ---- flip markers ----
-hmaFlipUp = showHMA and showFlip and ta.crossover(hmaF, hmaS)
-hmaFlipDn = showHMA and showFlip and ta.crossunder(hmaF, hmaS)
-sslFlipUp = showSSL and showFlip and sslDir == 1 and sslDir[1] != 1
-sslFlipDn = showSSL and showFlip and sslDir == -1 and sslDir[1] != -1
-emaFlipUp = showEMA and showFlip and ta.crossover(emaF, emaS)
-emaFlipDn = showEMA and showFlip and ta.crossunder(emaF, emaS)
+// ---- optional dead-zone band around each slow MA ----
+hmaBandU = showHMA and showBand ? hmaS + minSep : na
+hmaBandL = showHMA and showBand ? hmaS - minSep : na
+plot(hmaBandU, "HMA dz+", color=color.new(color.gray, 60), style=plot.style_stepline)
+plot(hmaBandL, "HMA dz-", color=color.new(color.gray, 60), style=plot.style_stepline)
 
-plotshape(hmaFlipUp, "HMA flip up", shape.triangleup,   location.belowbar, color=color.new(color.aqua,   0), size=size.tiny)
-plotshape(hmaFlipDn, "HMA flip dn", shape.triangledown, location.abovebar, color=color.new(color.orange, 0), size=size.tiny)
-plotshape(sslFlipUp, "SSL flip up", shape.triangleup,   location.belowbar, color=color.new(color.lime,   0), size=size.tiny)
-plotshape(sslFlipDn, "SSL flip dn", shape.triangledown, location.abovebar, color=color.new(color.fuchsia,0), size=size.tiny)
-plotshape(emaFlipUp, "EMA flip up", shape.triangleup,   location.belowbar, color=color.new(color.yellow, 0), size=size.tiny)
-plotshape(emaFlipDn, "EMA flip dn", shape.triangledown, location.abovebar, color=color.new(color.blue,   0), size=size.tiny)
+emaBandU = showEMA and showBand ? emaS + minSep : na
+emaBandL = showEMA and showBand ? emaS - minSep : na
+plot(emaBandU, "EMA dz+", color=color.new(color.gray, 60), style=plot.style_stepline)
+plot(emaBandL, "EMA dz-", color=color.new(color.gray, 60), style=plot.style_stepline)
 
-// ---- corner info table ----
-var table t = table.new(position.top_right, 2, 4, border_width=1)
+// ---- flip markers (only CONFIRMED flips) ----
+hmaFlipUp = showHMA and showFlip and hmaSt ==  1 and hmaSt[1] !=  1
+hmaFlipDn = showHMA and showFlip and hmaSt == -1 and hmaSt[1] != -1
+sslFlipUp = showSSL and showFlip and sslSt ==  1 and sslSt[1] !=  1
+sslFlipDn = showSSL and showFlip and sslSt == -1 and sslSt[1] != -1
+emaFlipUp = showEMA and showFlip and emaSt ==  1 and emaSt[1] !=  1
+emaFlipDn = showEMA and showFlip and emaSt == -1 and emaSt[1] != -1
+
+plotshape(hmaFlipUp, "HMA flip up", shape.triangleup,   location.belowbar, color=color.new(color.aqua,   0), size=size.small)
+plotshape(hmaFlipDn, "HMA flip dn", shape.triangledown, location.abovebar, color=color.new(color.orange, 0), size=size.small)
+plotshape(sslFlipUp, "SSL flip up", shape.triangleup,   location.belowbar, color=color.new(color.lime,   0), size=size.small)
+plotshape(sslFlipDn, "SSL flip dn", shape.triangledown, location.abovebar, color=color.new(color.fuchsia,0), size=size.small)
+plotshape(emaFlipUp, "EMA flip up", shape.triangleup,   location.belowbar, color=color.new(color.yellow, 0), size=size.small)
+plotshape(emaFlipDn, "EMA flip dn", shape.triangledown, location.abovebar, color=color.new(color.blue,   0), size=size.small)
+
+// ---- info table ----
+var table t = table.new(position.top_right, 3, 5, border_width=1)
 if barstate.islast
     table.cell(t, 0, 0, "MA Cloud SHIFT", bgcolor=color.new(color.black,80), text_color=color.white)
     table.cell(t, 1, 0, "trend",          bgcolor=color.new(color.black,80), text_color=color.white)
+    table.cell(t, 2, 0, "bars",           bgcolor=color.new(color.black,80), text_color=color.white)
+
     table.cell(t, 0, 1, "HMA " + str.tostring(hmaFast) + "/" + str.tostring(hmaSlow))
-    table.cell(t, 1, 1, hmaUp ? "UP" : "DN", text_color = hmaUp ? color.green : color.red)
+    table.cell(t, 1, 1, hmaSt == 1 ? "UP" : hmaSt == -1 ? "DN" : "-", text_color = hmaSt == 1 ? color.green : hmaSt == -1 ? color.red : color.gray)
+    table.cell(t, 2, 1, str.tostring(hmaBsf))
+
     table.cell(t, 0, 2, "SSL " + str.tostring(sslLen))
-    table.cell(t, 1, 2, sslDir == 1 ? "UP" : sslDir == -1 ? "DN" : "-", text_color = sslDir == 1 ? color.green : sslDir == -1 ? color.red : color.gray)
+    table.cell(t, 1, 2, sslSt == 1 ? "UP" : sslSt == -1 ? "DN" : "-", text_color = sslSt == 1 ? color.green : sslSt == -1 ? color.red : color.gray)
+    table.cell(t, 2, 2, str.tostring(sslBsf))
+
     table.cell(t, 0, 3, "EMA " + str.tostring(emaFast) + "/" + str.tostring(emaSlow))
-    table.cell(t, 1, 3, emaUp ? "UP" : "DN", text_color = emaUp ? color.green : color.red)
+    table.cell(t, 1, 3, emaSt == 1 ? "UP" : emaSt == -1 ? "DN" : "-", text_color = emaSt == 1 ? color.green : emaSt == -1 ? color.red : color.gray)
+    table.cell(t, 2, 3, str.tostring(emaBsf))
+
+    table.cell(t, 0, 4, "min sep (pts)")
+    table.cell(t, 1, 4, str.tostring(minSep, "#.##"))
+    table.cell(t, 2, 4, "×" + str.tostring(atrMult))
