@@ -81,6 +81,9 @@ class GCRibbonShiftFVG(QCAlgorithm):
         # regime state
         self.regime = 0
         self.regime_age = 0
+        # last DIRECTIONAL regime (+1 or -1) and its final age when it ended
+        self.last_dir_regime = 0
+        self.last_dir_age_final = 0
         self.bar_5m = 0
         self.pending_shift = None
         self.trade = None
@@ -214,17 +217,23 @@ class GCRibbonShiftFVG(QCAlgorithm):
         dn = (self.ef < self.em) and (self.em < self.es) and ((self.es - self.ef) > sep_min)
         new_r = 1 if up else (-1 if dn else 0)
 
-        prior_regime = self.regime
-        prior_age = self.regime_age
         if new_r == self.regime:
             self.regime_age += 1
         else:
-            # SHIFT check
-            if new_r != 0 and prior_regime != 0 and new_r != prior_regime:
+            # regime changed. If leaving a DIRECTIONAL regime, remember it.
+            if self.regime != 0:
+                self.last_dir_regime = self.regime
+                self.last_dir_age_final = self.regime_age
+            # entering a directional regime opposite to last one -> SHIFT
+            if new_r != 0 and self.last_dir_regime != 0 and new_r != self.last_dir_regime:
                 self.cnt_shifts += 1
-                if prior_age >= MIN_TREND_BARS:
+                if self.last_dir_age_final >= MIN_TREND_BARS:
                     self.cnt_shifts_valid_prior += 1
                     self.pending_shift = {'dir': new_r, 'bars_since': 0, 'shift_bar': self.bar_5m}
+                # any SHIFT-worthy transition consumes the "last dir" so we
+                # don't fire again on transient neutral flickers
+                self.last_dir_regime = new_r
+                self.last_dir_age_final = 0
             self.regime = new_r
             self.regime_age = 1
 
