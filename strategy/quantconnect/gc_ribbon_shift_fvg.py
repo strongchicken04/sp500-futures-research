@@ -41,6 +41,11 @@ MAX_HOLD_BARS = 120
 FVG_KEEP = 400
 REJ_WAIT_BARS = 20         # after FVG touch, how many bars to look for close-outside
 
+# SL configuration
+SL_MODE = "atr"            # "fvg" | "atr" | "swing"
+SL_ATR_BUFFER = 0.30       # ATR multiple added beyond FVG edge (mode "atr")
+SL_SWING_LOOKBACK = 5      # bars back for swing high/low (mode "swing")
+
 
 class GCRibbonShiftFVG(QCAlgorithm):
 
@@ -307,8 +312,20 @@ class GCRibbonShiftFVG(QCAlgorithm):
                     tgt = self._find_target(d, c)
                     if tgt is not None:
                         self.cnt_valid_target += 1
-                        # SL = opposite edge of rejection FVG (SMC invalidation)
-                        sl = cand['top'] if d == -1 else cand['bot']
+                        # SL depending on mode
+                        if SL_MODE == "fvg":
+                            sl = cand['top'] if d == -1 else cand['bot']
+                        elif SL_MODE == "atr":
+                            base = cand['top'] if d == -1 else cand['bot']
+                            buf = SL_ATR_BUFFER * self.atr
+                            sl = base + buf if d == -1 else base - buf
+                        elif SL_MODE == "swing":
+                            k = SL_SWING_LOOKBACK
+                            hh = list(self.highs)[-k:] if len(self.highs) >= k else list(self.highs)
+                            ll = list(self.lows)[-k:] if len(self.lows) >= k else list(self.lows)
+                            sl = max(hh) if d == -1 else min(ll)
+                        else:
+                            sl = cand['top'] if d == -1 else cand['bot']
                         self.trade = {'dir': d, 'entry_px': c, 'entry_bar': self.bar_5m,
                                       'target_top': tgt['top'], 'target_bot': tgt['bot'],
                                       'sl': sl, 'entry_ts': b['t']}
