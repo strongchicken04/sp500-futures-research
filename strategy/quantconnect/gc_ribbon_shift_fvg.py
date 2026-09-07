@@ -247,13 +247,21 @@ class GCRibbonShiftFVG(QCAlgorithm):
             tr = self.trade
             age = self.bar_5m - tr['entry_bar']
             done = False; ex_px = None; reason = None
+            # SL first (conservative same-bar priority)
             if tr['dir'] == -1:
-                # short, target below; exit at target_top (near edge)
-                if l <= tr['target_top']:
-                    done = True; ex_px = tr['target_top']; reason = 'T'
+                if h >= tr['sl']:
+                    done = True; ex_px = tr['sl']; reason = 'L'
             else:
-                if h >= tr['target_bot']:
-                    done = True; ex_px = tr['target_bot']; reason = 'T'
+                if l <= tr['sl']:
+                    done = True; ex_px = tr['sl']; reason = 'L'
+            # Target
+            if not done:
+                if tr['dir'] == -1:
+                    if l <= tr['target_top']:
+                        done = True; ex_px = tr['target_top']; reason = 'T'
+                else:
+                    if h >= tr['target_bot']:
+                        done = True; ex_px = tr['target_bot']; reason = 'T'
             if not done and new_r != 0 and new_r == -tr['dir']:
                 done = True; ex_px = c; reason = 'S'
             if not done and age >= MAX_HOLD_BARS:
@@ -299,9 +307,11 @@ class GCRibbonShiftFVG(QCAlgorithm):
                     tgt = self._find_target(d, c)
                     if tgt is not None:
                         self.cnt_valid_target += 1
+                        # SL = opposite edge of rejection FVG (SMC invalidation)
+                        sl = cand['top'] if d == -1 else cand['bot']
                         self.trade = {'dir': d, 'entry_px': c, 'entry_bar': self.bar_5m,
                                       'target_top': tgt['top'], 'target_bot': tgt['bot'],
-                                      'entry_ts': b['t']}
+                                      'sl': sl, 'entry_ts': b['t']}
                         self.trades_taken += 1
                         self.cnt_trades += 1
                         cand['filled'] = True
