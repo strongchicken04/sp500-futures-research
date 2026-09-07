@@ -108,10 +108,13 @@ class NQMACloud(QCAlgorithm):
         self.closes = deque(maxlen=64)
         self.highs  = deque(maxlen=32)
         self.lows   = deque(maxlen=32)
-        # per variant: prior trend sign, open trade dict
-        self.st = {"A": {"trend": 0, "trade": None},
-                   "B": {"trend": 0, "trade": None},
-                   "C": {"trend": 0, "trade": None}}
+        # per variant: prior trend sign, open trade dict, day aggregates
+        self.st = {"A": {"trend": 0, "trade": None, "n": 0, "w": 0, "l": 0,
+                          "pnl": 0.0, "sq": 0.0, "abspnl": 0.0},
+                   "B": {"trend": 0, "trade": None, "n": 0, "w": 0, "l": 0,
+                          "pnl": 0.0, "sq": 0.0, "abspnl": 0.0},
+                   "C": {"trend": 0, "trade": None, "n": 0, "w": 0, "l": 0,
+                          "pnl": 0.0, "sq": 0.0, "abspnl": 0.0}}
         self.rth_open = None
         self.emitted_today = False
 
@@ -125,15 +128,24 @@ class NQMACloud(QCAlgorithm):
         except Exception as e:
             self.Debug(f"tag fail: {e}")
 
+    def _record_pnl(self, variant, pnl):
+        st = self.st[variant]
+        st["n"] += 1
+        st["pnl"] += pnl
+        st["sq"] += pnl * pnl
+        st["abspnl"] += abs(pnl)
+        if pnl > 0:
+            st["w"] += 1
+        elif pnl < 0:
+            st["l"] += 1
+
     def _flip(self, variant, new_trend, mend, px):
         """Close existing trade (if any) and open a new one in new_trend."""
         st = self.st[variant]
         if st["trade"] is not None:
             tr = st["trade"]
             pnl = tr["dir"] * (px - tr["entry"])
-            self._emit(f"MC,{variant},{self.cur_date.strftime('%Y-%m-%d')},"
-                       f"{tr['dir']},{tr['entry_min']},{tr['entry']:.2f},"
-                       f"{mend},{px:.2f},F,{pnl:.2f}")
+            self._record_pnl(variant, pnl)
             st["trade"] = None
         if new_trend != 0:
             st["trade"] = dict(dir=new_trend, entry=px, entry_min=mend)
@@ -144,10 +156,12 @@ class NQMACloud(QCAlgorithm):
         if st["trade"] is not None:
             tr = st["trade"]
             pnl = tr["dir"] * (px - tr["entry"])
-            self._emit(f"MC,{variant},{self.cur_date.strftime('%Y-%m-%d')},"
-                       f"{tr['dir']},{tr['entry_min']},{tr['entry']:.2f},"
-                       f"{mend},{px:.2f},E,{pnl:.2f}")
+            self._record_pnl(variant, pnl)
             st["trade"] = None
+        # emit daily summary tag: one per variant per day
+        self._emit(f"MD,{variant},{self.cur_date.strftime('%Y-%m-%d')},"
+                   f"{st['n']},{st['w']},{st['l']},{st['pnl']:.2f},"
+                   f"{st['sq']:.2f},{st['abspnl']:.2f}")
 
     def OnData(self, slice: Slice):
         bar = slice.Bars.get(self.cont) if slice.Bars is not None else None
