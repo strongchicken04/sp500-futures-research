@@ -31,14 +31,15 @@ import math
 
 EMA_F, EMA_M, EMA_S = 20, 34, 50
 ATR_LEN = 14
-ATR_MULT = 0.20
-MIN_TREND_BARS = 20        # prior regime persist >= this 5m bars
-MIN_FVG_H = 3.0            # min FVG height (pts) to keep any
-MIN_TARGET_H = 3.0         # min target FVG height
-MIN_TARGET_DIST = 5.0      # min pts from entry to target mid
-MAX_WAIT_AFTER_SHIFT = 30  # bars to wait for rejection after SHIFT
-MAX_HOLD_BARS = 100        # safety cap on trade duration
-FVG_KEEP = 300             # keep last N 5m bars of FVGs
+ATR_MULT = 0.15            # loosened (was 0.20)
+MIN_TREND_BARS = 10        # was 20 -> now 50min prior trend
+MIN_FVG_H = 1.0            # pts, gold has small FVGs on 5m
+MIN_TARGET_H = 1.0
+MIN_TARGET_DIST = 2.0      # pts from entry to target mid
+MAX_WAIT_AFTER_SHIFT = 40
+MAX_HOLD_BARS = 120
+FVG_KEEP = 400
+REJ_WAIT_BARS = 20         # after FVG touch, how many bars to look for close-outside
 
 
 class GCRibbonShiftFVG(QCAlgorithm):
@@ -85,8 +86,16 @@ class GCRibbonShiftFVG(QCAlgorithm):
         self.trade = None
         self.trades_taken = 0
 
-        # FVGs: list of dict {top,bot,is_bull,born,filled}
+        # FVGs: list of dict {top,bot,is_bull,born,filled,touched_at}
         self.fvgs = []
+
+        # diagnostic counters
+        self.cnt_shifts = 0
+        self.cnt_shifts_valid_prior = 0
+        self.cnt_rejections = 0
+        self.cnt_valid_target = 0
+        self.cnt_trades = 0
+        self.cur_year = None
 
     # ---------- 5m bar builder ----------
     def _bucket_start(self, t):
@@ -145,13 +154,13 @@ class GCRibbonShiftFVG(QCAlgorithm):
             gtop = ll[-1]; gbot = hh[-3]
             if (gtop - gbot) >= MIN_FVG_H:
                 self.fvgs.append({'top': gtop, 'bot': gbot, 'is_bull': True,
-                                  'born': self.bar_5m, 'filled': False})
+                                  'born': self.bar_5m, 'filled': False, 'touched': None})
         # bear: low[-3] > high[-1]
         if ll[-3] > hh[-1]:
             gtop = ll[-3]; gbot = hh[-1]
             if (gtop - gbot) >= MIN_FVG_H:
                 self.fvgs.append({'top': gtop, 'bot': gbot, 'is_bull': False,
-                                  'born': self.bar_5m, 'filled': False})
+                                  'born': self.bar_5m, 'filled': False, 'touched': None})
 
     def _mark_filled(self, h, l):
         for f in self.fvgs:
@@ -211,8 +220,11 @@ class GCRibbonShiftFVG(QCAlgorithm):
             self.regime_age += 1
         else:
             # SHIFT check
-            if new_r != 0 and prior_regime != 0 and new_r != prior_regime and prior_age >= MIN_TREND_BARS:
-                self.pending_shift = {'dir': new_r, 'bars_since': 0, 'shift_bar': self.bar_5m}
+            if new_r != 0 and prior_regime != 0 and new_r != prior_regime:
+                self.cnt_shifts += 1
+                if prior_age >= MIN_TREND_BARS:
+                    self.cnt_shifts_valid_prior += 1
+                    self.pending_shift = {'dir': new_r, 'bars_since': 0, 'shift_bar': self.bar_5m}
             self.regime = new_r
             self.regime_age = 1
 
@@ -251,27 +263,49 @@ class GCRibbonShiftFVG(QCAlgorithm):
                 d = self.pending_shift['dir']
                 shift_bar = self.pending_shift['shift_bar']
                 cand = None
+                # 1) update touched state for direction-appropriate FVGs
                 for f in self.fvgs:
                     if f['filled']:
                         continue
-                    if f['born'] < shift_bar - 3:  # FVG too old (formed before SHIFT-ish)
+                    if f['born'] < shift_bar - 3:
                         continue
                     if d == -1 and not f['is_bull']:
-                        # short: bearish FVG. price wicked up into it, closed below bot.
-                        if h >= f['bot'] and c <= f['bot']:
-                            cand = f; break
-                    if d == 1 and f['is_bull']:
-                        if l <= f['top'] and c >= f['top']:
-                            cand = f; break
+                        if f.get('touched') is None and h >= f['bot']:
+                            f['touched'] = self.bar_5m
+                    elif d == 1 and f['is_bull']:
+                        if f.get('touched') is None and l <= f['top']:
+                            f['touched'] = self.bar_5m
+                # 2) check rejection = close outside FVG in trade direction, within REJ_WAIT_BARS of touch
+                for f in self.fvgs:
+                    if f['filled'] or f.get('touched') is None:
+                        continue
+                    if (self.bar_5m - f['touched']) > REJ_WAIT_BARS:
+                        continue
+                    if d == -1 and not f['is_bull'] and c <= f['bot']:
+                        cand = f; break
+                    if d == 1 and f['is_bull'] and c >= f['top']:
+                        cand = f; break
                 if cand is not None:
+                    self.cnt_rejections += 1
                     tgt = self._find_target(d, c)
                     if tgt is not None:
+                        self.cnt_valid_target += 1
                         self.trade = {'dir': d, 'entry_px': c, 'entry_bar': self.bar_5m,
                                       'target_top': tgt['top'], 'target_bot': tgt['bot'],
                                       'entry_ts': b['t']}
                         self.trades_taken += 1
+                        self.cnt_trades += 1
                         cand['filled'] = True
                         self.pending_shift = None
+
+        # ---- yearly diagnostic summary ----
+        yr = b['t'].year
+        if self.cur_year is None:
+            self.cur_year = yr
+        elif yr != self.cur_year:
+            self._emit(f"DIAG,{self.cur_year},shifts,{self.cnt_shifts},priorOK,{self.cnt_shifts_valid_prior},"
+                       f"rejections,{self.cnt_rejections},validTgt,{self.cnt_valid_target},trades,{self.cnt_trades}")
+            self.cur_year = yr
 
     # ---------- tag exfil ----------
     def _emit(self, tag):
@@ -285,4 +319,6 @@ class GCRibbonShiftFVG(QCAlgorithm):
             self.Debug(f"tag fail: {e}")
 
     def OnEndOfAlgorithm(self):
+        self._emit(f"DIAG,{self.cur_year},shifts,{self.cnt_shifts},priorOK,{self.cnt_shifts_valid_prior},"
+                   f"rejections,{self.cnt_rejections},validTgt,{self.cnt_valid_target},trades,{self.cnt_trades}")
         self.Log(f"TRADES={self.trades_taken}  TAGS={self.n_tags}")
