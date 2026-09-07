@@ -1,0 +1,87 @@
+// @version=5
+indicator("MA Cloud SHIFT — HMA / SSL / EMA", overlay=true, max_lines_count=500)
+
+// -----------------------------------------------------------------------------
+// MA "cloud" SHIFT vizualizace ze screenshotu (TikTok kanal). Tri varianty,
+// vsechny prepinatelne, s cloud fillem mezi fast a slow linii.
+//
+// !!! POZOR: testovano na NQ 1min RTH 2018-2025 (per-trade flip, bez SL/TP):
+//    HMA(9/21):    n=102443  avg=-0.20 pt  z=-3.28  win 40.0%  PF 0.967
+//    SSL Ch (10):  n= 65652  avg=-0.19 pt  z=-2.00  win 35.3%  PF 0.974
+//    EMA(9/21):    n= 34993  avg=+0.15 pt  z=+0.82  win 30.5%  PF 1.016
+// Zadna varianta neprosla Bonferroni prahem. Cist edge tam neni.
+// Indikator je pouze pro vizualni referenci na chartu.
+// -----------------------------------------------------------------------------
+
+// ---- inputs ----
+showHMA  = input.bool(true,  "HMA cloud (9/21)",       group="Cloud switches")
+showSSL  = input.bool(true,  "SSL Channel (10)",       group="Cloud switches")
+showEMA  = input.bool(false, "EMA cloud (9/21)",       group="Cloud switches")
+showFlip = input.bool(true,  "Mark trend flips (X)",   group="Cloud switches")
+
+hmaFast  = input.int(9,  "HMA fast", minval=2, group="Lengths")
+hmaSlow  = input.int(21, "HMA slow", minval=3, group="Lengths")
+sslLen   = input.int(10, "SSL length", minval=2, group="Lengths")
+emaFast  = input.int(9,  "EMA fast", minval=2, group="Lengths")
+emaSlow  = input.int(21, "EMA slow", minval=3, group="Lengths")
+
+colUp    = input.color(color.new(color.green, 78), "Cloud UP color",   group="Style")
+colDn    = input.color(color.new(color.red,   78), "Cloud DOWN color", group="Style")
+lineW    = input.int(1, "Line width", minval=1, maxval=4, group="Style")
+
+// ---- HMA cross ----
+hmaF = ta.hma(close, hmaFast)
+hmaS = ta.hma(close, hmaSlow)
+hmaUp = hmaF > hmaS
+
+pHmaF = plot(showHMA ? hmaF : na, "HMA fast", color=color.new(color.aqua,    0), linewidth=lineW)
+pHmaS = plot(showHMA ? hmaS : na, "HMA slow", color=color.new(color.orange,  0), linewidth=lineW)
+fill(pHmaF, pHmaS, color = showHMA ? (hmaUp ? colUp : colDn) : na, title="HMA cloud")
+
+// ---- SSL Channel ----
+sslU = ta.sma(high, sslLen)
+sslL = ta.sma(low,  sslLen)
+var int sslDir = 0
+sslDir := close > sslU ? 1 : close < sslL ? -1 : sslDir
+sslLine = sslDir == 1 ? sslU : sslL
+sslOther = sslDir == 1 ? sslL : sslU
+
+pSslA = plot(showSSL ? sslU : na, "SSL upper", color=color.new(color.lime,   0), linewidth=lineW)
+pSslB = plot(showSSL ? sslL : na, "SSL lower", color=color.new(color.fuchsia,0), linewidth=lineW)
+fill(pSslA, pSslB, color = showSSL ? (sslDir == 1 ? colUp : sslDir == -1 ? colDn : na) : na, title="SSL cloud")
+
+// ---- EMA cross ----
+emaF = ta.ema(close, emaFast)
+emaS = ta.ema(close, emaSlow)
+emaUp = emaF > emaS
+
+pEmaF = plot(showEMA ? emaF : na, "EMA fast", color=color.new(color.yellow, 0), linewidth=lineW)
+pEmaS = plot(showEMA ? emaS : na, "EMA slow", color=color.new(color.blue,   0), linewidth=lineW)
+fill(pEmaF, pEmaS, color = showEMA ? (emaUp ? colUp : colDn) : na, title="EMA cloud")
+
+// ---- flip markers ----
+hmaFlipUp = showHMA and showFlip and ta.crossover(hmaF, hmaS)
+hmaFlipDn = showHMA and showFlip and ta.crossunder(hmaF, hmaS)
+sslFlipUp = showSSL and showFlip and sslDir == 1 and sslDir[1] != 1
+sslFlipDn = showSSL and showFlip and sslDir == -1 and sslDir[1] != -1
+emaFlipUp = showEMA and showFlip and ta.crossover(emaF, emaS)
+emaFlipDn = showEMA and showFlip and ta.crossunder(emaF, emaS)
+
+plotshape(hmaFlipUp, "HMA flip up", shape.triangleup,   location.belowbar, color=color.new(color.aqua,   0), size=size.tiny)
+plotshape(hmaFlipDn, "HMA flip dn", shape.triangledown, location.abovebar, color=color.new(color.orange, 0), size=size.tiny)
+plotshape(sslFlipUp, "SSL flip up", shape.triangleup,   location.belowbar, color=color.new(color.lime,   0), size=size.tiny)
+plotshape(sslFlipDn, "SSL flip dn", shape.triangledown, location.abovebar, color=color.new(color.fuchsia,0), size=size.tiny)
+plotshape(emaFlipUp, "EMA flip up", shape.triangleup,   location.belowbar, color=color.new(color.yellow, 0), size=size.tiny)
+plotshape(emaFlipDn, "EMA flip dn", shape.triangledown, location.abovebar, color=color.new(color.blue,   0), size=size.tiny)
+
+// ---- corner info table ----
+var table t = table.new(position.top_right, 2, 4, border_width=1)
+if barstate.islast
+    table.cell(t, 0, 0, "MA Cloud SHIFT", bgcolor=color.new(color.black,80), text_color=color.white)
+    table.cell(t, 1, 0, "trend",          bgcolor=color.new(color.black,80), text_color=color.white)
+    table.cell(t, 0, 1, "HMA " + str.tostring(hmaFast) + "/" + str.tostring(hmaSlow))
+    table.cell(t, 1, 1, hmaUp ? "UP" : "DN", text_color = hmaUp ? color.green : color.red)
+    table.cell(t, 0, 2, "SSL " + str.tostring(sslLen))
+    table.cell(t, 1, 2, sslDir == 1 ? "UP" : sslDir == -1 ? "DN" : "-", text_color = sslDir == 1 ? color.green : sslDir == -1 ? color.red : color.gray)
+    table.cell(t, 0, 3, "EMA " + str.tostring(emaFast) + "/" + str.tostring(emaSlow))
+    table.cell(t, 1, 3, emaUp ? "UP" : "DN", text_color = emaUp ? color.green : color.red)
