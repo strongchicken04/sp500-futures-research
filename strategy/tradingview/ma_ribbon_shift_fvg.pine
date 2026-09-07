@@ -21,11 +21,13 @@ useShift = input.bool(true,  "Show SHIFT labels", group=grpS)
 holdBars = input.int(5, "Min bars between SHIFTs", minval=0, group=grpS)
 
 grpF = "FVG"
-useFVG    = input.bool(true, "Show FVG (current TF)", group=grpF)
-minFvgH   = input.float(0.5, "Min FVG height (pts)", minval=0.0, step=0.25, group=grpF)
-fvgOpac   = input.int(40,  "FVG opacity (0=solid, 100=invisible)", minval=0, maxval=100, group=grpF)
-fvgMaxAge = input.int(300, "Delete FVG after N bars if untouched", minval=10, group=grpF)
-fvgMaxN   = input.int(60,  "Max concurrent FVG boxes", minval=5, maxval=200, group=grpF)
+useFVG      = input.bool(true, "Show FVG (current TF)", group=grpF)
+showFilled  = input.bool(true, "Keep filled FVGs on chart (history)", group=grpF)
+minFvgH     = input.float(0.5, "Min FVG height (pts)", minval=0.0, step=0.25, group=grpF)
+fvgOpac     = input.int(30,  "Active FVG opacity",  minval=0, maxval=100, group=grpF)
+fvgOpacHist = input.int(80,  "Filled FVG opacity (history)", minval=0, maxval=100, group=grpF)
+fvgLive     = input.int(20,  "Max width of ACTIVE FVG (bars)", minval=3, group=grpF)
+fvgMaxN     = input.int(200, "Max FVG boxes kept on chart", minval=20, maxval=500, group=grpF)
 
 grpK = "Key area (magnet)"
 useKey  = input.bool(true, "Highlight nearest unfilled FVG as key area", group=grpK)
@@ -76,62 +78,80 @@ if useShift and shiftUp
 if useShift and shiftDn
     label.new(bar_index, high, "SHIFT", style=label.style_label_down, color=color.new(color.red, 0), textcolor=color.white, size=size.small, yloc=yloc.abovebar)
 
-// ==================== FVG (bez UDT, paralelni pole) ====================
-var array<box>   fvgBox = array.new<box>()
-var array<float> fvgTop = array.new<float>()
-var array<float> fvgBot = array.new<float>()
+// ==================== FVG ====================
+var array<box>   fvgBox    = array.new<box>()
+var array<float> fvgTop    = array.new<float>()
+var array<float> fvgBot    = array.new<float>()
 var array<bool>  fvgIsBull = array.new<bool>()
-var array<int>   fvgBorn = array.new<int>()
+var array<int>   fvgBorn   = array.new<int>()
+var array<bool>  fvgFilled = array.new<bool>()
 
 // detekce nove FVG
 if useFVG and bar_index >= 2
-    // bullish: high[2] < low  -> gap (high[2] .. low)
     bullGap = high[2] < low
     if bullGap
         gTop = low
         gBot = high[2]
         if (gTop - gBot) >= minFvgH
-            bx = box.new(left=bar_index - 2, top=gTop, right=bar_index + 30, bottom=gBot, bgcolor=color.new(cBull, fvgOpac), border_color=color.new(cBull, math.max(0, fvgOpac - 20)), border_width=1, extend=extend.right)
+            bx = box.new(left=bar_index - 2, top=gTop, right=bar_index, bottom=gBot, bgcolor=color.new(cBull, fvgOpac), border_color=color.new(cBull, math.max(0, fvgOpac - 20)), border_width=1)
             array.push(fvgBox, bx)
             array.push(fvgTop, gTop)
             array.push(fvgBot, gBot)
             array.push(fvgIsBull, true)
             array.push(fvgBorn, bar_index)
+            array.push(fvgFilled, false)
 
-    // bearish: low[2] > high  -> gap (low[2] .. high)
     bearGap = low[2] > high
     if bearGap
         gTop = low[2]
         gBot = high
         if (gTop - gBot) >= minFvgH
-            bx = box.new(left=bar_index - 2, top=gTop, right=bar_index + 30, bottom=gBot, bgcolor=color.new(cBear, fvgOpac), border_color=color.new(cBear, math.max(0, fvgOpac - 20)), border_width=1, extend=extend.right)
+            bx = box.new(left=bar_index - 2, top=gTop, right=bar_index, bottom=gBot, bgcolor=color.new(cBear, fvgOpac), border_color=color.new(cBear, math.max(0, fvgOpac - 20)), border_width=1)
             array.push(fvgBox, bx)
             array.push(fvgTop, gTop)
             array.push(fvgBot, gBot)
             array.push(fvgIsBull, false)
             array.push(fvgBorn, bar_index)
+            array.push(fvgFilled, false)
 
-// vyplneni / staroba
+// update kazdou baru: aktivni FVG rostou vpravo, po vyplneni zmrazit a ztmavit
 if array.size(fvgBox) > 0
     i = 0
     while i < array.size(fvgBox)
-        top_i = array.get(fvgTop, i)
-        bot_i = array.get(fvgBot, i)
+        top_i  = array.get(fvgTop, i)
+        bot_i  = array.get(fvgBot, i)
         bull_i = array.get(fvgIsBull, i)
         born_i = array.get(fvgBorn, i)
-        filled = bull_i ? (low <= bot_i) : (high >= top_i)
-        aged = (bar_index - born_i) > fvgMaxAge
-        if filled or aged
-            box.delete(array.get(fvgBox, i))
-            array.remove(fvgBox, i)
-            array.remove(fvgTop, i)
-            array.remove(fvgBot, i)
-            array.remove(fvgIsBull, i)
-            array.remove(fvgBorn, i)
-        else
-            i += 1
+        was_filled = array.get(fvgFilled, i)
+        bx = array.get(fvgBox, i)
 
-// omezeni max poctu — smaz nejstarsi kdyz preteka
+        if not was_filled
+            // check zaplneni na aktualnim baru
+            filled_now = bull_i ? (low <= bot_i) : (high >= top_i)
+            if filled_now
+                // zmrazit pravou hranu na aktualni baru + ztmavit
+                box.set_right(bx, bar_index)
+                col = bull_i ? cBull : cBear
+                box.set_bgcolor(bx, color.new(col, fvgOpacHist))
+                box.set_border_color(bx, color.new(col, math.max(0, fvgOpacHist - 20)))
+                array.set(fvgFilled, i, true)
+                if not showFilled
+                    box.delete(bx)
+                    array.remove(fvgBox, i)
+                    array.remove(fvgTop, i)
+                    array.remove(fvgBot, i)
+                    array.remove(fvgIsBull, i)
+                    array.remove(fvgBorn, i)
+                    array.remove(fvgFilled, i)
+                    continue
+            else
+                // aktivni, jeste ne moc siroky -> prodluz vpravo
+                if (bar_index - born_i) <= fvgLive
+                    box.set_right(bx, bar_index)
+                // jinak: zmrazit sirku ale nechat aktivni barvu
+        i += 1
+
+// omezeni max poctu — smaz nejstarsi
 while array.size(fvgBox) > fvgMaxN
     box.delete(array.get(fvgBox, 0))
     array.remove(fvgBox, 0)
@@ -139,6 +159,7 @@ while array.size(fvgBox) > fvgMaxN
     array.remove(fvgBot, 0)
     array.remove(fvgIsBull, 0)
     array.remove(fvgBorn, 0)
+    array.remove(fvgFilled, 0)
 
 // ==================== KEY AREA (magnet) ====================
 var box   keyBox   = na
@@ -160,6 +181,8 @@ if useKey and barstate.islast
 
     if array.size(fvgBox) > 0
         for i = 0 to array.size(fvgBox) - 1
+            if array.get(fvgFilled, i)
+                continue
             top_i = array.get(fvgTop, i)
             bot_i = array.get(fvgBot, i)
             h = top_i - bot_i
@@ -183,8 +206,16 @@ if barstate.islast
     table.cell(t, 0, 1, "regime")
     table.cell(t, 1, 1, regime == 1 ? "UP" : regime == -1 ? "DN" : "NEUTRAL",
                text_color = regime == 1 ? color.green : regime == -1 ? color.red : color.yellow)
-    table.cell(t, 0, 2, "FVG count")
-    table.cell(t, 1, 2, str.tostring(array.size(fvgBox)))
+    int nActive = 0
+    int nFilled = 0
+    if array.size(fvgBox) > 0
+        for i = 0 to array.size(fvgBox) - 1
+            if array.get(fvgFilled, i)
+                nFilled += 1
+            else
+                nActive += 1
+    table.cell(t, 0, 2, "FVG active/filled")
+    table.cell(t, 1, 2, str.tostring(nActive) + " / " + str.tostring(nFilled))
     table.cell(t, 0, 3, "ATR" + str.tostring(atrLen))
     table.cell(t, 1, 3, str.tostring(atrv, "#.##"))
     table.cell(t, 0, 4, "min FVG h")
