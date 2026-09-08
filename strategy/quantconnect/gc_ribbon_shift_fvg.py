@@ -33,7 +33,7 @@ EMA_F, EMA_M, EMA_S = 20, 34, 50
 ATR_LEN = 14
 ATR_MULT = 0.15            # optimal per grid
 MIN_TREND_BARS = 20        # prior trend must be >= this bars
-MIN_FVG_H = 3.0            # min FVG height (bigger => "confirmed" pullback)
+MIN_FVG_H = 2.0            # min FVG height (bigger => "confirmed" pullback)
 MIN_TARGET_H = 3.0
 MIN_TARGET_DIST = 20.0     # pts from entry to target mid
 MAX_WAIT_AFTER_SHIFT = 40
@@ -44,7 +44,7 @@ REJ_WAIT_BARS = 3          # after FVG touch, how many bars to look for close-ou
 # SL configuration
 SL_MODE = "swing"          # "fvg" | "atr" | "swing"
 SL_ATR_BUFFER = 0.30       # ATR multiple added beyond FVG edge (mode "atr")
-SL_SWING_LOOKBACK = 5      # bars back for swing high/low (mode "swing")
+SL_SWING_LOOKBACK = 10     # bars back for swing high/low (mode "swing")
 
 
 class GCRibbonShiftFVG(QCAlgorithm):
