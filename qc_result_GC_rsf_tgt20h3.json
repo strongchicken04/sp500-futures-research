@@ -1,0 +1,18 @@
+{
+  "projectId": 36290520,
+  "backtestId": "f8ebf03340d02f87a4934d772f13df08",
+  "name": "GC_rsf_tgt20h3_1788907164",
+  "statistics": {},
+  "runtimeStatistics": {
+    "Equity": "$1,000,000.00",
+    "Fees": "-$0.00",
+    "Holdings": "$0.00",
+    "Net Profit": "$0.00",
+    "Probabilistic Sharpe Ratio": "0%",
+    "Return": "0.00 %",
+    "Unrealized": "$0.00",
+    "Volume": "$0.00"
+  },
+  "totalPerformance": null,
+  "error": null
+}
