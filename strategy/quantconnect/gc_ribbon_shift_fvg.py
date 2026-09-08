@@ -32,14 +32,14 @@ import math
 EMA_F, EMA_M, EMA_S = 20, 34, 50
 ATR_LEN = 14
 ATR_MULT = 0.15            # loosened (was 0.20)
-MIN_TREND_BARS = 10        # was 20 -> now 50min prior trend
+MIN_TREND_BARS = 20        # prior trend must be >= this bars
 MIN_FVG_H = 1.0            # pts, gold has small FVGs on 5m
 MIN_TARGET_H = 3.0
 MIN_TARGET_DIST = 20.0     # pts from entry to target mid
 MAX_WAIT_AFTER_SHIFT = 40
 MAX_HOLD_BARS = 120
 FVG_KEEP = 400
-REJ_WAIT_BARS = 1          # after FVG touch, how many bars to look for close-outside
+REJ_WAIT_BARS = 3          # after FVG touch, how many bars to look for close-outside
 
 # SL configuration
 SL_MODE = "swing"          # "fvg" | "atr" | "swing"
