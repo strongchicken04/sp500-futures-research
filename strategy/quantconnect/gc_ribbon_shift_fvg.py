@@ -31,9 +31,9 @@ import math
 
 EMA_F, EMA_M, EMA_S = 20, 34, 50
 ATR_LEN = 14
-ATR_MULT = 0.25            # stricter regime separation
+ATR_MULT = 0.15            # optimal per grid
 MIN_TREND_BARS = 20        # prior trend must be >= this bars
-MIN_FVG_H = 1.0            # pts, gold has small FVGs on 5m
+MIN_FVG_H = 2.0            # min FVG height (bigger => "confirmed" pullback)
 MIN_TARGET_H = 3.0
 MIN_TARGET_DIST = 20.0     # pts from entry to target mid
 MAX_WAIT_AFTER_SHIFT = 40
