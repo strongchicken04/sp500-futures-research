@@ -39,7 +39,7 @@ MIN_TARGET_DIST = 20.0     # pts from entry to target mid
 MAX_WAIT_AFTER_SHIFT = 40
 MAX_HOLD_BARS = 120
 FVG_KEEP = 400
-REJ_WAIT_BARS = 3          # after FVG touch, how many bars to look for close-outside
+REJ_WAIT_BARS = 1          # after FVG touch, how many bars to look for close-outside
 
 # SL configuration
 SL_MODE = "swing"          # "fvg" | "atr" | "swing"
