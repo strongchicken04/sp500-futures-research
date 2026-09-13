@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "Haničky Řecko",
+    "slug": "hanicky-recko",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "hanickyrecko",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F6FBFE",
+    "ios": {
+      "bundleIdentifier": "cz.hanicka.recko",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "cz.hanicka.recko",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#DCF0FA",
+        "foregroundImage": "./assets/images/android-icon-foreground.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#DCF0FA",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 150
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Aplikace potřebuje přístup k fotkám, aby sis mohla přidávat vzpomínky z Řecka."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true,
+      "baseUrl": "/zuzanky-denik/hanicka/"
+    }
+  }
+}
