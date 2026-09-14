@@ -17,21 +17,17 @@ showRender   = input.bool(true,  "▶ Show Gameplan Renderer", group="Modules")
 // ===== DUMP INPUTS =====
 showLabels = input.bool(true,  "Show levels on chart", group="Dump display")
 showTable  = input.bool(true,  "Show data table",      group="Dump display")
-tblPos     = input.string("bottom_right", "Table position",
-             options=["top_left","top_right","middle_right","bottom_left","bottom_right"],
-             group="Dump display")
+tblPos     = input.string("bottom_right", "Table position", options=["top_left","top_right","middle_right","bottom_left","bottom_right"], group="Dump display")
 atrLen     = input.int(14, "ATR length", minval=1, group="Dump compute")
 onStartHr  = input.int(18, "ON start hour ET", minval=0, maxval=23, group="Overnight")
 onEndHr    = input.int(9,  "ON end hour ET",   minval=0, maxval=23, group="Overnight")
 onEndMin   = input.int(30, "ON end minute ET", minval=0, maxval=59, group="Overnight")
 
 // ===== RENDER INPUTS =====
-gpTxt = input.text_area(defval = "BIAS|Paste gameplan from Orochi Gameplan app\nLVL|0|BOTH|EXAMPLE|Example level|SL:|TP:",
-                        title = "Gameplan text", group="Gameplan renderer")
-showTooltips = input.bool(true,  "Show tooltips on labels", group="Gameplan renderer")
+gpTxt        = input.text_area("BIAS|Paste gameplan from Orochi Gameplan app\nLVL|0|BOTH|EXAMPLE|Example level|SL:|TP:", "Gameplan text", group="Gameplan renderer")
+showTooltips = input.bool(true, "Show tooltips on labels", group="Gameplan renderer")
 lineWidth    = input.int(1, "Line width", minval=1, maxval=4, group="Gameplan renderer")
-labelSize    = input.string("normal", "Label size",
-                options=["tiny","small","normal","large"], group="Gameplan renderer")
+labelSize    = input.string("normal", "Label size", options=["tiny","small","normal","large"], group="Gameplan renderer")
 extendRight  = input.int(30, "Bars to extend line right", minval=5, group="Gameplan renderer")
 
 colLong  = input.color(color.new(color.green, 20), "LONG color",  group="Gameplan colors")
@@ -146,11 +142,8 @@ plot(showDump and showLabels ? onL_prev : na, "ONL", color=color.new(color.lime,
 plot(showDump and showLabels ? onM_prev : na, "ONM", color=color.new(color.white,50), style=plot.style_stepline)
 
 // ===== DUMP TABLE =====
-var table t = table.new(tblPos == "top_left" ? position.top_left :
-                        tblPos == "top_right" ? position.top_right :
-                        tblPos == "middle_right" ? position.middle_right :
-                        tblPos == "bottom_left" ? position.bottom_left : position.bottom_right,
-                        2, 22, border_width=1)
+tblPosVal = tblPos == "top_left" ? position.top_left : tblPos == "top_right" ? position.top_right : tblPos == "middle_right" ? position.middle_right : tblPos == "bottom_left" ? position.bottom_left : position.bottom_right
+var table t = table.new(tblPosVal, 2, 22, border_width=1)
 if showDump and showTable and barstate.islast
     r = 0
     _addrow(string k, string v) =>
@@ -252,9 +245,7 @@ if showRender and barstate.islast
     lines = str.split(gpTxt, "\n")
     biasTxt = ""
 
-    lsize = labelSize == "tiny" ? size.tiny :
-             labelSize == "small" ? size.small :
-             labelSize == "large" ? size.large : size.normal
+    lsize = labelSize == "tiny" ? size.tiny : labelSize == "small" ? size.small : labelSize == "large" ? size.large : size.normal
 
     for i = 0 to array.size(lines) - 1
         row = array.get(lines, i)
@@ -287,8 +278,7 @@ if showRender and barstate.islast
 
             col = dir == "LONG" ? colLong : dir == "SHORT" ? colShort : colBoth
 
-            l = line.new(x1=bar_index - 20, y1=price, x2=bar_index + extendRight, y2=price,
-                          color=col, width=lineWidth, extend=extend.right)
+            l = line.new(x1=bar_index - 20, y1=price, x2=bar_index + extendRight, y2=price, color=col, width=lineWidth, extend=extend.right)
             array.push(arr_lines, l)
 
             labelTxt = typ + " " + priceStr + " (" + dir + ")"
@@ -298,13 +288,9 @@ if showRender and barstate.islast
             if str.length(tpStr) > 0
                 tip := tip + "\n" + tpStr
 
-            lbl = label.new(x=bar_index + extendRight, y=price, text=labelTxt,
-                            style=label.style_label_left, color=col, textcolor=color.white,
-                            size=lsize, tooltip=showTooltips ? tip : "")
+            lbl = label.new(x=bar_index + extendRight, y=price, text=labelTxt, style=label.style_label_left, color=col, textcolor=color.white, size=lsize, tooltip=showTooltips ? tip : "")
             array.push(arr_lbls, lbl)
 
     if str.length(biasTxt) > 0
-        biasLbl = label.new(x=bar_index, y=high, text="BIAS: " + biasTxt,
-                            style=label.style_label_down, color=colBias, textcolor=color.black,
-                            size=size.normal, yloc=yloc.abovebar)
+        biasLbl = label.new(x=bar_index, y=high, text="BIAS: " + biasTxt, style=label.style_label_down, color=colBias, textcolor=color.black, size=size.normal, yloc=yloc.abovebar)
         array.push(arr_lbls, biasLbl)
