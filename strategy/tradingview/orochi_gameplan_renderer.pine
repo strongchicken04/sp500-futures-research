@@ -1,0 +1,113 @@
+// @version=5
+indicator("Orochi Gameplan Renderer", overlay=true, max_lines_count=100, max_labels_count=100)
+
+// -----------------------------------------------------------------------------
+// Vezme text z agenta (viz orochi_agent_prompt.md) a vykresli levely s
+// popisky, SL a TP. Kazdy level je horizontalni linka + label s tooltipem.
+//
+// FORMAT vstupu (vloz do "Gameplan text" input):
+//   BIAS|Balanced day, prefer rotation
+//   LVL|21500|SHORT|VAH_D|Sell rejection z below toward D-VWAP|SL:21520|TP:21470
+//   LVL|21470|BOTH|POC_D|Magnet - watch delta for direction|SL:|TP:
+//   LVL|21440|LONG|VAL_D|Buy bounce toward D-VWAP|SL:21420|TP:21470
+//
+// Radky zacinajici na # jsou komentare (ignorovany).
+// Prazdne radky ignorovany.
+// -----------------------------------------------------------------------------
+
+txt = input.text_area(defval = "BIAS|Paste gameplan from agent here\nLVL|0|BOTH|EXAMPLE|Example level|SL:|TP:",
+                       title = "Gameplan text")
+
+showTooltips = input.bool(true,  "Show tooltips on labels", group="Display")
+lineWidth    = input.int(1, "Line width", minval=1, maxval=4, group="Display")
+labelSize    = input.string("normal", "Label size",
+                options=["tiny","small","normal","large"], group="Display")
+extendRight  = input.int(30, "Bars to extend line right", minval=5, group="Display")
+
+// Colors
+colLong  = input.color(color.new(color.green, 20), "LONG color",  group="Colors")
+colShort = input.color(color.new(color.red,   20), "SHORT color", group="Colors")
+colBoth  = input.color(color.new(color.gray,  20), "BOTH color",  group="Colors")
+colBias  = input.color(color.new(color.yellow, 0), "BIAS color",  group="Colors")
+
+// ===== PARSER =====
+// clean & split text into lines
+var array<line>  arr_lines = array.new<line>()
+var array<label> arr_lbls  = array.new<label>()
+
+// clear on last-bar so we redraw cleanly
+if barstate.islast
+    // delete old
+    if array.size(arr_lines) > 0
+        for i = 0 to array.size(arr_lines) - 1
+            line.delete(array.get(arr_lines, i))
+    if array.size(arr_lbls) > 0
+        for i = 0 to array.size(arr_lbls) - 1
+            label.delete(array.get(arr_lbls, i))
+    array.clear(arr_lines)
+    array.clear(arr_lbls)
+
+    lines = str.split(txt, "\n")
+    biasTxt = ""
+
+    lsize = labelSize == "tiny" ? size.tiny :
+             labelSize == "small" ? size.small :
+             labelSize == "large" ? size.large : size.normal
+
+    for i = 0 to array.size(lines) - 1
+        row = array.get(lines, i)
+        row := str.trim(row)
+        if str.length(row) == 0
+            continue
+        if str.startswith(row, "#")
+            continue
+
+        parts = str.split(row, "|")
+        // require at least 1 field
+        if array.size(parts) < 2
+            continue
+
+        kind = str.upper(str.trim(array.get(parts, 0)))
+
+        if kind == "BIAS"
+            biasTxt := array.size(parts) >= 2 ? array.get(parts, 1) : ""
+            continue
+
+        if kind == "LVL"
+            // LVL|price|dir|type|desc|SL:xxx|TP:xxx
+            if array.size(parts) < 5
+                continue
+            priceStr = str.trim(array.get(parts, 1))
+            price = str.tonumber(priceStr)
+            if na(price)
+                continue
+            dir = str.upper(str.trim(array.get(parts, 2)))
+            typ = str.trim(array.get(parts, 3))
+            desc = str.trim(array.get(parts, 4))
+            slStr = array.size(parts) >= 6 ? str.trim(array.get(parts, 5)) : ""
+            tpStr = array.size(parts) >= 7 ? str.trim(array.get(parts, 6)) : ""
+
+            col = dir == "LONG" ? colLong : dir == "SHORT" ? colShort : colBoth
+
+            l = line.new(x1=bar_index - 20, y1=price, x2=bar_index + extendRight, y2=price,
+                          color=col, width=lineWidth, extend=extend.right)
+            array.push(arr_lines, l)
+
+            labelTxt = typ + " " + priceStr + " (" + dir + ")"
+            tip = desc
+            if str.length(slStr) > 0
+                tip := tip + "\n" + slStr
+            if str.length(tpStr) > 0
+                tip := tip + "\n" + tpStr
+
+            lbl = label.new(x=bar_index + extendRight, y=price, text=labelTxt,
+                            style=label.style_label_left, color=col, textcolor=color.white,
+                            size=lsize, tooltip=showTooltips ? tip : "")
+            array.push(arr_lbls, lbl)
+
+    // Draw BIAS as fixed panel at top
+    if str.length(biasTxt) > 0
+        biasLbl = label.new(x=bar_index, y=high, text="BIAS: " + biasTxt,
+                            style=label.style_label_down, color=colBias, textcolor=color.black,
+                            size=size.normal, yloc=yloc.abovebar)
+        array.push(arr_lbls, biasLbl)
