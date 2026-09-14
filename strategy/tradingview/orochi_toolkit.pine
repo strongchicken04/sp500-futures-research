@@ -142,53 +142,35 @@ plot(showDump and showLabels ? onL_prev : na, "ONL", color=color.new(color.lime,
 plot(showDump and showLabels ? onM_prev : na, "ONM", color=color.new(color.white,50), style=plot.style_stepline)
 
 // ===== DUMP TABLE =====
+_addrow(table tt, int rr, string k, string v) =>
+    table.cell(tt, 0, rr, k, bgcolor=color.new(color.black, 80), text_color=color.white, text_size=size.small)
+    table.cell(tt, 1, rr, v, bgcolor=color.new(color.gray,  80), text_color=color.white, text_size=size.small)
+    rr + 1
+
 tblPosVal = tblPos == "top_left" ? position.top_left : tblPos == "top_right" ? position.top_right : tblPos == "middle_right" ? position.middle_right : tblPos == "bottom_left" ? position.bottom_left : position.bottom_right
 var table t = table.new(tblPosVal, 2, 22, border_width=1)
 if showDump and showTable and barstate.islast
     r = 0
-    _addrow(string k, string v) =>
-        table.cell(t, 0, r, k, bgcolor=color.new(color.black, 80), text_color=color.white, text_size=size.small)
-        table.cell(t, 1, r, v, bgcolor=color.new(color.gray,  80), text_color=color.white, text_size=size.small)
-    _addrow("SYM", syminfo.ticker + " @ " + str.tostring(close, "#.##"))
-    r += 1
-    _addrow("ATR" + str.tostring(atrLen), str.tostring(atrv, "#.##"))
-    r += 1
-    _addrow("D-VWAP", str.tostring(dvw, "#.##"))
-    r += 1
-    _addrow("D +1σ / -1σ", str.tostring(dva_h, "#.##") + " / " + str.tostring(dva_l, "#.##"))
-    r += 1
-    _addrow("D +2σ / -2σ", str.tostring(dva_h2, "#.##") + " / " + str.tostring(dva_l2, "#.##"))
-    r += 1
-    _addrow("W-VWAP", str.tostring(wvw, "#.##"))
-    r += 1
-    _addrow("W +1σ / -1σ", str.tostring(wva_h, "#.##") + " / " + str.tostring(wva_l, "#.##"))
-    r += 1
-    _addrow("M-VWAP", str.tostring(mvw, "#.##"))
-    r += 1
-    _addrow("M +1σ / -1σ", str.tostring(mva_h, "#.##") + " / " + str.tostring(mva_l, "#.##"))
-    r += 1
-    _addrow("PD-VWAP (POC~)", str.tostring(pdVwapFinal, "#.##"))
-    r += 1
-    _addrow("PD-VA H / L", str.tostring(pdVA_H, "#.##") + " / " + str.tostring(pdVA_L, "#.##"))
-    r += 1
-    _addrow("PD O", str.tostring(pdOpen, "#.##"))
-    r += 1
-    _addrow("PD H", str.tostring(pdHigh, "#.##"))
-    r += 1
-    _addrow("PD L", str.tostring(pdLow, "#.##"))
-    r += 1
-    _addrow("PD C", str.tostring(pdClose, "#.##"))
-    r += 1
-    _addrow("PW H", str.tostring(pwHigh, "#.##"))
-    r += 1
-    _addrow("PW L", str.tostring(pwLow, "#.##"))
-    r += 1
-    _addrow("ONH", str.tostring(onH_prev, "#.##"))
-    r += 1
-    _addrow("ONL", str.tostring(onL_prev, "#.##"))
-    r += 1
-    _addrow("ONM", str.tostring(onM_prev, "#.##"))
-    r += 1
+    r := _addrow(t, r, "SYM", syminfo.ticker + " @ " + str.tostring(close, "#.##"))
+    r := _addrow(t, r, "ATR" + str.tostring(atrLen), str.tostring(atrv, "#.##"))
+    r := _addrow(t, r, "D-VWAP", str.tostring(dvw, "#.##"))
+    r := _addrow(t, r, "D +1σ / -1σ", str.tostring(dva_h, "#.##") + " / " + str.tostring(dva_l, "#.##"))
+    r := _addrow(t, r, "D +2σ / -2σ", str.tostring(dva_h2, "#.##") + " / " + str.tostring(dva_l2, "#.##"))
+    r := _addrow(t, r, "W-VWAP", str.tostring(wvw, "#.##"))
+    r := _addrow(t, r, "W +1σ / -1σ", str.tostring(wva_h, "#.##") + " / " + str.tostring(wva_l, "#.##"))
+    r := _addrow(t, r, "M-VWAP", str.tostring(mvw, "#.##"))
+    r := _addrow(t, r, "M +1σ / -1σ", str.tostring(mva_h, "#.##") + " / " + str.tostring(mva_l, "#.##"))
+    r := _addrow(t, r, "PD-VWAP (POC~)", str.tostring(pdVwapFinal, "#.##"))
+    r := _addrow(t, r, "PD-VA H / L", str.tostring(pdVA_H, "#.##") + " / " + str.tostring(pdVA_L, "#.##"))
+    r := _addrow(t, r, "PD O", str.tostring(pdOpen, "#.##"))
+    r := _addrow(t, r, "PD H", str.tostring(pdHigh, "#.##"))
+    r := _addrow(t, r, "PD L", str.tostring(pdLow, "#.##"))
+    r := _addrow(t, r, "PD C", str.tostring(pdClose, "#.##"))
+    r := _addrow(t, r, "PW H", str.tostring(pwHigh, "#.##"))
+    r := _addrow(t, r, "PW L", str.tostring(pwLow, "#.##"))
+    r := _addrow(t, r, "ONH", str.tostring(onH_prev, "#.##"))
+    r := _addrow(t, r, "ONL", str.tostring(onL_prev, "#.##"))
+    r := _addrow(t, r, "ONM", str.tostring(onM_prev, "#.##"))
 
 // ===== DUMP TO PINE LOGS =====
 if showDump and barstate.islast
