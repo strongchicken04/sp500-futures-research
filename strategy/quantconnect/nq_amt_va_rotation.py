@@ -24,8 +24,11 @@ from collections import defaultdict
 #     level = H/L, exit_reason = T/L/E (target/loss/eod)
 
 BIN_SIZE = 2.0
-SL_PTS = 15.0
-VA_PCT = 0.68   # value area coverage
+SL_PTS = 15.0           # legacy, unused if SL_MODE="va_pct"
+SL_MODE = "va_pct"      # "fixed" | "va_pct"
+SL_VA_PCT = 0.30        # 30% VA width beyond entry level
+VA_PCT = 0.68           # value area coverage
+REQUIRE_OPEN_INSIDE_VA = True    # today's RTH open must be inside prior VA
 
 
 class NQAmtVaRotation(QCAlgorithm):
@@ -58,8 +61,10 @@ class NQAmtVaRotation(QCAlgorithm):
         self.prev_close = None
         self.h_traded = False
         self.l_traded = False
-        self.trade = None   # {'dir', 'entry_px', 'target', 'sl', 'level', 'entry_bar'}
+        self.trade = None
         self.bar_5m_id = 0
+        self.rth_open = None       # today's first RTH close (used as "open")
+        self.open_inside_va = None # bool cached once open is known
 
     # ---------- helpers ----------
     def _compute_va(self, bins):
@@ -110,6 +115,8 @@ class NQAmtVaRotation(QCAlgorithm):
         self.h_traded = False
         self.l_traded = False
         self.trade = None
+        self.rth_open = None
+        self.open_inside_va = None
         self.cur_date = new_date
 
     def OnData(self, slice):
@@ -141,6 +148,16 @@ class NQAmtVaRotation(QCAlgorithm):
             return
 
         h = bar.High; l = bar.Low; c = bar.Close
+
+        # capture today's RTH open on first bar (mend==570)
+        if self.rth_open is None:
+            self.rth_open = bar.Open
+            self.open_inside_va = (self.yVAL <= self.rth_open <= self.yVAH)
+
+        # optional acceptance filter
+        if REQUIRE_OPEN_INSIDE_VA and not self.open_inside_va:
+            self.prev_close = c
+            return
 
         # ---- manage active trade ----
         if self.trade is not None:
@@ -174,12 +191,18 @@ class NQAmtVaRotation(QCAlgorithm):
 
         # ---- entry checks ----
         if self.trade is None and not is_eod and self.prev_close is not None:
+            # compute SL offset (dynamic or fixed)
+            va_width = self.yVAH - self.yVAL
+            if SL_MODE == "va_pct":
+                sl_off = SL_VA_PCT * va_width
+            else:
+                sl_off = SL_PTS
             # SHORT at VAH: touch from below
             if (not self.h_traded) and (self.prev_close < self.yVAH) and (h >= self.yVAH):
                 entry_px = self.yVAH
                 self.trade = {
                     'dir': -1, 'entry_px': entry_px, 'target': self.yPOC,
-                    'sl': self.yVAH + SL_PTS, 'level': 'H',
+                    'sl': self.yVAH + sl_off, 'level': 'H',
                     'entry_min': t.hour * 60 + t.minute}
                 self.h_traded = True
             # LONG at VAL: touch from above
@@ -187,7 +210,7 @@ class NQAmtVaRotation(QCAlgorithm):
                 entry_px = self.yVAL
                 self.trade = {
                     'dir': 1, 'entry_px': entry_px, 'target': self.yPOC,
-                    'sl': self.yVAL - SL_PTS, 'level': 'L',
+                    'sl': self.yVAL - sl_off, 'level': 'L',
                     'entry_min': t.hour * 60 + t.minute}
                 self.l_traded = True
 
