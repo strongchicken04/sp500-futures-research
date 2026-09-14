@@ -172,8 +172,9 @@ if showDump and showTable and barstate.islast
     r := _addrow(t, r, "ONL", str.tostring(onL_prev, "#.##"))
     r := _addrow(t, r, "ONM", str.tostring(onM_prev, "#.##"))
 
-// ===== BUILD DUMP TEXT + SHOW AS COPYABLE LABEL + LOG =====
+// ===== BUILD DUMP TEXT + SHOW AS COPYABLE LABEL + LOG + FIXED PANEL =====
 var label dumpLabel = na
+var table dumpTbl = table.new(position.middle_right, 1, 1, border_width=1)
 if showDump and barstate.islast
     txt = "=== OROCHI DUMP === " + syminfo.ticker + " @ " + str.tostring(close, "#.##") + "\n"
     txt := txt + "TIME_UTC: " + str.format_time(time, "yyyy-MM-dd HH:mm", "UTC") + "\n"
@@ -210,11 +211,15 @@ if showDump and barstate.islast
     txt := txt + "ONM: " + str.tostring(onM_prev, "#.##") + "\n"
     txt := txt + "=== END DUMP ==="
     log.info(txt)
-    // Tap this label on mobile -> panel with copyable text.
-    // Right-click on desktop -> Copy Text.
+    // Method 1: Label at last bar (tap on mobile -> panel with text -> long-press -> copy)
     if not na(dumpLabel)
         label.delete(dumpLabel)
-    dumpLabel := label.new(x=bar_index + 5, y=close, text="📋 DUMP (tap to copy)\n\n" + txt, xloc=xloc.bar_index, yloc=yloc.price, style=label.style_label_left, color=color.new(color.black, 20), textcolor=color.white, size=size.small, textalign=text.align_left)
+    dumpLabel := label.new(x=bar_index + 5, y=close, text="📋 DUMP (tap)\n\n" + txt, xloc=xloc.bar_index, yloc=yloc.price, style=label.style_label_left, color=color.new(color.black, 20), textcolor=color.white, size=size.small, textalign=text.align_left)
+    // Method 2: Alert with dump text (set up "Any alert() function call" alert once,
+    // then every session-close you get a notification with the full copyable dump)
+    alert(txt, alert.freq_once_per_bar_close)
+    // Method 3: Table cell at middle_right — always visible, tap-and-hold to select
+    table.cell(dumpTbl, 0, 0, txt, bgcolor=color.new(color.black, 20), text_color=color.white, text_size=size.small, text_halign=text.align_left)
 
 // ===== RENDERER =====
 var array<line>  arr_lines = array.new<line>()
