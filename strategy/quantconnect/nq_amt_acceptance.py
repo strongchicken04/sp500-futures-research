@@ -25,7 +25,8 @@ from collections import defaultdict
 BIN_SIZE = 2.0
 VA_PCT = 0.68
 SL_BUFFER_PCT = 0.20   # SL = 20% of VA width beyond outer edge
-MIN_TIME_OUTSIDE_BARS = 3  # must have been outside for at least N bars before acceptance
+MIN_TIME_OUTSIDE_BARS = 5  # must have been outside for at least N bars before acceptance
+LONG_ONLY = True           # only take accept-from-below (dip buy)
 
 
 class NQAmtAcceptance(QCAlgorithm):
@@ -148,12 +149,11 @@ class NQAmtAcceptance(QCAlgorithm):
             va_width = self.yVAH - self.yVAL
             sl_buf = SL_BUFFER_PCT * va_width
             if cur_state == 'inside' and self.was_outside in ('above','below') and self.outside_bars >= MIN_TIME_OUTSIDE_BARS:
-                if self.was_outside == 'above':
-                    # accepting from above -> expect traversal down to VAL
+                if self.was_outside == 'above' and not LONG_ONLY:
                     self.trade = {'dir': -1, 'entry_px': c, 'target': self.yVAL,
                                   'sl': self.yVAH + sl_buf, 'kind': 'A2', 'bars': 0}
                     self.traded_today = True
-                else:  # below
+                elif self.was_outside == 'below':
                     self.trade = {'dir': 1, 'entry_px': c, 'target': self.yVAH,
                                   'sl': self.yVAL - sl_buf, 'kind': 'B2', 'bars': 0}
                     self.traded_today = True
