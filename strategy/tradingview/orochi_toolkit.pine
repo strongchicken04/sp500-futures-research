@@ -172,43 +172,49 @@ if showDump and showTable and barstate.islast
     r := _addrow(t, r, "ONL", str.tostring(onL_prev, "#.##"))
     r := _addrow(t, r, "ONM", str.tostring(onM_prev, "#.##"))
 
-// ===== DUMP TO PINE LOGS =====
+// ===== BUILD DUMP TEXT + SHOW AS COPYABLE LABEL + LOG =====
+var label dumpLabel = na
 if showDump and barstate.islast
     txt = "=== OROCHI DUMP === " + syminfo.ticker + " @ " + str.tostring(close, "#.##") + "\n"
     txt := txt + "TIME_UTC: " + str.format_time(time, "yyyy-MM-dd HH:mm", "UTC") + "\n"
     txt := txt + "TF: " + timeframe.period + "\n"
     txt := txt + "ATR" + str.tostring(atrLen) + ": " + str.tostring(atrv, "#.##") + "\n"
-    txt := txt + "\n-- DAILY VWAP (developing VA today) --\n"
+    txt := txt + "-- DAILY VWAP --\n"
     txt := txt + "D-VWAP: " + str.tostring(dvw, "#.##") + "\n"
-    txt := txt + "D +1σ: " + str.tostring(dva_h, "#.##") + "\n"
-    txt := txt + "D -1σ: " + str.tostring(dva_l, "#.##") + "\n"
-    txt := txt + "D +2σ: " + str.tostring(dva_h2, "#.##") + "\n"
-    txt := txt + "D -2σ: " + str.tostring(dva_l2, "#.##") + "\n"
-    txt := txt + "\n-- WEEKLY VWAP --\n"
+    txt := txt + "D+1σ: " + str.tostring(dva_h, "#.##") + "\n"
+    txt := txt + "D-1σ: " + str.tostring(dva_l, "#.##") + "\n"
+    txt := txt + "D+2σ: " + str.tostring(dva_h2, "#.##") + "\n"
+    txt := txt + "D-2σ: " + str.tostring(dva_l2, "#.##") + "\n"
+    txt := txt + "-- WEEKLY VWAP --\n"
     txt := txt + "W-VWAP: " + str.tostring(wvw, "#.##") + "\n"
-    txt := txt + "W +1σ: " + str.tostring(wva_h, "#.##") + "\n"
-    txt := txt + "W -1σ: " + str.tostring(wva_l, "#.##") + "\n"
-    txt := txt + "\n-- MONTHLY VWAP --\n"
+    txt := txt + "W+1σ: " + str.tostring(wva_h, "#.##") + "\n"
+    txt := txt + "W-1σ: " + str.tostring(wva_l, "#.##") + "\n"
+    txt := txt + "-- MONTHLY VWAP --\n"
     txt := txt + "M-VWAP: " + str.tostring(mvw, "#.##") + "\n"
-    txt := txt + "M +1σ: " + str.tostring(mva_h, "#.##") + "\n"
-    txt := txt + "M -1σ: " + str.tostring(mva_l, "#.##") + "\n"
-    txt := txt + "\n-- PRIOR DAY (established VA) --\n"
-    txt := txt + "PD-VWAP (POC~): " + str.tostring(pdVwapFinal, "#.##") + "\n"
-    txt := txt + "PD-VA-H (POC+σ): " + str.tostring(pdVA_H, "#.##") + "\n"
-    txt := txt + "PD-VA-L (POC-σ): " + str.tostring(pdVA_L, "#.##") + "\n"
-    txt := txt + "PD-Open: "  + str.tostring(pdOpen, "#.##")  + "\n"
-    txt := txt + "PD-High: "  + str.tostring(pdHigh, "#.##")  + "\n"
-    txt := txt + "PD-Low: "   + str.tostring(pdLow, "#.##")   + "\n"
-    txt := txt + "PD-Close: " + str.tostring(pdClose, "#.##") + "\n"
-    txt := txt + "\n-- PRIOR WEEK --\n"
-    txt := txt + "PW-High: " + str.tostring(pwHigh, "#.##") + "\n"
-    txt := txt + "PW-Low: "  + str.tostring(pwLow, "#.##")  + "\n"
-    txt := txt + "\n-- OVERNIGHT (18:00 ET -> 9:30 ET) --\n"
+    txt := txt + "M+1σ: " + str.tostring(mva_h, "#.##") + "\n"
+    txt := txt + "M-1σ: " + str.tostring(mva_l, "#.##") + "\n"
+    txt := txt + "-- PRIOR DAY --\n"
+    txt := txt + "PD-VWAP: " + str.tostring(pdVwapFinal, "#.##") + "\n"
+    txt := txt + "PD-VA-H: " + str.tostring(pdVA_H, "#.##") + "\n"
+    txt := txt + "PD-VA-L: " + str.tostring(pdVA_L, "#.##") + "\n"
+    txt := txt + "PDO: "  + str.tostring(pdOpen, "#.##")  + "\n"
+    txt := txt + "PDH: "  + str.tostring(pdHigh, "#.##")  + "\n"
+    txt := txt + "PDL: "   + str.tostring(pdLow, "#.##")   + "\n"
+    txt := txt + "PDC: " + str.tostring(pdClose, "#.##") + "\n"
+    txt := txt + "-- PRIOR WEEK --\n"
+    txt := txt + "PWH: " + str.tostring(pwHigh, "#.##") + "\n"
+    txt := txt + "PWL: "  + str.tostring(pwLow, "#.##")  + "\n"
+    txt := txt + "-- OVERNIGHT --\n"
     txt := txt + "ONH: " + str.tostring(onH_prev, "#.##") + "\n"
     txt := txt + "ONL: " + str.tostring(onL_prev, "#.##") + "\n"
     txt := txt + "ONM: " + str.tostring(onM_prev, "#.##") + "\n"
-    txt := txt + "\n=== END DUMP ==="
+    txt := txt + "=== END DUMP ==="
     log.info(txt)
+    // Tap this label on mobile -> panel with copyable text.
+    // Right-click on desktop -> Copy Text.
+    if not na(dumpLabel)
+        label.delete(dumpLabel)
+    dumpLabel := label.new(x=bar_index + 5, y=close, text="📋 DUMP (tap to copy)\n\n" + txt, xloc=xloc.bar_index, yloc=yloc.price, style=label.style_label_left, color=color.new(color.black, 20), textcolor=color.white, size=size.small, textalign=text.align_left)
 
 // ===== RENDERER =====
 var array<line>  arr_lines = array.new<line>()
