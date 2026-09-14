@@ -29,6 +29,7 @@ SL_MODE = "va_pct"      # "fixed" | "va_pct"
 SL_VA_PCT = 0.30        # 30% VA width beyond entry level
 VA_PCT = 0.68           # value area coverage
 REQUIRE_OPEN_INSIDE_VA = True    # today's RTH open must be inside prior VA
+REQUIRE_REJECTION_CLOSE = True   # bar close must be back inside VA (rejection candle)
 
 
 class NQAmtVaRotation(QCAlgorithm):
@@ -197,22 +198,24 @@ class NQAmtVaRotation(QCAlgorithm):
                 sl_off = SL_VA_PCT * va_width
             else:
                 sl_off = SL_PTS
-            # SHORT at VAH: touch from below
+            # SHORT at VAH: touch from below + rejection close
             if (not self.h_traded) and (self.prev_close < self.yVAH) and (h >= self.yVAH):
-                entry_px = self.yVAH
-                self.trade = {
-                    'dir': -1, 'entry_px': entry_px, 'target': self.yPOC,
-                    'sl': self.yVAH + sl_off, 'level': 'H',
-                    'entry_min': t.hour * 60 + t.minute}
-                self.h_traded = True
-            # LONG at VAL: touch from above
+                if not REQUIRE_REJECTION_CLOSE or (c < self.yVAH):
+                    entry_px = c   # entry at close of rejection bar
+                    self.trade = {
+                        'dir': -1, 'entry_px': entry_px, 'target': self.yPOC,
+                        'sl': self.yVAH + sl_off, 'level': 'H',
+                        'entry_min': t.hour * 60 + t.minute}
+                    self.h_traded = True
+            # LONG at VAL: touch from above + rejection close
             elif (not self.l_traded) and (self.prev_close > self.yVAL) and (l <= self.yVAL):
-                entry_px = self.yVAL
-                self.trade = {
-                    'dir': 1, 'entry_px': entry_px, 'target': self.yPOC,
-                    'sl': self.yVAL - sl_off, 'level': 'L',
-                    'entry_min': t.hour * 60 + t.minute}
-                self.l_traded = True
+                if not REQUIRE_REJECTION_CLOSE or (c > self.yVAL):
+                    entry_px = c
+                    self.trade = {
+                        'dir': 1, 'entry_px': entry_px, 'target': self.yPOC,
+                        'sl': self.yVAL - sl_off, 'level': 'L',
+                        'entry_min': t.hour * 60 + t.minute}
+                    self.l_traded = True
 
         # track prev close (RTH bars only)
         if in_rth:
