@@ -1,0 +1,866 @@
+<title>Orochi Gameplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --bg: #0f1114;
+    --card: #171a20;
+    --card-2: #1e222a;
+    --border: #2a2e36;
+    --border-strong: #3a3f4a;
+    --text: #e8eaed;
+    --text-2: #8b929e;
+    --text-3: #5d626e;
+    --accent: #4ade80;
+    --accent-dim: #22c55e;
+    --long: #4ade80;
+    --short: #ef4444;
+    --both: #fbbf24;
+    --info: #60a5fa;
+    --danger: #ef4444;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #f8f9fb;
+    --card: #ffffff;
+    --card-2: #f0f2f5;
+    --border: #dfe3ea;
+    --border-strong: #c6ccd6;
+    --text: #14171c;
+    --text-2: #5d626e;
+    --text-3: #8b929e;
+    color-scheme: light;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+  header.top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .brand h1 {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .brand .tag {
+    color: var(--text-2);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .brand .snake { color: var(--accent); }
+  .top-actions { display: flex; gap: 8px; align-items: center; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--card-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-head h2 {
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    font-weight: 600;
+  }
+  .panel-body { padding: 14px 16px; }
+
+  textarea, input, select {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 1.5;
+  }
+  textarea:focus, input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  textarea {
+    min-height: 240px;
+    resize: vertical;
+  }
+  .textarea-large { min-height: 340px; }
+
+  .row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .row > * { flex: 0 0 auto; }
+  .row.stretch > .grow { flex: 1 1 auto; }
+
+  button {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--accent);
+    color: #0a0d0a;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 16px;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+  button:hover:not(:disabled) { filter: brightness(1.1); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.ghost {
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border);
+  }
+  button.ghost:hover:not(:disabled) {
+    background: var(--card-2);
+    color: var(--text);
+  }
+  button.danger { background: var(--danger); color: white; }
+
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+  }
+  .field-row label {
+    font-size: 12px;
+    color: var(--text-2);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    min-width: 90px;
+  }
+  select {
+    padding: 6px 10px;
+    width: auto;
+  }
+
+  .status {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-2);
+    padding: 6px 12px;
+    background: var(--card-2);
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .status.thinking { color: var(--info); }
+  .status.error { color: var(--danger); }
+  .status.done { color: var(--accent); }
+
+  pre.output {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    max-height: 400px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+  }
+
+  .levels-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    margin-top: 12px;
+  }
+  .levels-table th {
+    text-align: left;
+    padding: 8px 10px;
+    background: var(--card-2);
+    color: var(--text-2);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .levels-table td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .levels-table tr:last-child td { border-bottom: none; }
+  .dir-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .dir-LONG { background: color-mix(in oklab, var(--long) 20%, transparent); color: var(--long); }
+  .dir-SHORT { background: color-mix(in oklab, var(--short) 20%, transparent); color: var(--short); }
+  .dir-BOTH { background: color-mix(in oklab, var(--both) 20%, transparent); color: var(--both); }
+  .price-cell { color: var(--text); font-weight: 700; }
+  .type-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    background: var(--card-2);
+    color: var(--text-2);
+    border-radius: 3px;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+  }
+  .desc-cell { color: var(--text); font-family: var(--font-body); font-size: 12.5px; }
+  .sltp {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+  .sltp span { color: var(--text); }
+
+  .bias-box {
+    padding: 12px 14px;
+    background: color-mix(in oklab, var(--info) 12%, var(--card));
+    border-left: 3px solid var(--info);
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-size: 13.5px;
+  }
+  .bias-box strong {
+    display: block;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--info);
+    margin-bottom: 4px;
+  }
+
+  .history-panel {
+    margin-top: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .history-panel details summary {
+    cursor: pointer;
+    padding: 12px 16px;
+    background: var(--card-2);
+    color: var(--text-2);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    list-style: none;
+    user-select: none;
+  }
+  .history-panel details summary::-webkit-details-marker { display: none; }
+  .history-panel details summary::before {
+    content: "▸ ";
+    color: var(--accent);
+  }
+  .history-panel details[open] summary::before { content: "▾ "; }
+  .history-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .history-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .history-list li:hover { background: var(--card-2); }
+  .history-list li:last-child { border-bottom: none; }
+  .history-list .h-when { color: var(--text-2); }
+  .history-list .h-bias { color: var(--text); flex: 1; margin: 0 16px; text-align: left; font-family: var(--font-body); font-size: 12.5px; }
+  .history-list .h-actions { display: flex; gap: 6px; }
+
+  footer.foot {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-3);
+    font-size: 12px;
+    text-align: center;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .empty {
+    color: var(--text-3);
+    font-style: italic;
+    padding: 24px 0;
+    text-align: center;
+    font-size: 13px;
+  }
+  .hint {
+    font-size: 11.5px;
+    color: var(--text-3);
+    margin-top: 6px;
+    font-family: var(--font-mono);
+  }
+  [hidden] { display: none !important; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1><span class="snake">◆</span> Orochi Gameplan</h1>
+      <span class="tag">Auction Market Theory · TPO · VWAP · Order Flow</span>
+    </div>
+    <div class="top-actions">
+      <button class="ghost" id="theme-toggle" title="Toggle theme">◐</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- INPUT -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>1. Chart Data Dump (from Pine indicator)</h2>
+        <span class="status" id="input-status">idle</span>
+      </div>
+      <div class="panel-body">
+        <textarea id="dump" class="textarea-large" placeholder="Paste the 'OROCHI DUMP' block from Pine Logs here. It should start with '=== OROCHI DUMP ===' and end with '=== END DUMP ==='."></textarea>
+        <div class="hint">Tip: from TradingView Pine Logs, right-click the log row and copy the entire dump block.</div>
+
+        <div class="field-row">
+          <label for="tier">Model</label>
+          <select id="tier">
+            <option value="default" selected>Default (balanced)</option>
+            <option value="complex">Complex (deeper reasoning)</option>
+            <option value="quick">Quick (fastest)</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label for="notes">Notes</label>
+          <input id="notes" placeholder="Optional: any context (news, session bias, etc)" />
+        </div>
+
+        <div class="row" style="margin-top: 12px;">
+          <button id="go">▶ Generate Gameplan</button>
+          <button class="ghost" id="stop" hidden>■ Stop</button>
+          <button class="ghost" id="clear-input">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>2. Gameplan Output</h2>
+        <span class="status" id="output-status">-</span>
+      </div>
+      <div class="panel-body">
+        <div id="bias-container"></div>
+        <div id="levels-container"></div>
+        <div id="empty-out" class="empty">No gameplan yet. Paste a chart dump and click Generate.</div>
+
+        <details style="margin-top: 16px;">
+          <summary style="cursor: pointer; color: var(--text-2); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;">Raw output (paste into Renderer indicator)</summary>
+          <div class="row" style="margin: 10px 0;">
+            <button class="ghost" id="copy-raw">Copy raw</button>
+            <span class="status" id="copy-status" hidden>copied</span>
+          </div>
+          <pre class="output" id="raw-out"></pre>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-panel">
+    <details>
+      <summary>History <span id="history-count" style="color: var(--text-3);"></span></summary>
+      <ul class="history-list" id="history"></ul>
+      <div id="history-empty" class="empty">No previous gameplans.</div>
+    </details>
+  </div>
+
+  <footer class="foot">
+    Convert chart dump → Orochi framework gameplan → paste into "Orochi Gameplan Renderer" TradingView indicator.
+    <br>Sample uses YOUR Claude account. Not financial advice.
+  </footer>
+</div>
+
+<script>
+  // ==== OROCHI FRAMEWORK SYSTEM PROMPT ====
+  const OROCHI_FRAMEWORK = `You are the Orochi Trading Framework analyst. Your ONLY output is a structured trade gameplan in the exact machine-readable format specified at the end. No prose, no explanations, no apologies — just BIAS + LVL lines.
+
+# FRAMEWORK LOGIC
+
+Orochi = Auction Market Theory (AMT) + Volume Profile / TPO + VWAP-based Dynamic Value Area (DVA) + Order Flow (Open Interest + Delta).
+
+## 1. Two market states
+Markets exist in TWO states only:
+- BALANCE: two-sided auction, value builds, distribution is bell-shaped. Strategy: mean-revert between VAL and VAH; POC as magnet. Long VAL toward POC/VAH; short VAH toward POC/VAL.
+- IMBALANCE: one-sided auction, price discovery, value migrates. Strategy: TREND-FOLLOW ONLY. Never fade a trending auction. Wait for pullback into an old VA boundary for continuation entries.
+
+## 2. Value Area (VA) definitions
+- POC = highest-volume price = mean of value distribution.
+- VA = 1 standard deviation around POC = 68% of session's volume/time.
+- VAH = top of VA, VAL = bottom.
+- On VWAP: VWAP ≈ POC, VWAP ±1σ ≈ VA boundaries (Dynamic Value Area = DVA).
+- Levels in data dump: D-VWAP, D +1σ (DVA_H), D -1σ (DVA_L), W-VWAP + bands, M-VWAP + bands, PD-VWAP (prior day POC approx), PD-VA-H/L (prior day VA approx), PDH/PDL/PDC (prior day extremes), ONH/ONL/ONM (overnight range), PWH/PWL (prior week).
+
+## 3. Established vs developing value — CRITICAL
+Trade ONLY established (completed) profiles. Developing profiles are unreliable because levels shift as they build.
+- Prior day VA (PD-VA-H, PD-VWAP, PD-VA-L) = strongest reference. Fresh auction today interacts with this most.
+- Prior week (PWH, PWL) = higher timeframe context.
+- Composite VA (multi-day overlapping value) = major structure.
+
+## 4. Level roles depending on price position
+For any established VA:
+- Price INSIDE VA → VAH = resistance, VAL = support.
+- Price OUTSIDE VA above → VAH = flipped to support (flip once).
+- Price OUTSIDE VA below → VAL = flipped to resistance (flip once).
+POC is always a magnet — the market seeks fair value.
+
+## 5. The four setup types
+### A. ROTATION (inside balance)
+Price is rotational INSIDE established VA. Long at VAL edge → target POC → target VAH. Short at VAH edge → target POC → target VAL. SL: opposite side of value, past a swing extreme. Confirmation: rejection wick + delta absorption on the edge.
+
+### B. BREAKOUT RETEST (imbalance continuation)
+Price breaks OUT of prior VA (closes bar outside VAH or VAL), builds new value outside. Wait for pullback to the broken edge. If broken edge holds → trade in break direction. Target: next established VA in trend direction (or composite). SL: back inside prior VA past a wick. Confirmation: strong break candle, delta spike WITH open interest increase (fresh positioning) on the break; on the retest, absorption on the flipped edge.
+
+### C. REJECTION (probe fails, back to value)
+Price probes outside VA but FAILS to build new value — snaps back inside. Trade the return: SHORT if probed up and rejected, LONG if probed down and rejected. Target: opposite side of prior VA (full traversal). SL: back outside past probe extreme. Confirmation: rejection candle (wick outside + close back inside) + volume climax + delta flip at probe extreme.
+
+### D. ACCEPTANCE (traversal after break-back)
+Price WAS outside VA, comes back inside and closes multiple bars inside (buyers/sellers agreed price is fair). Expect full traversal to opposite edge. Trade: at retest of the entered edge from inside. Target: opposite VA edge. SL: back outside the entered edge.
+
+## 6. Order flow confirmations (read these mental — the trader validates on their footprint)
+Levels alone are not entries; only add confluence:
+- ABSORPTION: fresh open interest increase (new longs/shorts opening) at level + large opposite delta but price doesn't break = passive limit orders soaking aggressive market orders → best signal for reversal at level.
+- EXHAUSTION: aggressive side runs out (OI unwinding, delta declining) at level = weaker reversal signal.
+- FLUSH / SQUEEZE: sudden OI decrease + huge negative/positive delta at level = stops run past level → often precise reversal (bottom/top).
+- DELTA FLIP: directional delta at level → immediate opposite delta → price rotates = trapped positioning being closed → confirmed reversal.
+- Without order flow: use candle rejection (long wick against level with close inside) as substitute.
+
+## 7. Stop loss placement
+NEVER at the "assumed low/high" — that's where retail stops sit and where they will be swept.
+- Past a swing extreme
+- Past a naked POC below/above the level
+- Past the opposite value area edge
+- Buffer of ~0.3× ATR or half the value area width beyond the invalidation
+If SL is wider → cut position size. Never tighten SL to save size.
+Aim for R:R ≥ 1:1.5 minimum, prefer ≥ 1:2.
+
+## 8. Target selection
+- Rotation → opposite VA edge or POC (magnet).
+- Breakout → next established VA in break direction, or composite edge.
+- Rejection → full VA traversal to opposite edge.
+- Always favor a structural level over an arbitrary N points.
+
+## 9. Day bias determination
+Compare today's opening price to prior day VA (PD-VA-L, PD-VWAP, PD-VA-H):
+- Open INSIDE prior VA + narrow overnight range → BALANCED day, prefer rotation setups.
+- Open ABOVE PD-VA-H + holding above → BULLISH TREND day, buy pullbacks to PD-VA-H / D-VWAP.
+- Open BELOW PD-VA-L + holding below → BEARISH TREND day, sell rallies to PD-VA-L / D-VWAP.
+- Open AT VA edge + rejecting → REVERT-TO-VALUE day, fade the failed break.
+- Overnight range > 65 pts wide on NQ → volatile session, expect reversion of overnight extremes toward RTH open.
+
+## 10. Level prioritization
+Rank levels by importance for the day:
+1. Nearest untouched PD-VAH, PD-POC, PD-VAL (highest confluence for retest).
+2. ONH, ONL, ONM if overnight range is significant.
+3. PDH, PDL (session extremes = liquidity magnets).
+4. D-VWAP (developing but Orochi weighs it as intraday value magnet).
+5. W-VWAP, W-VAH, W-VAL for higher timeframe context.
+6. Composite levels (PWH, PWL) as broad reference.
+
+Skip any level farther than 2× ATR from current price UNLESS it's a major magnet (POC / VWAP / composite edge).
+
+# INPUT
+You will receive a data dump from a TradingView indicator. It contains:
+symbol, current price, timeframe, ATR14, daily/weekly/monthly VWAP + bands, prior day OHLC + VWAP final (POC approx), prior day approximated VA H/L, prior week high/low, overnight range H/L/M.
+
+Optional user notes may follow.
+
+# OUTPUT FORMAT — MANDATORY
+Output ONLY these two line types. No preamble, no summary, no markdown.
+
+BIAS|<single sentence stating today's thesis: balanced/trend/revert + primary direction bias + key level(s) to watch>
+LVL|<price>|<LONG|SHORT|BOTH>|<TYPE_TAG>|<one sentence: setup type + order flow confirmation to watch for>|SL:<price or empty>|TP:<price or empty>
+LVL|... more lines ...
+
+Rules:
+- Exactly one BIAS line first, then all LVL lines.
+- Max 8 LVL lines total. Prioritize per section 10.
+- Only include levels within 2× ATR of current price OR structurally critical (all PD-* levels always eligible).
+- Direction:
+  - LONG = level is a support to buy from (target higher)
+  - SHORT = level is a resistance to sell from (target lower)
+  - BOTH = magnet/decision zone (POC, VWAP) — direction depends on approach
+- TYPE_TAG: use the exact tag from the dump when applicable (PD-VAH, PD-VAL, PD-POC, PDH, PDL, ONH, ONL, ONM, DVWAP, DVA_H, DVA_L, WVWAP, WVAH, WVAL, MVWAP, PWH, PWL). Custom tags allowed but keep short.
+- What to watch: name the SETUP (rotation / breakout retest / rejection / acceptance) AND the order flow confirmation (absorption / delta flip / volume climax / rejection candle).
+- SL: price where setup is invalidated (past next liquidity). Leave empty for BOTH magnets where no directional trade is prescribed yet.
+- TP: next structural level in trade direction. Leave empty for BOTH.
+- Do NOT invent levels; only use values from the dump.
+- Do NOT add prose. If you must comment, prefix with # (renderer will ignore, user will see).
+
+Now analyze the dump and produce the gameplan.`;
+
+  // ==== STATE ====
+  let currentController = null;
+  let currentOutput = "";
+  let currentDb = null;
+
+  // ==== DOM ====
+  const $ = (id) => document.getElementById(id);
+  const dump = $("dump");
+  const notesInput = $("notes");
+  const tierSelect = $("tier");
+  const goBtn = $("go");
+  const stopBtn = $("stop");
+  const clearBtn = $("clear-input");
+  const inputStatus = $("input-status");
+  const outputStatus = $("output-status");
+  const biasContainer = $("bias-container");
+  const levelsContainer = $("levels-container");
+  const emptyOut = $("empty-out");
+  const rawOut = $("raw-out");
+  const copyRawBtn = $("copy-raw");
+  const copyStatus = $("copy-status");
+  const historyList = $("history");
+  const historyEmpty = $("history-empty");
+  const historyCount = $("history-count");
+  const themeToggle = $("theme-toggle");
+
+  // ==== THEME ====
+  themeToggle.addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme");
+    if (cur === "light") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", "light");
+    try { localStorage.setItem("orochi-theme", document.documentElement.getAttribute("data-theme") || ""); } catch {}
+  });
+  try {
+    const stored = localStorage.getItem("orochi-theme");
+    if (stored === "light") document.documentElement.setAttribute("data-theme", "light");
+  } catch {}
+
+  // ==== PARSE OUTPUT ====
+  function parseGameplan(text) {
+    const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+    let bias = "";
+    const levels = [];
+    for (const line of lines) {
+      if (line.startsWith("#")) continue;
+      const parts = line.split("|");
+      const kind = (parts[0] || "").toUpperCase();
+      if (kind === "BIAS" && parts.length >= 2) {
+        bias = parts.slice(1).join("|").trim();
+      } else if (kind === "LVL" && parts.length >= 5) {
+        const price = parts[1]?.trim();
+        const dir = (parts[2] || "").toUpperCase().trim();
+        const type = parts[3]?.trim();
+        const desc = parts[4]?.trim();
+        let sl = "", tp = "";
+        for (let i = 5; i < parts.length; i++) {
+          const p = parts[i]?.trim() || "";
+          if (p.toUpperCase().startsWith("SL:")) sl = p.substring(3).trim();
+          else if (p.toUpperCase().startsWith("TP:")) tp = p.substring(3).trim();
+        }
+        levels.push({ price, dir, type, desc, sl, tp });
+      }
+    }
+    return { bias, levels };
+  }
+
+  function renderGameplan(text) {
+    const { bias, levels } = parseGameplan(text);
+    emptyOut.hidden = (bias || levels.length > 0);
+
+    biasContainer.innerHTML = "";
+    if (bias) {
+      const div = document.createElement("div");
+      div.className = "bias-box";
+      const strong = document.createElement("strong");
+      strong.textContent = "Day Bias";
+      div.appendChild(strong);
+      const span = document.createElement("span");
+      span.textContent = bias;
+      div.appendChild(span);
+      biasContainer.appendChild(div);
+    }
+
+    levelsContainer.innerHTML = "";
+    if (levels.length > 0) {
+      const table = document.createElement("table");
+      table.className = "levels-table";
+      const thead = document.createElement("thead");
+      thead.innerHTML = `<tr>
+        <th>Price</th><th>Dir</th><th>Type</th><th>Watch for</th><th>SL/TP</th>
+      </tr>`;
+      table.appendChild(thead);
+      const tbody = document.createElement("tbody");
+      for (const lv of levels) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="price-cell">${escapeHtml(lv.price)}</td>
+          <td><span class="dir-badge dir-${escapeAttr(lv.dir)}">${escapeHtml(lv.dir)}</span></td>
+          <td><span class="type-tag">${escapeHtml(lv.type)}</span></td>
+          <td class="desc-cell">${escapeHtml(lv.desc)}</td>
+          <td class="sltp">
+            ${lv.sl ? `SL <span>${escapeHtml(lv.sl)}</span>` : ""}
+            ${lv.sl && lv.tp ? "<br>" : ""}
+            ${lv.tp ? `TP <span>${escapeHtml(lv.tp)}</span>` : ""}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+      levelsContainer.appendChild(table);
+    }
+
+    rawOut.textContent = text;
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+  function escapeAttr(s) {
+    return String(s || "").replace(/[^A-Za-z0-9_-]/g, "");
+  }
+
+  // ==== GENERATE ====
+  goBtn.addEventListener("click", async () => {
+    const dumpText = dump.value.trim();
+    if (!dumpText) {
+      inputStatus.textContent = "empty dump";
+      inputStatus.className = "status error";
+      return;
+    }
+    const notes = notesInput.value.trim();
+    const tier = tierSelect.value;
+
+    const sample = await claude.use("sample");
+    if (!sample) {
+      outputStatus.textContent = "sample unavailable";
+      outputStatus.className = "status error";
+      return;
+    }
+
+    const prompt = OROCHI_FRAMEWORK
+      + "\n\n# DATA DUMP\n" + dumpText
+      + (notes ? "\n\n# USER NOTES\n" + notes : "");
+
+    currentOutput = "";
+    renderGameplan("");
+    outputStatus.textContent = "thinking…";
+    outputStatus.className = "status thinking";
+    goBtn.hidden = true;
+    stopBtn.hidden = false;
+    inputStatus.textContent = "generating";
+    inputStatus.className = "status thinking";
+
+    currentController = new AbortController();
+
+    try {
+      const result = await sample(prompt, {
+        modelTier: tier,
+        signal: currentController.signal,
+        cache: false,
+        onText: ({ text }) => {
+          currentOutput = text;
+          renderGameplan(text);
+          outputStatus.textContent = "streaming";
+          outputStatus.className = "status thinking";
+        }
+      });
+      currentOutput = result.text;
+      renderGameplan(result.text);
+      outputStatus.textContent = "done";
+      outputStatus.className = "status done";
+      inputStatus.textContent = "ready";
+      inputStatus.className = "status done";
+      await saveHistory(dumpText, result.text, notes, tier);
+    } catch (e) {
+      if (e.code === "cancelled") {
+        outputStatus.textContent = "cancelled";
+      } else if (e.code === "not_granted") {
+        outputStatus.textContent = "consent denied — sample unavailable";
+      } else if (e.code === "rate_limited") {
+        outputStatus.textContent = "rate limited — wait a moment";
+      } else {
+        outputStatus.textContent = "error: " + (e.code || "unknown");
+      }
+      outputStatus.className = "status error";
+      inputStatus.textContent = "idle";
+      inputStatus.className = "status";
+    } finally {
+      goBtn.hidden = false;
+      stopBtn.hidden = true;
+      currentController = null;
+    }
+  });
+
+  stopBtn.addEventListener("click", () => {
+    currentController?.abort();
+  });
+
+  clearBtn.addEventListener("click", () => {
+    dump.value = "";
+    notesInput.value = "";
+    inputStatus.textContent = "idle";
+    inputStatus.className = "status";
+  });
+
+  copyRawBtn.addEventListener("click", async () => {
+    // strip preamble that isn't BIAS or LVL, keep only BIAS + LVL + # comments
+    const cleaned = currentOutput.split("\n")
+      .map(l => l.trim())
+      .filter(l => {
+        const u = l.toUpperCase();
+        return u.startsWith("BIAS|") || u.startsWith("LVL|") || l.startsWith("#");
+      })
+      .join("\n");
+    try {
+      await navigator.clipboard.writeText(cleaned || currentOutput);
+      copyStatus.textContent = "copied ✓";
+      copyStatus.hidden = false;
+      setTimeout(() => { copyStatus.hidden = true; }, 1500);
+    } catch (e) {
+      copyStatus.textContent = "copy failed";
+      copyStatus.hidden = false;
+    }
+  });
+
+  // ==== HISTORY (localStorage — per browser, private, no server) ====
+  const HISTORY_KEY = "orochi-gameplan-history";
+  const HISTORY_MAX = 100;
+
+  function readHistory() {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch { return []; }
+  }
+  function writeHistory(items) {
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, HISTORY_MAX))); } catch {}
+  }
+  async function initDb() {
+    await loadHistory();
+  }
+  async function saveHistory(input, output, notes, tier) {
+    try {
+      const now = new Date();
+      const id = now.toISOString().replace(/[:.]/g, "-");
+      const { bias } = parseGameplan(output);
+      const items = readHistory();
+      items.unshift({ id, timestamp: now.toISOString(), input, output, notes, tier, bias });
+      writeHistory(items);
+      await loadHistory();
+    } catch (e) { console.warn("save failed", e); }
+  }
+  async function loadHistory() {
+    const items = readHistory();
+    renderHistory(items);
+  }
+
+  function renderHistory(items) {
+    historyList.innerHTML = "";
+    historyEmpty.hidden = items.length > 0;
+    historyCount.textContent = items.length > 0 ? `(${items.length})` : "";
+    for (const item of items) {
+      const li = document.createElement("li");
+      const dt = new Date(item.timestamp);
+      const when = dt.toLocaleString(undefined, { month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+      li.innerHTML = `
+        <span class="h-when">${escapeHtml(when)}</span>
+        <span class="h-bias">${escapeHtml(item.bias || "(no bias line)")}</span>
+        <span class="h-actions">
+          <button class="ghost" data-action="load" data-id="${escapeAttr(item.id)}">Load</button>
+          <button class="ghost" data-action="delete" data-id="${escapeAttr(item.id)}">Delete</button>
+        </span>
+      `;
+      historyList.appendChild(li);
+    }
+  }
+
+  historyList.addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    const items = readHistory();
+    const idx = items.findIndex(x => x.id === id);
+    if (idx < 0) return;
+    if (action === "load") {
+      const data = items[idx];
+      dump.value = data.input || "";
+      notesInput.value = data.notes || "";
+      tierSelect.value = data.tier || "default";
+      currentOutput = data.output || "";
+      renderGameplan(currentOutput);
+      outputStatus.textContent = "loaded from history";
+      outputStatus.className = "status done";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (action === "delete") {
+      if (!confirm("Delete this gameplan?")) return;
+      items.splice(idx, 1);
+      writeHistory(items);
+      await loadHistory();
+    }
+  });
+
+  initDb();
+</script>
