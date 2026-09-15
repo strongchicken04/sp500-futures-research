@@ -135,7 +135,7 @@ plot(showDump and showLabels ? mvw : na,   "MVWAP",   color=color.new(color.purp
 // ===== STATIC LEVELS jako CISTÉ HORIZONTALNI CARY (presna cena, label na konci) =====
 _addLevel(array<line> ls, array<label> lbs, float price, string name, color col) =>
     if not na(price)
-        l = line.new(x1=bar_index - 1, y1=price, x2=bar_index + 30, y2=price, color=col, width=1, extend=extend.both)
+        l = line.new(x1=bar_index - 5000, y1=price, x2=bar_index + 30, y2=price, color=col, width=1, extend=extend.both)
         array.push(ls, l)
         lbl = label.new(x=bar_index + 30, y=price, text=name + " " + str.tostring(price, "#.##"), style=label.style_label_left, color=color.new(col, 30), textcolor=color.white, size=size.tiny)
         array.push(lbs, lbl)
