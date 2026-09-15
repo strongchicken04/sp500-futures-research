@@ -500,11 +500,19 @@ NEVER at the "assumed low/high" — that's where retail stops sit and where they
 If SL is wider → cut position size. Never tighten SL to save size.
 Aim for R:R ≥ 1:1.5 minimum, prefer ≥ 1:2.
 
-## 8. Target selection
-- Rotation → opposite VA edge or POC (magnet).
-- Breakout → next established VA in break direction, or composite edge.
-- Rejection → full VA traversal to opposite edge.
-- Always favor a structural level over an arbitrary N points.
+## 8. Target selection (with Fib support)
+Full traversals to the opposite VA edge do NOT always happen. Layer Fibonacci retracements between structural levels to get intermediate/realistic targets.
+
+Priority order for targets:
+- **TP1 (partial / conservative)** — nearest Fib level in trade direction between entry and structural target. Prefer:
+  - PD-Fib 38.2 / 50.0 / 61.8 / 78.6 (retracement of prior day range)
+  - ON-Fib 38.2 / 50.0 / 61.8 (retracement of overnight range)
+- **TP2 (main structural)** — POC (magnet), opposite VA edge, or next established composite VA in trend direction
+- Always favor a structural or Fib level over an arbitrary N points
+
+For LVL output: TP field should carry the PRIMARY target you'd trade toward. If a Fib level between entry and structural target exists, use the Fib (better hit rate). If not, use the structural level.
+
+Add additional LVL lines as "milestones" between entry and target so trader can take partials. Mark them with dir=BOTH and short description like "Fib 61.8 magnet / partial-TP".
 
 ## 9. Day bias determination
 Compare today's opening price to prior day VA (PD-VA-L, PD-VWAP, PD-VA-H):
@@ -546,7 +554,7 @@ Rules:
   - LONG = level is a support to buy from (target higher)
   - SHORT = level is a resistance to sell from (target lower)
   - BOTH = magnet/decision zone (POC, VWAP) — direction depends on approach
-- TYPE_TAG: use the exact tag from the dump when applicable (PD-VAH, PD-VAL, PD-POC, PDH, PDL, ONH, ONL, ONM, DVWAP, DVA_H, DVA_L, WVWAP, WVAH, WVAL, MVWAP, PWH, PWL). Custom tags allowed but keep short.
+- TYPE_TAG: use the exact tag from the dump when applicable (PD-VAH, PD-VAL, PD-POC, PDH, PDL, ONH, ONL, ONM, DVWAP, DVA_H, DVA_L, WVWAP, WVAH, WVAL, MVWAP, PWH, PWL, PD-Fib38, PD-Fib50, PD-Fib61, PD-Fib78, ON-Fib38, ON-Fib50, ON-Fib61). Custom tags allowed but keep short.
 - What to watch: name the SETUP (rotation / breakout retest / rejection / acceptance) AND the order flow confirmation (absorption / delta flip / volume climax / rejection candle).
 - SL: price where setup is invalidated (past next liquidity). Leave empty for BOTH magnets where no directional trade is prescribed yet.
 - TP: next structural level in trade direction. Leave empty for BOTH.

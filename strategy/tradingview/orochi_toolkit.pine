@@ -22,6 +22,8 @@ atrLen     = input.int(14, "ATR length", minval=1, group="Dump compute")
 onStartHr  = input.int(18, "ON start hour ET", minval=0, maxval=23, group="Overnight")
 onEndHr    = input.int(9,  "ON end hour ET",   minval=0, maxval=23, group="Overnight")
 onEndMin   = input.int(30, "ON end minute ET", minval=0, maxval=59, group="Overnight")
+showPdFib  = input.bool(true, "Show PD-range Fibs (0.382/0.5/0.618/0.786)", group="Fibs")
+showOnFib  = input.bool(true, "Show ON-range Fibs (0.382/0.5/0.618)",       group="Fibs")
 
 // ===== RENDER INPUTS =====
 gpTxt        = input.text_area("BIAS|Paste gameplan from Orochi Gameplan app\nLVL|0|BOTH|EXAMPLE|Example level|SL:|TP:", "Gameplan text", group="Gameplan renderer")
@@ -163,6 +165,21 @@ if showDump and showLabels and barstate.islast
     _addLevel(lvlLines, lvlLabels, onH_prev,    "ONH",     color.red)
     _addLevel(lvlLines, lvlLabels, onL_prev,    "ONL",     color.lime)
     _addLevel(lvlLines, lvlLabels, onM_prev,    "ONM",     color.white)
+    // Fib retracements na prior-day range
+    if showPdFib and not na(pdHigh) and not na(pdLow)
+        pdRange = pdHigh - pdLow
+        cPdFib = color.new(color.fuchsia, 20)
+        _addLevel(lvlLines, lvlLabels, pdLow + 0.382 * pdRange, "PD-Fib 38.2", cPdFib)
+        _addLevel(lvlLines, lvlLabels, pdLow + 0.500 * pdRange, "PD-Fib 50.0", cPdFib)
+        _addLevel(lvlLines, lvlLabels, pdLow + 0.618 * pdRange, "PD-Fib 61.8", cPdFib)
+        _addLevel(lvlLines, lvlLabels, pdLow + 0.786 * pdRange, "PD-Fib 78.6", cPdFib)
+    // Fib retracements na overnight range
+    if showOnFib and not na(onH_prev) and not na(onL_prev)
+        onRange = onH_prev - onL_prev
+        cOnFib = color.new(color.blue, 20)
+        _addLevel(lvlLines, lvlLabels, onL_prev + 0.382 * onRange, "ON-Fib 38.2", cOnFib)
+        _addLevel(lvlLines, lvlLabels, onL_prev + 0.500 * onRange, "ON-Fib 50.0", cOnFib)
+        _addLevel(lvlLines, lvlLabels, onL_prev + 0.618 * onRange, "ON-Fib 61.8", cOnFib)
 
 // ===== DUMP TABLE =====
 _addrow(table tt, int rr, string k, string v) =>
@@ -232,6 +249,19 @@ if showDump and barstate.islast
     txt := txt + "ONH: " + str.tostring(onH_prev, "#.##") + "\n"
     txt := txt + "ONL: " + str.tostring(onL_prev, "#.##") + "\n"
     txt := txt + "ONM: " + str.tostring(onM_prev, "#.##") + "\n"
+    if not na(pdHigh) and not na(pdLow)
+        pdRange2 = pdHigh - pdLow
+        txt := txt + "-- PD FIB (PDL -> PDH) --\n"
+        txt := txt + "PD-Fib 38.2: " + str.tostring(pdLow + 0.382 * pdRange2, "#.##") + "\n"
+        txt := txt + "PD-Fib 50.0: " + str.tostring(pdLow + 0.500 * pdRange2, "#.##") + "\n"
+        txt := txt + "PD-Fib 61.8: " + str.tostring(pdLow + 0.618 * pdRange2, "#.##") + "\n"
+        txt := txt + "PD-Fib 78.6: " + str.tostring(pdLow + 0.786 * pdRange2, "#.##") + "\n"
+    if not na(onH_prev) and not na(onL_prev)
+        onRange2 = onH_prev - onL_prev
+        txt := txt + "-- ON FIB (ONL -> ONH) --\n"
+        txt := txt + "ON-Fib 38.2: " + str.tostring(onL_prev + 0.382 * onRange2, "#.##") + "\n"
+        txt := txt + "ON-Fib 50.0: " + str.tostring(onL_prev + 0.500 * onRange2, "#.##") + "\n"
+        txt := txt + "ON-Fib 61.8: " + str.tostring(onL_prev + 0.618 * onRange2, "#.##") + "\n"
     txt := txt + "=== END DUMP ==="
     log.info(txt)
     // Method 1: Label at last bar (tap on mobile -> panel with text -> long-press -> copy)
