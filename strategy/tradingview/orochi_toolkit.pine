@@ -123,23 +123,46 @@ pdSD_running := dsd
 pdVA_H = pdVwapFinal + pdSD
 pdVA_L = pdVwapFinal - pdSD
 
-// ===== DUMP LEVELS ON CHART =====
+// ===== DEVELOPING VWAP BANDS (plynulé plot, kresli se pres den) =====
 plot(showDump and showLabels ? dvw : na,   "DVWAP",   color=color.new(color.orange, 0), linewidth=2)
 plot(showDump and showLabels ? dva_h : na, "D +1σ",   color=color.new(color.orange, 50))
 plot(showDump and showLabels ? dva_l : na, "D -1σ",   color=color.new(color.orange, 50))
-plot(showDump and showLabels ? dva_h2 : na, "D +2σ",  color=color.new(color.orange, 75), style=plot.style_stepline)
-plot(showDump and showLabels ? dva_l2 : na, "D -2σ",  color=color.new(color.orange, 75), style=plot.style_stepline)
 plot(showDump and showLabels ? wvw : na,   "WVWAP",   color=color.new(color.aqua, 0), linewidth=2)
 plot(showDump and showLabels ? wva_h : na, "W +1σ",   color=color.new(color.aqua, 50))
 plot(showDump and showLabels ? wva_l : na, "W -1σ",   color=color.new(color.aqua, 50))
 plot(showDump and showLabels ? mvw : na,   "MVWAP",   color=color.new(color.purple, 0), linewidth=1)
-plot(showDump and showLabels ? pdHigh : na,  "PDH",  color=color.new(color.gray, 30), style=plot.style_stepline)
-plot(showDump and showLabels ? pdLow  : na,  "PDL",  color=color.new(color.gray, 30), style=plot.style_stepline)
-plot(showDump and showLabels ? pdClose : na, "PDC",  color=color.new(color.gray, 50), style=plot.style_stepline)
-plot(showDump and showLabels ? pdVwapFinal : na, "PD-VWAP (~POC)", color=color.new(color.yellow, 0), style=plot.style_stepline)
-plot(showDump and showLabels ? onH_prev : na, "ONH", color=color.new(color.red,  30), style=plot.style_stepline)
-plot(showDump and showLabels ? onL_prev : na, "ONL", color=color.new(color.lime, 30), style=plot.style_stepline)
-plot(showDump and showLabels ? onM_prev : na, "ONM", color=color.new(color.white,50), style=plot.style_stepline)
+
+// ===== STATIC LEVELS jako CISTÉ HORIZONTALNI CARY (presna cena, label na konci) =====
+_addLevel(array<line> ls, array<label> lbs, float price, string name, color col) =>
+    if not na(price)
+        l = line.new(x1=bar_index - 500, y1=price, x2=bar_index + 30, y2=price, color=col, width=1, extend=extend.right)
+        array.push(ls, l)
+        lbl = label.new(x=bar_index + 30, y=price, text=name + " " + str.tostring(price, "#.##"), style=label.style_label_left, color=color.new(col, 30), textcolor=color.white, size=size.tiny)
+        array.push(lbs, lbl)
+
+var array<line>  lvlLines  = array.new<line>()
+var array<label> lvlLabels = array.new<label>()
+
+if showDump and showLabels and barstate.islast
+    if array.size(lvlLines) > 0
+        for i = 0 to array.size(lvlLines) - 1
+            line.delete(array.get(lvlLines, i))
+    if array.size(lvlLabels) > 0
+        for i = 0 to array.size(lvlLabels) - 1
+            label.delete(array.get(lvlLabels, i))
+    array.clear(lvlLines)
+    array.clear(lvlLabels)
+    _addLevel(lvlLines, lvlLabels, pdHigh,      "PDH",     color.gray)
+    _addLevel(lvlLines, lvlLabels, pdLow,       "PDL",     color.gray)
+    _addLevel(lvlLines, lvlLabels, pdClose,     "PDC",     color.new(color.gray, 20))
+    _addLevel(lvlLines, lvlLabels, pdVwapFinal, "PD-VWAP", color.yellow)
+    _addLevel(lvlLines, lvlLabels, pdVA_H,      "PD-VAH",  color.orange)
+    _addLevel(lvlLines, lvlLabels, pdVA_L,      "PD-VAL",  color.orange)
+    _addLevel(lvlLines, lvlLabels, pwHigh,      "PWH",     color.aqua)
+    _addLevel(lvlLines, lvlLabels, pwLow,       "PWL",     color.aqua)
+    _addLevel(lvlLines, lvlLabels, onH_prev,    "ONH",     color.red)
+    _addLevel(lvlLines, lvlLabels, onL_prev,    "ONL",     color.lime)
+    _addLevel(lvlLines, lvlLabels, onM_prev,    "ONM",     color.white)
 
 // ===== DUMP TABLE =====
 _addrow(table tt, int rr, string k, string v) =>
