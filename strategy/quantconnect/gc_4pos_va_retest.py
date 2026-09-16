@@ -29,7 +29,7 @@ from collections import deque, defaultdict
 #   G4D,tf,date_time,entry_px,val,poc,vah,exit_px,exit_reason,pnl,mfe,mae,bars_held
 #     exit_reason: L (SL hit) | O (opposite pattern) | M (max hold)
 
-TF_MIN = 1              # timeframe in minutes (change for 1/3)
+TF_MIN = 3              # timeframe in minutes (change for 1/3)
 SETUP_MODE = "LONG_HOLD"  # "LONG_HOLD" (original) | "SHORT_BREAK" (inverted)
 BIN_SIZE = 0.5          # $ bin for VP
 VA_PCT = 0.68
