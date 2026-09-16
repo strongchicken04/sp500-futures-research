@@ -1,0 +1,18 @@
+{
+  "projectId": 36609227,
+  "backtestId": "46211db8c38ab17a77063866538b1d4d",
+  "name": "GC_4pos_LONG_HOLD_3min_1789556398",
+  "statistics": {},
+  "runtimeStatistics": {
+    "Equity": "$1,000,000.00",
+    "Fees": "-$0.00",
+    "Holdings": "$0.00",
+    "Net Profit": "$0.00",
+    "Probabilistic Sharpe Ratio": "0%",
+    "Return": "0.00 %",
+    "Unrealized": "$0.00",
+    "Volume": "$0.00"
+  },
+  "totalPerformance": null,
+  "error": null
+}
