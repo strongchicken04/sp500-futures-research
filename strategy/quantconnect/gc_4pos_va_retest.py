@@ -30,6 +30,7 @@ from collections import deque, defaultdict
 #     exit_reason: L (SL hit) | O (opposite pattern) | M (max hold)
 
 TF_MIN = 5              # timeframe in minutes (change for 1/3)
+SETUP_MODE = "SHORT_BREAK"  # "LONG_HOLD" (original) | "SHORT_BREAK" (inverted)
 BIN_SIZE = 0.5          # $ bin for VP
 VA_PCT = 0.68
 MIN_VA_WIDTH = 1.0      # min VAH-VAL to accept setup (pts)
@@ -143,22 +144,31 @@ class GC4PosVARetest(QCAlgorithm):
         if self.trade is not None:
             tr = self.trade
             tr['bars'] += 1
-            tr['mfe'] = max(tr['mfe'], b['h'] - tr['entry_px'])
-            tr['mae'] = min(tr['mae'], b['l'] - tr['entry_px'])
+            # MFE = in favor, MAE = adverse. Track relative to direction.
+            if tr['dir'] == 1:
+                tr['mfe'] = max(tr['mfe'], b['h'] - tr['entry_px'])
+                tr['mae'] = min(tr['mae'], b['l'] - tr['entry_px'])
+            else:
+                tr['mfe'] = max(tr['mfe'], tr['entry_px'] - b['l'])
+                tr['mae'] = min(tr['mae'], tr['entry_px'] - b['h'])
             done = False; ex_px = None; reason = None
-            # SL check
-            if b['l'] <= tr['val']:
-                done, ex_px, reason = True, tr['val'], 'L'
-            # opposite pattern (4 bearish in a row) — quick invalidation
+            # SL check (SL_px is always the opposite VA edge)
+            if tr['dir'] == 1 and b['l'] <= tr['sl_px']:
+                done, ex_px, reason = True, tr['sl_px'], 'L'
+            elif tr['dir'] == -1 and b['h'] >= tr['sl_px']:
+                done, ex_px, reason = True, tr['sl_px'], 'L'
+            # opposite pattern (4 opposite bars in a row) — quick invalidation
             if not done and len(self.hist) == 4:
-                if all(x['c'] < x['o'] for x in self.hist):
+                if tr['dir'] == 1 and all(x['c'] < x['o'] for x in self.hist):
+                    done, ex_px, reason = True, b['c'], 'O'
+                elif tr['dir'] == -1 and all(x['c'] > x['o'] for x in self.hist):
                     done, ex_px, reason = True, b['c'], 'O'
             # max hold
             if not done and tr['bars'] >= MAX_HOLD:
                 done, ex_px, reason = True, b['c'], 'M'
             if done:
-                pnl = ex_px - tr['entry_px']
-                self._emit(f"G4D,{TF_MIN},{b['t'].strftime('%Y-%m-%d %H:%M')},"
+                pnl = tr['dir'] * (ex_px - tr['entry_px'])
+                self._emit(f"G4D,{TF_MIN},{tr['dir']},{b['t'].strftime('%Y-%m-%d %H:%M')},"
                            f"{tr['entry_px']:.2f},{tr['val']:.2f},{tr['poc']:.2f},{tr['vah']:.2f},"
                            f"{ex_px:.2f},{reason},{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
                 self.trade = None
@@ -169,15 +179,27 @@ class GC4PosVARetest(QCAlgorithm):
             if self.pending['bars_waited'] > MAX_WAIT:
                 self.pending = None
             else:
-                # retest: bar's low touched into zone [VAL..POC]
                 low = b['l']; close = b['c']
-                val = self.pending['val']; poc = self.pending['poc']
-                if low <= poc and close >= val:
-                    # entry at close
-                    self.trade = {
-                        'entry_px': close, 'val': val, 'poc': poc, 'vah': self.pending['vah'],
-                        'entry_bar': self.bar_count, 'mfe': 0.0, 'mae': 0.0, 'bars': 0}
-                    self.pending = None
+                val = self.pending['val']; poc = self.pending['poc']; vah = self.pending['vah']
+                if low <= poc:  # retest of zone
+                    if SETUP_MODE == "LONG_HOLD" and close >= val:
+                        # LONG entry: SL = VAL
+                        self.trade = {'dir': 1, 'entry_px': close, 'val': val, 'poc': poc, 'vah': vah,
+                                      'sl_px': val, 'entry_bar': self.bar_count,
+                                      'mfe': 0.0, 'mae': 0.0, 'bars': 0}
+                        self.pending = None
+                    elif SETUP_MODE == "SHORT_BREAK" and close < val:
+                        # SHORT entry: SL = POC (top of zone)
+                        self.trade = {'dir': -1, 'entry_px': close, 'val': val, 'poc': poc, 'vah': vah,
+                                      'sl_px': poc, 'entry_bar': self.bar_count,
+                                      'mfe': 0.0, 'mae': 0.0, 'bars': 0}
+                        self.pending = None
+                    elif SETUP_MODE == "LONG_HOLD" and close < val:
+                        # LONG failed — cancel setup
+                        self.pending = None
+                    elif SETUP_MODE == "SHORT_BREAK" and close >= val:
+                        # keep waiting for the break — no cancel
+                        pass
 
         # ---- new setup detection: 4 bullish in a row ----
         if len(self.hist) == 4 and self.trade is None and self.pending is None:
