@@ -34,7 +34,7 @@ class GCFirstCandleEMATrail(QCAlgorithm):
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
         f = self.AddFuture(
-            Futures.Indices.NASDAQ100EMini, Resolution.Minute,
+            Futures.Indices.SP500EMini, Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=True)
@@ -52,6 +52,8 @@ class GCFirstCandleEMATrail(QCAlgorithm):
         self.cur_date = None
         self.first_bar_done = False
         self.trade = None
+        self.day_open = None    # first RTH bar OPEN (for day_move computation)
+        self.day_dow = None     # day-of-week 0-6
         # last 3 bar lows/highs for chandelier trail
         self.last_lows = deque(maxlen=3)
         self.last_highs = deque(maxlen=3)
@@ -86,15 +88,17 @@ class GCFirstCandleEMATrail(QCAlgorithm):
 
         # daily rollover
         if self.cur_date != d:
-            # force-close any open trade at prev day close (rare edge)
             if self.trade is not None:
                 pnl = self.trade['dir'] * (b['c'] - self.trade['entry_px'])
                 self._emit(f"FCET,{self.cur_date.strftime('%Y-%m-%d')},{self.trade['dir']},"
                            f"{self.trade['entry_px']:.2f},{self.trade['init_sl']:.2f},{b['c']:.2f},"
-                           f"E,{pnl:.2f},{self.trade['mfe']:.2f},{self.trade['mae']:.2f},{self.trade['bars']}")
+                           f"E,{pnl:.2f},{self.trade['mfe']:.2f},{self.trade['mae']:.2f},{self.trade['bars']},"
+                           f"0.00,{self.day_dow if self.day_dow is not None else -1}")
                 self.trade = None
             self.cur_date = d
             self.first_bar_done = False
+            self.day_open = None
+            self.day_dow = b['t'].weekday()
 
         # update EMA (regardless of RTH — but only use it during RTH for entry)
         if self.ema is None:
@@ -133,8 +137,10 @@ class GCFirstCandleEMATrail(QCAlgorithm):
                     # eod_only: no trail update
                     if is_eod:
                         pnl = b['c'] - tr['entry_px']
+                        day_move = (b['c'] - self.day_open) if self.day_open is not None else 0.0
                         self._emit(f"FCET,{d.strftime('%Y-%m-%d')},1,{tr['entry_px']:.2f},"
-                                   f"{tr['init_sl']:.2f},{b['c']:.2f},E,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
+                                   f"{tr['init_sl']:.2f},{b['c']:.2f},E,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']},"
+                                   f"{day_move:.2f},{self.day_dow if self.day_dow is not None else -1}")
                         self.trade = None
             else:
                 tr['mfe'] = max(tr['mfe'], tr['entry_px'] - b['l'])
@@ -155,8 +161,10 @@ class GCFirstCandleEMATrail(QCAlgorithm):
                         if cand < tr['stop']: tr['stop'] = cand
                     if is_eod:
                         pnl = tr['entry_px'] - b['c']
+                        day_move = (b['c'] - self.day_open) if self.day_open is not None else 0.0
                         self._emit(f"FCET,{d.strftime('%Y-%m-%d')},-1,{tr['entry_px']:.2f},"
-                                   f"{tr['init_sl']:.2f},{b['c']:.2f},E,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
+                                   f"{tr['init_sl']:.2f},{b['c']:.2f},E,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']},"
+                                   f"{day_move:.2f},{self.day_dow if self.day_dow is not None else -1}")
                         self.trade = None
 
         # update rolling lows/highs AFTER trade management (bar is complete)
@@ -166,6 +174,7 @@ class GCFirstCandleEMATrail(QCAlgorithm):
         # ---- first bar of RTH: entry ----
         if not self.first_bar_done and et_min == RTH_START_ET and self.trade is None:
             self.first_bar_done = True
+            self.day_open = b['o']  # RTH session open (first RTH bar's open)
             if self.ema is not None:
                 if b['c'] > self.ema:
                     self.trade = {'dir': 1, 'entry_px': b['c'], 'init_sl': b['l'],
