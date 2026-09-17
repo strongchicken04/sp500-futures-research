@@ -76,12 +76,8 @@ class GCFirstCandleEMATrail(QCAlgorithm):
             self.bar_c = bar.Close
 
     def _on_bar(self, b):
-        # ET time-of-day
-        et = b['t'].astimezone(pytz.timezone("America/New_York")) if hasattr(b['t'], 'astimezone') else None
-        # We can approximate: use UTC + subtract 5 (EST) or 4 (EDT). Cleaner: use hour/minute of ET directly.
-        # QC's self.Time is in algorithm timezone (default NY). Use the raw bar time as ET-ish.
-        et_min = b['t'].hour * 60 + b['t'].minute  # b['t'] is UTC in our slice; but we track in QC timezone
-        # In QC, default TimeZone is NY (America/New_York). So b['t'].hour is ET already.
+        # QC default timezone is NY (America/New_York), so b['t'].hour is ET
+        et_min = b['t'].hour * 60 + b['t'].minute
         d = b['t'].date()
 
         # daily rollover
