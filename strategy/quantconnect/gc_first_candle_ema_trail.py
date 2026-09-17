@@ -24,6 +24,7 @@ TF_MIN = 5
 EMA_LEN = 12
 RTH_START_ET = 9 * 60 + 30   # 09:30
 RTH_END_ET   = 16 * 60 - 1   # 15:59
+TRAIL_MODE = "chandelier3"   # "tight" (prev bar low) | "chandelier3" (last 3-bar low)
 
 
 class GCFirstCandleEMATrail(QCAlgorithm):
@@ -51,6 +52,9 @@ class GCFirstCandleEMATrail(QCAlgorithm):
         self.cur_date = None
         self.first_bar_done = False
         self.trade = None
+        # last 3 bar lows/highs for chandelier trail
+        self.last_lows = deque(maxlen=3)
+        self.last_highs = deque(maxlen=3)
 
     def _bucket_start(self, t):
         m = (t.minute // TF_MIN) * TF_MIN
@@ -108,11 +112,9 @@ class GCFirstCandleEMATrail(QCAlgorithm):
         if self.trade is not None:
             tr = self.trade
             tr['bars'] += 1
-            # update MFE/MAE
             if tr['dir'] == 1:
                 tr['mfe'] = max(tr['mfe'], b['h'] - tr['entry_px'])
                 tr['mae'] = min(tr['mae'], b['l'] - tr['entry_px'])
-                # check stop hit FIRST (on this bar's low)
                 if b['l'] <= tr['stop']:
                     ex_px = tr['stop']
                     pnl = ex_px - tr['entry_px']
@@ -120,16 +122,23 @@ class GCFirstCandleEMATrail(QCAlgorithm):
                                f"{tr['init_sl']:.2f},{ex_px:.2f},T,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
                     self.trade = None
                 else:
-                    # raise stop if this bar's low is higher
-                    if b['l'] > tr['stop']:
-                        tr['stop'] = b['l']
-                    # EOD flat
+                    # compute new candidate stop by mode
+                    if TRAIL_MODE == "tight":
+                        cand = b['l']
+                    elif TRAIL_MODE == "chandelier3":
+                        # min of last 3 completed bar lows (including current)
+                        lows = list(self.last_lows) + [b['l']]
+                        cand = min(lows[-3:])
+                    else:
+                        cand = b['l']
+                    if cand > tr['stop']:
+                        tr['stop'] = cand
                     if is_eod:
                         pnl = b['c'] - tr['entry_px']
                         self._emit(f"FCET,{d.strftime('%Y-%m-%d')},1,{tr['entry_px']:.2f},"
                                    f"{tr['init_sl']:.2f},{b['c']:.2f},E,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
                         self.trade = None
-            else:  # short
+            else:
                 tr['mfe'] = max(tr['mfe'], tr['entry_px'] - b['l'])
                 tr['mae'] = min(tr['mae'], tr['entry_px'] - b['h'])
                 if b['h'] >= tr['stop']:
@@ -139,13 +148,24 @@ class GCFirstCandleEMATrail(QCAlgorithm):
                                f"{tr['init_sl']:.2f},{ex_px:.2f},T,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
                     self.trade = None
                 else:
-                    if b['h'] < tr['stop']:
-                        tr['stop'] = b['h']
+                    if TRAIL_MODE == "tight":
+                        cand = b['h']
+                    elif TRAIL_MODE == "chandelier3":
+                        highs = list(self.last_highs) + [b['h']]
+                        cand = max(highs[-3:])
+                    else:
+                        cand = b['h']
+                    if cand < tr['stop']:
+                        tr['stop'] = cand
                     if is_eod:
                         pnl = tr['entry_px'] - b['c']
                         self._emit(f"FCET,{d.strftime('%Y-%m-%d')},-1,{tr['entry_px']:.2f},"
                                    f"{tr['init_sl']:.2f},{b['c']:.2f},E,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
                         self.trade = None
+
+        # update rolling lows/highs AFTER trade management (bar is complete)
+        self.last_lows.append(b['l'])
+        self.last_highs.append(b['h'])
 
         # ---- first bar of RTH: entry ----
         if not self.first_bar_done and et_min == RTH_START_ET and self.trade is None:
