@@ -34,7 +34,7 @@ class GCFirstCandleEMATrail(QCAlgorithm):
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
         f = self.AddFuture(
-            Futures.Metals.Gold, Resolution.Minute,
+            Futures.Indices.NASDAQ100EMini, Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=True)
