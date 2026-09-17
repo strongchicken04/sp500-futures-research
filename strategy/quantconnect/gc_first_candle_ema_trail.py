@@ -24,7 +24,7 @@ TF_MIN = 5
 EMA_LEN = 12
 RTH_START_ET = 9 * 60 + 30   # 09:30
 RTH_END_ET   = 16 * 60 - 1   # 15:59
-TRAIL_MODE = "chandelier3"   # "tight" (prev bar low) | "chandelier3" (last 3-bar low)
+TRAIL_MODE = "eod_only"      # "tight" | "chandelier3" | "eod_only" (no trail, EOD flat)
 
 
 class GCFirstCandleEMATrail(QCAlgorithm):
@@ -115,24 +115,22 @@ class GCFirstCandleEMATrail(QCAlgorithm):
             if tr['dir'] == 1:
                 tr['mfe'] = max(tr['mfe'], b['h'] - tr['entry_px'])
                 tr['mae'] = min(tr['mae'], b['l'] - tr['entry_px'])
-                if b['l'] <= tr['stop']:
+                # SL only if trail is active (not eod_only)
+                if TRAIL_MODE != "eod_only" and b['l'] <= tr['stop']:
                     ex_px = tr['stop']
                     pnl = ex_px - tr['entry_px']
                     self._emit(f"FCET,{d.strftime('%Y-%m-%d')},1,{tr['entry_px']:.2f},"
                                f"{tr['init_sl']:.2f},{ex_px:.2f},T,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
                     self.trade = None
                 else:
-                    # compute new candidate stop by mode
                     if TRAIL_MODE == "tight":
                         cand = b['l']
+                        if cand > tr['stop']: tr['stop'] = cand
                     elif TRAIL_MODE == "chandelier3":
-                        # min of last 3 completed bar lows (including current)
                         lows = list(self.last_lows) + [b['l']]
                         cand = min(lows[-3:])
-                    else:
-                        cand = b['l']
-                    if cand > tr['stop']:
-                        tr['stop'] = cand
+                        if cand > tr['stop']: tr['stop'] = cand
+                    # eod_only: no trail update
                     if is_eod:
                         pnl = b['c'] - tr['entry_px']
                         self._emit(f"FCET,{d.strftime('%Y-%m-%d')},1,{tr['entry_px']:.2f},"
@@ -141,7 +139,7 @@ class GCFirstCandleEMATrail(QCAlgorithm):
             else:
                 tr['mfe'] = max(tr['mfe'], tr['entry_px'] - b['l'])
                 tr['mae'] = min(tr['mae'], tr['entry_px'] - b['h'])
-                if b['h'] >= tr['stop']:
+                if TRAIL_MODE != "eod_only" and b['h'] >= tr['stop']:
                     ex_px = tr['stop']
                     pnl = tr['entry_px'] - ex_px
                     self._emit(f"FCET,{d.strftime('%Y-%m-%d')},-1,{tr['entry_px']:.2f},"
@@ -150,13 +148,11 @@ class GCFirstCandleEMATrail(QCAlgorithm):
                 else:
                     if TRAIL_MODE == "tight":
                         cand = b['h']
+                        if cand < tr['stop']: tr['stop'] = cand
                     elif TRAIL_MODE == "chandelier3":
                         highs = list(self.last_highs) + [b['h']]
                         cand = max(highs[-3:])
-                    else:
-                        cand = b['h']
-                    if cand < tr['stop']:
-                        tr['stop'] = cand
+                        if cand < tr['stop']: tr['stop'] = cand
                     if is_eod:
                         pnl = tr['entry_px'] - b['c']
                         self._emit(f"FCET,{d.strftime('%Y-%m-%d')},-1,{tr['entry_px']:.2f},"
