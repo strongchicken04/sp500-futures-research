@@ -1,0 +1,18 @@
+{
+  "projectId": 36690359,
+  "backtestId": "663e4c31f0c5722bad3c646e23ea2a46",
+  "name": "NQ_mon_long_fri_short_initial_sl_1789728063",
+  "statistics": {},
+  "runtimeStatistics": {
+    "Equity": "$1,000,000.00",
+    "Fees": "-$0.00",
+    "Holdings": "$0.00",
+    "Net Profit": "$0.00",
+    "Probabilistic Sharpe Ratio": "0%",
+    "Return": "0.00 %",
+    "Unrealized": "$0.00",
+    "Volume": "$0.00"
+  },
+  "totalPerformance": null,
+  "error": null
+}
