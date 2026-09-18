@@ -24,7 +24,9 @@ TF_MIN = 5
 EMA_LEN = 12
 RTH_START_ET = 9 * 60 + 30   # 09:30
 RTH_END_ET   = 16 * 60 - 1   # 15:59
-TRAIL_MODE = "initial_only"  # "tight" | "chandelier3" | "eod_only" | "initial_only" (SL at entry wick, no trail)
+TRAIL_MODE = "chandelier_N"  # "tight" | "chandelier3" | "chandelier_N" | "eod_only" | "initial_only"
+CHAND_N     = 10             # lookback for chandelier_N mode
+ACTIVATE_PT = 0.0            # trail activates after price moves +N pt in favor (0 = immediate)
 DOW_FILTER = "mon_long_fri_short"   # None | "mon_long_fri_short"
 
 
@@ -55,9 +57,9 @@ class GCFirstCandleEMATrail(QCAlgorithm):
         self.trade = None
         self.day_open = None    # first RTH bar OPEN (for day_move computation)
         self.day_dow = None     # day-of-week 0-6
-        # last 3 bar lows/highs for chandelier trail
-        self.last_lows = deque(maxlen=3)
-        self.last_highs = deque(maxlen=3)
+        # rolling bar lows/highs for chandelier trails (size = max N used)
+        self.last_lows = deque(maxlen=max(CHAND_N, 3))
+        self.last_highs = deque(maxlen=max(CHAND_N, 3))
 
     def _bucket_start(self, t):
         m = (t.minute // TF_MIN) * TF_MIN
@@ -128,13 +130,20 @@ class GCFirstCandleEMATrail(QCAlgorithm):
                                f"{tr['init_sl']:.2f},{ex_px:.2f},T,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
                     self.trade = None
                 else:
-                    if TRAIL_MODE == "tight":
-                        cand = b['l']
-                        if cand > tr['stop']: tr['stop'] = cand
-                    elif TRAIL_MODE == "chandelier3":
-                        lows = list(self.last_lows) + [b['l']]
-                        cand = min(lows[-3:])
-                        if cand > tr['stop']: tr['stop'] = cand
+                    # activation gate for LONG: mfe must exceed threshold
+                    trail_active = (tr['mfe'] >= ACTIVATE_PT)
+                    if trail_active:
+                        if TRAIL_MODE == "tight":
+                            cand = b['l']
+                            if cand > tr['stop']: tr['stop'] = cand
+                        elif TRAIL_MODE == "chandelier3":
+                            lows = list(self.last_lows) + [b['l']]
+                            cand = min(lows[-3:])
+                            if cand > tr['stop']: tr['stop'] = cand
+                        elif TRAIL_MODE == "chandelier_N":
+                            lows = list(self.last_lows) + [b['l']]
+                            cand = min(lows[-CHAND_N:])
+                            if cand > tr['stop']: tr['stop'] = cand
                     # eod_only + initial_only: no trail update
                     if is_eod:
                         pnl = b['c'] - tr['entry_px']
@@ -153,13 +162,19 @@ class GCFirstCandleEMATrail(QCAlgorithm):
                                f"{tr['init_sl']:.2f},{ex_px:.2f},T,{pnl:.2f},{tr['mfe']:.2f},{tr['mae']:.2f},{tr['bars']}")
                     self.trade = None
                 else:
-                    if TRAIL_MODE == "tight":
-                        cand = b['h']
-                        if cand < tr['stop']: tr['stop'] = cand
-                    elif TRAIL_MODE == "chandelier3":
-                        highs = list(self.last_highs) + [b['h']]
-                        cand = max(highs[-3:])
-                        if cand < tr['stop']: tr['stop'] = cand
+                    trail_active = (tr['mfe'] >= ACTIVATE_PT)
+                    if trail_active:
+                        if TRAIL_MODE == "tight":
+                            cand = b['h']
+                            if cand < tr['stop']: tr['stop'] = cand
+                        elif TRAIL_MODE == "chandelier3":
+                            highs = list(self.last_highs) + [b['h']]
+                            cand = max(highs[-3:])
+                            if cand < tr['stop']: tr['stop'] = cand
+                        elif TRAIL_MODE == "chandelier_N":
+                            highs = list(self.last_highs) + [b['h']]
+                            cand = max(highs[-CHAND_N:])
+                            if cand < tr['stop']: tr['stop'] = cand
                     if is_eod:
                         pnl = tr['entry_px'] - b['c']
                         day_move = (b['c'] - self.day_open) if self.day_open is not None else 0.0
