@@ -25,6 +25,7 @@ EMA_LEN = 12
 RTH_START_ET = 9 * 60 + 30   # 09:30
 RTH_END_ET   = 16 * 60 - 1   # 15:59
 TRAIL_MODE = "eod_only"      # "tight" | "chandelier3" | "eod_only" (no trail, EOD flat)
+DOW_FILTER = "mon_long_fri_short"   # None | "mon_long_fri_short"
 
 
 class GCFirstCandleEMATrail(QCAlgorithm):
@@ -175,11 +176,18 @@ class GCFirstCandleEMATrail(QCAlgorithm):
         if not self.first_bar_done and et_min == RTH_START_ET and self.trade is None:
             self.first_bar_done = True
             self.day_open = b['o']  # RTH session open (first RTH bar's open)
+            dow = b['t'].weekday()
+            self.day_dow = dow
+            allow_long  = True
+            allow_short = True
+            if DOW_FILTER == "mon_long_fri_short":
+                allow_long  = (dow == 0)  # Monday only
+                allow_short = (dow == 4)  # Friday only
             if self.ema is not None:
-                if b['c'] > self.ema:
+                if b['c'] > self.ema and allow_long:
                     self.trade = {'dir': 1, 'entry_px': b['c'], 'init_sl': b['l'],
                                   'stop': b['l'], 'bars': 0, 'mfe': 0.0, 'mae': 0.0}
-                elif b['c'] < self.ema:
+                elif b['c'] < self.ema and allow_short:
                     self.trade = {'dir': -1, 'entry_px': b['c'], 'init_sl': b['h'],
                                   'stop': b['h'], 'bars': 0, 'mfe': 0.0, 'mae': 0.0}
 
