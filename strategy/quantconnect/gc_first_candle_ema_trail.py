@@ -24,9 +24,9 @@ TF_MIN = 5
 EMA_LEN = 12
 RTH_START_ET = 9 * 60 + 30   # 09:30
 RTH_END_ET   = 16 * 60 - 1   # 15:59
-TRAIL_MODE = "chandelier_N"  # "tight" | "chandelier3" | "chandelier_N" | "eod_only" | "initial_only"
-CHAND_N     = 10             # lookback for chandelier_N mode
-ACTIVATE_PT = 30.0           # trail activates after price moves +N pt in favor (0 = immediate)
+TRAIL_MODE = "initial_only"  # best config so far
+CHAND_N     = 10
+ACTIVATE_PT = 0.0
 DOW_FILTER = "mon_long_fri_short"   # None | "mon_long_fri_short"
 
 
@@ -37,7 +37,7 @@ class GCFirstCandleEMATrail(QCAlgorithm):
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
         f = self.AddFuture(
-            Futures.Indices.NASDAQ100EMini, Resolution.Minute,
+            Futures.Indices.SP500EMini, Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=True)

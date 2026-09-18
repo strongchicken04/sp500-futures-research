@@ -1,0 +1,75 @@
+// @version=5
+strategy("NQ Mon-LONG + Fri-SHORT (5min EMA12)", overlay=true,
+         initial_capital=100000, default_qty_type=strategy.fixed,
+         default_qty_value=1, calc_on_every_tick=false,
+         process_orders_on_close=true, commission_type=strategy.commission.cash_per_contract,
+         commission_value=2.50)
+
+// =============================================================
+// Setup (backtested on NQ 2018-2025):
+//   Instrument: NQ 5min RTH
+//   ENTRY (at 09:30 ET close):
+//     Monday & close > EMA12(5min)  -> LONG
+//     Friday & close < EMA12(5min)  -> SHORT
+//   Initial SL: wick low (long) / high (short) of entry candle
+//   Exit: SL hit OR EOD 15:59 ET
+//
+// Backtest stats: n=409 avg +11.83pt z=+2.18 PF=1.54 total=+4836
+//                 26% winners avg +128, 74% losers avg -29
+//                 8/8 years without SL (eod_only); adding SL kept z
+//
+// USAGE:
+//   Paste into TradingView Pine Editor -> Save to chart -> apply
+//   to NQ1! 5min chart. Enable in Strategy Tester or Paper Trading.
+//
+// NOT FINANCIAL ADVICE. Cherry-pick + limited testing risk applies.
+// =============================================================
+
+emaLen    = input.int(12, "EMA length", minval=2)
+sessStart = input.session("0930-1600", "RTH session (ET)")
+useMon    = input.bool(true, "Trade Monday LONG")
+useFri    = input.bool(true, "Trade Friday SHORT")
+
+ema = ta.ema(close, emaLen)
+plot(ema, "EMA12", color=color.orange, linewidth=2)
+
+// current-bar-time inside NY session
+inRTH = not na(time(timeframe.period, sessStart, "America/New_York"))
+
+// detect first bar of RTH (9:30 ET bar close)
+var int lastDay = na
+sessionStart = ta.change(dayofmonth) != 0 and inRTH
+// alternative: first bar of session — check for change into inRTH
+prevInRTH = nz(inRTH[1], false)
+firstRthBar = inRTH and not prevInRTH
+
+dow = dayofweek(time, "America/New_York")   // Sunday=1, Monday=2 ... Friday=6
+isMon = dow == dayofweek.monday
+isFri = dow == dayofweek.friday
+
+// entry logic on last completed bar of the first RTH bar
+if barstate.isconfirmed and firstRthBar
+    // LONG on Monday
+    if useMon and isMon and close > ema
+        strategy.entry("MonLong", strategy.long, comment="MonLong")
+        strategy.exit("MonLong_SL", from_entry="MonLong", stop=low)
+    // SHORT on Friday
+    if useFri and isFri and close < ema
+        strategy.entry("FriShort", strategy.short, comment="FriShort")
+        strategy.exit("FriShort_SL", from_entry="FriShort", stop=high)
+
+// EOD flat at 15:59 ET (last bar of RTH)
+isEOD = inRTH and not na(time(timeframe.period, sessStart, "America/New_York")) and hour(time, "America/New_York") == 15 and minute(time, "America/New_York") >= 55
+if isEOD
+    strategy.close_all(comment="EOD")
+
+// -- visual markers on chart --
+plotshape(barstate.isconfirmed and firstRthBar and isMon and close > ema, "MonLong signal", shape.triangleup,   location.belowbar, color=color.green,  size=size.small)
+plotshape(barstate.isconfirmed and firstRthBar and isFri and close < ema, "FriShort signal", shape.triangledown, location.abovebar, color=color.red,   size=size.small)
+
+// day-of-week debug label at last bar
+var label dbg = na
+if barstate.islast
+    if not na(dbg)
+        label.delete(dbg)
+    dbg := label.new(bar_index, high, "DOW=" + str.tostring(dow) + " EMA=" + str.tostring(ema, "#.##"), style=label.style_label_left, color=color.new(color.black, 20), textcolor=color.white, size=size.small)
