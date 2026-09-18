@@ -24,7 +24,7 @@ TF_MIN = 5
 EMA_LEN = 12
 RTH_START_ET = 9 * 60 + 30   # 09:30
 RTH_END_ET   = 16 * 60 - 1   # 15:59
-TRAIL_MODE = "eod_only"      # "tight" | "chandelier3" | "eod_only" (no trail, EOD flat)
+TRAIL_MODE = "initial_only"  # "tight" | "chandelier3" | "eod_only" | "initial_only" (SL at entry wick, no trail)
 DOW_FILTER = "mon_long_fri_short"   # None | "mon_long_fri_short"
 
 
@@ -120,7 +120,7 @@ class GCFirstCandleEMATrail(QCAlgorithm):
             if tr['dir'] == 1:
                 tr['mfe'] = max(tr['mfe'], b['h'] - tr['entry_px'])
                 tr['mae'] = min(tr['mae'], b['l'] - tr['entry_px'])
-                # SL only if trail is active (not eod_only)
+                # SL check for tight/chandelier3/initial_only (not eod_only)
                 if TRAIL_MODE != "eod_only" and b['l'] <= tr['stop']:
                     ex_px = tr['stop']
                     pnl = ex_px - tr['entry_px']
@@ -135,7 +135,7 @@ class GCFirstCandleEMATrail(QCAlgorithm):
                         lows = list(self.last_lows) + [b['l']]
                         cand = min(lows[-3:])
                         if cand > tr['stop']: tr['stop'] = cand
-                    # eod_only: no trail update
+                    # eod_only + initial_only: no trail update
                     if is_eod:
                         pnl = b['c'] - tr['entry_px']
                         day_move = (b['c'] - self.day_open) if self.day_open is not None else 0.0
@@ -146,7 +146,7 @@ class GCFirstCandleEMATrail(QCAlgorithm):
             else:
                 tr['mfe'] = max(tr['mfe'], tr['entry_px'] - b['l'])
                 tr['mae'] = min(tr['mae'], tr['entry_px'] - b['h'])
-                if TRAIL_MODE != "eod_only" and b['h'] >= tr['stop']:
+                if TRAIL_MODE != "eod_only" and b['h'] >= tr['stop']:  # SL check
                     ex_px = tr['stop']
                     pnl = tr['entry_px'] - ex_px
                     self._emit(f"FCET,{d.strftime('%Y-%m-%d')},-1,{tr['entry_px']:.2f},"
