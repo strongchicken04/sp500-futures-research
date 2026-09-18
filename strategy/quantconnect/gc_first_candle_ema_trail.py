@@ -26,7 +26,7 @@ RTH_START_ET = 9 * 60 + 30   # 09:30
 RTH_END_ET   = 16 * 60 - 1   # 15:59
 TRAIL_MODE = "chandelier_N"  # "tight" | "chandelier3" | "chandelier_N" | "eod_only" | "initial_only"
 CHAND_N     = 10             # lookback for chandelier_N mode
-ACTIVATE_PT = 0.0            # trail activates after price moves +N pt in favor (0 = immediate)
+ACTIVATE_PT = 30.0           # trail activates after price moves +N pt in favor (0 = immediate)
 DOW_FILTER = "mon_long_fri_short"   # None | "mon_long_fri_short"
 
 
