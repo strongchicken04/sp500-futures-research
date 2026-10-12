@@ -87,10 +87,25 @@ f_add(px, kind) =>
     array.push(lvl_kind, kind)
     array.push(lvl_swp, 0)
 
-// --- DETECTION ON levelTF --------------------------------------------
-// Pivots and FVG mids come from the chosen level-detection TF (default 15m
-// for Day mode). Flip chart 1m/3m/5m — the target stays the same.
-// Scoring and display still use chart TF data; only the LEVELS come here.
+// --- DETECTION: chart TF (always) + levelTF (if different) -----------
+// Chart-TF pool guarantees a target shows up quickly. Higher-TF pool adds
+// structural anchors so the WINNING score usually comes from a HTF level
+// (freshness is lower there but pivots are more significant).
+
+// Chart-TF pivots & FVG
+chPH = ta.pivothigh(high, pivotLen, pivotLen)
+chPL = ta.pivotlow(low,  pivotLen, pivotLen)
+if barstate.isconfirmed and not na(chPH)
+    f_add(chPH, 1)
+if barstate.isconfirmed and not na(chPL)
+    f_add(chPL, 2)
+if barstate.isconfirmed and low > high[2]
+    f_add((low + high[2]) / 2, 3)
+if barstate.isconfirmed and high < low[2]
+    f_add((high + low[2]) / 2, 4)
+
+// Higher-TF pool (if levelTF differs from chart). Only pull if the
+// resolution is different enough to matter.
 f_detectAll() =>
     _ph = ta.pivothigh(high, pivotLen, pivotLen)
     _pl = ta.pivotlow(low,  pivotLen, pivotLen)
@@ -98,16 +113,16 @@ f_detectAll() =>
     _be = high < low[2]  ? (high + low[2]) / 2 : na
     [_ph, _pl, _bu, _be]
 
+useHTF = levelTF != timeframe.period
 [detPH, detPL, detBuFVG, detBeFVG] = request.security(syminfo.tickerid, levelTF, f_detectAll(), lookahead=barmerge.lookahead_off)
 
-// Add on each new value (change vs prior bar on levelTF). Guards duplicates.
-if barstate.isconfirmed and not na(detPH) and detPH != detPH[1]
+if useHTF and barstate.isconfirmed and not na(detPH) and (na(detPH[1]) or detPH != detPH[1])
     f_add(detPH, 1)
-if barstate.isconfirmed and not na(detPL) and detPL != detPL[1]
+if useHTF and barstate.isconfirmed and not na(detPL) and (na(detPL[1]) or detPL != detPL[1])
     f_add(detPL, 2)
-if barstate.isconfirmed and not na(detBuFVG) and detBuFVG != detBuFVG[1]
+if useHTF and barstate.isconfirmed and not na(detBuFVG) and (na(detBuFVG[1]) or detBuFVG != detBuFVG[1])
     f_add(detBuFVG, 3)
-if barstate.isconfirmed and not na(detBeFVG) and detBeFVG != detBeFVG[1]
+if useHTF and barstate.isconfirmed and not na(detBeFVG) and (na(detBeFVG[1]) or detBeFVG != detBeFVG[1])
     f_add(detBeFVG, 4)
 
 // --- SWEEP DETECTION (mark as ghost) ----------------------------------
