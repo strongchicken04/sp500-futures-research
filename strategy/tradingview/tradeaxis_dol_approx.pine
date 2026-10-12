@@ -24,7 +24,8 @@ halfLife = input.int(50,  "Freshness half-life (bars)", minval=5)
 pivotLen = input.int(5,   "Pivot length (swing H/L)", minval=2)
 // Score threshold: 75+ is the only bucket with proven edge on NQ 2018-2025
 // (QC backtest: +33pp hit-rate PF=2.64). Below 75 is still drawn but dimmer.
-minPoT    = input.float(50.0, "Minimum PoT% to show DOL", step=5)
+// By default: show something always, let brightness tier the quality.
+minPoT    = input.float(0.0, "Minimum PoT% (0 = always show the top one)", step=5)
 tradePoT  = input.float(75.0, "Trade-grade PoT (bright glow above this)", step=5)
 zonePct   = input.float(0.08, "Zone half-width (* ATR)", step=0.02)
 showGhost = input.bool(false, "Show Ghost trail (prior swept levels)")
@@ -153,7 +154,10 @@ var float topBSL_sc = na
 var float topSSL_px = na
 var float topSSL_sc = na
 
-if barstate.isconfirmed
+// Run on EVERY tick during the live bar (barstate.islast) + every confirmed
+// bar — so PoT updates live as price moves and the winner can flip when
+// another level overtakes.
+if barstate.isconfirmed or barstate.islast
     best_above_px = float(na)
     best_above_sc = -1.0
     best_below_px = float(na)
