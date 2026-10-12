@@ -75,37 +75,40 @@ pdc = request.security(syminfo.tickerid, "D", close[1], lookahead=barmerge.looka
 pdEq = (pdh + pdl) / 2
 
 // --- LEVEL POOL (arrays of candidate liquidity levels) ----------------
-// Each level: price, birthBar, kind (1=BSL,2=SSL,3=bullFVG,4=bearFVG), swept(0/1)
+// Each level: price, birthBar, kind, swept(0/1), tfWeight (chart-bars per
+// 1 "native" bar on the source TF — chart=1, HTF=levelTF_min/chartMin).
 var array<float> lvl_px   = array.new<float>()
 var array<int>   lvl_bar  = array.new<int>()
 var array<int>   lvl_kind = array.new<int>()
-var array<int>   lvl_swp  = array.new<int>()  // 0=live, 1=swept (ghost)
+var array<int>   lvl_swp  = array.new<int>()
+var array<float> lvl_tfw  = array.new<float>()
 
-f_add(px, kind) =>
+f_add(px, kind, tfw) =>
     array.push(lvl_px, px)
     array.push(lvl_bar, bar_index)
     array.push(lvl_kind, kind)
     array.push(lvl_swp, 0)
+    array.push(lvl_tfw, tfw)
+
+// TF ratio: how many chart bars = 1 bar on levelTF
+f_tfMin(tf) =>
+    tf == "D" ? 1440.0 : tf == "W" ? 10080.0 : tf == "M" ? 43200.0 : nz(str.tonumber(tf), 1.0)
+chartMin = timeframe.multiplier * (timeframe.isminutes ? 1.0 : timeframe.isdaily ? 1440.0 : timeframe.isweekly ? 10080.0 : 60.0)
+levelMin = f_tfMin(levelTF)
+htfWeight = math.max(levelMin / math.max(chartMin, 1.0), 1.0)
 
 // --- DETECTION: chart TF (always) + levelTF (if different) -----------
-// Chart-TF pool guarantees a target shows up quickly. Higher-TF pool adds
-// structural anchors so the WINNING score usually comes from a HTF level
-// (freshness is lower there but pivots are more significant).
-
-// Chart-TF pivots & FVG
 chPH = ta.pivothigh(high, pivotLen, pivotLen)
 chPL = ta.pivotlow(low,  pivotLen, pivotLen)
 if barstate.isconfirmed and not na(chPH)
-    f_add(chPH, 1)
+    f_add(chPH, 1, 1.0)
 if barstate.isconfirmed and not na(chPL)
-    f_add(chPL, 2)
+    f_add(chPL, 2, 1.0)
 if barstate.isconfirmed and low > high[2]
-    f_add((low + high[2]) / 2, 3)
+    f_add((low + high[2]) / 2, 3, 1.0)
 if barstate.isconfirmed and high < low[2]
-    f_add((high + low[2]) / 2, 4)
+    f_add((high + low[2]) / 2, 4, 1.0)
 
-// Higher-TF pool (if levelTF differs from chart). Only pull if the
-// resolution is different enough to matter.
 f_detectAll() =>
     _ph = ta.pivothigh(high, pivotLen, pivotLen)
     _pl = ta.pivotlow(low,  pivotLen, pivotLen)
@@ -117,13 +120,13 @@ useHTF = levelTF != timeframe.period
 [detPH, detPL, detBuFVG, detBeFVG] = request.security(syminfo.tickerid, levelTF, f_detectAll(), lookahead=barmerge.lookahead_off)
 
 if useHTF and barstate.isconfirmed and not na(detPH) and (na(detPH[1]) or detPH != detPH[1])
-    f_add(detPH, 1)
+    f_add(detPH, 1, htfWeight)
 if useHTF and barstate.isconfirmed and not na(detPL) and (na(detPL[1]) or detPL != detPL[1])
-    f_add(detPL, 2)
+    f_add(detPL, 2, htfWeight)
 if useHTF and barstate.isconfirmed and not na(detBuFVG) and (na(detBuFVG[1]) or detBuFVG != detBuFVG[1])
-    f_add(detBuFVG, 3)
+    f_add(detBuFVG, 3, htfWeight)
 if useHTF and barstate.isconfirmed and not na(detBeFVG) and (na(detBeFVG[1]) or detBeFVG != detBeFVG[1])
-    f_add(detBeFVG, 4)
+    f_add(detBeFVG, 4, htfWeight)
 
 // --- SWEEP DETECTION (mark as ghost) ----------------------------------
 if barstate.isconfirmed
@@ -145,15 +148,14 @@ if barstate.isconfirmed
         i += 1
 
 // --- SCORING ----------------------------------------------------------
-// returns score 0..100; separates BSL (above price, kind in 1,3) and SSL (below)
-f_score(px, birthBar, kind) =>
+// returns score 0..100. tfw = TF weight (chart bars per native bar of
+// source TF). Chart=1, HTF>1. Freshness age is divided by tfw so a 15m
+// level ages 1 "bar" per 15 chart bars, not 1 per chart tick.
+f_score(px, birthBar, kind, tfw) =>
     dAtr = math.abs(close - px) / math.max(atr, syminfo.mintick)
-    // Proximity: 0..40, linearly interpolated
     prox = dAtr > maxAtr ? 0.0 : (1.0 - dAtr / maxAtr) * 40.0
-    // Freshness: exp half-life decay, 0..25
-    age = bar_index - birthBar
+    age = (bar_index - birthBar) / math.max(tfw, 1.0)
     fresh = math.pow(0.5, age / math.max(halfLife, 1)) * 25.0
-    // Confluence: 0..20 bonus if within 0.2 ATR of PDH/PDL/PDC/pdEq
     tol = 0.2 * math.max(atr, syminfo.mintick)
     conf = 0.0
     if math.abs(px - pdh) <= tol
@@ -165,12 +167,12 @@ f_score(px, birthBar, kind) =>
     if math.abs(px - pdEq) <= tol
         conf += 4
     conf := math.min(conf, 20)
-    // HTF-bias alignment bonus (part of confluence):
-    //   bullish bias + BSL/bullFVG target above = aligned
     aligned = (htfBias == 1 and (kind == 1 or kind == 3) and px > close) or (htfBias == -1 and (kind == 2 or kind == 4) and px < close)
     if aligned
         conf := math.min(conf + 5, 20)
-    // Density: 0..15 — count equal highs/lows near px within last 20 bars
+    // HTF structural bonus: pivots from a higher TF carry more weight
+    if tfw > 1.0
+        conf := math.min(conf + 10, 20)
     tolD = 0.1 * math.max(atr, syminfo.mintick)
     dens = 0.0
     for j = 0 to 19
@@ -200,7 +202,8 @@ if barstate.isconfirmed or barstate.islast
             px   = array.get(lvl_px, i)
             birth= array.get(lvl_bar, i)
             kind = array.get(lvl_kind, i)
-            sc = f_score(px, birth, kind)
+            tfw  = array.get(lvl_tfw, i)
+            sc = f_score(px, birth, kind, tfw)
             // ATR distance eject
             dAtr = math.abs(close - px) / math.max(atr, syminfo.mintick)
             if dAtr <= maxAtr
