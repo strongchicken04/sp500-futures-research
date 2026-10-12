@@ -26,19 +26,19 @@ from collections import deque
 # Emit: DOL4,dt_entry,side,entry,sl,tp,exit,reason,pnl,bars_held,bars_waited,
 #       score,atr_dist,rr
 
-TF_MIN       = 5
+TF_MIN       = 15          # 15min bars — less noise, cleaner SL survival
 ATR_LEN      = 14
 MAX_ATR_DIST = 4.0
 HALF_LIFE    = 50
 PIVOT_LEN    = 5
 ZONE_FRAC    = 0.10
-MIN_SCORE    = 65.0
-CANCEL_SCORE = 50.0
+MIN_SCORE    = 70.0        # only the better bucket
+CANCEL_SCORE = 55.0
 MAX_HOLD     = 20
 HTF_LEN      = 50
-WAIT_BARS    = 10          # how long to wait for pullback
-PB_ATR       = 0.4         # pullback distance to trigger entry
-SL_CAP_ATR   = 0.75        # cap SL to this * ATR
+WAIT_BARS    = 6
+PB_ATR       = 0.4
+SL_CAP_ATR   = 0.75
 RR_MIN       = 1.5
 LONG_ONLY    = True
 START_YEAR   = 2018
