@@ -98,18 +98,9 @@ chartMin = timeframe.multiplier * (timeframe.isminutes ? 1.0 : timeframe.isdaily
 levelMin = f_tfMin(levelTF)
 htfWeight = math.max(levelMin / math.max(chartMin, 1.0), 1.0)
 
-// --- DETECTION: chart TF (always) + levelTF (if different) -----------
-chPH = ta.pivothigh(high, pivotLen, pivotLen)
-chPL = ta.pivotlow(low,  pivotLen, pivotLen)
-if barstate.isconfirmed and not na(chPH)
-    f_add(chPH, 1, 1.0)
-if barstate.isconfirmed and not na(chPL)
-    f_add(chPL, 2, 1.0)
-if barstate.isconfirmed and low > high[2]
-    f_add((low + high[2]) / 2, 3, 1.0)
-if barstate.isconfirmed and high < low[2]
-    f_add((high + low[2]) / 2, 4, 1.0)
-
+// --- DETECTION: ONLY from levelTF ------------------------------------
+// Chart TF is ignored (1m is pure noise). All pivots/FVGs come from the
+// user-selected levelTF (default auto: Swing=60m, Day=15m, Scalp=5m).
 f_detectAll() =>
     _ph = ta.pivothigh(high, pivotLen, pivotLen)
     _pl = ta.pivotlow(low,  pivotLen, pivotLen)
@@ -117,16 +108,15 @@ f_detectAll() =>
     _be = high < low[2]  ? (high + low[2]) / 2 : na
     [_ph, _pl, _bu, _be]
 
-useHTF = levelTF != timeframe.period
 [detPH, detPL, detBuFVG, detBeFVG] = request.security(syminfo.tickerid, levelTF, f_detectAll(), lookahead=barmerge.lookahead_off)
 
-if useHTF and barstate.isconfirmed and not na(detPH) and (na(detPH[1]) or detPH != detPH[1])
+if barstate.isconfirmed and not na(detPH) and (na(detPH[1]) or detPH != detPH[1])
     f_add(detPH, 1, htfWeight)
-if useHTF and barstate.isconfirmed and not na(detPL) and (na(detPL[1]) or detPL != detPL[1])
+if barstate.isconfirmed and not na(detPL) and (na(detPL[1]) or detPL != detPL[1])
     f_add(detPL, 2, htfWeight)
-if useHTF and barstate.isconfirmed and not na(detBuFVG) and (na(detBuFVG[1]) or detBuFVG != detBuFVG[1])
+if barstate.isconfirmed and not na(detBuFVG) and (na(detBuFVG[1]) or detBuFVG != detBuFVG[1])
     f_add(detBuFVG, 3, htfWeight)
-if useHTF and barstate.isconfirmed and not na(detBeFVG) and (na(detBeFVG[1]) or detBeFVG != detBeFVG[1])
+if barstate.isconfirmed and not na(detBeFVG) and (na(detBeFVG[1]) or detBeFVG != detBeFVG[1])
     f_add(detBeFVG, 4, htfWeight)
 
 // --- SWEEP DETECTION (mark as ghost) ----------------------------------
