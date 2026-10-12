@@ -33,14 +33,16 @@ MAX_ATR_DIST = 4.0
 HALF_LIFE    = 50
 PIVOT_LEN    = 5
 ZONE_FRAC    = 0.10
-MIN_SCORE    = 75.0
+MIN_SCORE    = 65.0
 MAX_HOLD     = 20
-HTF_LEN      = 50    # ~4h on 5m
-MTF_LEN      = 20    # ~1.5h on 5m
-BOS_LB       = 5     # bars to look back for breakout
-SL_CAP_ATR   = 0.75  # cap SL to this * ATR
-RR_MIN       = 1.5
-LONG_ONLY    = False
+HTF_LEN      = 50
+MTF_LEN      = 20
+BOS_LB       = 5
+SL_CAP_ATR   = 1.0
+RR_MIN       = 1.3
+REQUIRE_MTF  = False
+REQUIRE_BOS  = False  # trigger on raw primary emergence (BOS kills edge)
+LONG_ONLY    = True
 START_YEAR   = 2018
 END_YEAR     = 2025
 
@@ -257,24 +259,31 @@ class TradeAxisDOLv3(QCAlgorithm):
         if LONG_ONLY and side != 'LONG':
             return
 
-        # bias filters
-        if side == 'LONG' and not (close_px > self.ema_htf and close_px > self.ema_mtf):
-            return
-        if side == 'SHORT' and not (close_px < self.ema_htf and close_px < self.ema_mtf):
-            return
-
-        # BOS price-action trigger on last BOS_LB bars (excluding current)
-        prev_bars = list(self.hist)[-(BOS_LB + 1):-1]
-        if len(prev_bars) < BOS_LB:
-            return
+        # bias filters: HTF always, MTF only if REQUIRE_MTF
         if side == 'LONG':
-            prior_hi = max(bb['h'] for bb in prev_bars)
-            if close_px <= prior_hi:
+            if close_px <= self.ema_htf:
+                return
+            if REQUIRE_MTF and close_px <= self.ema_mtf:
                 return
         else:
-            prior_lo = min(bb['l'] for bb in prev_bars)
-            if close_px >= prior_lo:
+            if close_px >= self.ema_htf:
                 return
+            if REQUIRE_MTF and close_px >= self.ema_mtf:
+                return
+
+        # BOS trigger (optional)
+        if REQUIRE_BOS:
+            prev_bars = list(self.hist)[-(BOS_LB + 1):-1]
+            if len(prev_bars) < BOS_LB:
+                return
+            if side == 'LONG':
+                prior_hi = max(bb['h'] for bb in prev_bars)
+                if close_px <= prior_hi:
+                    return
+            else:
+                prior_lo = min(bb['l'] for bb in prev_bars)
+                if close_px >= prior_lo:
+                    return
 
         # SL: capped to 0.75 ATR
         raw_sl = self._nearest_opposite(side, close_px)
