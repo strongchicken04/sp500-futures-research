@@ -38,11 +38,12 @@ MAX_HOLD     = 20
 HTF_LEN      = 50
 MTF_LEN      = 20
 BOS_LB       = 5
-SL_CAP_ATR   = 1.0
-RR_MIN       = 1.3
+SL_CAP_ATR   = 0.5        # tight: accept small losses, let TP catch far
+RR_MIN       = 2.0        # tight SL raises R:R threshold naturally
 REQUIRE_MTF  = False
-REQUIRE_BOS  = False  # trigger on raw primary emergence (BOS kills edge)
+REQUIRE_BOS  = False
 LONG_ONLY    = True
+USE_HARD_SL  = True       # hard stop at close - SL_CAP_ATR*ATR, ignore structure
 START_YEAR   = 2018
 END_YEAR     = 2025
 
@@ -285,10 +286,13 @@ class TradeAxisDOLv3(QCAlgorithm):
                 if close_px >= prior_lo:
                     return
 
-        # SL: capped to 0.75 ATR
-        raw_sl = self._nearest_opposite(side, close_px)
+        # SL: hard cap at SL_CAP_ATR * ATR (if USE_HARD_SL) or structural capped
         if side == 'LONG':
-            sl = max(raw_sl, close_px - SL_CAP_ATR * self.atr)
+            if USE_HARD_SL:
+                sl = close_px - SL_CAP_ATR * self.atr
+            else:
+                raw_sl = self._nearest_opposite(side, close_px)
+                sl = max(raw_sl, close_px - SL_CAP_ATR * self.atr)
             if sl >= close_px:
                 return
             tp = lv['px']
@@ -296,7 +300,11 @@ class TradeAxisDOLv3(QCAlgorithm):
                 return
             rr = (tp - close_px) / (close_px - sl)
         else:
-            sl = min(raw_sl, close_px + SL_CAP_ATR * self.atr)
+            if USE_HARD_SL:
+                sl = close_px + SL_CAP_ATR * self.atr
+            else:
+                raw_sl = self._nearest_opposite(side, close_px)
+                sl = min(raw_sl, close_px + SL_CAP_ATR * self.atr)
             if sl <= close_px:
                 return
             tp = lv['px']
