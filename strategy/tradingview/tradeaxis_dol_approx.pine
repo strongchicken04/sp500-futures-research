@@ -31,9 +31,10 @@ levelTFin = input.string("auto", "Level detection TF", options=["auto","1","3","
 // By default: show something always, let brightness tier the quality.
 minPoT    = input.float(0.0, "Minimum PoT% (0 = always show the top one)", step=5)
 tradePoT  = input.float(75.0, "Trade-grade PoT (bright glow above this)", step=5)
-zonePct   = input.float(0.08, "Zone half-width (* ATR)", step=0.02)
+zonePct   = input.float(0.05, "Zone half-width (* ATR)", step=0.02)
+trajLen   = input.int(30, "Trajectory length (bars back for funnel base)", minval=5)
 showGhost = input.bool(false, "Show Ghost trail (prior swept levels)")
-showBias  = input.bool(true, "Show MTF Bias table")
+showBias  = input.bool(false, "Show MTF Bias table")
 tblPos    = input.string("top_right", "Bias table position", options=["top_right","top_left","bottom_right","bottom_left"])
 
 // pick TF strings per mode
@@ -236,26 +237,36 @@ potSSL = na(topSSL_sc) ? na : math.min(topSSL_sc, 95.0)
 f_kindTag(k) =>
     k == 1 ? "BSL" : k == 2 ? "SSL" : k == 3 ? "BUFVG" : k == 4 ? "BEFVG" : "?"
 
-var box    zoneBox = na
-var label  zoneLbl = na
-var line   trajLn  = na
+// --- RENDER (match commercial design) ---------------------------------
+// Zone = bright white laser-bar with purple glow halo (3 layered boxes).
+// Trajectory = dotted funnel: two lines from zone edges back to current
+// price point, forming a cone of possibility.
+// Label = dark pill at left edge of zone with "Target: KIND\nPoT: XX.X%".
+var box   zoneCore  = na
+var box   zoneGlow1 = na
+var box   zoneGlow2 = na
+var label zoneLbl   = na
+var line  trajTop   = na
+var line  trajBot   = na
 
 if barstate.islast
-    // delete previous
-    if not na(zoneBox)
-        box.delete(zoneBox)
+    if not na(zoneCore)
+        box.delete(zoneCore)
+    if not na(zoneGlow1)
+        box.delete(zoneGlow1)
+    if not na(zoneGlow2)
+        box.delete(zoneGlow2)
     if not na(zoneLbl)
         label.delete(zoneLbl)
-    if not na(trajLn)
-        line.delete(trajLn)
+    if not na(trajTop)
+        line.delete(trajTop)
+    if not na(trajBot)
+        line.delete(trajBot)
 
-    // pick winning side
-    winAbove = (not na(topBSL_sc)) and ((na(topSSL_sc)) or topBSL_sc >= topSSL_sc)
+    winAbove = (not na(potBSL)) and ((na(potSSL)) or potBSL >= potSSL)
     winPx = winAbove ? topBSL_px : topSSL_px
-    winSc = winAbove ? topBSL_sc : topSSL_sc
     winPot = winAbove ? potBSL : potSSL
 
-    // find kind of winner by lookup
     winKind = 0
     if not na(winPx)
         nL = array.size(lvl_px)
@@ -267,19 +278,28 @@ if barstate.islast
 
     if not na(winPx) and not na(winPot) and winPot >= minPoT
         half = zonePct * atr
-        // tier-based brightness: trade-grade (>=tradePoT) gets full glow;
-        // watch regime gets dimmer alpha so it reads as "setup building"
         isTrade = winPot >= tradePoT
-        baseCol = winAbove ? color.lime : color.red
-        zCol    = color.new(baseCol, isTrade ? 10 : 45)
-        bgCol   = color.new(baseCol, isTrade ? 65 : 85)
-        bw      = isTrade ? 3 : 2
-        zoneBox := box.new(bar_index - 60, winPx + half, bar_index + 25, winPx - half, bgcolor=bgCol, border_color=zCol, border_width=bw, extend=extend.right)
-        // dashed diagonal trajectory from last close to target
-        trajLn := line.new(bar_index, close, bar_index + 20, winPx, color=zCol, style=line.style_dashed, width=2)
-        // floating label — black bg, colored text, 2-line
+        leftBar  = bar_index - trajLen
+        rightBar = bar_index + 25
+
+        // 3 layered boxes: outer halo -> mid glow -> bright white core
+        haloCol  = color.new(#B98BFF, isTrade ? 82 : 90)   // soft outer
+        midCol   = color.new(#9B6DFF, isTrade ? 60 : 78)   // mid lavender
+        coreCol  = color.new(color.white, isTrade ? 0 : 25)
+        borderC  = color.new(color.white, isTrade ? 0 : 50)
+
+        zoneGlow2 := box.new(leftBar, winPx + half*5, rightBar, winPx - half*5, bgcolor=haloCol, border_color=na, extend=extend.right)
+        zoneGlow1 := box.new(leftBar, winPx + half*2, rightBar, winPx - half*2, bgcolor=midCol,  border_color=na, extend=extend.right)
+        zoneCore  := box.new(leftBar, winPx + half*0.4, rightBar, winPx - half*0.4, bgcolor=coreCol, border_color=borderC, border_width=1, extend=extend.right)
+
+        // funnel trajectory — two dotted lines from current price up/down to zone edges
+        funnelCol = color.new(color.white, isTrade ? 45 : 70)
+        trajTop := line.new(bar_index, close, leftBar, winPx + half, color=funnelCol, style=line.style_dotted, width=1)
+        trajBot := line.new(bar_index, close, leftBar, winPx - half, color=funnelCol, style=line.style_dotted, width=1)
+
+        // dark rounded label at the LEFT edge of zone
         txt = "Target: " + f_kindTag(winKind) + "\nPoT: " + str.tostring(winPot, "#.#") + "%"
-        zoneLbl := label.new(bar_index + 22, winPx, txt, color=color.new(color.black, 10), textcolor=zCol, style=label.style_label_left, size=size.normal, textalign=text.align_left)
+        zoneLbl := label.new(leftBar - 2, winPx, txt, color=color.new(#1A1A1A, 5), textcolor=color.white, style=label.style_label_right, size=size.small, textalign=text.align_left)
 
 // --- GHOST TRAIL ------------------------------------------------------
 // draw last-N swept levels as faded lines (approximation)
