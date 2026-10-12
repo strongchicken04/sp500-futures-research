@@ -1,0 +1,234 @@
+// @version=5
+indicator("TradeAxis DOL (approx)", overlay=true, max_lines_count=200, max_boxes_count=200, max_labels_count=100)
+
+// =========================================================================
+// Approximation of TradeAxis DOL — commercial indicator.
+// We cannot see the source. This replicates the 4-pillar scoring recipe:
+//   Score = Proximity + Freshness + Confluence + Density  (0..100)
+// Level types scored: Buy-Side Liquidity (swing highs), Sell-Side Liquidity
+//   (swing lows), bullish FVG, bearish FVG.
+// Highest-scored above price = primary BSL target (zone drawn in blue).
+// Highest-scored below price = primary SSL target (zone drawn in orange).
+// =========================================================================
+
+// --- INPUTS ------------------------------------------------------------
+mode     = input.string("Day", "Trading Mode", options=["Swing","Day","Scalp"])
+atrLen   = input.int(14, "ATR length", minval=2)
+maxAtr   = input.float(4.0, "Max ATR distance (eject)", step=0.5)
+halfLife = input.int(50,  "Freshness half-life (bars)", minval=5)
+pivotLen = input.int(5,   "Pivot length (swing H/L)", minval=2)
+minPoT   = input.float(55.0, "Minimum PoT% to show DOL", step=5)
+zonePct  = input.float(0.10, "Zone half-width (* ATR)", step=0.05)
+showGhost= input.bool(true, "Show Ghost trail")
+showBias = input.bool(true, "Show MTF Bias table")
+
+// pick TF strings per mode
+htfTF = mode == "Swing" ? "D" : mode == "Day" ? "240" : "60"
+mtfTF = mode == "Swing" ? "240" : mode == "Day" ? "60"  : "15"
+ltfTF = mode == "Swing" ? "60"  : mode == "Day" ? "15"  : "5"
+
+atr = ta.atr(atrLen)
+
+// --- HTF BIAS (candle-body breaks via nested call on security) --------
+f_bias() =>
+    ph = ta.pivothigh(high, 5, 5)
+    pl = ta.pivotlow(low, 5, 5)
+    var float lastPH = na
+    var float lastPL = na
+    if not na(ph)
+        lastPH := ph
+    if not na(pl)
+        lastPL := pl
+    var int b = 0
+    if not na(lastPH) and close > lastPH
+        b := 1
+    if not na(lastPL) and close < lastPL
+        b := -1
+    b
+
+[htfBias] = request.security(syminfo.tickerid, htfTF, [f_bias()], lookahead=barmerge.lookahead_off)
+[mtfBias] = request.security(syminfo.tickerid, mtfTF, [f_bias()], lookahead=barmerge.lookahead_off)
+[ltfBias] = request.security(syminfo.tickerid, ltfTF, [f_bias()], lookahead=barmerge.lookahead_off)
+
+// --- PDH / PDL (confluence anchors) -----------------------------------
+pdh = request.security(syminfo.tickerid, "D", high[1], lookahead=barmerge.lookahead_on)
+pdl = request.security(syminfo.tickerid, "D", low[1],  lookahead=barmerge.lookahead_on)
+pdc = request.security(syminfo.tickerid, "D", close[1], lookahead=barmerge.lookahead_on)
+pdEq = (pdh + pdl) / 2
+
+// --- LEVEL POOL (arrays of candidate liquidity levels) ----------------
+// Each level: price, birthBar, kind (1=BSL,2=SSL,3=bullFVG,4=bearFVG), swept(0/1)
+var array<float> lvl_px   = array.new<float>()
+var array<int>   lvl_bar  = array.new<int>()
+var array<int>   lvl_kind = array.new<int>()
+var array<int>   lvl_swp  = array.new<int>()  // 0=live, 1=swept (ghost)
+
+f_add(px, kind) =>
+    array.push(lvl_px, px)
+    array.push(lvl_bar, bar_index)
+    array.push(lvl_kind, kind)
+    array.push(lvl_swp, 0)
+
+// --- DETECTION --------------------------------------------------------
+// BSL = confirmed pivot high; SSL = confirmed pivot low
+ph = ta.pivothigh(high, pivotLen, pivotLen)
+pl = ta.pivotlow(low,  pivotLen, pivotLen)
+if barstate.isconfirmed and not na(ph)
+    f_add(ph, 1)
+if barstate.isconfirmed and not na(pl)
+    f_add(pl, 2)
+
+// FVG (3-bar). Bullish FVG: low[0] > high[2]  -> gap top = low[0], bot = high[2]
+if barstate.isconfirmed and low > high[2]
+    f_add((low + high[2]) / 2, 3)  // midpoint of gap
+if barstate.isconfirmed and high < low[2]
+    f_add((high + low[2]) / 2, 4)
+
+// --- SWEEP DETECTION (mark as ghost) ----------------------------------
+if barstate.isconfirmed
+    n = array.size(lvl_px)
+    i = 0
+    while i < n
+        px   = array.get(lvl_px, i)
+        kind = array.get(lvl_kind, i)
+        swp  = array.get(lvl_swp, i)
+        if swp == 0
+            // BSL/bullFVG swept when price trades above (high >= px)
+            swept = false
+            if (kind == 1 or kind == 3) and high >= px
+                swept := true
+            if (kind == 2 or kind == 4) and low  <= px
+                swept := true
+            if swept
+                array.set(lvl_swp, i, 1)
+        i += 1
+
+// --- SCORING ----------------------------------------------------------
+// returns score 0..100; separates BSL (above price, kind in 1,3) and SSL (below)
+f_score(px, birthBar, kind) =>
+    dAtr = math.abs(close - px) / math.max(atr, syminfo.mintick)
+    // Proximity: 0..40, linearly interpolated
+    prox = dAtr > maxAtr ? 0.0 : (1.0 - dAtr / maxAtr) * 40.0
+    // Freshness: exp half-life decay, 0..25
+    age = bar_index - birthBar
+    fresh = math.pow(0.5, age / math.max(halfLife, 1)) * 25.0
+    // Confluence: 0..20 bonus if within 0.2 ATR of PDH/PDL/PDC/pdEq
+    tol = 0.2 * math.max(atr, syminfo.mintick)
+    conf = 0.0
+    if math.abs(px - pdh) <= tol
+        conf += 10
+    if math.abs(px - pdl) <= tol
+        conf += 10
+    if math.abs(px - pdc) <= tol
+        conf += 6
+    if math.abs(px - pdEq) <= tol
+        conf += 4
+    conf := math.min(conf, 20)
+    // HTF-bias alignment bonus (part of confluence):
+    //   bullish bias + BSL/bullFVG target above = aligned
+    aligned = (htfBias == 1 and (kind == 1 or kind == 3) and px > close) or (htfBias == -1 and (kind == 2 or kind == 4) and px < close)
+    if aligned
+        conf := math.min(conf + 5, 20)
+    // Density: 0..15 — count equal highs/lows near px within last 20 bars
+    tolD = 0.1 * math.max(atr, syminfo.mintick)
+    dens = 0.0
+    for j = 0 to 19
+        if math.abs(high[j] - px) <= tolD or math.abs(low[j] - px) <= tolD
+            dens += 2.0
+    dens := math.min(dens, 15)
+    prox + fresh + conf + dens
+
+// --- FIND PRIMARY TARGETS --------------------------------------------
+var float topBSL_px = na
+var float topBSL_sc = na
+var float topSSL_px = na
+var float topSSL_sc = na
+
+if barstate.isconfirmed
+    best_above_px = float(na)
+    best_above_sc = -1.0
+    best_below_px = float(na)
+    best_below_sc = -1.0
+    n = array.size(lvl_px)
+    i = 0
+    while i < n
+        if array.get(lvl_swp, i) == 0
+            px   = array.get(lvl_px, i)
+            birth= array.get(lvl_bar, i)
+            kind = array.get(lvl_kind, i)
+            sc = f_score(px, birth, kind)
+            // ATR distance eject
+            dAtr = math.abs(close - px) / math.max(atr, syminfo.mintick)
+            if dAtr <= maxAtr
+                // Only BSL (1) or bullFVG (3) qualify as upside target if above price
+                if px > close and (kind == 1 or kind == 3)
+                    if sc > best_above_sc
+                        best_above_sc := sc
+                        best_above_px := px
+                if px < close and (kind == 2 or kind == 4)
+                    if sc > best_below_sc
+                        best_below_sc := sc
+                        best_below_px := px
+        i += 1
+    topBSL_px := best_above_px
+    topBSL_sc := best_above_sc
+    topSSL_px := best_below_px
+    topSSL_sc := best_below_sc
+
+// --- POT% -------------------------------------------------------------
+// PoT = clamp( score, 0..95 ). The commercial original uses tick-by-tick
+// unclosed data — approximation uses confirmed-bar score.
+potBSL = na(topBSL_sc) ? na : math.min(topBSL_sc, 95.0)
+potSSL = na(topSSL_sc) ? na : math.min(topSSL_sc, 95.0)
+
+// --- DRAW ZONES -------------------------------------------------------
+var box boxBSL = na
+var box boxSSL = na
+var label lblBSL = na
+var label lblSSL = na
+
+if barstate.islast
+    half = zonePct * atr
+    if not na(topBSL_px) and potBSL >= minPoT
+        if not na(boxBSL)
+            box.delete(boxBSL)
+            label.delete(lblBSL)
+        boxBSL := box.new(bar_index - 50, topBSL_px + half, bar_index + 30, topBSL_px - half, bgcolor=color.new(color.aqua, 80), border_color=color.aqua, extend=extend.right)
+        lblBSL := label.new(bar_index + 5, topBSL_px + half, "BSL " + str.tostring(potBSL, "#.#") + "%", color=color.new(color.aqua, 60), textcolor=color.white, style=label.style_label_left, size=size.small)
+    if not na(topSSL_px) and potSSL >= minPoT
+        if not na(boxSSL)
+            box.delete(boxSSL)
+            label.delete(lblSSL)
+        boxSSL := box.new(bar_index - 50, topSSL_px + half, bar_index + 30, topSSL_px - half, bgcolor=color.new(color.orange, 80), border_color=color.orange, extend=extend.right)
+        lblSSL := label.new(bar_index + 5, topSSL_px - half, "SSL " + str.tostring(potSSL, "#.#") + "%", color=color.new(color.orange, 60), textcolor=color.white, style=label.style_label_left, size=size.small)
+
+// --- GHOST TRAIL ------------------------------------------------------
+// draw last-N swept levels as faded lines (approximation)
+if showGhost and barstate.islast
+    n = array.size(lvl_px)
+    draw = 0
+    i = n - 1
+    while i >= 0 and draw < 12
+        if array.get(lvl_swp, i) == 1
+            px = array.get(lvl_px, i)
+            birth = array.get(lvl_bar, i)
+            kind = array.get(lvl_kind, i)
+            col = (kind == 1 or kind == 3) ? color.new(color.aqua, 70) : color.new(color.orange, 70)
+            line.new(birth, px, bar_index, px, color=col, style=line.style_dotted)
+            draw += 1
+        i -= 1
+
+// --- MTF BIAS TABLE ---------------------------------------------------
+f_biasStr(b) => b == 1 ? "BULL" : b == -1 ? "BEAR" : "NEUT"
+f_biasCol(b) => b == 1 ? color.new(color.green, 20) : b == -1 ? color.new(color.red, 20) : color.new(color.gray, 50)
+
+var table tbl = table.new(position.top_right, 2, 4, border_width=1)
+if showBias and barstate.islast
+    table.cell(tbl, 0, 0, "TF", bgcolor=color.new(color.navy, 20), text_color=color.white)
+    table.cell(tbl, 1, 0, "Bias", bgcolor=color.new(color.navy, 20), text_color=color.white)
+    table.cell(tbl, 0, 1, "HTF " + htfTF, bgcolor=color.new(color.black, 30), text_color=color.white)
+    table.cell(tbl, 1, 1, f_biasStr(htfBias), bgcolor=f_biasCol(htfBias), text_color=color.white)
+    table.cell(tbl, 0, 2, "MTF " + mtfTF, bgcolor=color.new(color.black, 30), text_color=color.white)
+    table.cell(tbl, 1, 2, f_biasStr(mtfBias), bgcolor=f_biasCol(mtfBias), text_color=color.white)
+    table.cell(tbl, 0, 3, "LTF " + ltfTF, bgcolor=color.new(color.black, 30), text_color=color.white)
+    table.cell(tbl, 1, 3, f_biasStr(ltfBias), bgcolor=f_biasCol(ltfBias), text_color=color.white)
