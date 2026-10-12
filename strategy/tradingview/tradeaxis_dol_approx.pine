@@ -189,26 +189,54 @@ if barstate.isconfirmed
 potBSL = na(topBSL_sc) ? na : math.min(topBSL_sc, 95.0)
 potSSL = na(topSSL_sc) ? na : math.min(topSSL_sc, 95.0)
 
-// --- DRAW ZONES -------------------------------------------------------
-var box boxBSL = na
-var box boxSSL = na
-var label lblBSL = na
-var label lblSSL = na
+// --- DRAW SINGLE PRIMARY TARGET (matches commercial design) -----------
+// Pick the WINNING side — highest-scored of BSL vs SSL, drawn as a thin
+// bright zone with a dashed diagonal trajectory from current price up/down
+// to the target, plus a floating label "Target: KIND  PoT: XX.X%".
+
+f_kindTag(k) =>
+    k == 1 ? "BSL" : k == 2 ? "SSL" : k == 3 ? "BUFVG" : k == 4 ? "BEFVG" : "?"
+
+var box    zoneBox = na
+var label  zoneLbl = na
+var line   trajLn  = na
 
 if barstate.islast
-    half = zonePct * atr
-    if not na(topBSL_px) and potBSL >= minPoT
-        if not na(boxBSL)
-            box.delete(boxBSL)
-            label.delete(lblBSL)
-        boxBSL := box.new(bar_index - 100, topBSL_px + half, bar_index + 30, topBSL_px - half, bgcolor=color.new(color.aqua, 65), border_color=color.aqua, border_width=2, extend=extend.right)
-        lblBSL := label.new(bar_index + 5, topBSL_px + half, "BSL  " + str.tostring(potBSL, "#.#") + "  dist=" + str.tostring(math.abs(close - topBSL_px) / atr, "#.##") + "ATR", color=color.new(color.aqua, 40), textcolor=color.white, style=label.style_label_left, size=size.normal)
-    if not na(topSSL_px) and potSSL >= minPoT
-        if not na(boxSSL)
-            box.delete(boxSSL)
-            label.delete(lblSSL)
-        boxSSL := box.new(bar_index - 100, topSSL_px + half, bar_index + 30, topSSL_px - half, bgcolor=color.new(color.orange, 65), border_color=color.orange, border_width=2, extend=extend.right)
-        lblSSL := label.new(bar_index + 5, topSSL_px - half, "SSL  " + str.tostring(potSSL, "#.#") + "  dist=" + str.tostring(math.abs(close - topSSL_px) / atr, "#.##") + "ATR", color=color.new(color.orange, 40), textcolor=color.white, style=label.style_label_left, size=size.normal)
+    // delete previous
+    if not na(zoneBox)
+        box.delete(zoneBox)
+    if not na(zoneLbl)
+        label.delete(zoneLbl)
+    if not na(trajLn)
+        line.delete(trajLn)
+
+    // pick winning side
+    winAbove = (not na(topBSL_sc)) and ((na(topSSL_sc)) or topBSL_sc >= topSSL_sc)
+    winPx = winAbove ? topBSL_px : topSSL_px
+    winSc = winAbove ? topBSL_sc : topSSL_sc
+    winPot = winAbove ? potBSL : potSSL
+
+    // find kind of winner by lookup
+    winKind = 0
+    if not na(winPx)
+        nL = array.size(lvl_px)
+        iL = nL - 1
+        while iL >= 0 and winKind == 0
+            if array.get(lvl_swp, iL) == 0 and array.get(lvl_px, iL) == winPx
+                winKind := array.get(lvl_kind, iL)
+            iL -= 1
+
+    if not na(winPx) and winPot >= minPoT
+        half = zonePct * atr
+        // bright zone — thin horizontal bar with glow (match screenshot)
+        zCol = winAbove ? color.new(color.lime, 20) : color.new(color.red, 20)
+        bgCol = winAbove ? color.new(color.lime, 70) : color.new(color.red, 70)
+        zoneBox := box.new(bar_index - 60, winPx + half, bar_index + 25, winPx - half, bgcolor=bgCol, border_color=zCol, border_width=3, extend=extend.right)
+        // dashed diagonal trajectory from last close to target
+        trajLn := line.new(bar_index, close, bar_index + 20, winPx, color=zCol, style=line.style_dashed, width=2)
+        // floating label — black bg, white/colored text, 2-line
+        txt = "Target: " + f_kindTag(winKind) + "\nPoT: " + str.tostring(winPot, "#.#") + "%"
+        zoneLbl := label.new(bar_index + 22, winPx, txt, color=color.new(color.black, 10), textcolor=zCol, style=label.style_label_left, size=size.normal, textalign=text.align_left)
 
 // --- GHOST TRAIL ------------------------------------------------------
 // draw last-N swept levels as faded lines (approximation)
