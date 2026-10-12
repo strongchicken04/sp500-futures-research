@@ -277,20 +277,16 @@ f_kindTag(k) =>
 // Trajectory = dotted funnel: two lines from zone edges back to current
 // price point, forming a cone of possibility.
 // Label = dark pill at left edge of zone with "Target: KIND\nPoT: XX.X%".
-var box   zoneCore  = na
-var box   zoneGlow1 = na
-var box   zoneGlow2 = na
-var label zoneLbl   = na
-var line  trajTop   = na
-var line  trajBot   = na
+// Zone = single thin bright line. Trade-grade: width 2 full brightness.
+// Watch regime: width 1, dimmer.
+var line  zoneLine = na
+var label zoneLbl  = na
+var line  trajTop  = na
+var line  trajBot  = na
 
 if barstate.islast
-    if not na(zoneCore)
-        box.delete(zoneCore)
-    if not na(zoneGlow1)
-        box.delete(zoneGlow1)
-    if not na(zoneGlow2)
-        box.delete(zoneGlow2)
+    if not na(zoneLine)
+        line.delete(zoneLine)
     if not na(zoneLbl)
         label.delete(zoneLbl)
     if not na(trajTop)
@@ -312,27 +308,20 @@ if barstate.islast
             iL -= 1
 
     if not na(winPx) and not na(winPot) and winPot >= minPoT
-        half = zonePct * atr
         isTrade = winPot >= tradePoT
         leftBar  = bar_index - trajLen
         rightBar = bar_index + 25
 
-        // 3 layered boxes: outer halo -> mid glow -> bright white core
-        haloCol  = color.new(#B98BFF, isTrade ? 82 : 90)   // soft outer
-        midCol   = color.new(#9B6DFF, isTrade ? 60 : 78)   // mid lavender
-        coreCol  = color.new(color.white, isTrade ? 0 : 25)
-        borderC  = color.new(color.white, isTrade ? 0 : 50)
+        // single thin line (laser)
+        lineCol = color.new(color.white, isTrade ? 0 : 40)
+        lw      = isTrade ? 2 : 1
+        zoneLine := line.new(leftBar, winPx, rightBar, winPx, color=lineCol, width=lw, extend=extend.right)
 
-        zoneGlow2 := box.new(leftBar, winPx + half*5, rightBar, winPx - half*5, bgcolor=haloCol, border_color=na, extend=extend.right)
-        zoneGlow1 := box.new(leftBar, winPx + half*2, rightBar, winPx - half*2, bgcolor=midCol,  border_color=na, extend=extend.right)
-        zoneCore  := box.new(leftBar, winPx + half*0.4, rightBar, winPx - half*0.4, bgcolor=coreCol, border_color=borderC, border_width=1, extend=extend.right)
+        // dotted funnel from current price to the line
+        funnelCol = color.new(color.white, isTrade ? 55 : 75)
+        trajTop := line.new(bar_index, close, leftBar, winPx, color=funnelCol, style=line.style_dotted, width=1)
+        trajBot := line.new(bar_index, close, leftBar, winPx, color=funnelCol, style=line.style_dotted, width=1)
 
-        // funnel trajectory — two dotted lines from current price up/down to zone edges
-        funnelCol = color.new(color.white, isTrade ? 45 : 70)
-        trajTop := line.new(bar_index, close, leftBar, winPx + half, color=funnelCol, style=line.style_dotted, width=1)
-        trajBot := line.new(bar_index, close, leftBar, winPx - half, color=funnelCol, style=line.style_dotted, width=1)
-
-        // dark rounded label at the LEFT edge of zone
         txt = "Target: " + f_kindTag(winKind) + "\nPoT: " + str.tostring(winPot, "#.#") + "%"
         zoneLbl := label.new(leftBar - 2, winPx, txt, color=color.new(#1A1A1A, 5), textcolor=color.white, style=label.style_label_right, size=size.small, textalign=text.align_left)
 
