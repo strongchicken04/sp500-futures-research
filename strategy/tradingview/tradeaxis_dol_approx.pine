@@ -130,7 +130,11 @@ if useHTF and barstate.isconfirmed and not na(detBeFVG) and (na(detBeFVG[1]) or 
     f_add(detBeFVG, 4, htfWeight)
 
 // --- SWEEP DETECTION (mark as ghost) ----------------------------------
-if barstate.isconfirmed
+// Sweep detection — a level is "hit" the moment price enters its ZONE,
+// not when it reaches the exact pivot price. Zone edge = px -/+ zonePct*ATR.
+// Runs on every tick during live bar so the display flips immediately.
+zoneHalf = zonePct * atr
+if barstate.isconfirmed or barstate.islast
     n = array.size(lvl_px)
     i = 0
     while i < n
@@ -138,11 +142,12 @@ if barstate.isconfirmed
         kind = array.get(lvl_kind, i)
         swp  = array.get(lvl_swp, i)
         if swp == 0
-            // BSL/bullFVG swept when price trades above (high >= px)
+            // upside targets: swept when high enters zone (reaches px - half)
             swept = false
-            if (kind == 1 or kind == 3) and high >= px
+            if (kind == 1 or kind == 3) and high >= px - zoneHalf
                 swept := true
-            if (kind == 2 or kind == 4) and low  <= px
+            // downside targets: swept when low enters zone (reaches px + half)
+            if (kind == 2 or kind == 4) and low  <= px + zoneHalf
                 swept := true
             if swept
                 array.set(lvl_swp, i, 1)
