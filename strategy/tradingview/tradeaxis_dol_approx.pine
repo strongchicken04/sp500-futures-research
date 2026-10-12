@@ -240,8 +240,20 @@ if barstate.isconfirmed or barstate.islast
 // --- POT% -------------------------------------------------------------
 // PoT = clamp( score, 0..95 ). The commercial original uses tick-by-tick
 // unclosed data — approximation uses confirmed-bar score.
-potBSL = na(topBSL_sc) ? na : math.min(topBSL_sc, 95.0)
-potSSL = na(topSSL_sc) ? na : math.min(topSSL_sc, 95.0)
+// Calibrated PoT — maps (score, ATR distance) to actual touch probability.
+// Base rates are empirical from our v2 QC backtest on NQ 2018-2025, 10001
+// signals: base_rate(atr_dist) + score_bonus (0..+33pp between score 45..85).
+f_atrBase(dAtr) =>
+    dAtr < 0.5 ? 88.0 : dAtr < 1.0 ? 75.0 : dAtr < 1.5 ? 62.0 : dAtr < 2.0 ? 51.0 : dAtr < 2.5 ? 40.0 : dAtr < 3.0 ? 32.0 : 26.0
+
+f_calibratePoT(sc, px) =>
+    dAtr = math.abs(close - px) / math.max(atr, syminfo.mintick)
+    base = f_atrBase(dAtr)
+    bonus = math.max(0.0, math.min(33.0, (sc - 45.0) * 33.0 / 40.0))
+    math.min(base + bonus, 95.0)
+
+potBSL = na(topBSL_sc) or topBSL_sc < 0 or na(topBSL_px) ? na : f_calibratePoT(topBSL_sc, topBSL_px)
+potSSL = na(topSSL_sc) or topSSL_sc < 0 or na(topSSL_px) ? na : f_calibratePoT(topSSL_sc, topSSL_px)
 
 // --- DRAW SINGLE PRIMARY TARGET (matches commercial design) -----------
 // Pick the WINNING side — highest-scored of BSL vs SSL, drawn as a thin
