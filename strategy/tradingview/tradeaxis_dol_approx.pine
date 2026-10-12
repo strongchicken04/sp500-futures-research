@@ -9,6 +9,11 @@ indicator("TradeAxis DOL (approx)", overlay=true, max_lines_count=200, max_boxes
 //   (swing lows), bullish FVG, bearish FVG.
 // Highest-scored above price = primary BSL target (zone drawn in blue).
 // Highest-scored below price = primary SSL target (zone drawn in orange).
+//
+// FILTER: default threshold 75 — only this bucket showed a measurable edge
+// on NQ 2018-2025 QC backtest (+33pp hit-rate above matched-dist base rate,
+// z=+5.9). The table shows current scores regardless of threshold so you
+// can see "watch" (65-74) and "trade" (75+) regimes.
 // =========================================================================
 
 // --- INPUTS ------------------------------------------------------------
@@ -17,7 +22,10 @@ atrLen   = input.int(14, "ATR length", minval=2)
 maxAtr   = input.float(4.0, "Max ATR distance (eject)", step=0.5)
 halfLife = input.int(50,  "Freshness half-life (bars)", minval=5)
 pivotLen = input.int(5,   "Pivot length (swing H/L)", minval=2)
-minPoT   = input.float(55.0, "Minimum PoT% to show DOL", step=5)
+// Score threshold: 75+ is the only bucket with proven edge on NQ 2018-2025
+// (QC backtest: +33pp hit-rate above matched-dist base rate, PF=2.64 PnL).
+// Rare — expect ~1 zone per week on NQ 5min.
+minPoT   = input.float(75.0, "Minimum PoT% to show DOL (75+ only has edge)", step=5)
 zonePct  = input.float(0.10, "Zone half-width (* ATR)", step=0.05)
 showGhost= input.bool(true, "Show Ghost trail")
 showBias = input.bool(true, "Show MTF Bias table")
@@ -193,14 +201,14 @@ if barstate.islast
         if not na(boxBSL)
             box.delete(boxBSL)
             label.delete(lblBSL)
-        boxBSL := box.new(bar_index - 50, topBSL_px + half, bar_index + 30, topBSL_px - half, bgcolor=color.new(color.aqua, 80), border_color=color.aqua, extend=extend.right)
-        lblBSL := label.new(bar_index + 5, topBSL_px + half, "BSL " + str.tostring(potBSL, "#.#") + "%", color=color.new(color.aqua, 60), textcolor=color.white, style=label.style_label_left, size=size.small)
+        boxBSL := box.new(bar_index - 100, topBSL_px + half, bar_index + 30, topBSL_px - half, bgcolor=color.new(color.aqua, 65), border_color=color.aqua, border_width=2, extend=extend.right)
+        lblBSL := label.new(bar_index + 5, topBSL_px + half, "BSL  " + str.tostring(potBSL, "#.#") + "  dist=" + str.tostring(math.abs(close - topBSL_px) / atr, "#.##") + "ATR", color=color.new(color.aqua, 40), textcolor=color.white, style=label.style_label_left, size=size.normal)
     if not na(topSSL_px) and potSSL >= minPoT
         if not na(boxSSL)
             box.delete(boxSSL)
             label.delete(lblSSL)
-        boxSSL := box.new(bar_index - 50, topSSL_px + half, bar_index + 30, topSSL_px - half, bgcolor=color.new(color.orange, 80), border_color=color.orange, extend=extend.right)
-        lblSSL := label.new(bar_index + 5, topSSL_px - half, "SSL " + str.tostring(potSSL, "#.#") + "%", color=color.new(color.orange, 60), textcolor=color.white, style=label.style_label_left, size=size.small)
+        boxSSL := box.new(bar_index - 100, topSSL_px + half, bar_index + 30, topSSL_px - half, bgcolor=color.new(color.orange, 65), border_color=color.orange, border_width=2, extend=extend.right)
+        lblSSL := label.new(bar_index + 5, topSSL_px - half, "SSL  " + str.tostring(potSSL, "#.#") + "  dist=" + str.tostring(math.abs(close - topSSL_px) / atr, "#.##") + "ATR", color=color.new(color.orange, 40), textcolor=color.white, style=label.style_label_left, size=size.normal)
 
 // --- GHOST TRAIL ------------------------------------------------------
 // draw last-N swept levels as faded lines (approximation)
@@ -222,7 +230,14 @@ if showGhost and barstate.islast
 f_biasStr(b) => b == 1 ? "BULL" : b == -1 ? "BEAR" : "NEUT"
 f_biasCol(b) => b == 1 ? color.new(color.green, 20) : b == -1 ? color.new(color.red, 20) : color.new(color.gray, 50)
 
-var table tbl = table.new(position.top_right, 2, 4, border_width=1)
+// Current primary scores (always shown, even when below minPoT) so you
+// know the indicator is working even on quiet bars.
+f_scoreCell(sc) =>
+    na(sc) ? "--" : sc >= 75 ? "** " + str.tostring(sc, "#.#") + " **" : sc >= 65 ? str.tostring(sc, "#.#") + " (watch)" : str.tostring(sc, "#.#")
+f_scoreCol(sc) =>
+    na(sc) ? color.new(color.gray, 50) : sc >= 75 ? color.new(color.green, 20) : sc >= 65 ? color.new(color.olive, 30) : color.new(color.gray, 40)
+
+var table tbl = table.new(position.top_right, 2, 6, border_width=1)
 if showBias and barstate.islast
     table.cell(tbl, 0, 0, "TF", bgcolor=color.new(color.navy, 20), text_color=color.white)
     table.cell(tbl, 1, 0, "Bias", bgcolor=color.new(color.navy, 20), text_color=color.white)
@@ -232,3 +247,7 @@ if showBias and barstate.islast
     table.cell(tbl, 1, 2, f_biasStr(mtfBias), bgcolor=f_biasCol(mtfBias), text_color=color.white)
     table.cell(tbl, 0, 3, "LTF " + ltfTF, bgcolor=color.new(color.black, 30), text_color=color.white)
     table.cell(tbl, 1, 3, f_biasStr(ltfBias), bgcolor=f_biasCol(ltfBias), text_color=color.white)
+    table.cell(tbl, 0, 4, "BSL sc", bgcolor=color.new(color.aqua, 60), text_color=color.white)
+    table.cell(tbl, 1, 4, f_scoreCell(topBSL_sc), bgcolor=f_scoreCol(topBSL_sc), text_color=color.white)
+    table.cell(tbl, 0, 5, "SSL sc", bgcolor=color.new(color.orange, 60), text_color=color.white)
+    table.cell(tbl, 1, 5, f_scoreCell(topSSL_sc), bgcolor=f_scoreCol(topSSL_sc), text_color=color.white)
