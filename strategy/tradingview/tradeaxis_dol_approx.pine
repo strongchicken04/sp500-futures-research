@@ -152,34 +152,43 @@ if barstate.isconfirmed
 // returns score 0..100. tfw = TF weight (chart bars per native bar of
 // source TF). Chart=1, HTF>1. Freshness age is divided by tfw so a 15m
 // level ages 1 "bar" per 15 chart bars, not 1 per chart tick.
+// Rebalanced scoring to favor the "biggest liquidity magnet" over the
+// nearest pivot. Proximity plateaus within 1.5 ATR (indicator doesn't
+// discriminate between "very close" and "close enough to be actionable")
+// then decays linearly to 0 at maxAtr. Density + confluence get more
+// weight — those are the signatures of real liquidity, not distance.
 f_score(px, birthBar, kind, tfw) =>
     dAtr = math.abs(close - px) / math.max(atr, syminfo.mintick)
-    prox = dAtr > maxAtr ? 0.0 : (1.0 - dAtr / maxAtr) * 40.0
+    // Proximity: 0..20, plateau to 1.5 ATR, decay after
+    prox = dAtr >= maxAtr ? 0.0 : dAtr <= 1.5 ? 20.0 : (1.0 - (dAtr - 1.5) / math.max(maxAtr - 1.5, 0.01)) * 20.0
+    // Freshness: 0..25 (TF-weighted age)
     age = (bar_index - birthBar) / math.max(tfw, 1.0)
     fresh = math.pow(0.5, age / math.max(halfLife, 1)) * 25.0
+    // Confluence: 0..30 — PDH/PDL stronger, HTF bonus +10, bias +5
     tol = 0.2 * math.max(atr, syminfo.mintick)
     conf = 0.0
     if math.abs(px - pdh) <= tol
-        conf += 10
+        conf += 12
     if math.abs(px - pdl) <= tol
-        conf += 10
+        conf += 12
     if math.abs(px - pdc) <= tol
         conf += 6
     if math.abs(px - pdEq) <= tol
-        conf += 4
-    conf := math.min(conf, 20)
+        conf += 5
     aligned = (htfBias == 1 and (kind == 1 or kind == 3) and px > close) or (htfBias == -1 and (kind == 2 or kind == 4) and px < close)
     if aligned
-        conf := math.min(conf + 5, 20)
+        conf += 5
     // HTF structural bonus: pivots from a higher TF carry more weight
     if tfw > 1.0
-        conf := math.min(conf + 10, 20)
-    tolD = 0.1 * math.max(atr, syminfo.mintick)
+        conf += 10
+    conf := math.min(conf, 30)
+    // Density: 0..25 — equal highs/lows cluster near px over last 30 bars
+    tolD = 0.15 * math.max(atr, syminfo.mintick)
     dens = 0.0
-    for j = 0 to 19
+    for j = 0 to 29
         if math.abs(high[j] - px) <= tolD or math.abs(low[j] - px) <= tolD
-            dens += 2.0
-    dens := math.min(dens, 15)
+            dens += 2.5
+    dens := math.min(dens, 25)
     prox + fresh + conf + dens
 
 // --- FIND PRIMARY TARGETS --------------------------------------------
