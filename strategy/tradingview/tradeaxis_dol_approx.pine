@@ -21,8 +21,7 @@ mode     = input.string("Day", "Trading Mode", options=["Swing","Day","Scalp"])
 atrLen   = input.int(14, "ATR length", minval=2)
 maxAtr   = input.float(4.0, "Max ATR distance (eject)", step=0.5)
 halfLife = input.int(50,  "Freshness half-life (bars)", minval=5)
-pivotLen = input.int(3,   "Pivot length (swing H/L on levelTF)", minval=2)
-extLook  = input.int(10,  "Rolling extremes lookback (bars on levelTF)", minval=3)
+pivotLen = input.int(2,   "Pivot length (swing H/L on levelTF)", minval=1)
 // Level detection TF: targets come from this TF regardless of chart TF.
 // Flip chart 1m/3m/5m — the target stays the same. Default per mode:
 //   Swing="60", Day="15", Scalp="5". Override here if you want something else.
@@ -100,37 +99,27 @@ levelMin = f_tfMin(levelTF)
 htfWeight = math.max(levelMin / math.max(chartMin, 1.0), 1.0)
 
 // --- DETECTION: ONLY from levelTF ------------------------------------
-// Chart TF is ignored. Pull pivots, FVG mids, AND rolling extremes from
-// the user-selected levelTF (default auto: Swing=60m, Day=15m, Scalp=5m).
-// Rolling extremes = recent swing high/low over N HTF bars — these are
-// available INSTANTLY (no pivot-confirmation lag) so the chart is never
-// empty while waiting for the first pivot to confirm.
+// Pure levelTF pivots + FVGs. No chart-TF noise, no rolling-extremes
+// fallback. Pivots confirm pivotLen bars after the swing (default 2 bars
+// on levelTF — 10 min on 5m levels).
 f_detectAll() =>
     _ph = ta.pivothigh(high, pivotLen, pivotLen)
     _pl = ta.pivotlow(low,  pivotLen, pivotLen)
     _bu = low > high[2]  ? (low + high[2]) / 2 : na
     _be = high < low[2]  ? (high + low[2]) / 2 : na
-    _rh = ta.highest(high, extLook)
-    _rl = ta.lowest(low,  extLook)
-    [_ph, _pl, _bu, _be, _rh, _rl]
+    [_ph, _pl, _bu, _be]
 
-[detPH, detPL, detBuFVG, detBeFVG, detRH, detRL] = request.security(syminfo.tickerid, levelTF, f_detectAll(), lookahead=barmerge.lookahead_off)
+[detPH, detPL, detBuFVG, detBeFVG] = request.security(syminfo.tickerid, levelTF, f_detectAll(), lookahead=barmerge.lookahead_off)
 
-// Confirmed pivots: add on each new value
-if barstate.isconfirmed and not na(detPH) and (na(detPH[1]) or detPH != detPH[1])
+// Add on every bar where a NEW value appears (not just confirmed chart bars)
+if not na(detPH) and (na(detPH[1]) or detPH != detPH[1])
     f_add(detPH, 1, htfWeight)
-if barstate.isconfirmed and not na(detPL) and (na(detPL[1]) or detPL != detPL[1])
+if not na(detPL) and (na(detPL[1]) or detPL != detPL[1])
     f_add(detPL, 2, htfWeight)
-if barstate.isconfirmed and not na(detBuFVG) and (na(detBuFVG[1]) or detBuFVG != detBuFVG[1])
+if not na(detBuFVG) and (na(detBuFVG[1]) or detBuFVG != detBuFVG[1])
     f_add(detBuFVG, 3, htfWeight)
-if barstate.isconfirmed and not na(detBeFVG) and (na(detBeFVG[1]) or detBeFVG != detBeFVG[1])
+if not na(detBeFVG) and (na(detBeFVG[1]) or detBeFVG != detBeFVG[1])
     f_add(detBeFVG, 4, htfWeight)
-
-// Rolling extremes: add on each new high/low (always-available fallback)
-if barstate.isconfirmed and not na(detRH) and (na(detRH[1]) or detRH != detRH[1])
-    f_add(detRH, 1, htfWeight)
-if barstate.isconfirmed and not na(detRL) and (na(detRL[1]) or detRL != detRL[1])
-    f_add(detRL, 2, htfWeight)
 
 // --- SWEEP DETECTION (mark as ghost) ----------------------------------
 // Sweep detection — a level is "hit" the moment price enters its ZONE,
