@@ -22,6 +22,10 @@ atrLen   = input.int(14, "ATR length", minval=2)
 maxAtr   = input.float(4.0, "Max ATR distance (eject)", step=0.5)
 halfLife = input.int(50,  "Freshness half-life (bars)", minval=5)
 pivotLen = input.int(5,   "Pivot length (swing H/L)", minval=2)
+// Level detection TF: targets come from this TF regardless of chart TF.
+// Flip chart 1m/3m/5m — the target stays the same. Default per mode:
+//   Swing="60", Day="15", Scalp="5". Override here if you want something else.
+levelTFin = input.string("auto", "Level detection TF", options=["auto","1","3","5","15","30","60","240","D"])
 // Score threshold: 75+ is the only bucket with proven edge on NQ 2018-2025
 // (QC backtest: +33pp hit-rate PF=2.64). Below 75 is still drawn but dimmer.
 // By default: show something always, let brightness tier the quality.
@@ -36,6 +40,10 @@ tblPos    = input.string("top_right", "Bias table position", options=["top_right
 htfTF = mode == "Swing" ? "D" : mode == "Day" ? "240" : "60"
 mtfTF = mode == "Swing" ? "240" : mode == "Day" ? "60"  : "15"
 ltfTF = mode == "Swing" ? "60"  : mode == "Day" ? "15"  : "5"
+// If user left it on "auto", pick a sensible level-detection TF per mode:
+//   Swing uses 1H, Day uses 15m, Scalp uses 5m.
+autoTF   = mode == "Swing" ? "60" : mode == "Day" ? "15" : "5"
+levelTF  = levelTFin == "auto" ? autoTF : levelTFin
 
 atr = ta.atr(atrLen)
 
@@ -79,20 +87,28 @@ f_add(px, kind) =>
     array.push(lvl_kind, kind)
     array.push(lvl_swp, 0)
 
-// --- DETECTION --------------------------------------------------------
-// BSL = confirmed pivot high; SSL = confirmed pivot low
-ph = ta.pivothigh(high, pivotLen, pivotLen)
-pl = ta.pivotlow(low,  pivotLen, pivotLen)
-if barstate.isconfirmed and not na(ph)
-    f_add(ph, 1)
-if barstate.isconfirmed and not na(pl)
-    f_add(pl, 2)
+// --- DETECTION ON levelTF --------------------------------------------
+// Pivots and FVG mids come from the chosen level-detection TF (default 15m
+// for Day mode). Flip chart 1m/3m/5m — the target stays the same.
+// Scoring and display still use chart TF data; only the LEVELS come here.
+f_detectAll() =>
+    _ph = ta.pivothigh(high, pivotLen, pivotLen)
+    _pl = ta.pivotlow(low,  pivotLen, pivotLen)
+    _bu = low > high[2]  ? (low + high[2]) / 2 : na
+    _be = high < low[2]  ? (high + low[2]) / 2 : na
+    [_ph, _pl, _bu, _be]
 
-// FVG (3-bar). Bullish FVG: low[0] > high[2]  -> gap top = low[0], bot = high[2]
-if barstate.isconfirmed and low > high[2]
-    f_add((low + high[2]) / 2, 3)  // midpoint of gap
-if barstate.isconfirmed and high < low[2]
-    f_add((high + low[2]) / 2, 4)
+[detPH, detPL, detBuFVG, detBeFVG] = request.security(syminfo.tickerid, levelTF, f_detectAll(), lookahead=barmerge.lookahead_off)
+
+// Add on each new value (change vs prior bar on levelTF). Guards duplicates.
+if barstate.isconfirmed and not na(detPH) and detPH != detPH[1]
+    f_add(detPH, 1)
+if barstate.isconfirmed and not na(detPL) and detPL != detPL[1]
+    f_add(detPL, 2)
+if barstate.isconfirmed and not na(detBuFVG) and detBuFVG != detBuFVG[1]
+    f_add(detBuFVG, 3)
+if barstate.isconfirmed and not na(detBeFVG) and detBeFVG != detBeFVG[1]
+    f_add(detBeFVG, 4)
 
 // --- SWEEP DETECTION (mark as ghost) ----------------------------------
 if barstate.isconfirmed
@@ -276,7 +292,7 @@ f_scoreCol(sc) =>
     (na(sc) or sc < 0) ? color.new(color.gray, 50) : sc >= 75 ? color.new(color.green, 20) : sc >= 60 ? color.new(color.olive, 30) : color.new(color.gray, 40)
 
 tblPosition = tblPos == "top_left" ? position.top_left : tblPos == "bottom_right" ? position.bottom_right : tblPos == "bottom_left" ? position.bottom_left : position.top_right
-var table tbl = table.new(tblPosition, 2, 6, border_width=1)
+var table tbl = table.new(tblPosition, 2, 7, border_width=1)
 if showBias and barstate.islast
     table.cell(tbl, 0, 0, "TF", bgcolor=color.new(color.navy, 20), text_color=color.white)
     table.cell(tbl, 1, 0, "Bias", bgcolor=color.new(color.navy, 20), text_color=color.white)
@@ -286,7 +302,9 @@ if showBias and barstate.islast
     table.cell(tbl, 1, 2, f_biasStr(mtfBias), bgcolor=f_biasCol(mtfBias), text_color=color.white)
     table.cell(tbl, 0, 3, "LTF " + ltfTF, bgcolor=color.new(color.black, 30), text_color=color.white)
     table.cell(tbl, 1, 3, f_biasStr(ltfBias), bgcolor=f_biasCol(ltfBias), text_color=color.white)
-    table.cell(tbl, 0, 4, "BSL sc", bgcolor=color.new(color.aqua, 60), text_color=color.white)
-    table.cell(tbl, 1, 4, f_scoreCell(topBSL_sc), bgcolor=f_scoreCol(topBSL_sc), text_color=color.white)
-    table.cell(tbl, 0, 5, "SSL sc", bgcolor=color.new(color.orange, 60), text_color=color.white)
-    table.cell(tbl, 1, 5, f_scoreCell(topSSL_sc), bgcolor=f_scoreCol(topSSL_sc), text_color=color.white)
+    table.cell(tbl, 0, 4, "Levels", bgcolor=color.new(color.purple, 30), text_color=color.white)
+    table.cell(tbl, 1, 4, "TF " + levelTF, bgcolor=color.new(color.purple, 50), text_color=color.white)
+    table.cell(tbl, 0, 5, "BSL sc", bgcolor=color.new(color.aqua, 60), text_color=color.white)
+    table.cell(tbl, 1, 5, f_scoreCell(topBSL_sc), bgcolor=f_scoreCol(topBSL_sc), text_color=color.white)
+    table.cell(tbl, 0, 6, "SSL sc", bgcolor=color.new(color.orange, 60), text_color=color.white)
+    table.cell(tbl, 1, 6, f_scoreCell(topSSL_sc), bgcolor=f_scoreCol(topSSL_sc), text_color=color.white)
