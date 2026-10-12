@@ -23,12 +23,13 @@ maxAtr   = input.float(4.0, "Max ATR distance (eject)", step=0.5)
 halfLife = input.int(50,  "Freshness half-life (bars)", minval=5)
 pivotLen = input.int(5,   "Pivot length (swing H/L)", minval=2)
 // Score threshold: 75+ is the only bucket with proven edge on NQ 2018-2025
-// (QC backtest: +33pp hit-rate above matched-dist base rate, PF=2.64 PnL).
-// Rare — expect ~1 zone per week on NQ 5min.
-minPoT   = input.float(75.0, "Minimum PoT% to show DOL (75+ only has edge)", step=5)
-zonePct  = input.float(0.10, "Zone half-width (* ATR)", step=0.05)
-showGhost= input.bool(true, "Show Ghost trail")
-showBias = input.bool(true, "Show MTF Bias table")
+// (QC backtest: +33pp hit-rate PF=2.64). Below 75 is still drawn but dimmer.
+minPoT    = input.float(50.0, "Minimum PoT% to show DOL", step=5)
+tradePoT  = input.float(75.0, "Trade-grade PoT (bright glow above this)", step=5)
+zonePct   = input.float(0.08, "Zone half-width (* ATR)", step=0.02)
+showGhost = input.bool(false, "Show Ghost trail (prior swept levels)")
+showBias  = input.bool(true, "Show MTF Bias table")
+tblPos    = input.string("top_right", "Bias table position", options=["top_right","top_left","bottom_right","bottom_left"])
 
 // pick TF strings per mode
 htfTF = mode == "Swing" ? "D" : mode == "Day" ? "240" : "60"
@@ -226,15 +227,19 @@ if barstate.islast
                 winKind := array.get(lvl_kind, iL)
             iL -= 1
 
-    if not na(winPx) and winPot >= minPoT
+    if not na(winPx) and not na(winPot) and winPot >= minPoT
         half = zonePct * atr
-        // bright zone — thin horizontal bar with glow (match screenshot)
-        zCol = winAbove ? color.new(color.lime, 20) : color.new(color.red, 20)
-        bgCol = winAbove ? color.new(color.lime, 70) : color.new(color.red, 70)
-        zoneBox := box.new(bar_index - 60, winPx + half, bar_index + 25, winPx - half, bgcolor=bgCol, border_color=zCol, border_width=3, extend=extend.right)
+        // tier-based brightness: trade-grade (>=tradePoT) gets full glow;
+        // watch regime gets dimmer alpha so it reads as "setup building"
+        isTrade = winPot >= tradePoT
+        baseCol = winAbove ? color.lime : color.red
+        zCol    = color.new(baseCol, isTrade ? 10 : 45)
+        bgCol   = color.new(baseCol, isTrade ? 65 : 85)
+        bw      = isTrade ? 3 : 2
+        zoneBox := box.new(bar_index - 60, winPx + half, bar_index + 25, winPx - half, bgcolor=bgCol, border_color=zCol, border_width=bw, extend=extend.right)
         // dashed diagonal trajectory from last close to target
         trajLn := line.new(bar_index, close, bar_index + 20, winPx, color=zCol, style=line.style_dashed, width=2)
-        // floating label — black bg, white/colored text, 2-line
+        // floating label — black bg, colored text, 2-line
         txt = "Target: " + f_kindTag(winKind) + "\nPoT: " + str.tostring(winPot, "#.#") + "%"
         zoneLbl := label.new(bar_index + 22, winPx, txt, color=color.new(color.black, 10), textcolor=zCol, style=label.style_label_left, size=size.normal, textalign=text.align_left)
 
@@ -260,12 +265,14 @@ f_biasCol(b) => b == 1 ? color.new(color.green, 20) : b == -1 ? color.new(color.
 
 // Current primary scores (always shown, even when below minPoT) so you
 // know the indicator is working even on quiet bars.
+// treat -1 sentinel (no live level this side) as NA so table shows "--"
 f_scoreCell(sc) =>
-    na(sc) ? "--" : sc >= 75 ? "** " + str.tostring(sc, "#.#") + " **" : sc >= 65 ? str.tostring(sc, "#.#") + " (watch)" : str.tostring(sc, "#.#")
+    (na(sc) or sc < 0) ? "--" : sc >= 75 ? "** " + str.tostring(sc, "#.#") + " **" : sc >= 60 ? str.tostring(sc, "#.#") + " watch" : str.tostring(sc, "#.#")
 f_scoreCol(sc) =>
-    na(sc) ? color.new(color.gray, 50) : sc >= 75 ? color.new(color.green, 20) : sc >= 65 ? color.new(color.olive, 30) : color.new(color.gray, 40)
+    (na(sc) or sc < 0) ? color.new(color.gray, 50) : sc >= 75 ? color.new(color.green, 20) : sc >= 60 ? color.new(color.olive, 30) : color.new(color.gray, 40)
 
-var table tbl = table.new(position.top_right, 2, 6, border_width=1)
+tblPosition = tblPos == "top_left" ? position.top_left : tblPos == "bottom_right" ? position.bottom_right : tblPos == "bottom_left" ? position.bottom_left : position.top_right
+var table tbl = table.new(tblPosition, 2, 6, border_width=1)
 if showBias and barstate.islast
     table.cell(tbl, 0, 0, "TF", bgcolor=color.new(color.navy, 20), text_color=color.white)
     table.cell(tbl, 1, 0, "Bias", bgcolor=color.new(color.navy, 20), text_color=color.white)
