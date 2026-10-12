@@ -1,0 +1,18 @@
+{
+  "projectId": 37709374,
+  "backtestId": "c811689a47b134c8723f9e470c09d5eb",
+  "name": "TradeAxis_DOL_Strategy_1791791733",
+  "statistics": {},
+  "runtimeStatistics": {
+    "Equity": "$1,000,000.00",
+    "Fees": "-$0.00",
+    "Holdings": "$0.00",
+    "Net Profit": "$0.00",
+    "Probabilistic Sharpe Ratio": "0%",
+    "Return": "0.00 %",
+    "Unrealized": "$0.00",
+    "Volume": "$0.00"
+  },
+  "totalPerformance": null,
+  "error": null
+}
