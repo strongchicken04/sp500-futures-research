@@ -46,7 +46,20 @@ ltfTF = mode == "Swing" ? "60"  : mode == "Day" ? "15"  : "5"
 autoTF   = mode == "Swing" ? "60" : mode == "Day" ? "15" : "5"
 levelTF  = levelTFin == "auto" ? autoTF : levelTFin
 
-atr = ta.atr(atrLen)
+// ATR pulled from levelTF so proximity + PoT are consistent across chart TFs
+atr = request.security(syminfo.tickerid, levelTF, ta.atr(atrLen), lookahead=barmerge.lookahead_off)
+
+// Buffer last 30 levelTF bar highs/lows for TF-invariant density scoring
+htfHi    = request.security(syminfo.tickerid, levelTF, high[1], lookahead=barmerge.lookahead_off)
+htfLo    = request.security(syminfo.tickerid, levelTF, low[1],  lookahead=barmerge.lookahead_off)
+var array<float> htf_hi_buf = array.new<float>()
+var array<float> htf_lo_buf = array.new<float>()
+if not na(htfHi) and (na(htfHi[1]) or htfHi != htfHi[1])
+    array.push(htf_hi_buf, htfHi)
+    array.push(htf_lo_buf, htfLo)
+    if array.size(htf_hi_buf) > 30
+        array.shift(htf_hi_buf)
+        array.shift(htf_lo_buf)
 
 // --- HTF BIAS (candle-body breaks via nested call on security) --------
 f_bias() =>
@@ -180,10 +193,14 @@ f_score(px, birthBar, kind, tfw) =>
         conf += 10
     conf := math.min(conf, 30)
     // Density: 0..25 — equal highs/lows cluster near px over last 30 bars
+    // Density: count equal highs/lows across the last levelTF bars (TF-invariant)
     tolD = 0.15 * math.max(atr, syminfo.mintick)
     dens = 0.0
-    for j = 0 to 29
-        if math.abs(high[j] - px) <= tolD or math.abs(low[j] - px) <= tolD
+    szD = array.size(htf_hi_buf)
+    for j = 0 to szD - 1
+        hv = array.get(htf_hi_buf, j)
+        lv = array.get(htf_lo_buf, j)
+        if math.abs(hv - px) <= tolD or math.abs(lv - px) <= tolD
             dens += 2.5
     dens := math.min(dens, 25)
     prox + fresh + conf + dens
