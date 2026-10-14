@@ -17,10 +17,12 @@ weeksTgt  = input.int(8, "Target weeks to pass", minval=2, maxval=16, group=grpA
 consist   = input.float(1500.0, "Consistency ceiling / day ($)", group=grpAcct)
 
 grpPos    = "Dashboard"
+showDash  = input.bool(true, "Show dashboard table", group=grpPos)
 posStr    = input.string("top_right", "Position", options=["top_right","top_left","bottom_right","bottom_left","middle_right"], group=grpPos)
 
 grpSig    = "Signals"
 showMonFri = input.bool(true, "Draw Mon-LONG / Fri-SHORT levels", group=grpSig)
+showEMA    = input.bool(true, "Plot 5m EMA12 (Mon/Fri reference)", group=grpSig)
 showVWAP   = input.bool(true, "Draw VWAP + 20bps band", group=grpSig)
 showVWAPsig= input.bool(true, "Draw VWAP Trend entry levels", group=grpSig)
 emaLen     = input.int(12, "EMA for Mon/Fri trigger (on 5m)", group=grpSig)
@@ -79,7 +81,7 @@ tblPosV = posStr == "top_left" ? position.top_left : posStr == "bottom_right" ? 
 
 var table dash = table.new(tblPosV, 2, 14, border_width=1, bgcolor=color.new(color.black, 30), border_color=color.new(color.gray, 50))
 
-if barstate.islast
+if barstate.islast and showDash
     // Header
     table.cell(dash, 0, 0, "LUCID 50K TRACKER", bgcolor=color.new(color.navy, 10), text_color=color.white, text_size=size.normal)
     table.cell(dash, 1, 0, dowName + "  " + str.format("{0,number,00}:{1,number,00}", hET, mET) + " ET", bgcolor=color.new(color.navy, 10), text_color=color.white)
@@ -219,10 +221,11 @@ vwapVal = ta.vwap(hlc3)
 upperBand = vwapVal * (1.0 + bandBps)
 lowerBand = vwapVal * (1.0 - bandBps)
 
-if showVWAP
-    plot(vwapVal, "VWAP", color=color.new(color.aqua, 20), linewidth=1)
-    plot(upperBand, "VWAP upper", color=color.new(color.orange, 60))
-    plot(lowerBand, "VWAP lower", color=color.new(color.orange, 60))
+// EMA12 (5m) reference — the trigger EMA for Mon-LONG/Fri-SHORT
+plot(showEMA ? ema5m : na, "EMA12 (5m)", color=color.new(color.yellow, 30), linewidth=2)
+plot(showVWAP ? vwapVal : na, "VWAP", color=color.new(color.aqua, 20), linewidth=1)
+plot(showVWAP ? upperBand : na, "VWAP upper", color=color.new(color.orange, 60))
+plot(showVWAP ? lowerBand : na, "VWAP lower", color=color.new(color.orange, 60))
 
 // VWAP Trend fire: close breaks outside band after 9:31 ET, only if gates pass
 // Simplified gates: just check we're in session, no gap-size calc here
