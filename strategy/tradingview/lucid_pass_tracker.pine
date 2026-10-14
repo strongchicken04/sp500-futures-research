@@ -60,7 +60,7 @@ pacePct = expectedByNow > 0 ? (curPnl / expectedByNow) * 100.0 : 100.0
 dowET = dayofweek(time, "America/New_York")
 dowName = dowET == dayofweek.monday ? "MON" : dowET == dayofweek.tuesday ? "TUE" : dowET == dayofweek.wednesday ? "WED" : dowET == dayofweek.thursday ? "THU" : dowET == dayofweek.friday ? "FRI" : dowET == dayofweek.saturday ? "SAT" : "SUN"
 isTradeDay = dowET == dayofweek.monday or dowET == dayofweek.tuesday or dowET == dayofweek.thursday or dowET == dayofweek.friday
-todaySetup = dowET == dayofweek.monday ? "Mon-LONG @9:35 (+VWAP)" : dowET == dayofweek.tuesday ? "Opcni+DOL (+VWAP)" : dowET == dayofweek.wednesday ? "SKIP — rest day" : dowET == dayofweek.thursday ? "Opcni+DOL (+VWAP)" : dowET == dayofweek.friday ? "Fri-SHORT @9:35 (+VWAP)" : "Weekend"
+todaySetup = dowET == dayofweek.monday ? "Mon-LONG @9:35 (+VWAP fallback)" : dowET == dayofweek.tuesday ? "VWAP Trend only" : dowET == dayofweek.wednesday ? "SKIP — rest day" : dowET == dayofweek.thursday ? "VWAP Trend only" : dowET == dayofweek.friday ? "Fri-SHORT @9:35 (+VWAP fallback)" : "Weekend"
 
 // --- SESSION STATE ----------------------------------------------------
 hET = hour(time, "America/New_York")
