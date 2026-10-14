@@ -1,0 +1,137 @@
+// @version=5
+indicator("Lucid Flex 50K Pass Tracker", overlay=true, max_labels_count=20)
+
+// =========================================================================
+// Pass tracker for Lucid Flex 50K ($2000 DD, $3000 target, 8-week plan).
+// Auto-identifies phase, size, daily stop, today's setup priority.
+// You only update "Current P&L from start" once a day — rest is automatic.
+// =========================================================================
+
+// --- INPUTS -----------------------------------------------------------
+grpAcct   = "Account"
+startYMD  = input.int(20261014, "Start date (YYYYMMDD)", group=grpAcct)
+curPnl    = input.float(0.0, "Current P&L from start ($)", step=50.0, group=grpAcct, tooltip="Update daily after EOD")
+targetUSD = input.float(3000.0, "Target profit ($)", step=100.0, group=grpAcct)
+maxDDUSD  = input.float(2000.0, "Max DD ($)", step=100.0, group=grpAcct)
+weeksTgt  = input.int(8, "Target weeks to pass", minval=2, maxval=16, group=grpAcct)
+consist   = input.float(1500.0, "Consistency ceiling / day ($)", group=grpAcct)
+
+grpPos    = "Dashboard"
+posStr    = input.string("top_right", "Position", options=["top_right","top_left","bottom_right","bottom_left","middle_right"], group=grpPos)
+
+// --- PHASE LOGIC ------------------------------------------------------
+phase    = curPnl < 400.0 ? 1 : curPnl < 1000.0 ? 2 : curPnl < 2000.0 ? 3 : 4
+sizeStr  = phase == 1 ? "2 MNQ" : phase == 2 ? "3 MNQ" : "1 NQ"
+dollarPt = phase == 1 ? 40.0 : phase == 2 ? 60.0 : 200.0
+stopPts  = phase == 1 ? 7.0 : phase == 2 ? 7.0 : phase == 3 ? 6.0 : 5.0
+riskUSD  = stopPts * dollarPt
+dailyMax = phase == 1 ? 400.0 : phase == 2 ? 500.0 : phase == 3 ? 600.0 : 500.0
+nextPhaseAt = phase == 1 ? 400.0 : phase == 2 ? 1000.0 : phase == 3 ? 2000.0 : targetUSD
+nextSize    = phase == 1 ? "3 MNQ" : phase == 2 ? "1 NQ" : phase == 3 ? "1 NQ (tight)" : "DONE"
+
+// --- TIMELINE ---------------------------------------------------------
+startYr = math.floor(startYMD / 10000)
+startMo = math.floor(math.fmod(startYMD, 10000) / 100)
+startDy = int(math.fmod(startYMD, 100))
+startTs = timestamp(startYr, startMo, startDy, 0, 0)
+nowTs = timenow
+daysElapsed = math.max(0, math.floor((nowTs - startTs) / 86400000))
+weeksElapsed = daysElapsed / 7.0
+daysInPlan = weeksTgt * 7
+daysLeft = math.max(1, daysInPlan - daysElapsed)
+tradingDaysLeft = math.max(1, math.floor(daysLeft * 4.0 / 7.0))  // 4 trade days/week (skip Wed)
+remainingUSD = math.max(0, targetUSD - curPnl)
+reqPerDay = remainingUSD / tradingDaysLeft
+
+// On-pace % — are we ahead or behind linear pace?
+expectedByNow = daysElapsed > 0 ? (daysElapsed / math.max(daysInPlan, 1)) * targetUSD : 0
+pacePct = expectedByNow > 0 ? (curPnl / expectedByNow) * 100.0 : 100.0
+
+// --- DOW LOGIC --------------------------------------------------------
+dowET = dayofweek(time, "America/New_York")
+dowName = dowET == dayofweek.monday ? "MON" : dowET == dayofweek.tuesday ? "TUE" : dowET == dayofweek.wednesday ? "WED" : dowET == dayofweek.thursday ? "THU" : dowET == dayofweek.friday ? "FRI" : dowET == dayofweek.saturday ? "SAT" : "SUN"
+isTradeDay = dowET == dayofweek.monday or dowET == dayofweek.tuesday or dowET == dayofweek.thursday or dowET == dayofweek.friday
+todaySetup = dowET == dayofweek.monday ? "Mon-LONG @9:35 (+VWAP)" : dowET == dayofweek.tuesday ? "Opcni+DOL (+VWAP)" : dowET == dayofweek.wednesday ? "SKIP — rest day" : dowET == dayofweek.thursday ? "Opcni+DOL (+VWAP)" : dowET == dayofweek.friday ? "Fri-SHORT @9:35 (+VWAP)" : "Weekend"
+
+// --- SESSION STATE ----------------------------------------------------
+hET = hour(time, "America/New_York")
+mET = minute(time, "America/New_York")
+etMin = hET * 60 + mET
+sessState = etMin < 570 ? "PRE-OPEN" : etMin < 575 ? "9:30-9:35 WATCH 1ST BAR" : etMin < 695 ? "OPEN WINDOW (edge)" : etMin < 955 ? "MID (VWAP only)" : etMin < 960 ? "CLOSE 5MIN!" : "CLOSED"
+sessColor = etMin >= 955 and etMin < 960 ? color.red : etMin >= 570 and etMin < 695 ? color.new(color.green, 20) : etMin < 570 or etMin >= 960 ? color.new(color.gray, 50) : color.new(color.olive, 30)
+
+// --- COLORS -----------------------------------------------------------
+f_phaseCol(p) => p == 1 ? color.new(#4A90E2, 20) : p == 2 ? color.new(#9B59B6, 20) : p == 3 ? color.new(#E67E22, 20) : color.new(#27AE60, 20)
+f_paceCol(p)  => p >= 100.0 ? color.new(color.green, 20) : p >= 70.0 ? color.new(color.olive, 20) : p >= 40.0 ? color.new(color.orange, 20) : color.new(color.red, 20)
+f_pnlCol(v)   => v >= targetUSD ? color.new(color.green, 10) : v >= 0 ? color.new(color.navy, 30) : color.new(color.red, 20)
+
+// --- DASHBOARD --------------------------------------------------------
+tblPosV = posStr == "top_left" ? position.top_left : posStr == "bottom_right" ? position.bottom_right : posStr == "bottom_left" ? position.bottom_left : posStr == "middle_right" ? position.middle_right : position.top_right
+
+var table dash = table.new(tblPosV, 2, 14, border_width=1, bgcolor=color.new(color.black, 30), border_color=color.new(color.gray, 50))
+
+if barstate.islast
+    // Header
+    table.cell(dash, 0, 0, "LUCID 50K TRACKER", bgcolor=color.new(color.navy, 10), text_color=color.white, text_size=size.normal)
+    table.cell(dash, 1, 0, dowName + "  " + str.format("{0,number,00}:{1,number,00}", hET, mET) + " ET", bgcolor=color.new(color.navy, 10), text_color=color.white)
+
+    // Equity vs target
+    equityPct = (curPnl / targetUSD) * 100.0
+    table.cell(dash, 0, 1, "P&L", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 1, "$" + str.tostring(curPnl, "#") + " / $" + str.tostring(targetUSD, "#") + "  (" + str.tostring(equityPct, "#.#") + "%)", bgcolor=f_pnlCol(curPnl), text_color=color.white)
+
+    // Phase + size
+    table.cell(dash, 0, 2, "PHASE", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 2, "F" + str.tostring(phase) + "  →  " + sizeStr, bgcolor=f_phaseCol(phase), text_color=color.white)
+
+    // Next phase trigger
+    table.cell(dash, 0, 3, "Next→", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 3, "At $" + str.tostring(nextPhaseAt, "#") + " → " + nextSize, bgcolor=color.new(color.gray, 40), text_color=color.white)
+
+    // Risk params
+    table.cell(dash, 0, 4, "Risk/trade", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 4, "$" + str.tostring(riskUSD, "#") + " (" + str.tostring(stopPts, "#.#") + "pt stop)", text_color=color.white, bgcolor=color.new(color.black, 30))
+
+    table.cell(dash, 0, 5, "Daily stop", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 5, "-$" + str.tostring(dailyMax, "#") + "  (warn: -$" + str.tostring(dailyMax/2, "#") + ")", bgcolor=color.new(color.maroon, 20), text_color=color.white)
+
+    table.cell(dash, 0, 6, "Day cap", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 6, "+$" + str.tostring(consist, "#") + " (consistency)", text_color=color.white, bgcolor=color.new(color.black, 30))
+
+    // Timeline
+    table.cell(dash, 0, 7, "Week", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 7, str.tostring(weeksElapsed, "#.#") + " / " + str.tostring(weeksTgt) + "  (" + str.tostring(daysLeft) + " d left)", text_color=color.white, bgcolor=color.new(color.black, 30))
+
+    table.cell(dash, 0, 8, "Need/day", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    needCol = reqPerDay > 500.0 ? color.new(color.red, 20) : reqPerDay > 250.0 ? color.new(color.orange, 20) : color.new(color.green, 20)
+    table.cell(dash, 1, 8, "$" + str.tostring(reqPerDay, "#") + "/trading day", bgcolor=needCol, text_color=color.white)
+
+    table.cell(dash, 0, 9, "Pace", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 9, str.tostring(pacePct, "#") + "% of linear plan", bgcolor=f_paceCol(pacePct), text_color=color.white)
+
+    // Today
+    table.cell(dash, 0, 10, "TODAY", bgcolor=color.new(color.purple, 10), text_color=color.white)
+    todayCol = isTradeDay ? color.new(color.navy, 10) : color.new(color.gray, 30)
+    table.cell(dash, 1, 10, todaySetup, bgcolor=todayCol, text_color=color.white)
+
+    // Session
+    table.cell(dash, 0, 11, "Session", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 11, sessState, bgcolor=sessColor, text_color=color.white)
+
+    // Warnings — close pending
+    if etMin >= 955 and etMin < 960 and isTradeDay
+        table.cell(dash, 0, 12, "⚠", bgcolor=color.red, text_color=color.white)
+        table.cell(dash, 1, 12, "FLAT ALL @ 15:55!", bgcolor=color.red, text_color=color.white)
+
+    // Warning — Wed = skip
+    if dowET == dayofweek.wednesday
+        table.cell(dash, 0, 13, "✖", bgcolor=color.new(color.red, 30), text_color=color.white)
+        table.cell(dash, 1, 13, "WEDNESDAY — NO TRADES", bgcolor=color.new(color.red, 30), text_color=color.white)
+
+    // Warning — past 11:30 (open edge done)
+    if etMin >= 695 and etMin < 955 and isTradeDay
+        table.cell(dash, 0, 13, "ⓘ", bgcolor=color.new(color.orange, 40), text_color=color.white)
+        table.cell(dash, 1, 13, "Past 11:30 — VWAP Trend only", bgcolor=color.new(color.orange, 40), text_color=color.white)
+
+// --- OPTIONAL: progress bar as box at top ----------------------------
+// (floating % equity bar — visual complement to table)
