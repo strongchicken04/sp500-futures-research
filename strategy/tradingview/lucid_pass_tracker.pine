@@ -1,5 +1,5 @@
 // @version=5
-indicator("Lucid Flex 50K Pass Tracker", overlay=true, max_labels_count=20)
+indicator("Lucid Flex 50K Pass Tracker", overlay=true, max_labels_count=50, max_lines_count=50, max_boxes_count=20)
 
 // =========================================================================
 // Pass tracker for Lucid Flex 50K ($2000 DD, $3000 target, 8-week plan).
@@ -18,6 +18,15 @@ consist   = input.float(1500.0, "Consistency ceiling / day ($)", group=grpAcct)
 
 grpPos    = "Dashboard"
 posStr    = input.string("top_right", "Position", options=["top_right","top_left","bottom_right","bottom_left","middle_right"], group=grpPos)
+
+grpSig    = "Signals"
+showMonFri = input.bool(true, "Draw Mon-LONG / Fri-SHORT levels", group=grpSig)
+showVWAP   = input.bool(true, "Draw VWAP + 20bps band", group=grpSig)
+showVWAPsig= input.bool(true, "Draw VWAP Trend entry levels", group=grpSig)
+emaLen     = input.int(12, "EMA for Mon/Fri trigger (on 5m)", group=grpSig)
+tpPts      = input.float(40.0, "Mon/Fri TP points (if hit before EOD)", group=grpSig)
+bandBps    = input.float(0.002, "VWAP band width (fraction)", step=0.0005, group=grpSig)
+vwapSLpts  = input.float(150.0, "VWAP Trend disaster SL points", group=grpSig)
 
 // --- PHASE LOGIC ------------------------------------------------------
 phase    = curPnl < 400.0 ? 1 : curPnl < 1000.0 ? 2 : curPnl < 2000.0 ? 3 : 4
@@ -133,5 +142,130 @@ if barstate.islast
         table.cell(dash, 0, 13, "ⓘ", bgcolor=color.new(color.orange, 40), text_color=color.white)
         table.cell(dash, 1, 13, "Past 11:30 — VWAP Trend only", bgcolor=color.new(color.orange, 40), text_color=color.white)
 
-// --- OPTIONAL: progress bar as box at top ----------------------------
-// (floating % equity bar — visual complement to table)
+// =========================================================================
+// SIGNAL DETECTION + ENTRY/SL/TP DRAWING
+// =========================================================================
+
+// --- SETUP 1: Mon-LONG / Fri-SHORT (first 5m RTH bar vs EMA12) --------
+// Compute on 5m regardless of chart TF via request.security
+f_firstRthBar() =>
+    inRTH = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+    prevInRTH = nz(inRTH[1], false)
+    firstBar = inRTH and not prevInRTH
+    ema = ta.ema(close, emaLen)
+    [firstBar, close, ema, low, high]
+
+[isFirstRth_5m, close5m, ema5m, low5m, high5m] = request.security(syminfo.tickerid, "5", f_firstRthBar(), lookahead=barmerge.lookahead_off)
+
+// Mon/Fri trigger
+monLongFired = showMonFri and isFirstRth_5m and dowET == dayofweek.monday and close5m > ema5m
+friShortFired = showMonFri and isFirstRth_5m and dowET == dayofweek.friday and close5m < ema5m
+
+// Store latest trigger per day
+var float trigPx = na
+var float trigSL = na
+var float trigTP = na
+var string trigDir = na
+var int trigBar = na
+var int trigDayId = na
+curDayId = year * 10000 + month * 100 + dayofmonth
+
+if monLongFired and trigDayId != curDayId
+    trigPx := close5m
+    trigSL := low5m
+    trigTP := close5m + tpPts
+    trigDir := "LONG"
+    trigBar := bar_index
+    trigDayId := curDayId
+if friShortFired and trigDayId != curDayId
+    trigPx := close5m
+    trigSL := high5m
+    trigTP := close5m - tpPts
+    trigDir := "SHORT"
+    trigBar := bar_index
+    trigDayId := curDayId
+
+// Draw Mon/Fri setup lines + size/pnl labels
+var line  monFriEntry = na
+var line  monFriSL = na
+var line  monFriTP = na
+var label monFriLbl = na
+
+if barstate.islast
+    if not na(monFriEntry)
+        line.delete(monFriEntry)
+    if not na(monFriSL)
+        line.delete(monFriSL)
+    if not na(monFriTP)
+        line.delete(monFriTP)
+    if not na(monFriLbl)
+        label.delete(monFriLbl)
+
+    if showMonFri and not na(trigPx) and trigDayId == curDayId
+        slDist = math.abs(trigPx - trigSL)
+        tpDist = math.abs(trigTP - trigPx)
+        riskD  = slDist * dollarPt
+        rewardD = tpDist * dollarPt
+        rr     = slDist > 0 ? tpDist / slDist : na
+        dirCol = trigDir == "LONG" ? color.lime : color.red
+        monFriEntry := line.new(trigBar, trigPx, bar_index + 30, trigPx, color=color.new(color.white, 0), width=2, extend=extend.right)
+        monFriSL    := line.new(trigBar, trigSL, bar_index + 30, trigSL, color=color.new(color.red, 20), width=1, style=line.style_dashed, extend=extend.right)
+        monFriTP    := line.new(trigBar, trigTP, bar_index + 30, trigTP, color=color.new(color.green, 20), width=1, style=line.style_dashed, extend=extend.right)
+        lblTxt = trigDir + " @ " + str.tostring(trigPx, format.mintick) + "\n" + sizeStr + "  R:$" + str.tostring(riskD, "#") + "  T:$" + str.tostring(rewardD, "#") + "  RR " + str.tostring(rr, "#.#")
+        monFriLbl   := label.new(bar_index + 5, trigPx, lblTxt, color=color.new(dirCol, 20), textcolor=color.white, style=label.style_label_left, size=size.small)
+
+// --- SETUP 2: VWAP Trend v7 (session VWAP + 20bps band) --------------
+vwapVal = ta.vwap(hlc3)
+upperBand = vwapVal * (1.0 + bandBps)
+lowerBand = vwapVal * (1.0 - bandBps)
+
+if showVWAP
+    plot(vwapVal, "VWAP", color=color.new(color.aqua, 20), linewidth=1)
+    plot(upperBand, "VWAP upper", color=color.new(color.orange, 60))
+    plot(lowerBand, "VWAP lower", color=color.new(color.orange, 60))
+
+// VWAP Trend fire: close breaks outside band after 9:31 ET, only if gates pass
+// Simplified gates: just check we're in session, no gap-size calc here
+// (full gap+trend gate requires 250-day daily history — assume you check manually)
+vwapLongFire  = showVWAPsig and etMin >= 571 and etMin < 955 and ta.crossover(close, upperBand)
+vwapShortFire = showVWAPsig and etMin >= 571 and etMin < 955 and ta.crossunder(close, lowerBand)
+
+var float vwapTrigPx = na
+var float vwapTrigSL = na
+var string vwapTrigDir = na
+var int vwapTrigBar = na
+var int vwapTrigDayId = na
+
+if vwapLongFire and vwapTrigDayId != curDayId and isTradeDay and dowET != dayofweek.wednesday
+    vwapTrigPx := close
+    vwapTrigSL := close - vwapSLpts
+    vwapTrigDir := "LONG"
+    vwapTrigBar := bar_index
+    vwapTrigDayId := curDayId
+if vwapShortFire and vwapTrigDayId != curDayId and isTradeDay and dowET != dayofweek.wednesday
+    vwapTrigPx := close
+    vwapTrigSL := close + vwapSLpts
+    vwapTrigDir := "SHORT"
+    vwapTrigBar := bar_index
+    vwapTrigDayId := curDayId
+
+var line  vwapEntry = na
+var line  vwapSL    = na
+var label vwapLbl   = na
+
+if barstate.islast
+    if not na(vwapEntry)
+        line.delete(vwapEntry)
+    if not na(vwapSL)
+        line.delete(vwapSL)
+    if not na(vwapLbl)
+        label.delete(vwapLbl)
+
+    if showVWAPsig and not na(vwapTrigPx) and vwapTrigDayId == curDayId
+        slDistV = math.abs(vwapTrigPx - vwapTrigSL)
+        riskDV  = slDistV * dollarPt
+        dirColV = vwapTrigDir == "LONG" ? color.lime : color.red
+        vwapEntry := line.new(vwapTrigBar, vwapTrigPx, bar_index + 20, vwapTrigPx, color=color.new(color.yellow, 0), width=2, extend=extend.right)
+        vwapSL    := line.new(vwapTrigBar, vwapTrigSL, bar_index + 20, vwapTrigSL, color=color.new(color.red, 20), width=1, style=line.style_dashed, extend=extend.right)
+        lblTxtV = "VWAP-" + vwapTrigDir + " @ " + str.tostring(vwapTrigPx, format.mintick) + "\n" + sizeStr + "  R:$" + str.tostring(riskDV, "#") + "  Exit: band flip or EOD"
+        vwapLbl   := label.new(bar_index + 5, vwapTrigPx, lblTxtV, color=color.new(dirColV, 30), textcolor=color.white, style=label.style_label_left, size=size.small)
