@@ -12,7 +12,7 @@ from collections import deque
 # No gates here (user runs them manually or we add later).
 #
 # Tag format per trade:
-#   VG,date,dir,entry,s15,s25,s40,s60,s75,s100,s150,t15,t25,t40,t60,t100,t150,t200,eod_pnl,bars_end
+#   VG, date, dir, entry, s15..s150, t15..t200, eod_pnl, bars_end
 # sXX = bar_index when MAE >= XX pts (first breach), -1 if never
 # tXX = bar_index when MFE >= XX pts, -1 if never
 # eod_pnl = pnl at MAX_BARS or EOD close
@@ -162,10 +162,12 @@ class VwapSlTpGrid(QCAlgorithm):
     def _emit(self, tag):
         try:
             sym = self.future.Mapped
-            if sym is not None and sym in self.Securities and self.Securities[sym].Price > 0:
-                tkt = self.LimitOrder(sym, 1, round(self.Securities[sym].Price * 0.5, 2), tag=tag)
-                tkt.Cancel()
-                self.n_tags += 1
+            if sym is not None and sym in self.Securities:
+                px = self.Securities[sym].Price
+                if px > 0:
+                    tkt = self.LimitOrder(sym, 1, round(px * 0.5, 2), tag=tag)
+                    tkt.Cancel()
+                    self.n_tags += 1
         except Exception as e:
             self.Debug(f"tag fail: {e}")
 
