@@ -216,14 +216,20 @@ if barstate.islast
         lblTxt = trigDir + " @ " + str.tostring(trigPx, format.mintick) + "\n" + sizeStr + "  R:$" + str.tostring(riskD, "#") + "  T:$" + str.tostring(rewardD, "#") + "  RR " + str.tostring(rr, "#.#")
         monFriLbl   := label.new(bar_index + 5, trigPx, lblTxt, color=color.new(dirCol, 20), textcolor=color.white, style=label.style_label_left, size=size.small)
 
-// --- SETUP 2: VWAP Trend v7 (session VWAP + 20bps band) --------------
-vwapVal = ta.vwap(hlc3)
-upperBand = vwapVal * (1.0 + bandBps)
-lowerBand = vwapVal * (1.0 - bandBps)
+// --- SETUP 2: VWAP Trend v7 (session RTH VWAP + 20bps band) ----------
+// Anchor the VWAP reset at 9:30 ET so it tracks the RTH session, not
+// the symbol's ETH session (which could be 18:00 ET prior day).
+rthFlag = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+rthStart = rthFlag and not nz(rthFlag[1], false)
+vwapVal = ta.vwap(hlc3, rthStart)
+// Only plot/use VWAP during RTH; outside session it's irrelevant
+vwapShow = rthFlag ? vwapVal : na
+upperBand = vwapShow * (1.0 + bandBps)
+lowerBand = vwapShow * (1.0 - bandBps)
 
 // EMA12 (5m) reference — the trigger EMA for Mon-LONG/Fri-SHORT
 plot(showEMA ? ema5m : na, "EMA12 (5m)", color=color.new(color.yellow, 30), linewidth=2)
-plot(showVWAP ? vwapVal : na, "VWAP", color=color.new(color.aqua, 20), linewidth=1)
+plot(showVWAP ? vwapShow : na, "VWAP (RTH)", color=color.new(color.aqua, 20), linewidth=1)
 plot(showVWAP ? upperBand : na, "VWAP upper", color=color.new(color.orange, 60))
 plot(showVWAP ? lowerBand : na, "VWAP lower", color=color.new(color.orange, 60))
 
@@ -234,8 +240,8 @@ plot(showVWAP ? lowerBand : na, "VWAP lower", color=color.new(color.orange, 60))
 // didn't fire today. On Tue/Thu it's always primary.
 monFriFiredToday = trigDayId == curDayId and not na(trigPx)
 vwapAllowed = isTradeDay and dowET != dayofweek.wednesday and not monFriFiredToday
-vwapLongFire  = showVWAPsig and vwapAllowed and etMin >= 571 and etMin < 955 and ta.crossover(close, upperBand)
-vwapShortFire = showVWAPsig and vwapAllowed and etMin >= 571 and etMin < 955 and ta.crossunder(close, lowerBand)
+vwapLongFire  = showVWAPsig and vwapAllowed and etMin >= 571 and etMin < 955 and rthFlag and ta.crossover(close, upperBand)
+vwapShortFire = showVWAPsig and vwapAllowed and etMin >= 571 and etMin < 955 and rthFlag and ta.crossunder(close, lowerBand)
 
 var float vwapTrigPx = na
 var float vwapTrigSL = na
