@@ -26,7 +26,7 @@ showVWAPsig= input.bool(true, "Draw VWAP Trend entry levels", group=grpSig)
 emaLen     = input.int(12, "EMA for Mon/Fri trigger (on 5m)", group=grpSig)
 tpPts      = input.float(40.0, "Mon/Fri TP points (if hit before EOD)", group=grpSig)
 bandBps    = input.float(0.002, "VWAP band width (fraction)", step=0.0005, group=grpSig)
-vwapSLpts  = input.float(150.0, "VWAP Trend disaster SL points", group=grpSig)
+vwapSLpts  = input.float(75.0, "VWAP Trend SL points (optimum 75)", group=grpSig)
 
 // --- PHASE LOGIC ------------------------------------------------------
 phase    = curPnl < 400.0 ? 1 : curPnl < 1000.0 ? 2 : curPnl < 2000.0 ? 3 : 4
