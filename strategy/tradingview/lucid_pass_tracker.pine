@@ -40,8 +40,8 @@ nextSize    = phase == 1 ? "3 MNQ" : phase == 2 ? "1 NQ" : phase == 3 ? "1 NQ (t
 
 // --- TIMELINE ---------------------------------------------------------
 startYr = math.floor(startYMD / 10000)
-startMo = math.floor(math.fmod(startYMD, 10000) / 100)
-startDy = int(math.fmod(startYMD, 100))
+startMo = math.floor((startYMD % 10000) / 100)
+startDy = startYMD % 100
 startTs = timestamp(startYr, startMo, startDy, 0, 0)
 nowTs = timenow
 daysElapsed = math.max(0, math.floor((nowTs - startTs) / 86400000))
