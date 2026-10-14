@@ -227,8 +227,12 @@ if showVWAP
 // VWAP Trend fire: close breaks outside band after 9:31 ET, only if gates pass
 // Simplified gates: just check we're in session, no gap-size calc here
 // (full gap+trend gate requires 250-day daily history — assume you check manually)
-vwapLongFire  = showVWAPsig and etMin >= 571 and etMin < 955 and ta.crossover(close, upperBand)
-vwapShortFire = showVWAPsig and etMin >= 571 and etMin < 955 and ta.crossunder(close, lowerBand)
+// VWAP Trend is FALLBACK — only activates if primary Mon/Fri setup
+// didn't fire today. On Tue/Thu it's always primary.
+monFriFiredToday = trigDayId == curDayId and not na(trigPx)
+vwapAllowed = isTradeDay and dowET != dayofweek.wednesday and not monFriFiredToday
+vwapLongFire  = showVWAPsig and vwapAllowed and etMin >= 571 and etMin < 955 and ta.crossover(close, upperBand)
+vwapShortFire = showVWAPsig and vwapAllowed and etMin >= 571 and etMin < 955 and ta.crossunder(close, lowerBand)
 
 var float vwapTrigPx = na
 var float vwapTrigSL = na
@@ -236,13 +240,13 @@ var string vwapTrigDir = na
 var int vwapTrigBar = na
 var int vwapTrigDayId = na
 
-if vwapLongFire and vwapTrigDayId != curDayId and isTradeDay and dowET != dayofweek.wednesday
+if vwapLongFire and vwapTrigDayId != curDayId
     vwapTrigPx := close
     vwapTrigSL := close - vwapSLpts
     vwapTrigDir := "LONG"
     vwapTrigBar := bar_index
     vwapTrigDayId := curDayId
-if vwapShortFire and vwapTrigDayId != curDayId and isTradeDay and dowET != dayofweek.wednesday
+if vwapShortFire and vwapTrigDayId != curDayId
     vwapTrigPx := close
     vwapTrigSL := close + vwapSLpts
     vwapTrigDir := "SHORT"
