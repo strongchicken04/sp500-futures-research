@@ -28,7 +28,8 @@ showVWAPsig= input.bool(true, "Draw VWAP Trend entry levels", group=grpSig)
 emaLen     = input.int(12, "EMA for Mon/Fri trigger (on 5m)", group=grpSig)
 tpPts      = input.float(40.0, "Mon/Fri TP points (if hit before EOD)", group=grpSig)
 bandBps    = input.float(0.002, "VWAP band width (fraction)", step=0.0005, group=grpSig)
-vwapSLpts  = input.float(75.0, "VWAP Trend SL points (optimum 75)", group=grpSig)
+vwapSLpts  = input.float(15.0, "VWAP Trend SL points (optimum 15)", group=grpSig)
+vwapTPpts  = input.float(100.0, "VWAP Trend TP points (optimum 100)", group=grpSig)
 
 // --- PHASE LOGIC ------------------------------------------------------
 phase    = curPnl < 400.0 ? 1 : curPnl < 1000.0 ? 2 : curPnl < 2000.0 ? 3 : 4
@@ -249,21 +250,25 @@ var string vwapTrigDir = na
 var int vwapTrigBar = na
 var int vwapTrigDayId = na
 
+var float vwapTrigTP = na
 if vwapLongFire and vwapTrigDayId != curDayId
     vwapTrigPx := close
     vwapTrigSL := close - vwapSLpts
+    vwapTrigTP := close + vwapTPpts
     vwapTrigDir := "LONG"
     vwapTrigBar := bar_index
     vwapTrigDayId := curDayId
 if vwapShortFire and vwapTrigDayId != curDayId
     vwapTrigPx := close
     vwapTrigSL := close + vwapSLpts
+    vwapTrigTP := close - vwapTPpts
     vwapTrigDir := "SHORT"
     vwapTrigBar := bar_index
     vwapTrigDayId := curDayId
 
 var line  vwapEntry = na
 var line  vwapSL    = na
+var line  vwapTP    = na
 var label vwapLbl   = na
 
 if barstate.islast
@@ -271,14 +276,20 @@ if barstate.islast
         line.delete(vwapEntry)
     if not na(vwapSL)
         line.delete(vwapSL)
+    if not na(vwapTP)
+        line.delete(vwapTP)
     if not na(vwapLbl)
         label.delete(vwapLbl)
 
     if showVWAPsig and not na(vwapTrigPx) and vwapTrigDayId == curDayId
         slDistV = math.abs(vwapTrigPx - vwapTrigSL)
+        tpDistV = math.abs(vwapTrigTP - vwapTrigPx)
         riskDV  = slDistV * dollarPt
+        rewV    = tpDistV * dollarPt
+        rrV     = slDistV > 0 ? tpDistV / slDistV : na
         dirColV = vwapTrigDir == "LONG" ? color.lime : color.red
         vwapEntry := line.new(vwapTrigBar, vwapTrigPx, bar_index + 20, vwapTrigPx, color=color.new(color.yellow, 0), width=2, extend=extend.right)
         vwapSL    := line.new(vwapTrigBar, vwapTrigSL, bar_index + 20, vwapTrigSL, color=color.new(color.red, 20), width=1, style=line.style_dashed, extend=extend.right)
-        lblTxtV = "VWAP-" + vwapTrigDir + " @ " + str.tostring(vwapTrigPx, format.mintick) + "\n" + sizeStr + "  R:$" + str.tostring(riskDV, "#") + "  Exit: band flip or EOD"
+        vwapTP    := line.new(vwapTrigBar, vwapTrigTP, bar_index + 20, vwapTrigTP, color=color.new(color.green, 20), width=1, style=line.style_dashed, extend=extend.right)
+        lblTxtV = "VWAP-" + vwapTrigDir + " @ " + str.tostring(vwapTrigPx, format.mintick) + "\n" + sizeStr + "  R:$" + str.tostring(riskDV, "#") + "  T:$" + str.tostring(rewV, "#") + "  RR " + str.tostring(rrV, "#.#")
         vwapLbl   := label.new(bar_index + 5, vwapTrigPx, lblTxtV, color=color.new(dirColV, 30), textcolor=color.white, style=label.style_label_left, size=size.small)
