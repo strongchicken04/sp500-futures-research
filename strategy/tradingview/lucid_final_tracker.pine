@@ -1,0 +1,346 @@
+// @version=5
+indicator("Lucid Final Pass Tracker (S1 ORB + VWAP + Mon/Fri)", overlay=true, max_labels_count=500, max_lines_count=500, max_boxes_count=100)
+
+// =========================================================================
+// FINAL version — 3 strategies, historical trade markers, dashboard.
+// Backtested combo (NQ 2018-2025 barrier sim, tiered 2 MNQ -> 3 MNQ -> 1 NQ):
+//   Pass 64.1% / Bust 18.7% / Edge +45.3 / Median 15 trading days
+//   Multi-attempt: 2 attempts = 87%, 3 attempts = 95%
+//
+// Each strategy's trades shown as:
+//   Entry marker: triangle up (long) / down (short), color by strategy
+//     S1 ORB   : lime
+//     VWAP     : yellow
+//     Mon/Fri  : aqua
+//   Exit marker: cross (SL), diamond (TP), circle (EOD/TIME) + pnl label
+// =========================================================================
+
+// --- INPUTS -----------------------------------------------------------
+grpAcct = "Account"
+startYMD  = input.int(20261015, "Start date (YYYYMMDD)", group=grpAcct)
+curPnl    = input.float(0.0, "Current P&L from start ($)", step=50.0, group=grpAcct)
+targetUSD = input.float(3000.0, "Target profit ($)", step=100.0, group=grpAcct)
+maxDDUSD  = input.float(2000.0, "Max DD ($)", step=100.0, group=grpAcct)
+weeksTgt  = input.int(8, "Target weeks", minval=2, maxval=16, group=grpAcct)
+consist   = input.float(1500.0, "Consistency cap / day ($)", group=grpAcct)
+
+grpSig = "Setups"
+useS1   = input.bool(true, "S1 ORB 15min long-only", group=grpSig)
+useVW   = input.bool(true, "VWAP Trend v7 (SL15/TP100)", group=grpSig)
+useMF   = input.bool(true, "Mon-LONG / Fri-SHORT EOD-hold", group=grpSig)
+emaLen  = input.int(12, "EMA for Mon/Fri (5m)", group=grpSig)
+ema20Len= input.int(20, "20-EMA for S1 trail (5m)", group=grpSig)
+bandBps = input.float(0.002, "VWAP band (fraction)", step=0.0005, group=grpSig)
+vwapSL  = input.float(15.0, "VWAP SL pts", group=grpSig)
+vwapTP  = input.float(100.0, "VWAP TP pts", group=grpSig)
+
+grpHist = "Historical trade markers"
+showHist = input.bool(true, "Show historical entries/exits", group=grpHist)
+showPnlLbl = input.bool(true, "Show P&L label at exit", group=grpHist)
+histBars = input.int(500, "Last N bars to mark (0 = all)", group=grpHist)
+
+grpDash = "Dashboard"
+showDash = input.bool(true, "Show dashboard", group=grpDash)
+posStr = input.string("top_right", "Position", options=["top_right","top_left","bottom_right","bottom_left","middle_right"], group=grpDash)
+
+// --- PHASE LOGIC ------------------------------------------------------
+phase    = curPnl < 400.0 ? 1 : curPnl < 1000.0 ? 2 : 3
+sizeStr  = phase == 1 ? "2 MNQ" : phase == 2 ? "3 MNQ" : "1 NQ"
+dollarPt = phase == 1 ? 40.0 : phase == 2 ? 60.0 : 200.0
+dailyMax = phase == 1 ? 400.0 : phase == 2 ? 500.0 : 600.0
+
+// --- TIMELINE ---------------------------------------------------------
+startYr = math.floor(startYMD / 10000)
+startMo = math.floor((startYMD % 10000) / 100)
+startDy = startYMD % 100
+startTs = timestamp(startYr, startMo, startDy, 0, 0)
+daysElapsed = math.max(0, math.floor((timenow - startTs) / 86400000))
+weeksEl = daysElapsed / 7.0
+daysInPlan = weeksTgt * 7
+daysLeft = math.max(1, daysInPlan - daysElapsed)
+tradingDaysLeft = math.max(1, math.floor(daysLeft * 4.0 / 7.0))
+remainingUSD = math.max(0, targetUSD - curPnl)
+reqPerDay = remainingUSD / tradingDaysLeft
+expectedByNow = daysElapsed > 0 ? (daysElapsed / math.max(daysInPlan, 1)) * targetUSD : 0
+pacePct = expectedByNow > 0 ? (curPnl / expectedByNow) * 100.0 : 100.0
+
+// --- DOW + SESSION ----------------------------------------------------
+dowET = dayofweek(time, "America/New_York")
+dowName = dowET == dayofweek.monday ? "MON" : dowET == dayofweek.tuesday ? "TUE" : dowET == dayofweek.wednesday ? "WED" : dowET == dayofweek.thursday ? "THU" : dowET == dayofweek.friday ? "FRI" : dowET == dayofweek.saturday ? "SAT" : "SUN"
+isWed = dowET == dayofweek.wednesday
+isMon = dowET == dayofweek.monday
+isFri = dowET == dayofweek.friday
+isTradeDay = not isWed and dowET >= dayofweek.monday and dowET <= dayofweek.friday
+hET = hour(time, "America/New_York")
+mET = minute(time, "America/New_York")
+etMin = hET * 60 + mET
+
+// --- COMMON DATA ------------------------------------------------------
+// Mon/Fri uses 5m EMA via security
+f_mfData() =>
+    inRTH = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+    prevRTH = nz(inRTH[1], false)
+    firstBar = inRTH and not prevRTH
+    ema = ta.ema(close, emaLen)
+    [firstBar, close, ema, low, high]
+[isFirst5m, close5m, ema5m, low5m, high5m] = request.security(syminfo.tickerid, "5", f_mfData(), lookahead=barmerge.lookahead_off)
+
+// VWAP RTH-anchored (on chart TF)
+rthFlag = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+rthStart = rthFlag and not nz(rthFlag[1], false)
+vwapVal = ta.vwap(hlc3, rthStart)
+upperBand = rthFlag ? vwapVal * (1.0 + bandBps) : na
+lowerBand = rthFlag ? vwapVal * (1.0 - bandBps) : na
+
+// S1 ORB: build OR 9:30-9:45 ET + session VWAP + 20-EMA (chart TF)
+var float orHigh = na
+var float orLow = na
+var bool orSet = false
+if rthFlag and not nz(rthFlag[1], false)
+    orHigh := na
+    orLow := na
+    orSet := false
+if rthFlag and etMin >= 9*60+30 and etMin < 9*60+45
+    orHigh := na(orHigh) ? high : math.max(orHigh, high)
+    orLow  := na(orLow) ? low : math.min(orLow, low)
+if rthFlag and etMin >= 9*60+45 and not orSet
+    orSet := true
+
+ema20 = ta.ema(close, ema20Len)
+
+// --- TRADE STATE (per strategy) ---------------------------------------
+curDayId = year * 10000 + month * 100 + dayofmonth
+
+// S1
+var float s1Entry = na
+var float s1SL    = na
+var int   s1Bar   = na
+var int   s1DayId = na
+// Mon/Fri
+var float mfEntry = na
+var float mfSL    = na
+var float mfTP    = na
+var int   mfSide  = na
+var int   mfBar   = na
+var int   mfDayId = na
+// VWAP
+var float vwEntry = na
+var float vwSL    = na
+var float vwTP    = na
+var int   vwSide  = na
+var int   vwBar   = na
+var int   vwDayId = na
+
+// --- S1 ENTRY ---------------------------------------------------------
+s1Trigger = useS1 and not isWed and rthFlag and orSet and etMin > 9*60+45 and etMin < 15*60 and close > orHigh and close > vwapVal and na(s1Entry) and barstate.isconfirmed
+if s1Trigger
+    orRange = orHigh - orLow
+    sl = math.max(orLow, close - orRange)
+    if sl < close
+        s1Entry := close
+        s1SL    := sl
+        s1Bar   := bar_index
+        s1DayId := curDayId
+
+// --- MON/FRI ENTRY ----------------------------------------------------
+mfLongFire  = useMF and isFirst5m and isMon and close5m > ema5m and na(mfEntry)
+mfShortFire = useMF and isFirst5m and isFri and close5m < ema5m and na(mfEntry)
+if mfLongFire
+    mfEntry := close5m
+    mfSL    := low5m
+    mfTP    := na  // EOD-hold
+    mfSide  := 1
+    mfBar   := bar_index
+    mfDayId := curDayId
+if mfShortFire
+    mfEntry := close5m
+    mfSL    := high5m
+    mfTP    := na
+    mfSide  := -1
+    mfBar   := bar_index
+    mfDayId := curDayId
+
+// --- VWAP ENTRY -------------------------------------------------------
+vwLongFire  = useVW and not isWed and rthFlag and etMin >= 571 and etMin < 955 and ta.crossover(close, upperBand) and na(vwEntry) and barstate.isconfirmed
+vwShortFire = useVW and not isWed and rthFlag and etMin >= 571 and etMin < 955 and ta.crossunder(close, lowerBand) and na(vwEntry) and barstate.isconfirmed
+if vwLongFire
+    vwEntry := close
+    vwSL    := close - vwapSL
+    vwTP    := close + vwapTP
+    vwSide  := 1
+    vwBar   := bar_index
+    vwDayId := curDayId
+if vwShortFire
+    vwEntry := close
+    vwSL    := close + vwapSL
+    vwTP    := close - vwapTP
+    vwSide  := -1
+    vwBar   := bar_index
+    vwDayId := curDayId
+
+// --- EXIT MANAGEMENT --------------------------------------------------
+isEOD = etMin >= 15*60+55
+dayChg = ta.change(curDayId) != 0
+
+// S1 exit: SL (low <= SL) / trail 20-EMA / EOD
+if not na(s1Entry)
+    // trail: raise SL to 20-EMA if higher
+    if ema20 > s1SL
+        s1SL := ema20
+    exReason = ""
+    exPx = 0.0
+    if low <= s1SL
+        exReason := "SL"
+        exPx := s1SL
+    else if isEOD or dayChg
+        exReason := "EOD"
+        exPx := close
+    if exReason != ""
+        pnl = exPx - s1Entry
+        pnlUSD = pnl * dollarPt
+        if showHist
+            label.new(bar_index, exPx, "S1 " + exReason + "\n" + str.tostring(pnl, "+#.#") + "pt / " + str.tostring(pnlUSD, "+#") + "$", color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)
+        s1Entry := na
+        s1SL := na
+
+// Mon/Fri exit: SL / EOD
+if not na(mfEntry)
+    exReason = ""
+    exPx = 0.0
+    if mfSide == 1
+        if low <= mfSL
+            exReason := "SL"
+            exPx := mfSL
+        else if isEOD or dayChg
+            exReason := "EOD"
+            exPx := close
+    else
+        if high >= mfSL
+            exReason := "SL"
+            exPx := mfSL
+        else if isEOD or dayChg
+            exReason := "EOD"
+            exPx := close
+    if exReason != ""
+        pnl = mfSide * (exPx - mfEntry)
+        pnlUSD = pnl * dollarPt
+        if showHist
+            label.new(bar_index, exPx, (mfSide == 1 ? "MonL " : "FriS ") + exReason + "\n" + str.tostring(pnl, "+#.#") + "pt / " + str.tostring(pnlUSD, "+#") + "$", color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)
+        mfEntry := na
+        mfSL := na
+
+// VWAP exit: SL / TP / EOD
+if not na(vwEntry)
+    exReason = ""
+    exPx = 0.0
+    if vwSide == 1
+        if low <= vwSL
+            exReason := "SL"
+            exPx := vwSL
+        else if high >= vwTP
+            exReason := "TP"
+            exPx := vwTP
+        else if isEOD or dayChg
+            exReason := "EOD"
+            exPx := close
+    else
+        if high >= vwSL
+            exReason := "SL"
+            exPx := vwSL
+        else if low <= vwTP
+            exReason := "TP"
+            exPx := vwTP
+        else if isEOD or dayChg
+            exReason := "EOD"
+            exPx := close
+    if exReason != ""
+        pnl = vwSide * (exPx - vwEntry)
+        pnlUSD = pnl * dollarPt
+        if showHist
+            label.new(bar_index, exPx, "VW " + exReason + "\n" + str.tostring(pnl, "+#.#") + "pt / " + str.tostring(pnlUSD, "+#") + "$", color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)
+        vwEntry := na
+        vwSL := na
+
+// --- HISTORICAL ENTRY MARKERS -----------------------------------------
+plotshape(showHist and s1Trigger, "S1 entry", shape.triangleup, location.belowbar, color=color.lime, size=size.small, text="S1")
+plotshape(showHist and mfLongFire, "Mon-L entry", shape.triangleup, location.belowbar, color=color.aqua, size=size.small, text="M")
+plotshape(showHist and mfShortFire, "Fri-S entry", shape.triangledown, location.abovebar, color=color.aqua, size=size.small, text="F")
+plotshape(showHist and vwLongFire, "VWAP-L entry", shape.triangleup, location.belowbar, color=color.yellow, size=size.small, text="V")
+plotshape(showHist and vwShortFire, "VWAP-S entry", shape.triangledown, location.abovebar, color=color.yellow, size=size.small, text="V")
+
+// --- CURRENT (live) TRADE LINES ---------------------------------------
+var line s1EntryLn = na
+var line s1SLLn    = na
+if barstate.islast
+    if not na(s1EntryLn)
+        line.delete(s1EntryLn)
+    if not na(s1SLLn)
+        line.delete(s1SLLn)
+    if not na(s1Entry) and s1DayId == curDayId
+        s1EntryLn := line.new(s1Bar, s1Entry, bar_index + 20, s1Entry, color=color.lime, width=2, extend=extend.right)
+        s1SLLn    := line.new(s1Bar, s1SL, bar_index + 20, s1SL, color=color.new(color.red, 20), style=line.style_dashed, extend=extend.right)
+
+var line vwEntryLn = na
+var line vwSLLn    = na
+var line vwTPLn    = na
+if barstate.islast
+    if not na(vwEntryLn)
+        line.delete(vwEntryLn)
+    if not na(vwSLLn)
+        line.delete(vwSLLn)
+    if not na(vwTPLn)
+        line.delete(vwTPLn)
+    if not na(vwEntry) and vwDayId == curDayId
+        vwEntryLn := line.new(vwBar, vwEntry, bar_index + 20, vwEntry, color=color.yellow, width=2, extend=extend.right)
+        vwSLLn    := line.new(vwBar, vwSL, bar_index + 20, vwSL, color=color.new(color.red, 20), style=line.style_dashed, extend=extend.right)
+        vwTPLn    := line.new(vwBar, vwTP, bar_index + 20, vwTP, color=color.new(color.green, 20), style=line.style_dashed, extend=extend.right)
+
+// --- VWAP + EMA + OR plots --------------------------------------------
+plot(rthFlag ? vwapVal : na, "VWAP", color=color.new(color.aqua, 30), linewidth=1)
+plot(upperBand, "VWAP upper", color=color.new(color.orange, 60))
+plot(lowerBand, "VWAP lower", color=color.new(color.orange, 60))
+plot(ema5m, "EMA12 (5m) — Mon/Fri", color=color.new(color.purple, 40), linewidth=1)
+plot(ema20, "EMA20 — S1 trail", color=color.new(color.gray, 50))
+plot(rthFlag and orSet ? orHigh : na, "OR High", color=color.new(color.green, 20), linewidth=2, style=plot.style_linebr)
+plot(rthFlag and orSet ? orLow : na, "OR Low", color=color.new(color.red, 20), linewidth=2, style=plot.style_linebr)
+
+// --- DASHBOARD --------------------------------------------------------
+tblPosV = posStr == "top_left" ? position.top_left : posStr == "bottom_right" ? position.bottom_right : posStr == "bottom_left" ? position.bottom_left : posStr == "middle_right" ? position.middle_right : position.top_right
+var table dash = table.new(tblPosV, 2, 12, border_width=1, bgcolor=color.new(color.black, 30))
+if barstate.islast and showDash
+    f_pnlCol(v) => v >= targetUSD ? color.new(color.green, 10) : v >= 0 ? color.new(color.navy, 30) : color.new(color.red, 20)
+    f_phaseCol(p) => p == 1 ? color.new(#4A90E2, 20) : p == 2 ? color.new(#9B59B6, 20) : color.new(#27AE60, 20)
+    f_paceCol(p)  => p >= 100 ? color.new(color.green, 20) : p >= 70 ? color.new(color.olive, 20) : p >= 40 ? color.new(color.orange, 20) : color.new(color.red, 20)
+    equityPct = (curPnl / targetUSD) * 100.0
+    todaySetup = isMon ? "Mon-L + S1 + VWAP all active" : isFri ? "Fri-S + S1 + VWAP all active" : isWed ? "WED — SKIP" : "S1 + VWAP"
+    sessState = etMin < 570 ? "PRE-OPEN" : etMin < 585 ? "9:30-9:45 BUILD OR" : etMin < 695 ? "9:45-11:35 PRIME" : etMin < 955 ? "MID (VWAP+S1)" : etMin < 960 ? "CLOSE 5MIN!" : "CLOSED"
+    sessColor = etMin >= 955 and etMin < 960 ? color.red : etMin >= 585 and etMin < 695 ? color.new(color.green, 20) : color.new(color.olive, 30)
+    table.cell(dash, 0, 0, "LUCID FINAL TRACKER", bgcolor=color.new(color.navy, 10), text_color=color.white)
+    table.cell(dash, 1, 0, dowName + " " + str.format("{0,number,00}:{1,number,00}", hET, mET) + " ET", bgcolor=color.new(color.navy, 10), text_color=color.white)
+    table.cell(dash, 0, 1, "P&L", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 1, "$" + str.tostring(curPnl, "#") + " / $" + str.tostring(targetUSD, "#") + " (" + str.tostring(equityPct, "#.#") + "%)", bgcolor=f_pnlCol(curPnl), text_color=color.white)
+    table.cell(dash, 0, 2, "PHASE", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 2, "F" + str.tostring(phase) + "  →  " + sizeStr + "  ($" + str.tostring(dollarPt, "#") + "/pt)", bgcolor=f_phaseCol(phase), text_color=color.white)
+    table.cell(dash, 0, 3, "Daily stop", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 3, "-$" + str.tostring(dailyMax, "#"), bgcolor=color.new(color.maroon, 20), text_color=color.white)
+    table.cell(dash, 0, 4, "Day cap", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 4, "+$" + str.tostring(consist, "#"), text_color=color.white)
+    table.cell(dash, 0, 5, "Week", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 5, str.tostring(weeksEl, "#.#") + " / " + str.tostring(weeksTgt) + " (" + str.tostring(daysLeft) + "d)", text_color=color.white)
+    table.cell(dash, 0, 6, "Need/day", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    nc = reqPerDay > 400 ? color.new(color.red, 20) : reqPerDay > 200 ? color.new(color.orange, 20) : color.new(color.green, 20)
+    table.cell(dash, 1, 6, "$" + str.tostring(reqPerDay, "#") + "/day", bgcolor=nc, text_color=color.white)
+    table.cell(dash, 0, 7, "Pace", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 7, str.tostring(pacePct, "#") + "% of plan", bgcolor=f_paceCol(pacePct), text_color=color.white)
+    table.cell(dash, 0, 8, "TODAY", bgcolor=color.new(color.purple, 10), text_color=color.white)
+    table.cell(dash, 1, 8, todaySetup, bgcolor=isTradeDay ? color.new(color.navy, 10) : color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 0, 9, "Session", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 9, sessState, bgcolor=sessColor, text_color=color.white)
+    table.cell(dash, 0, 10, "Pass stats", bgcolor=color.new(color.gray, 30), text_color=color.white)
+    table.cell(dash, 1, 10, "64% 1-try / 87% 2-try / 95% 3-try", text_color=color.white)
+    if etMin >= 955 and etMin < 960 and isTradeDay
+        table.cell(dash, 0, 11, "⚠", bgcolor=color.red, text_color=color.white)
+        table.cell(dash, 1, 11, "FLAT ALL @ 15:55!", bgcolor=color.red, text_color=color.white)
+    else if isWed
+        table.cell(dash, 0, 11, "✖", bgcolor=color.new(color.red, 30), text_color=color.white)
+        table.cell(dash, 1, 11, "WEDNESDAY — SKIP", bgcolor=color.new(color.red, 30), text_color=color.white)
