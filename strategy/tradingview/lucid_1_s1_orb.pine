@@ -1,0 +1,112 @@
+// @version=5
+indicator("Lucid 1/3 — S1 ORB 15min Long", overlay=true, max_labels_count=500, max_lines_count=50)
+
+// =========================================================================
+// S1: Opening Range Breakout 15-min, long-only, w/ 20-EMA trail
+// Entry : after 09:45 ET, close > OR_high AND close > session VWAP
+// SL    : max(OR_low, close - OR_range)
+// Trail : 20-EMA 5m (SL moves up to EMA, never down)
+// Exit  : SL hit or EOD 15:55 ET
+// Skip Wed. One trade/day max.
+// =========================================================================
+
+showHist = input.bool(true, "Show historical entries/exits")
+ema20Len = input.int(20, "20-EMA trail length (chart TF)")
+
+// Session + DOW
+hET = hour(time, "America/New_York")
+mET = minute(time, "America/New_York")
+etMin = hET * 60 + mET
+dowET = dayofweek(time, "America/New_York")
+isWed = dowET == dayofweek.wednesday
+rthFlag = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+
+// RTH VWAP anchored
+rthStart = rthFlag and not nz(rthFlag[1], false)
+vwapVal = ta.vwap(hlc3, rthStart)
+
+// 20-EMA trail
+ema20 = ta.ema(close, ema20Len)
+
+// Build OR 9:30-9:45
+var float orHigh = na
+var float orLow  = na
+var bool  orSet  = false
+if rthStart
+    orHigh := na
+    orLow := na
+    orSet := false
+if rthFlag and etMin >= 9*60+30 and etMin < 9*60+45
+    orHigh := na(orHigh) ? high : math.max(orHigh, high)
+    orLow  := na(orLow)  ? low  : math.min(orLow, low)
+if rthFlag and etMin >= 9*60+45 and not orSet
+    orSet := true
+
+// Trade state
+var float sEntry = na
+var float sSL    = na
+var int   sBar   = na
+var int   sDayId = na
+curDayId = year*10000 + month*100 + dayofmonth
+
+trigger = not isWed and rthFlag and orSet and etMin > 9*60+45 and etMin < 15*60 and close > orHigh and close > vwapVal and na(sEntry) and barstate.isconfirmed
+if trigger
+    orRange = orHigh - orLow
+    sl0 = math.max(orLow, close - orRange)
+    if sl0 < close
+        sEntry := close
+        sSL    := sl0
+        sBar   := bar_index
+        sDayId := curDayId
+
+// Exit management: trail + SL hit + EOD
+isEOD = etMin >= 15*60+55
+dayChg = ta.change(curDayId) != 0
+
+if not na(sEntry)
+    if ema20 > sSL
+        sSL := ema20
+    exReason = ""
+    exPx = 0.0
+    if low <= sSL
+        exReason := "SL"
+        exPx := sSL
+    else if isEOD or dayChg
+        exReason := "EOD"
+        exPx := close
+    if exReason != ""
+        pnl = exPx - sEntry
+        if showHist
+            label.new(bar_index, exPx, "S1 " + exReason + "\n" + str.tostring(pnl, "+#.#") + "pt", color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)
+        sEntry := na
+        sSL := na
+
+// Entry marker (historical)
+plotshape(showHist and trigger, "S1 entry", shape.triangleup, location.belowbar, color=color.lime, size=size.small, text="S1")
+
+// Live lines
+var line eLn = na
+var line slLn = na
+if barstate.islast
+    if not na(eLn)
+        line.delete(eLn)
+    if not na(slLn)
+        line.delete(slLn)
+    if not na(sEntry) and sDayId == curDayId
+        eLn := line.new(sBar, sEntry, bar_index + 20, sEntry, color=color.lime, width=2, extend=extend.right)
+        slLn := line.new(sBar, sSL, bar_index + 20, sSL, color=color.new(color.red, 20), style=line.style_dashed, extend=extend.right)
+
+// Reference plots
+plot(rthFlag ? vwapVal : na, "VWAP (RTH)", color=color.new(color.aqua, 30), linewidth=1)
+plot(ema20, "20-EMA (trail)", color=color.new(color.gray, 40))
+plot(rthFlag and orSet ? orHigh : na, "OR High", color=color.new(color.green, 10), linewidth=2, style=plot.style_linebr)
+plot(rthFlag and orSet ? orLow : na, "OR Low", color=color.new(color.red, 10), linewidth=2, style=plot.style_linebr)
+
+// Mini status badge
+var table badge = table.new(position.top_right, 1, 3, border_width=1, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    sessState = etMin < 570 ? "PRE-OPEN" : etMin < 585 ? "BUILDING OR 9:30-9:45" : etMin < 900 ? "LIVE 9:45+ (watch entry)" : etMin < 955 ? "MID (still ok)" : "CLOSE SOON"
+    sessCol = etMin >= 585 and etMin < 900 ? color.new(color.green, 20) : etMin >= 955 ? color.red : color.new(color.gray, 50)
+    table.cell(badge, 0, 0, "S1 ORB 15m LONG", bgcolor=color.new(color.lime, 50), text_color=color.white)
+    table.cell(badge, 0, 1, isWed ? "WED — SKIP" : sessState, bgcolor=isWed ? color.red : sessCol, text_color=color.white)
+    table.cell(badge, 0, 2, not na(sEntry) ? "LIVE: entry " + str.tostring(sEntry, format.mintick) : "no position", text_color=color.white, bgcolor=color.new(color.black, 50))

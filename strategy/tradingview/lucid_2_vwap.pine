@@ -1,0 +1,129 @@
+// @version=5
+indicator("Lucid 2/3 — VWAP Trend v7 (SL15 / TP100)", overlay=true, max_labels_count=500, max_lines_count=50)
+
+// =========================================================================
+// S-VWAP: RTH-anchored VWAP crossover, both directions
+// Entry : close crosses above/below VWAP during RTH (not Wed)
+// SL    : 15 pt from entry
+// TP    : 100 pt from entry   (R:R = 6.67:1)
+// Exit  : SL/TP hit OR EOD 15:55 ET
+// One trade/day max.
+// =========================================================================
+
+showHist = input.bool(true, "Show historical entries/exits")
+slPts    = input.float(15.0, "Stop-loss (pt)")
+tpPts    = input.float(100.0, "Take-profit (pt)")
+
+// Session + DOW
+hET = hour(time, "America/New_York")
+mET = minute(time, "America/New_York")
+etMin = hET * 60 + mET
+dowET = dayofweek(time, "America/New_York")
+isWed = dowET == dayofweek.wednesday
+rthFlag = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+
+// RTH VWAP anchored
+rthStart = rthFlag and not nz(rthFlag[1], false)
+vwapVal = ta.vwap(hlc3, rthStart)
+
+// Crossover signals
+xUp = rthFlag and ta.crossover(close, vwapVal)
+xDn = rthFlag and ta.crossunder(close, vwapVal)
+
+// Trade state
+var float vEntry = na
+var float vSL    = na
+var float vTP    = na
+var int   vDir   = na
+var int   vBar   = na
+var int   vDayId = na
+var bool  vDone  = false
+curDayId = year*10000 + month*100 + dayofmonth
+dayChg = ta.change(curDayId) != 0
+if dayChg
+    vDone := false
+
+canTrade = not isWed and rthFlag and etMin < 15*60+50 and na(vEntry) and not vDone and barstate.isconfirmed
+
+if canTrade and xUp
+    vEntry := close
+    vDir   := 1
+    vSL    := close - slPts
+    vTP    := close + tpPts
+    vBar   := bar_index
+    vDayId := curDayId
+if canTrade and xDn
+    vEntry := close
+    vDir   := -1
+    vSL    := close + slPts
+    vTP    := close - tpPts
+    vBar   := bar_index
+    vDayId := curDayId
+
+// Exit management
+isEOD = etMin >= 15*60+55
+if not na(vEntry)
+    exReason = ""
+    exPx = 0.0
+    if vDir == 1
+        if low <= vSL
+            exReason := "SL"
+            exPx := vSL
+        else if high >= vTP
+            exReason := "TP"
+            exPx := vTP
+        else if isEOD or dayChg
+            exReason := "EOD"
+            exPx := close
+    else
+        if high >= vSL
+            exReason := "SL"
+            exPx := vSL
+        else if low <= vTP
+            exReason := "TP"
+            exPx := vTP
+        else if isEOD or dayChg
+            exReason := "EOD"
+            exPx := close
+    if exReason != ""
+        pnl = vDir * (exPx - vEntry)
+        if showHist
+            label.new(bar_index, exPx, "VWAP " + exReason + "\n" + str.tostring(pnl, "+#.#") + "pt", color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)
+        vEntry := na
+        vSL := na
+        vTP := na
+        vDir := na
+        vDone := true
+
+// Entry markers (historical)
+plotshape(showHist and xUp and not isWed, "VWAP long", shape.triangleup, location.belowbar, color=color.aqua, size=size.small, text="VL")
+plotshape(showHist and xDn and not isWed, "VWAP short", shape.triangledown, location.abovebar, color=color.fuchsia, size=size.small, text="VS")
+
+// Live lines
+var line veLn = na
+var line vslLn = na
+var line vtpLn = na
+if barstate.islast
+    if not na(veLn)
+        line.delete(veLn)
+    if not na(vslLn)
+        line.delete(vslLn)
+    if not na(vtpLn)
+        line.delete(vtpLn)
+    if not na(vEntry) and vDayId == curDayId
+        clrDir = vDir == 1 ? color.aqua : color.fuchsia
+        veLn := line.new(vBar, vEntry, bar_index + 20, vEntry, color=clrDir, width=2, extend=extend.right)
+        vslLn := line.new(vBar, vSL, bar_index + 20, vSL, color=color.new(color.red, 20), style=line.style_dashed, extend=extend.right)
+        vtpLn := line.new(vBar, vTP, bar_index + 20, vTP, color=color.new(color.green, 20), style=line.style_dashed, extend=extend.right)
+
+// Reference plots
+plot(rthFlag ? vwapVal : na, "VWAP (RTH)", color=color.new(color.yellow, 20), linewidth=2)
+
+// Mini status badge
+var table badgeV = table.new(position.top_right, 1, 3, border_width=1, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    sessStateV = etMin < 570 ? "PRE-OPEN" : etMin < 955 ? "LIVE (watch cross)" : "CLOSE SOON"
+    sessColV = etMin >= 570 and etMin < 955 ? color.new(color.aqua, 30) : color.new(color.gray, 50)
+    table.cell(badgeV, 0, 0, "VWAP TREND", bgcolor=color.new(color.yellow, 50), text_color=color.white)
+    table.cell(badgeV, 0, 1, isWed ? "WED — SKIP" : vDone ? "DONE TODAY" : sessStateV, bgcolor=isWed ? color.red : vDone ? color.new(color.gray, 30) : sessColV, text_color=color.white)
+    table.cell(badgeV, 0, 2, not na(vEntry) ? "LIVE " + (vDir==1?"L ":"S ") + str.tostring(vEntry, format.mintick) : "no position", text_color=color.white, bgcolor=color.new(color.black, 50))

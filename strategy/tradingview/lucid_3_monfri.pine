@@ -1,0 +1,118 @@
+// @version=5
+indicator("Lucid 3/3 — Mon LONG / Fri SHORT EOD-hold", overlay=true, max_labels_count=500, max_lines_count=50)
+
+// =========================================================================
+// S-MonFri: First 5m RTH bar trigger, held to EOD
+// Mon LONG : first 5m RTH bar (09:30-09:35) closes > EMA12
+//            → enter at that close
+//            → SL = bar LOW (wick), no TP
+//            → exit 15:55 ET
+// Fri SHORT: first 5m RTH bar closes < EMA12
+//            → enter at that close
+//            → SL = bar HIGH (wick), no TP
+//            → exit 15:55 ET
+// Skip Wed. Chart TF: 5m recommended.
+// =========================================================================
+
+showHist = input.bool(true, "Show historical entries/exits")
+emaLen   = input.int(12, "EMA length (first-bar trigger)")
+
+// Session + DOW
+hET = hour(time, "America/New_York")
+mET = minute(time, "America/New_York")
+etMin = hET * 60 + mET
+dowET = dayofweek(time, "America/New_York")
+isMon = dowET == dayofweek.monday
+isFri = dowET == dayofweek.friday
+rthFlag = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+
+// EMA12
+ema12 = ta.ema(close, emaLen)
+
+// First 5m RTH bar detection (etMin == 09:30 on 5m chart)
+firstBar = rthFlag and etMin == 9*60+30
+
+// Trade state
+var float mEntry = na
+var float mSL    = na
+var int   mDir   = na
+var int   mBar   = na
+var int   mDayId = na
+var bool  mDone  = false
+curDayId = year*10000 + month*100 + dayofmonth
+dayChg = ta.change(curDayId) != 0
+if dayChg
+    mDone := false
+
+if firstBar and not mDone and barstate.isconfirmed
+    if isMon and close > ema12
+        mEntry := close
+        mSL    := low
+        mDir   := 1
+        mBar   := bar_index
+        mDayId := curDayId
+    else if isFri and close < ema12
+        mEntry := close
+        mSL    := high
+        mDir   := -1
+        mBar   := bar_index
+        mDayId := curDayId
+
+// Exit: SL hit or EOD 15:55
+isEOD = etMin >= 15*60+55
+if not na(mEntry)
+    exReason = ""
+    exPx = 0.0
+    if mDir == 1
+        if low <= mSL
+            exReason := "SL"
+            exPx := mSL
+        else if isEOD or dayChg
+            exReason := "EOD"
+            exPx := close
+    else
+        if high >= mSL
+            exReason := "SL"
+            exPx := mSL
+        else if isEOD or dayChg
+            exReason := "EOD"
+            exPx := close
+    if exReason != ""
+        pnl = mDir * (exPx - mEntry)
+        tag = (mDir == 1 ? "MON " : "FRI ") + exReason
+        if showHist
+            label.new(bar_index, exPx, tag + "\n" + str.tostring(pnl, "+#.#") + "pt", color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)
+        mEntry := na
+        mSL := na
+        mDir := na
+        mDone := true
+
+// Entry markers
+plotshape(showHist and firstBar and isMon and close > ema12, "Mon long", shape.triangleup, location.belowbar, color=color.lime, size=size.normal, text="MON")
+plotshape(showHist and firstBar and isFri and close < ema12, "Fri short", shape.triangledown, location.abovebar, color=color.red, size=size.normal, text="FRI")
+
+// Live lines
+var line meLn = na
+var line mslLn = na
+if barstate.islast
+    if not na(meLn)
+        line.delete(meLn)
+    if not na(mslLn)
+        line.delete(mslLn)
+    if not na(mEntry) and mDayId == curDayId
+        clrDir = mDir == 1 ? color.lime : color.red
+        meLn := line.new(mBar, mEntry, bar_index + 20, mEntry, color=clrDir, width=2, extend=extend.right)
+        mslLn := line.new(mBar, mSL, bar_index + 20, mSL, color=color.new(color.red, 20), style=line.style_dashed, extend=extend.right)
+
+// Reference plot
+plot(ema12, "EMA12", color=color.new(color.orange, 30))
+
+// Mini status badge
+var table badgeM = table.new(position.top_right, 1, 3, border_width=1, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    daytxt = isMon ? "MON — LONG day" : isFri ? "FRI — SHORT day" : dowET == dayofweek.wednesday ? "WED — SKIP" : "no trade today"
+    daycol = (isMon or isFri) ? color.new(color.lime, 40) : color.new(color.gray, 50)
+    stateTxt = etMin < 570 ? "PRE-OPEN" : etMin == 570 ? "FIRST BAR — trigger window" : etMin < 955 ? "HOLDING" : "FLAT @ 15:55"
+    table.cell(badgeM, 0, 0, "MON/FRI EOD-HOLD", bgcolor=color.new(color.orange, 50), text_color=color.white)
+    table.cell(badgeM, 0, 1, daytxt, bgcolor=daycol, text_color=color.white)
+    table.cell(badgeM, 0, 2, not na(mEntry) ? "LIVE " + (mDir==1?"L ":"S ") + str.tostring(mEntry, format.mintick) : stateTxt, text_color=color.white, bgcolor=color.new(color.black, 50))
