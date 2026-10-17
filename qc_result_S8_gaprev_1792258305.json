@@ -1,0 +1,18 @@
+{
+  "projectId": 37993316,
+  "backtestId": "57bd0577242d846db5af29250a41128d",
+  "name": "S8_gaprev_1792258305_1792258307",
+  "statistics": {},
+  "runtimeStatistics": {
+    "Equity": "$1,000,000.00",
+    "Fees": "-$0.00",
+    "Holdings": "$0.00",
+    "Net Profit": "$0.00",
+    "Probabilistic Sharpe Ratio": "0%",
+    "Return": "0.00 %",
+    "Unrealized": "$0.00",
+    "Volume": "$0.00"
+  },
+  "totalPerformance": null,
+  "error": null
+}
