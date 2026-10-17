@@ -80,12 +80,23 @@ ones in every sweep. Day profit cap: **stop at +$1,450**.
 
 | # | Strategy | Edge | Status |
 |---|----------|------|--------|
-| 1 | **S1 ORB 15m long** | the workhorse, 46% pass alone | ✅ tested |
-| 2 | **VWAP band SL25/TP100** | +11pp on top of S1 | ✅ tested, **SL changed from 15 to 25** |
-| 4 | **Overnight gap reversal** | +10pp, *new* | ✅ tested |
-| 3 | Mon/Fri EOD hold | +1pp, marginal | ✅ tested, keep |
+| 1 | **S1 ORB 15m long** | the workhorse | ✅ verified 2018-2025 |
+| 2 | **VWAP band SL25/TP100** | +11pp on top of S1 | ✅ verified, **SL changed from 15 to 25** |
+| 4 | **Overnight gap reversal** | +4pp | ✅ verified on minute data |
+| 3 | Mon/Fri EOD hold | +1pp, marginal | ✅ keep |
 
-Combined, 2 MNQ, 80-day window: **~61% pass / 19% bust** on the overlap sample.
+Combined, 2 MNQ, vol-gated: **82% pass / 8% bust at 80 days**, 90% / 8% at 120.
+
+### Rejected after testing
+
+| Candidate | Why |
+|-----------|-----|
+| **ROD momentum** (Baltussen, *JFE* 2021) | best-evidenced idea in the whole review, NQ t = 7.97 — and it has decayed. Positive 2018-2022, then −1.39 pt in 2023 and −4.46 in 2024. Their sample ends 2020. Costs 2.8pp. |
+| **Gap fade** | −8.27 pt per trade, negative in seven of eight years |
+| Reversal after large drop (*JAM* 2011) | −6.33 pt on NQ, costs 8.7pp |
+| Turn-of-month | +0.8pp, noise |
+| Four short-side rules | all weak or negative; shorting fights NQ's drift |
+| All twenty lab-archive strategies | best is 34.8% pass at 64% bust |
 
 ### Daily schedule
 
@@ -105,30 +116,34 @@ direction, skip it.
 
 ## How much of this to believe
 
-The headline numbers above are averages over 2018-2025, and that average hides
-a wide spread. Same configuration, same rules, split by period:
+Headline numbers are averages over 2018-2025. Split by period, at 80 days:
 
 | Period | pass | bust |
 |--------|------|------|
-| 2018-2020 | 50% | 0% |
-| 2020-2022 | 98% | 0% |
-| 2022-2024 | 98% | 0% |
-| 2024-2026 | 67% | 28% |
+| 2018-2020 | 58% | 22% |
+| 2020-2022 | 84% | 0% |
+| 2022-2024 | 99% | 0% |
+| 2024-2026 | 83% | 16% |
 
-The book is long-biased — ORB is long-only, the gap reversal is long-only — so
-it feasts in a bull market and grinds in anything else. **Plan on ~65%, not
-~85%.** The 85% is a bull-market number.
+That spread is much tighter than the previous version of this book managed
+(50 / 98 / 98 / 67), and the gain came from the volatility gate and the tight
+percentage stops rather than from new strategies. **Plan on ~60%, the worst
+observed period**, and treat anything above it as the market cooperating.
 
-The drop in the most recent period is *not* edge decay. Per-trade edge is
-stable or improving: S1 averaged +1.73 pt in 2018 and +4.26 pt in 2025. What
-changed is that 2025 was volatile enough that the gate sat out most of it —
-233 qualifying trades versus 605 in 2024. The filter costs time, not money,
-which is survivable if rule 3 holds and expensive if it does not.
+The book is long-biased — ORB is long-only, the gap reversal is long-only —
+because four separate attempts to build a short side all failed. That bias is
+a property of NQ's drift, not a gap in the research.
 
-Worth keeping in view: a driftless walk passes this challenge at
-L/(L+T) = 40%, and ~35% once costs and the trailing floor are modelled
-(Villahermosa, SSRN 7445798). That is the bar. A 65% planning figure is a real
-edge over it; it is not a sure thing.
+Two benchmarks worth holding in view, because they frame what "good" means:
+
+- A driftless walk passes at L/(L+T) = 40%, or ~35% with costs and the
+  trailing floor modelled (Villahermosa, SSRN 7445798).
+- **Leveraged long NQ with a stop, risk-matched to this book, passes at
+  roughly 37% over 80 days and 61% over 120.** That is the honest bar, not
+  the 40%. This book beats it clearly at 80 days and by less at 120. An
+  earlier comparison appeared to show buy-and-hold winning outright; that was
+  an artefact of comparing at equal contract count rather than equal risk —
+  the buy-and-hold leg was running 3.6× the daily volatility.
 
 ---
 
@@ -154,20 +169,30 @@ worse. Current numbers supersede it.
 it does not replicate on NQ: **−6.33 pt per trade**, and it subtracts 8.7pp from
 the portfolio. Turn-of-month is also near-worthless here (+0.8pp).
 
-**Correction to the gap-reversal claim.** An earlier pass reported it as
-"positive in every five-year sub-period". Five-year buckets hid the real
-pattern. Year by year:
+**Express every stop as a percentage, never a point count.** The gap
+reversal's 15-point stop was fitted on a panel where NQ traded near 5,000,
+making it 0.30% of price. At 22,000 the same number is 0.07% — the rule
+silently tightened fourfold while looking unchanged. Sweeping every stop
+definition against recorded excursions, tighter is emphatically better here:
 
-| | avg pt/trade |
-|---|---|
-| 2005-2012 | **+0.28** (nothing) |
-| 2013-2020 | **+4.27** |
+| stop | pass (80d) | bust |
+|------|-----------|------|
+| **0.05% of price** | **82.2%** | 7.7% |
+| 0.10% of price | 81.5% | 7.9% |
+| 0.35% of price | 73.1% | 18.0% |
+| 0.25 × ATR | 68.4% | 22.9% |
+| 1.00 × ATR | 59.6% | 34.7% |
 
-Five of sixteen years are negative and the losers are the choppy corrections —
-2011 at −2.37, 2015 at −0.94. This is dip-buying, and dip-buying needs a bull
-market. The daily panel ends 2020-05 so 2020-2025 could not be checked at all.
-**Treat indicator 4 as a bull-regime overlay, not a core rule**, and do not
-size it as though the +10pp were dependable.
+ATR-scaled stops are the worst of the lot. The reason the tight stop wins is
+that the winners run to the close regardless of how wide the stop is, so stop
+width only sets what the losers cost. **Do not widen it after a losing
+streak.** At 30,000 the 0.05% rule is about 15 points.
+
+**The gap reversal is a lottery ticket — expect it to feel bad.** About 85% of
+entries stop out small; the remaining 15% run to the close, several above
++300 points. Earlier daily testing suggested a 35% win rate; on real minute
+data it is 15%. The expectancy is fine (+8.91 pt per trade over 2021-2025)
+but it arrives in a handful of days.
 
 **The whole lab archive is unusable.** All twenty previously-backtested
 strategies were re-scored on pass rate: the best manages 34.8% with a 64% bust

@@ -31,6 +31,7 @@ GAP_MAX = 0.0045         # 0.45% of price
 ATR_FRAC_MAX = 0.40      # gap must be < 40% of 20d ATR
 EXTEND_MAX = 0.0015      # abandon if price ran 0.15% past the open
 HARD_STOP_PTS = 20.0
+MIN_EDGE_PTS = 10.0     # target must still be this far away at entry
 TIME_STOP_ET = 12 * 60
 SKIP_WED = True
 
@@ -162,8 +163,16 @@ class PropS7GapFade(QCAlgorithm):
             gap = (self.day_open - self.prev_close) / self.prev_close
             gap_pts = abs(self.day_open - self.prev_close)
             atr = sum(self.ranges) / len(self.ranges)
+            # Entry is at 09:45 but the target is yesterday's close, so on a
+            # gap that has already filled by then the target sits behind the
+            # entry and the trade exits instantly at a loss booked as "TP".
+            # That is what the first run did: 129 target exits against 66
+            # winners. Require the fill to still be ahead and worth taking.
+            remaining = ((b['c'] - self.prev_close) if gap > 0
+                         else (self.prev_close - b['c']))
             if (GAP_MIN <= abs(gap) <= GAP_MAX
-                    and gap_pts < ATR_FRAC_MAX * atr):
+                    and gap_pts < ATR_FRAC_MAX * atr
+                    and remaining >= MIN_EDGE_PTS):
                 # Abandon if the open kept running in the gap direction.
                 if gap > 0:
                     extended = (self.day_hi - self.day_open) / self.day_open
