@@ -103,6 +103,35 @@ direction, skip it.
 
 ---
 
+## How much of this to believe
+
+The headline numbers above are averages over 2018-2025, and that average hides
+a wide spread. Same configuration, same rules, split by period:
+
+| Period | pass | bust |
+|--------|------|------|
+| 2018-2020 | 50% | 0% |
+| 2020-2022 | 98% | 0% |
+| 2022-2024 | 98% | 0% |
+| 2024-2026 | 67% | 28% |
+
+The book is long-biased — ORB is long-only, the gap reversal is long-only — so
+it feasts in a bull market and grinds in anything else. **Plan on ~65%, not
+~85%.** The 85% is a bull-market number.
+
+The drop in the most recent period is *not* edge decay. Per-trade edge is
+stable or improving: S1 averaged +1.73 pt in 2018 and +4.26 pt in 2025. What
+changed is that 2025 was volatile enough that the gate sat out most of it —
+233 qualifying trades versus 605 in 2024. The filter costs time, not money,
+which is survivable if rule 3 holds and expensive if it does not.
+
+Worth keeping in view: a driftless walk passes this challenge at
+L/(L+T) = 40%, and ~35% once costs and the trailing floor are modelled
+(Villahermosa, SSRN 7445798). That is the bar. A 65% planning figure is a real
+edge over it; it is not a sure thing.
+
+---
+
 ## What changed from v1, and why
 
 **S1 ORB must re-enter.** v1's indicator allowed one trade per day. That is
