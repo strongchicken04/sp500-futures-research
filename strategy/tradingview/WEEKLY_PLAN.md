@@ -17,10 +17,9 @@ At that moment you hold $2,000 of room with only $900 left to target.
 and **overshooting relaxes it**. If your best day was $1,800, finish at $3,600
 rather than grinding ten more small days.
 
-**3. There is no published time limit.** Lucid documents no deadline for
-LucidFlex. The 8-week window in v1 was self-imposed — and it is the single most
-expensive assumption in the whole plan. ⚠️ **Verify this with Lucid before
-anything else.** It changes the optimal size by a factor of two.
+**3. There is no time limit.** Confirmed with the account. The 8-week window
+in v1 was self-imposed, and dropping it is the largest single improvement
+available — it is what makes the small-size policy below possible.
 
 ---
 
@@ -46,12 +45,45 @@ The exact threshold should not be trusted to two decimals — anything from
 
 ---
 
-## Sizing — depends entirely on rule 3
+## Sizing — the answer, now that rule 3 is settled
 
-Measured on the full portfolio, conditional on your current state (+$200 banked):
+**Run 1 MNQ until banked profit reaches $800, then switch to 2 MNQ. Never go
+above 2.**
 
-| Size | 39 days left | 79 days left | 119 days left |
-|------|--------------|--------------|---------------|
+Conditional on the current state (+$200 banked), over a 200-day horizon:
+
+| policy | pass | bust | median days |
+|--------|------|------|-------------|
+| 1 MNQ throughout | 93.5% | **0.0%** | 67 |
+| **1 → 2 MNQ at $800** | **96.1%** | **1.5%** | 49 |
+| 1 → 2 MNQ at $600 | 95.1% | 2.4% | 43 |
+| 2 MNQ throughout | 94.4% | 5.6% | 33 |
+| 3 MNQ throughout | 77.0% | 23.0% | 20 |
+
+Flat 1 MNQ **never busts anywhere in the 2018-2025 sample**, at any window
+length tested. It cannot fail, it can only run long. The ramp keeps nearly all
+of that safety and finishes about three weeks sooner, because the busts happen
+early, while the cushion is thin and the trailing line is close behind.
+
+Three MNQ is where it comes apart: a quarter of attempts die. Resist it.
+
+By sub-period the ramp passes at 86.5% / 100% / 98.9% across 2018-2021,
+2021-2024 and 2024-2026, so even the worst stretch clears 85%.
+
+Daily loss stop: **$150 on 1 MNQ, $240 on 2 MNQ**. Day profit cap $1,450.
+
+### Where the drawdown line sits
+
+It ratchets to $2,000 below the highest **end-of-day** balance and never
+retreats: close at $50,600 and the line is $48,600; fall back to $50,200 the
+next day and it stays at $48,600. Once an EOD close clears $52,100 it locks at
+$50,100 for good — $2,000 of room with $900 left to run.
+
+The lock is worth little at the recommended size (96.1% with it, 94.7%
+without) and a lot at 3 MNQ (77.0% versus 68.9%), which is one more reason not
+to go there.
+
+------|--------------|--------------|---------------|
 | 1 MNQ | 0% | 11% | 35% |
 | **2 MNQ** | 29% | **62%** | **70%** |
 | 3 MNQ | **44%** | 67% | 66% |
