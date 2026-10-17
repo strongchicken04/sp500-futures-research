@@ -2,9 +2,19 @@
 indicator("Lucid 4/4 Overnight Gap Reversal", overlay=true, max_labels_count=500, max_lines_count=500)
 
 // Long the RTH open after a weak overnight gap, flat at 15:55.
-// Della Corte & Kosowski, overnight-to-intraday reversal. Tested here on
-// NQ daily 2005-2020: positive in every five-year sub-period and improving
-// over time (+0.67 / +1.17 / +2.35 pt per trade).
+// Della Corte & Kosowski, overnight-to-intraday reversal.
+//
+// READ THIS BEFORE SIZING IT. Year by year on NQ 2005-2020 the edge is not
+// structural, it is dip-buying and it needs a bull market:
+//   2005-2012  +0.28 pt per trade   (nothing)
+//   2013-2020  +4.27 pt per trade
+// Five of sixteen years are negative, and the losing ones are the choppy
+// corrections -- 2011 at -2.37, 2015 at -0.94. Win rate also falls in the
+// good years (16-30%) while the average rises, so the recent profile is a
+// long string of -15s punctuated by large up days.
+//
+// The local daily panel ends 2020-05, so whether this survived 2020-2025
+// could not be checked. Treat it as a bull-regime overlay, not a core rule.
 //
 // The hard 15-point stop is what makes it usable on a trailing-drawdown
 // account. Stopping at one full gap width instead lifts the worst trade to

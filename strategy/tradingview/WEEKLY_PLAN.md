@@ -154,6 +154,33 @@ worse. Current numbers supersede it.
 it does not replicate on NQ: **−6.33 pt per trade**, and it subtracts 8.7pp from
 the portfolio. Turn-of-month is also near-worthless here (+0.8pp).
 
+**Correction to the gap-reversal claim.** An earlier pass reported it as
+"positive in every five-year sub-period". Five-year buckets hid the real
+pattern. Year by year:
+
+| | avg pt/trade |
+|---|---|
+| 2005-2012 | **+0.28** (nothing) |
+| 2013-2020 | **+4.27** |
+
+Five of sixteen years are negative and the losers are the choppy corrections —
+2011 at −2.37, 2015 at −0.94. This is dip-buying, and dip-buying needs a bull
+market. The daily panel ends 2020-05 so 2020-2025 could not be checked at all.
+**Treat indicator 4 as a bull-regime overlay, not a core rule**, and do not
+size it as though the +10pp were dependable.
+
+**The whole lab archive is unusable.** All twenty previously-backtested
+strategies were re-scored on pass rate: the best manages 34.8% with a 64% bust
+rate, against 46% for ORB alone. The reason is one column — every one of them
+averages between −30 and −175 points on a losing trade, against −13 for ORB.
+On a trailing-drawdown account a wide stop is disqualifying regardless of how
+good the entry is. **Average loss under ~20 points is the screening test** any
+new idea has to pass before it is worth simulating.
+
+**The stop width cliff is sharp.** Same gap-reversal rule, varying only the
+stop: 15 pt gives 18.7% bust, 20 pt gives 34.2%. Nearly double, for five
+points of room.
+
 **There is no usable short side in NQ daily data.** Four candidates were built
 and tested to balance the long bias: gap-up fade (+0.52 pt, stable but too
 small to matter), downtrend bounce fade (+0.42 overall but negative in both
