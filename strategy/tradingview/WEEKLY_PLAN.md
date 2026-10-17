@@ -24,6 +24,28 @@ anything else.** It changes the optimal size by a factor of two.
 
 ---
 
+## The volatility gate — biggest single improvement found
+
+**Do not trade when 20-day realised volatility is above 30% annualised.**
+
+Stops are set in points, so the same rule risks far more dollars per trade in
+a high-volatility regime and the trailing drawdown arrives much sooner. Sitting
+out those days costs little and buys a lot:
+
+| | pass | bust |
+|---|------|------|
+| no gate | 76.1% | 15.5% |
+| **gate at 30%** | **79.7%** | **9.0%** |
+
+It blocks about **17% of sessions** and holds up in both halves of the sample.
+The gate is wired into the indicators; the badge turns red and shows the
+current reading when a day is blocked.
+
+The exact threshold should not be trusted to two decimals — anything from
+0.22 to 0.30 improves things, 0.28 scored best, and 0.30 is the robust pick.
+
+---
+
 ## Sizing — depends entirely on rule 3
 
 Measured on the full portfolio, conditional on your current state (+$200 banked):
@@ -36,6 +58,12 @@ Measured on the full portfolio, conditional on your current state (+$200 banked)
 
 **If the 8-week deadline is real → 3 MNQ.** Nothing else reaches the target in time.
 **If there is no deadline → 2 MNQ and take as long as needed.**
+
+With the volatility gate on, flat 2 MNQ reaches **85.3% pass / 10.6% bust**
+over 120 days. Two sizing ideas were tested and rejected: scaling up after the
+drawdown line locks (it adds bust faster than it shortens the run), and sizing
+proportional to cushion (better than flat only when the deadline is short —
+55.9% vs 48.9% at 40 days, but behind it at 120).
 
 This follows Pestien & Sudderth (1985): maximising P(reach goal before ruin)
 means maximising μ/σ², and since size scales drift linearly but variance
