@@ -23,6 +23,54 @@ available — it is what makes the small-size policy below possible.
 
 ---
 
+## The full lifecycle — sizing per phase
+
+All four account rules are now confirmed: no time limit, the drawdown line
+locks at $50,100 once an EOD close clears $52,100, it **stays** locked after a
+withdrawal, and payouts come every 5 days.
+
+That last pair changes everything about the funded phase, because the barrier
+problem is a different shape in each stage:
+
+| stage | start | need | DD line | size | survives | time |
+|-------|-------|------|---------|------|----------|------|
+| evaluation | $50,000 | +$3,000 | trailing | **1 → 2 MNQ at $800** | 96% | ~2.3 mo |
+| first funded cycle | $50,000 | +$4,000 | trailing | **1-2 MNQ** | 100% / 93% | 4.9 / 2.4 mo |
+| **repeat cycles** | $52,000 | +$2,000 | **locked** | **3 MNQ** | **88%** | **13 days** |
+
+The repeat cycle is the easiest barrier in the whole lifecycle and it is where
+being timid costs the most. You start with **$1,900 of cushion against a
+frozen line** and need only $2,000 — the line cannot chase you upward any
+more. Running 1 MNQ there buys a 100% survival rate that is not worth having:
+
+| size on repeats | survives | median | $/account/month |
+|-----------------|----------|--------|-----------------|
+| 1 MNQ | 100% | 55 d | $687 |
+| 2 MNQ | 94.3% | 22 d | $1,418 |
+| **3 MNQ** | **88.0%** | **13 d** | **$1,703** |
+| 4 MNQ | 81.9% | 9 d | $1,644 |
+| 1 NQ | 68.3% | 3 d (5 d floor) | $1,147 |
+
+Those figures already charge each bust the replacement cost — the eval fee
+plus 2.5 months of re-qualifying. The 5-day payout floor does not bind until
+past 5 MNQ, so it is the bust rate that caps aggression, not the schedule.
+
+Across five accounts: **$8,515/month at 3 MNQ against $3,436 at 1 MNQ.** Over
+two years that is roughly $153,000 versus $66,000, from one change that leaves
+the evaluation and first cycle conservative.
+
+**Stagger the five starts by about a month.** Five accounts trading one
+strategy from the same day are not five bets — identical trades give identical
+outcomes, so it is one bet at five times the size. Staggering leaves expected
+passes unchanged (3.7 of 5) while dropping the chance that *nothing* works
+from 26% to under 2%.
+
+⚠️ Still unverified and capable of voiding all of it: whether Lucid permits
+near-identical trading across several accounts. Many firms restrict it. Check
+before buying the extra evaluations.
+
+---
+
 ## The volatility gate — biggest single improvement found
 
 **Do not trade when 20-day realised volatility is above 30% annualised.**
