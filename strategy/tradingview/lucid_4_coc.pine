@@ -1,0 +1,85 @@
+// @version=5
+indicator("Lucid 4/4 Overnight Gap Reversal", overlay=true, max_labels_count=500, max_lines_count=500)
+
+// Long the RTH open after a weak overnight gap, flat at 15:55.
+// Della Corte & Kosowski, overnight-to-intraday reversal. Tested here on
+// NQ daily 2005-2020: positive in every five-year sub-period and improving
+// over time (+0.67 / +1.17 / +2.35 pt per trade).
+//
+// The hard 15-point stop is what makes it usable on a trailing-drawdown
+// account. Stopping at one full gap width instead lifts the worst trade to
+// -283 pt and pushes the portfolio bust rate from 19% to 33%; capping it
+// keeps the same edge with the left tail cut off.
+//
+// Long leg only. The short-after-strong-gap leg earns about a quarter as
+// much (+0.52 vs +2.21 per trade) and overlaps the long-only ORB book.
+
+gapThr  = input.float(0.25, "Min gap below prior close (%)") / 100.0
+stopCap = input.float(15.0, "Hard stop cap (pt)")
+
+hET = hour(time, "America/New_York")
+mET = minute(time, "America/New_York")
+etMin = hET * 60 + mET
+dow = dayofweek(time, "America/New_York")
+skip = dow == dayofweek.wednesday
+rth = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+rthS = rth and not nz(rth[1], false)
+
+// Prior session's RTH close, captured as the session rolls over.
+var float prevClose = na
+var float runClose = na
+if rth
+    runClose := close
+if rthS and not na(runClose[1])
+    prevClose := runClose[1]
+
+var float cE = na
+var float cS = na
+var int cBar = na
+var line cEl = na
+var line cSl = na
+var bool cDn = false
+cDay = year * 10000 + month * 100 + dayofmonth
+dChg = ta.change(cDay) != 0
+if dChg
+    cDn := false
+
+plotEnt = na(cE) ? na : cE
+plotSL = na(cE) ? na : cS
+
+// The gap is only readable on the first RTH bar of the session.
+if rthS and not cDn and not skip and not na(prevClose) and barstate.isconfirmed
+    gap = (open - prevClose) / prevClose
+    if gap <= -gapThr
+        sz = math.min(math.abs(open - prevClose), stopCap)
+        cE := open
+        cS := open - sz
+        cBar := bar_index
+        cEl := line.new(bar_index, cE, bar_index + 5, cE, color=color.yellow, width=3, extend=extend.right)
+        cSl := line.new(bar_index, cS, bar_index + 5, cS, color=color.red, width=3, extend=extend.right)
+        label.new(bar_index, low, "GAP LONG\n" + str.tostring(gap * 100, "#.##") + "%", color=color.aqua, textcolor=color.black, style=label.style_label_up, size=size.normal)
+
+if not na(cE)
+    rsn = ""
+    px = 0.0
+    if low <= cS
+        rsn := "SL"
+        px := cS
+    else if etMin >= 955 or dChg
+        rsn := "EOD"
+        px := close
+    if rsn != ""
+        pnl = px - cE
+        endBar = math.max(bar_index, cBar + 5)
+        line.set_x2(cEl, endBar)
+        line.set_x2(cSl, endBar)
+        line.set_extend(cEl, extend.none)
+        line.set_extend(cSl, extend.none)
+        clr = pnl >= 0 ? color.green : color.red
+        label.new(bar_index, px, "GAP " + rsn + " " + str.tostring(pnl, "+#.#"), color=clr, textcolor=color.white, style=label.style_label_down, size=size.small)
+        cE := na
+        cDn := true
+
+plot(plotEnt, "entry mark", color=color.new(color.yellow, 0), linewidth=2, style=plot.style_cross)
+plot(plotSL, "SL mark", color=color.new(color.red, 0), linewidth=2, style=plot.style_cross)
+plot(rth ? prevClose : na, "prior RTH close", color=color.new(color.gray, 40), style=plot.style_linebr)

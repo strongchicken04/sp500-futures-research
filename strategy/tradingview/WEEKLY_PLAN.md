@@ -1,73 +1,120 @@
-# Lucid Flex 50K — Weekly Plan
+# Lucid Flex 50K — Plan v2
 
-**3 strategies, 3 indicators, one plan.**
-Target: $3000 before -$2000 EOD trailing DD, 8-week window, $1500/day consistency cap.
-
----
-
-## Day-by-day
-
-| Day | Strategies active | Window (ET) | Max trades |
-|-----|------------------|-------------|------------|
-| **MON** | Mon-LONG + S1 ORB + VWAP | 09:30 → 15:55 | 3 |
-| **TUE** | S1 ORB + VWAP | 09:45 → 15:55 | 2 |
-| **WED** | **SKIP — no trades** | — | 0 |
-| **THU** | S1 ORB + VWAP | 09:45 → 15:55 | 2 |
-| **FRI** | Fri-SHORT + S1 ORB + VWAP | 09:30 → 15:55 | 3 |
-
-### Strategy rules recap
-
-- **Mon-LONG** (indicator 3): 09:30 5m bar closes > EMA12 → long at close, SL = bar low, hold to 15:55
-- **Fri-SHORT** (indicator 3): 09:30 5m bar closes < EMA12 → short at close, SL = bar high, hold to 15:55
-- **S1 ORB** (indicator 1): after 09:45, close > OR_high AND > VWAP → long, SL = max(OR_low, close − OR_range), trail 20-EMA, exit 15:55
-- **VWAP** (indicator 2): close crosses VWAP during RTH → both ways, SL 15pt / TP 100pt, exit 15:55
-- **All strategies**: FLAT @ 15:55 ET, no exceptions. Skip Wednesday entirely.
+Rebuilt after a round of literature research and a corrected barrier simulator.
+Several conclusions from v1 were wrong; what changed and why is at the bottom.
 
 ---
 
-## Sizing — tiered by account cushion
+## The three rules that actually govern this account
 
-Cushion = current equity − trailing DD trigger line.
+**1. The drawdown line locks.** It trails the highest *end-of-day* balance, but
+once an EOD close clears **$52,100** it freezes at **$50,100** permanently.
+At that moment you hold $2,000 of room with only $900 left to target.
+→ *Sprint to a $52,100 close, then coast.* The last $900 is near-risk-free.
 
-| Phase | Cushion | Size per trade | Daily loss stop |
-|-------|---------|----------------|-----------------|
-| **1 — Build** | $0 → $400 | **2 MNQ** ($4/pt) | $400 |
-| **2 — Grow** | $400 → $1000 | **3 MNQ** ($6/pt) | $500 |
-| **3 — Push** | $1000 → $3000 | **1 NQ** ($20/pt) | $600 |
+**2. Consistency is a ratio, not a dollar cap.** Largest single day must be
+≤ 50% of **final** profit. It gates the upgrade, it does not kill the account,
+and **overshooting relaxes it**. If your best day was $1,800, finish at $3,600
+rather than grinding ten more small days.
 
-- Only step UP a phase after a green day closes the cushion above the threshold.
-- If a day closes below the previous threshold, step DOWN.
-- **Never size up intraday** — phase change applies to next session's trades.
-- Max 1 contract active per strategy (don't stack).
-
----
-
-## Daily routine
-
-1. **08:30 ET** — Check economic calendar. Red-folder event in first hour? Skip VWAP + ORB until 10:30.
-2. **09:30 ET** — Mon/Fri: watch first 5m bar close for trigger (indicator 3).
-3. **09:45 ET** — ORB window opens (indicator 1). VWAP already active (indicator 2).
-4. **Entry** — Place MKT at close of trigger bar, bracket OCO (SL + TP where applicable).
-5. **Day stop** — If daily loss hits phase limit, FLAT and done for the day.
-6. **15:55 ET** — Close everything manually if any strategy still holding.
-7. **End of day** — Log cushion, re-check phase for tomorrow.
+**3. There is no published time limit.** Lucid documents no deadline for
+LucidFlex. The 8-week window in v1 was self-imposed — and it is the single most
+expensive assumption in the whole plan. ⚠️ **Verify this with Lucid before
+anything else.** It changes the optimal size by a factor of two.
 
 ---
 
-## Pass math (backtest 2018-2025)
+## Sizing — depends entirely on rule 3
 
-- **Combined pass rate ~64%** over 8-week windows
-- Standalone S1 ORB: 50.8% pass
-- Standalone Mon/Fri + VWAP: 32% pass
-- Combined (3 strategies): **64.1% pass / ~5% bust**
-- 2nd attempt EV: **87%** · 3rd attempt EV: **95%**
+Measured on the full portfolio, conditional on your current state (+$200 banked):
+
+| Size | 39 days left | 79 days left | 119 days left |
+|------|--------------|--------------|---------------|
+| 1 MNQ | 0% | 11% | 35% |
+| **2 MNQ** | 29% | **62%** | **70%** |
+| 3 MNQ | **44%** | 67% | 66% |
+
+**If the 8-week deadline is real → 3 MNQ.** Nothing else reaches the target in time.
+**If there is no deadline → 2 MNQ and take as long as needed.**
+
+This follows Pestien & Sudderth (1985): maximising P(reach goal before ruin)
+means maximising μ/σ², and since size scales drift linearly but variance
+quadratically, the smallest workable size wins whenever you have a real edge
+and no clock. 1 MNQ has a **0% bust rate at every window tested** — it cannot
+fail, it can only run out of time.
+
+Daily loss stop: **$240 at 2 MNQ, $300 at 3 MNQ**. Tighter stops beat looser
+ones in every sweep. Day profit cap: **stop at +$1,450**.
 
 ---
 
-## Indicator files
+## The book
 
-- `lucid_1_s1_orb.pine` — paste into TradingView, 15m NQ chart
-- `lucid_2_vwap.pine` — paste into TradingView, 1m or 5m NQ chart
-- `lucid_3_monfri.pine` — paste into TradingView, 5m NQ chart
+| # | Strategy | Edge | Status |
+|---|----------|------|--------|
+| 1 | **S1 ORB 15m long** | the workhorse, 46% pass alone | ✅ tested |
+| 2 | **VWAP band SL25/TP100** | +11pp on top of S1 | ✅ tested, **SL changed from 15 to 25** |
+| 4 | **Overnight gap reversal** | +10pp, *new* | ✅ tested |
+| 3 | Mon/Fri EOD hold | +1pp, marginal | ✅ tested, keep |
 
-Run all three in parallel panes (same symbol, different TFs) or stack as separate indicators on one chart.
+Combined, 2 MNQ, 80-day window: **~61% pass / 19% bust** on the overlap sample.
+
+### Daily schedule
+
+| Time ET | What |
+|---------|------|
+| **09:30** | Gap ≤ −0.25% vs prior close? → **long the open**, hard stop 15 pt |
+| **09:30** | Mon/Fri only: first 5m bar vs EMA12 → enter, stop at that bar's wick |
+| **09:40+** | VWAP ±20bps band breaks → enter, **SL 25 / TP 100** |
+| **09:45–15:00** | ORB: close > OR high *and* > VWAP → long, trail 20-EMA. **Re-enter freely** |
+| **15:30** | *(S6, once backtested)* ROD ≤ −0.20% → short into the close |
+| **15:55** | Flat everything |
+
+Skip Wednesday. Max two positions at once; if a third fires in the same
+direction, skip it.
+
+---
+
+## What changed from v1, and why
+
+**S1 ORB must re-enter.** v1's indicator allowed one trade per day. That is
+wrong: the backtest averages 4.5 entries per day, and capping it at one drops
+the standalone pass rate **from 46% to 9%**. Later entries are the better ones
+— hit rate climbs from 37% on the first to 61% by the seventh, because the
+trend has declared itself. *The indicator has been fixed.*
+
+**VWAP stop moves 15 → 25.** v1 picked SL15/TP100 by total points. Re-scored on
+pass rate, **SL25/TP100 wins (57.7% vs 52.7%)**. Total points is a bad proxy:
+the most profitable cell in the whole grid (SL60/TP200, 10,819 pts) passes only
+44% — worse than running S1 alone.
+
+**The old 64% was measured against the wrong rules** — no MLL lock, and the
+consistency rule modelled as a flat $1,500 kill rather than a 50% ratio that
+dilutes with more profit. The lock makes things better; the ratio makes them
+worse. Current numbers supersede it.
+
+**Drop the "reversal after a large down day" idea.** Published in JAM 2011, but
+it does not replicate on NQ: **−6.33 pt per trade**, and it subtracts 8.7pp from
+the portfolio. Turn-of-month is also near-worthless here (+0.8pp).
+
+**Zero-edge benchmark: 40%.** A driftless walk passes at L/(L+T) = 2000/5000.
+With trailing floors and costs, Villahermosa (SSRN 7445798) measures ~35%.
+Anything we build has to beat that bar to be worth anything, which is the right
+way to read the numbers above.
+
+---
+
+## Still untested
+
+Three strategies are coded and queued but could not be backtested — this
+session's container has no QuantConnect credentials and the egress policy
+blocks market-data hosts:
+
+- **S6 ROD momentum** (`prop_s6_rod_momentum.py`) — the best-evidenced
+  candidate found. Baltussen et al., *JFE* 142(1) 2021: NQ t = 7.97. Short leg
+  only, for decorrelation from the long-only ORB. 29 minutes of exposure a day.
+- **S7 gap fade** (`prop_s7_gap_fade.py`) — practitioner evidence only, no
+  peer-reviewed backtest. Queued on shape, not proof.
+- **Lunch drift 11:00–14:00** — Vojtko & Dujava, SSRN 4934614. Not yet coded.
+
+Restore QC credentials and these can be measured in an afternoon.
