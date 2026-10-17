@@ -11,8 +11,15 @@ indicator("Lucid 2/3 — VWAP Trend v7 (SL15 / TP100)", overlay=true, max_labels
 // =========================================================================
 
 showHist = input.bool(true, "Show historical entries/exits")
-slPts    = input.float(15.0, "Stop-loss (pt)")
+slPts    = input.float(25.0, "Stop-loss (pt)")
 tpPts    = input.float(100.0, "Take-profit (pt)")
+volCeil  = input.float(0.30, "Max 20d realised vol (skip day above this)")
+
+// See lucid_1 for why this gate exists: point-denominated stops risk far more
+// dollars per trade in a high-volatility regime, and the trailing drawdown
+// arrives correspondingly sooner.
+rvol20 = request.security(syminfo.tickerid, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+volOK = na(rvol20) or rvol20 < volCeil
 
 // Session + DOW
 hET = hour(time, "America/New_York")
@@ -43,7 +50,7 @@ dayChg = ta.change(curDayId) != 0
 if dayChg
     vDone := false
 
-canTrade = not isWed and rthFlag and etMin < 15*60+50 and na(vEntry) and not vDone and barstate.isconfirmed
+canTrade = not isWed and volOK and rthFlag and etMin < 15*60+50 and na(vEntry) and not vDone and barstate.isconfirmed
 
 if canTrade and xUp
     vEntry := close

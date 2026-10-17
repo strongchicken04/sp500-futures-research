@@ -16,6 +16,11 @@ indicator("Lucid 3/3 — Mon LONG / Fri SHORT EOD-hold", overlay=true, max_label
 
 showHist = input.bool(true, "Show historical entries/exits")
 emaLen   = input.int(12, "EMA length (first-bar trigger)")
+volCeil  = input.float(0.30, "Max 20d realised vol (skip day above this)")
+
+// See lucid_1 for the rationale behind the volatility gate.
+rvol20 = request.security(syminfo.tickerid, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+volOK = na(rvol20) or rvol20 < volCeil
 
 // Session + DOW
 hET = hour(time, "America/New_York")
@@ -44,7 +49,7 @@ dayChg = ta.change(curDayId) != 0
 if dayChg
     mDone := false
 
-if firstBar and not mDone and barstate.isconfirmed
+if firstBar and volOK and not mDone and barstate.isconfirmed
     if isMon and close > ema12
         mEntry := close
         mSL    := low

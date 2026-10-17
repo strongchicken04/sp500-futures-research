@@ -16,6 +16,11 @@ indicator("Lucid 4/4 Overnight Gap Reversal", overlay=true, max_labels_count=500
 
 gapThr  = input.float(0.25, "Min gap below prior close (%)") / 100.0
 stopCap = input.float(15.0, "Hard stop cap (pt)")
+volCeil = input.float(0.30, "Max 20d realised vol (skip day above this)")
+
+// See lucid_1 for the rationale behind the volatility gate.
+rvol20 = request.security(syminfo.tickerid, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+volOK = na(rvol20) or rvol20 < volCeil
 
 hET = hour(time, "America/New_York")
 mET = minute(time, "America/New_York")
@@ -48,7 +53,7 @@ plotEnt = na(cE) ? na : cE
 plotSL = na(cE) ? na : cS
 
 // The gap is only readable on the first RTH bar of the session.
-if rthS and not cDn and not skip and not na(prevClose) and barstate.isconfirmed
+if rthS and volOK and not cDn and not skip and not na(prevClose) and barstate.isconfirmed
     gap = (open - prevClose) / prevClose
     if gap <= -gapThr
         sz = math.min(math.abs(open - prevClose), stopCap)

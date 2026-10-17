@@ -154,6 +154,14 @@ worse. Current numbers supersede it.
 it does not replicate on NQ: **−6.33 pt per trade**, and it subtracts 8.7pp from
 the portfolio. Turn-of-month is also near-worthless here (+0.8pp).
 
+**There is no usable short side in NQ daily data.** Four candidates were built
+and tested to balance the long bias: gap-up fade (+0.52 pt, stable but too
+small to matter), downtrend bounce fade (+0.42 overall but negative in both
+recent sub-periods), four-day-streak exhaustion (−2.11) and down-day
+follow-through (−3.96). Shorting fights the instrument's structural drift. The
+long bias is a property of NQ, not a bug in the book — the only short worth
+testing is the intraday ROD leg, which needs minute data.
+
 **Zero-edge benchmark: 40%.** A driftless walk passes at L/(L+T) = 2000/5000.
 With trailing floors and costs, Villahermosa (SSRN 7445798) measures ~35%.
 Anything we build has to beat that bar to be worth anything, which is the right
