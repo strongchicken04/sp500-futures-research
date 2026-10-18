@@ -32,11 +32,34 @@ withdrawal, and payouts come every 5 days.
 That last pair changes everything about the funded phase, because the barrier
 problem is a different shape in each stage:
 
-| stage | start | need | DD line | size | survives | time |
-|-------|-------|------|---------|------|----------|------|
-| evaluation | $50,000 | +$3,000 | trailing | **1 → 2 MNQ at $800** | 96% | ~2.3 mo |
-| first funded cycle | $50,000 | +$4,000 | trailing | **1-2 MNQ** | 100% / 93% | 4.9 / 2.4 mo |
-| **repeat cycles** | $52,000 | +$2,000 | **locked** | **3 MNQ** | **88%** | **13 days** |
+| stage | what a bust costs | barrier | size | survives | time |
+|-------|-------------------|---------|------|----------|------|
+| evaluation | **one $150 fee** | hard | **2 MNQ** | 94% | **1.6 mo** |
+| first funded cycle | **the seat** | hard | 1-2 MNQ | 100% / 93% | 4.9 / 2.4 mo |
+| repeat cycles | the seat | **easy** | **3 MNQ** | 88% | **13 days** |
+
+Size should follow the cost of failing multiplied by how hard the barrier is,
+and those two move in opposite directions across the lifecycle. **An
+evaluation bust costs a fee. A funded bust costs the seat** — and the seat is
+worth $1,800 every 13 days thereafter. Being equally careful in both is the
+mistake the earlier version of this plan made.
+
+In the evaluation, caution is close to worthless:
+
+| eval size | pass | median | expected months | expected fees (×5) |
+|-----------|------|--------|-----------------|--------------------|
+| 1 MNQ | 97.3% | 71 d | 3.44 | $771 |
+| **2 MNQ** | **94.1%** | **33 d** | **1.63** | **$797** |
+| 3 MNQ | 75.9% | 20 d | 1.13 | $988 |
+
+Dropping to 1 MNQ buys 3.1 percentage points of pass rate for **1.8 extra
+months**. Going past 2 MNQ costs real money: 3 MNQ saves another half month
+for $190 in extra fees and a pass rate down in the seventies. Ramps were
+tested too and none beat flat 2 MNQ.
+
+Timeline, five copytraded accounts: **1.6 months of evaluation, 2.4 months to
+the first payout, then $9,000 roughly every 13 trading days.** First money at
+about month four, against month 7.4 under the all-1-MNQ plan.
 
 The repeat cycle is the easiest barrier in the whole lifecycle and it is where
 being timid costs the most. You start with **$1,900 of cushion against a
