@@ -144,3 +144,33 @@ plateau, ne spike. Robustnost potvrzena.
 ---
 
 **Připraveno k paper trading.** Další commit po tomto = paper start.
+
+---
+
+## Dodatek 2026-10-18 — re-test: edge je artefakt, NEOBCHODOVAT
+
+Konfigurace výše byla přetestována (`strategy/quantconnect/on_fade_fill_test.py`,
+`scripts/score_on_fill.py`) se třemi pravidly plnění vedle sebe. Výsledek po
+nákladech 0,75 bodu, všechny tři úrovně, ONrange ≥ 65, bracket 15:
+
+| plnění | průměr na obchod | 2018-21 | 2022-25 |
+|---|---|---|---|
+| dotyk úrovně (původní předpoklad) | −1,92 | −1,67 | −2,10 |
+| průchod o 1 tick | −2,10 | −1,92 | −2,23 |
+| close dotykové svíčky | −1,16 | −0,71 | −1,49 |
+
+Původní +3,07 bodu (z = +12,7) vzniklo v `_process_bar(first_bar_of_touch=True)`:
+na svíčce, ve které cena úroveň poprvé zasáhne, se počítá cíl, pokud se ta
+svíčka kdekoli dostala o B bodů na příznivou stranu. U fade ta část pohybu
+typicky proběhla **před** dotykem — cena k úrovni přišla právě odtamtud. Je to
+pohled do budoucnosti uvnitř jedné minutové svíčky.
+
+Důkaz: vstupní ceny a overnight rozpětí obou implementací se shodují v
+3 887 z 3 890 společných případů. Výsledky se liší v 556 případech, kde
+originál hlásí cíl a re-test stop, a v **žádném** opačném. Jediný rozdíl mezi
+implementacemi je zacházení s příznivým pohybem na svíčce plnění.
+
+Stejný mechanismus už dříve vyrobil falešné z = +19,5 ve VWAP mean-reversion
+(viz `results/vwap_mr/VWAP_MR_CZ.md`). Obecné pravidlo pro všechny budoucí
+exportéry: **na svíčce plnění se nesmí počítat příznivý pohyb**, protože jeho
+pořadí vůči plnění není známé.
