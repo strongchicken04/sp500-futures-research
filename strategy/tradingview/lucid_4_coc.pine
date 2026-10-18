@@ -1,4 +1,10 @@
 // @version=5
+// =====================================================================
+// DO NOT TRADE (2026-10-18). The backtest behind this indicator skipped
+// the 09:30 entry bar when checking the stop. Counting it, 82% of entries
+// stop out inside the first five minutes and expectancy is zero
+// (2022-2025: -1.46 pt per trade). Kept only for reference.
+// =====================================================================
 indicator("Lucid 4/4 Overnight Gap Reversal", overlay=true, max_labels_count=500, max_lines_count=500)
 
 // Long the RTH open after a weak overnight gap, flat at 15:55.

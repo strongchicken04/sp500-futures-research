@@ -1,3 +1,23 @@
+# ⚠️ OPRAVA 2026-10-18 — před pondělkem si přečti tohle
+
+**Reverzaci po gapu dolů (indikátor `lucid_gap_reversal` / `lucid_4_coc`) NEOBCHODUJ.**
+Její backtest vstupoval na otevírací ceně svíčky 9:30, ale stop začal
+kontrolovat až od další svíčky — první pětiminutovka po gapu se ignorovala.
+Po opravě skončí **82 % vstupů na stopu právě v té první pětiminutovce** a
+očekávaná hodnota je nulová (0,05% stop: +0,00 bodu; 2022-25: −1,46).
+Původní +10 bodů na obchod byl artefakt. Pine indikátor vstupní svíčku
+kontroluje správně, takže naživo by se choval jako opravená verze.
+
+**Pondělí/Pátek z knihy také vyřaď.** Bez cíle +40 (tak jak ho obchoduješ) má
+sice kladnou hodnotu na obchod, ale stop na knotu první svíčky bývá přes 100
+bodů a kniha je bez něj stejná nebo lepší.
+
+**Opravená kniha: ORB + VWAP pásmo.** Na 3 MNQ: 77,3 % pass / 22,7 % bust
+(s gap reversalem 71,6 / 28,4). Další změny (velikost podle propadu, zlato)
+jsou ve výzkumu a budou v závěrečné zprávě.
+
+---
+
 # Lucid Flex 50K — final plan
 
 Five copytraded accounts. Every number below comes from simulating the actual
