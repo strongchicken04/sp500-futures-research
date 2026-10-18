@@ -1,0 +1,18 @@
+{
+  "projectId": 38061859,
+  "backtestId": "c5588071f573435aaa80306dab1c8b06",
+  "name": "WEDS1_1792352818_1792353041",
+  "statistics": {},
+  "runtimeStatistics": {
+    "Equity": "$1,000,000.00",
+    "Fees": "-$0.00",
+    "Holdings": "$0.00",
+    "Net Profit": "$0.00",
+    "Probabilistic Sharpe Ratio": "0%",
+    "Return": "0.00 %",
+    "Unrealized": "$0.00",
+    "Volume": "$0.00"
+  },
+  "totalPerformance": null,
+  "error": null
+}
