@@ -145,6 +145,16 @@ class PropS8MaeExporter(QCAlgorithm):
                     'dt': b['t'].strftime('%Y-%m-%d %H:%M'),
                 }
                 self.done_today = True
+                # Entry is at this bar's open, so its whole range is after
+                # the fill and its low counts. An earlier version skipped
+                # it, which ignored the most volatile five minutes of the
+                # day -- right after a gap -- and flattered every stop.
+                tr = self.trade
+                adverse = e - b['l']
+                tr['mae'] = max(tr['mae'], adverse)
+                for key in ('lv_pt', 'lv_pct', 'lv_atr'):
+                    tr[key] = [(lvl, 0 if adverse >= lvl else hit)
+                               for lvl, hit in tr[key]]
 
         self.last_close = b['c']
 

@@ -128,6 +128,10 @@ class PropS8GapReversal(QCAlgorithm):
                     'dt': b['t'].strftime('%Y-%m-%d %H:%M'),
                 }
                 self.done_today = True
+                # Entry is at this bar's open, so the bar's low is after the
+                # fill and can stop it out immediately.
+                if b['l'] <= self.trade['sl']:
+                    self._close(self.trade['sl'], 'SL')
 
         self.last_close = b['c']
 

@@ -75,13 +75,19 @@ def load_book(sp: str, gate):
     vwap = to_trades(g, SL_LVLS.index(25.0), TP_LVLS.index(100.0))
     monfri = [t for t in load_tags(f"{sp}/combo_tags.txt", fmt="combo")
               if t.strat == "MONFRI"]
-    s8 = trades_for(parse_mae(f"{sp}/s8mae_tags.txt"), "pct", 0)
+    # Prefer the re-run that counts the entry bar: the original exporter
+    # entered at the 09:30 open but only tracked from the next bar.
+    import os
+    fixed = f"{sp}/S8FIX_tags.txt"
+    src = fixed if os.path.exists(fixed) else f"{sp}/s8mae_tags.txt"
+    s8 = trades_for(parse_mae(src), "pct", 0)
     return merge(gate(s1), gate(vwap), gate(monfri), gate(s8))
 
 
 def main() -> None:
     sp, tagfile = sys.argv[1], sys.argv[2]
-    sigs = parse_ms(tagfile)
+    prefix = sys.argv[3] if len(sys.argv) > 3 else "M"
+    sigs = parse_ms(tagfile, prefix)
     reg = {}
     with open("results/nq_panel_real.csv") as fh:
         for r in csv.DictReader(fh):
