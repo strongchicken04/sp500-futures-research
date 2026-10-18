@@ -1,76 +1,57 @@
-# ⚠️ AKTUALIZACE 2026-10-18 — platí přednostně před vším níže
+# ⚠️ AKTUALIZACE 2026-10-18 (večer) — platí přednostně před vším níže
+
+## 0. Oprava: náklady
+
+Všechny dřívější simulace počítaly bez poplatků a skluzu. Teď je v nich
+**$1 komise + 1,5 ticku skluzu na mikrokontrakt a obchod** (MNQ ≈ $1,75).
+Kniha dělá v průměru 4,6 obchodu denně, takže náklady seberou zhruba čtvrtinu
+hrany. Všechna čísla níže už jsou po nákladech (`scripts/cost_check.py`).
 
 ## 1. Co neobchodovat
 
-- **Reverzace po gapu dolů (`lucid_gap_reversal` / `lucid_4_coc`) — NE.**
-  Backtest vstupoval na otevírací ceně svíčky 9:30, ale stop kontroloval až od
-  další svíčky. Po opravě skončí 82 % vstupů na stopu hned v první
-  pětiminutovce a očekávaná hodnota je nulová (2022–25: −1,46 bodu/obchod).
-- **Pondělí/Pátek (`lucid_3_monfri`) — NE.** Stop na knotu první svíčky bývá
-  přes 100 bodů a kniha je bez něj stejná nebo lepší.
+- **Reverzace po gapu dolů** — artefakt backtestu (stop se nekontroloval
+  v první svíčce), hrana nulová.
+- **Pondělí/Pátek** — široké stopy, kniha je bez nich stejná nebo lepší.
+- **Russell (M2K)** — hrana +$2,46 na M2K a obchod, náklady ~$2,2 → po
+  nákladech skoro nula. Pravděpodobnost projití fází nezvedá.
+- **Zlato (MGC)** — ORB funguje long i short (short zrcadlo kladné všech 8 let,
+  takže to není jen růst zlata), ale hrana $4,6 / $3,9 na MGC a obchod po
+  nákladech ~$3,5 skoro mizí; se skluzem 2 ticky je zlatý účet ztrátový.
 
-## 2. Kniha
+## 2. Kniha — beze změny
 
-| | strategie | trh | indikátor |
-|---|---|---|---|
-| 1 | ORB 15 min long | MNQ | `lucid_1_s1_orb` |
-| 2 | VWAP pásmo (SL 25 / TP 100) | MNQ | `lucid_2_vwap` |
-| 3 | **ORB 15 min long — NOVĚ** | **M2K** | stejný `lucid_1_s1_orb` na grafu M2K |
+ORB 15 min long + VWAP pásmo (SL 25 / TP 100) na MNQ, volatilitní brána 0,30,
+středa ne. Obě strategie mají po nákladech kladnou hranu
+(ORB +$6,1, VWAP +$6,6 na MNQ a obchod).
 
-Pravidla ORB na Russellu jsou úplně stejná jako na NQ (po 9:45, close nad OR
-high i nad VWAP, stop max(OR low, close − OR range), trail 20-EMA, konec 15:55,
-středa ne). **Volatilitní brána čte vždy NQ** (vstup „Vol gate symbol" =
-`CME_MINI:NQ1!`, je to výchozí hodnota) — Russell se obchoduje přesně v ty dny
-jako NQ.
+## 3. Velikost — podle vzdálenosti od DD čáry
 
-Proč Russell: ORB na RTY je kladný ve všech osmi letech 2018–2025, korelace s NQ
-knihou je jen 0,23 a zlepšil pass rate zvlášť na 2018–21 (+3,3 b.) i na
-2022–25 (+3,6 b.).
+`rezerva = zůstatek − DD čára` (dokud se čára nezamkne, je to $2 000 minus
+propad od maxima).
 
-## 3. Velikost — „jednotka" = 1 MNQ + 2,33 M2K
-
-| fáze | jednotky | konkrétně | pass / bust | medián dní |
+| fáze | pravidlo | rezerva → MNQ | pass / bust | medián dní |
 |---|---|---|---|---|
-| evaluace (+$3 000) | 3 | **3 MNQ + 7 M2K** | 82,8 % / 17,2 % | 23 |
-| první funded (+$4 000) | 2 | **2 MNQ + 5 M2K** | 92,9 % / 7,1 % | 47 |
-| další výplaty (+$2 000) | 3 | **3 MNQ + 7 M2K** | 92,9 % / 7,1 % | 14 |
+| evaluace | rezerva ÷ 400, max 4 | ≥1 600: 4 · 1 200–1 599: 3 · 800–1 199: 2 · pod 800: 1 | **77,5 % / 22,5 %** | 27 |
+| první funded | rezerva ÷ 500, max 4 | ≥2 000: 4 · 1 500–1 999: 3 · 1 000–1 499: 2 · pod 1 000: 1 | **80,3 % / 19,7 %** | 53 |
+| další výplaty | rezerva ÷ 400, max 4 | jako evaluace | **88,4 % / 11,6 %** | 14 |
 
-Pro srovnání dosavadní plán jen na NQ (3/2/3 MNQ): 78,6 % / 92,1 % / 92,3 %,
-evaluace 30 dní, první výplata 70 dní.
+Pro srovnání: pevně 3 MNQ v evaluaci = 60,5 % / 39,5 %. Žebříček vyhrál
+v evaluaci i bez nákladů (86,6 % vs 73,9 %), takže tohle je robustní.
 
-## 4. Pět účtů, 24 měsíců (čistý zisk po poplatcích, sdílený kalendář)
+Opatrnější první funded: **pevně 1 MNQ = 95,7 % / 0 %**, ale medián ~134
+obchodních dní (~6 měsíců).
 
-| varianta | p10 | medián | p90 |
-|---|---|---|---|
-| 5× jen NQ, 3/2/3 (dosavadní) | $60 000 | $123 750 | $178 500 |
-| **5× NQ + RTY, 3/2/3 (doporučeno)** | **$105 750** | **$178 500** | **$231 750** |
-| 5× NQ + RTY, 2/2/2 (opatrnější eval) | $70 500 | $152 250 | $223 500 |
-| 5× NQ + RTY, 4/3/4 (agresivní) | $112 500 | $192 750 | $255 750 |
-| 2× NQ + RTY + 3× zlato (oddělené účty) | $108 450 | $148 350 | $191 850 |
+## 4. Pět účtů, 24 měsíců, po nákladech
 
-4/3/4 má nejvyšší medián, ale evaluace jen 75 % a první funded 82 %. Protože
-chceš ve fázi 2 spíš vyšší jistotu, doporučuji **3/2/3**. Kdo chce eval
-s 93 %, vezme 2 jednotky (za cenu ~14 dní navíc).
+Žebříček 400/500/400: p10 $24 000 · **medián $105 750** · p90 $179 250.
+Dřívější čísla ($178 500 atd.) byla bez nákladů a neplatí.
 
-Na „velikost podle propadu" (ladder) v kombinaci s Russellem nepřecházej:
-v evaluaci sice zvedá pass na ~93 %, ale za celý životní cyklus vychází hůř
-než flat 3/2/3 (medián $151 500 vs $178 500).
+## 5. Zamítnuto
 
-## 5. Zlato — zatím NE
-
-ORB na zlatě (MGC) vypadá velmi dobře (kladný všech 8 let, korelace s NQ
-+0,06), ale zlato v letech 2018–25 hlavně rostlo a ještě nedoběhl test
-zrcadlového shortu, který rozliší skutečnou hranu od pouhého driftu. **Do
-stejného účtu s NQ ho nedávej** — při 7 MGC na jednotku pass rate spadne pod
-40 %. Pokud test projde, bude to samostatný účet.
-
-## 6. Co bylo testováno a zamítnuto (tato kola)
-
-Reverzace po gapu (artefakt vstupní svíčky), fade overnight levelů (artefakt —
-TP na svíčce vstupu), mikro-propad 1 min (artefakt 5min svíčky, na 1 min bez
-hrany), ROD momentum, crude oil EIA (OOS otočil znaménko), zlato přes
-asijskou seanci (nárazové, kniha horší), Pondělí/Pátek, dvě dávky nových
-intradenních signálů NQ, shorty, dřívější „lab" archiv.
+Reverzace po gapu, fade overnight levelů, 1min mikro-propad (tři artefakty
+backtestu), ROD momentum, ropa kolem EIA, zlato přes asijskou seanci,
+Pondělí/Pátek, dvě dávky nových signálů na NQ, shorty, „lab" archiv, Russell
+ORB a zlatý ORB (hrana nepřežije náklady).
 
 ---
 
