@@ -1,3 +1,22 @@
+# ⚠️ AKTUALIZACE 2026-10-18 (skutečné komise) — platí přednostně před vším níže
+
+Čitelná verze plánu je v Claude Docs („Lucid Flex 50K — finální plán").
+
+Komise účtu na mikro a obchod: MNQ/M2K/MYM $0,50, MGC $0,80. Se skluzem
+1 tick (`scripts/real_costs.py`):
+
+| kniha (žebříček, max 4 jednotky) | eval · funded · výplaty | medián 5 účtů / 24 m |
+|---|---|---|
+| NQ (K400/500/400) | 88,8 · 87,9 · 96,0 | $116 250 |
+| **NQ + 2 MYM na MNQ (K700/800/700)** | **93,7 · 95,4 · 99,5** | **$125 250** |
+| NQ + 2,33 M2K (K500/600/500) | 88,1 · 87,3 · 93,4 | $133 500 |
+| NQ + 2 MYM + 2,33 M2K | 91,5 · 92,2 · 98,8 | $143 250 |
+| zlato long+short, samostatný účet | 82,3 · 81,0 · 88,3 | $62 250 |
+
+**Rozhodnutí: přidat ORB na Dow (2 MYM na každý MNQ).** Zvedá pass ve všech
+fázích i bez skluzu i s dvojnásobnou komisí. Russell zvedá medián, ale snižuje
+pass v evaluaci a prvním funded — vynechán. Zlato vynecháno.
+
 # ⚠️ AKTUALIZACE 2026-10-18 (večer) — platí přednostně před vším níže
 
 ## 0. Oprava: náklady
