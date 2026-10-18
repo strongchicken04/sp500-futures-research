@@ -13,13 +13,17 @@ indicator("Lucid 1/3 — S1 ORB 15min Long", overlay=true, max_labels_count=500,
 showHist = input.bool(true, "Show historical entries/exits")
 ema20Len = input.int(20, "20-EMA trail length (chart TF)")
 volCeil  = input.float(0.30, "Max 20d realised vol (skip day above this)")
+volSym   = input.string("CME_MINI:NQ1!", "Vol gate symbol (empty = this chart)")
 
 // Volatility gate. Stops are set in points, so in the top volatility quintile
 // the same rule risks far more dollars per trade and the trailing drawdown
 // gets hit much sooner. Sitting out those days (about 17% of the sample)
 // raised portfolio pass rate by ~5pp and roughly halved the bust rate.
-dRet = request.security(syminfo.tickerid, "D", close / close[1] - 1.0, lookahead=barmerge.lookahead_off)
-rvol20 = request.security(syminfo.tickerid, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+// The gate always reads NQ, so on an M2K chart Russell trades on exactly the
+// days NQ trades, as in the backtest.
+gateSym = volSym == "" ? syminfo.tickerid : volSym
+dRet = request.security(gateSym, "D", close / close[1] - 1.0, lookahead=barmerge.lookahead_off)
+rvol20 = request.security(gateSym, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
 volOK = na(rvol20) or rvol20 < volCeil
 
 // Session + DOW

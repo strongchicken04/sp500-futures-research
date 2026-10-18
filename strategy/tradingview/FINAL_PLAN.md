@@ -1,20 +1,76 @@
-# ⚠️ OPRAVA 2026-10-18 — před pondělkem si přečti tohle
+# ⚠️ AKTUALIZACE 2026-10-18 — platí přednostně před vším níže
 
-**Reverzaci po gapu dolů (indikátor `lucid_gap_reversal` / `lucid_4_coc`) NEOBCHODUJ.**
-Její backtest vstupoval na otevírací ceně svíčky 9:30, ale stop začal
-kontrolovat až od další svíčky — první pětiminutovka po gapu se ignorovala.
-Po opravě skončí **82 % vstupů na stopu právě v té první pětiminutovce** a
-očekávaná hodnota je nulová (0,05% stop: +0,00 bodu; 2022-25: −1,46).
-Původní +10 bodů na obchod byl artefakt. Pine indikátor vstupní svíčku
-kontroluje správně, takže naživo by se choval jako opravená verze.
+## 1. Co neobchodovat
 
-**Pondělí/Pátek z knihy také vyřaď.** Bez cíle +40 (tak jak ho obchoduješ) má
-sice kladnou hodnotu na obchod, ale stop na knotu první svíčky bývá přes 100
-bodů a kniha je bez něj stejná nebo lepší.
+- **Reverzace po gapu dolů (`lucid_gap_reversal` / `lucid_4_coc`) — NE.**
+  Backtest vstupoval na otevírací ceně svíčky 9:30, ale stop kontroloval až od
+  další svíčky. Po opravě skončí 82 % vstupů na stopu hned v první
+  pětiminutovce a očekávaná hodnota je nulová (2022–25: −1,46 bodu/obchod).
+- **Pondělí/Pátek (`lucid_3_monfri`) — NE.** Stop na knotu první svíčky bývá
+  přes 100 bodů a kniha je bez něj stejná nebo lepší.
 
-**Opravená kniha: ORB + VWAP pásmo.** Na 3 MNQ: 77,3 % pass / 22,7 % bust
-(s gap reversalem 71,6 / 28,4). Další změny (velikost podle propadu, zlato)
-jsou ve výzkumu a budou v závěrečné zprávě.
+## 2. Kniha
+
+| | strategie | trh | indikátor |
+|---|---|---|---|
+| 1 | ORB 15 min long | MNQ | `lucid_1_s1_orb` |
+| 2 | VWAP pásmo (SL 25 / TP 100) | MNQ | `lucid_2_vwap` |
+| 3 | **ORB 15 min long — NOVĚ** | **M2K** | stejný `lucid_1_s1_orb` na grafu M2K |
+
+Pravidla ORB na Russellu jsou úplně stejná jako na NQ (po 9:45, close nad OR
+high i nad VWAP, stop max(OR low, close − OR range), trail 20-EMA, konec 15:55,
+středa ne). **Volatilitní brána čte vždy NQ** (vstup „Vol gate symbol" =
+`CME_MINI:NQ1!`, je to výchozí hodnota) — Russell se obchoduje přesně v ty dny
+jako NQ.
+
+Proč Russell: ORB na RTY je kladný ve všech osmi letech 2018–2025, korelace s NQ
+knihou je jen 0,23 a zlepšil pass rate zvlášť na 2018–21 (+3,3 b.) i na
+2022–25 (+3,6 b.).
+
+## 3. Velikost — „jednotka" = 1 MNQ + 2,33 M2K
+
+| fáze | jednotky | konkrétně | pass / bust | medián dní |
+|---|---|---|---|---|
+| evaluace (+$3 000) | 3 | **3 MNQ + 7 M2K** | 82,8 % / 17,2 % | 23 |
+| první funded (+$4 000) | 2 | **2 MNQ + 5 M2K** | 92,9 % / 7,1 % | 47 |
+| další výplaty (+$2 000) | 3 | **3 MNQ + 7 M2K** | 92,9 % / 7,1 % | 14 |
+
+Pro srovnání dosavadní plán jen na NQ (3/2/3 MNQ): 78,6 % / 92,1 % / 92,3 %,
+evaluace 30 dní, první výplata 70 dní.
+
+## 4. Pět účtů, 24 měsíců (čistý zisk po poplatcích, sdílený kalendář)
+
+| varianta | p10 | medián | p90 |
+|---|---|---|---|
+| 5× jen NQ, 3/2/3 (dosavadní) | $60 000 | $123 750 | $178 500 |
+| **5× NQ + RTY, 3/2/3 (doporučeno)** | **$105 750** | **$178 500** | **$231 750** |
+| 5× NQ + RTY, 2/2/2 (opatrnější eval) | $70 500 | $152 250 | $223 500 |
+| 5× NQ + RTY, 4/3/4 (agresivní) | $112 500 | $192 750 | $255 750 |
+| 2× NQ + RTY + 3× zlato (oddělené účty) | $108 450 | $148 350 | $191 850 |
+
+4/3/4 má nejvyšší medián, ale evaluace jen 75 % a první funded 82 %. Protože
+chceš ve fázi 2 spíš vyšší jistotu, doporučuji **3/2/3**. Kdo chce eval
+s 93 %, vezme 2 jednotky (za cenu ~14 dní navíc).
+
+Na „velikost podle propadu" (ladder) v kombinaci s Russellem nepřecházej:
+v evaluaci sice zvedá pass na ~93 %, ale za celý životní cyklus vychází hůř
+než flat 3/2/3 (medián $151 500 vs $178 500).
+
+## 5. Zlato — zatím NE
+
+ORB na zlatě (MGC) vypadá velmi dobře (kladný všech 8 let, korelace s NQ
++0,06), ale zlato v letech 2018–25 hlavně rostlo a ještě nedoběhl test
+zrcadlového shortu, který rozliší skutečnou hranu od pouhého driftu. **Do
+stejného účtu s NQ ho nedávej** — při 7 MGC na jednotku pass rate spadne pod
+40 %. Pokud test projde, bude to samostatný účet.
+
+## 6. Co bylo testováno a zamítnuto (tato kola)
+
+Reverzace po gapu (artefakt vstupní svíčky), fade overnight levelů (artefakt —
+TP na svíčce vstupu), mikro-propad 1 min (artefakt 5min svíčky, na 1 min bez
+hrany), ROD momentum, crude oil EIA (OOS otočil znaménko), zlato přes
+asijskou seanci (nárazové, kniha horší), Pondělí/Pátek, dvě dávky nových
+intradenních signálů NQ, shorty, dřívější „lab" archiv.
 
 ---
 
