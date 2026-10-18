@@ -31,7 +31,7 @@ def first(sp, *names):
     return None
 
 
-def load_components(sp, use_true_vwap=False, mf_variant="MFE"):
+def load_components(sp, use_true_vwap=True, mf_variant="MFE"):
     src = {}
     s1p = first(sp, "S1VW_tags.txt") if use_true_vwap else None
     s1p = s1p or first(sp, "s1_tags.txt")
