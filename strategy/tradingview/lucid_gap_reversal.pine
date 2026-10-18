@@ -1,0 +1,111 @@
+// @version=5
+indicator("Lucid — Overnight Gap Reversal", overlay=true, max_labels_count=500, max_lines_count=500)
+
+// Buy the RTH open after the session gaps down against the prior close, hard
+// stop just below, flat at 15:55. Della Corte & Kosowski's overnight-to-
+// intraday reversal, cut down to one instrument and the long leg only.
+//
+// Verified on QuantConnect minute data 2018-2025, 475 trades. The edge
+// survived the stretch a daily panel could not reach: +2.38 pt per trade over
+// 2018-2020 against +8.91 over 2021-2025.
+//
+// EXPECT IT TO FEEL BAD. Around 85% of entries stop out small and the other
+// 15% run to the close, several above +300 points. Losing runs of ten or more
+// are normal. The expectancy is real but it arrives in a handful of days.
+//
+// NEVER WIDEN THE STOP AFTER A LOSING STREAK. The winners run to the close
+// regardless of how wide the stop is, so its width only sets what the losers
+// cost. Every stop definition was swept against recorded excursions: 0.05% of
+// price passes at 82.2%, one ATR at 59.6%. Wider is strictly worse here.
+//
+// The stop is a percentage, not a point count, on purpose. A fixed 15 points
+// was fitted where NQ traded near 5,000, which made it 0.30% of price; at
+// 22,000 the same number is 0.07%, so the rule tightened fourfold while
+// looking unchanged. In percent it holds still as the index rises. At 30,000
+// it works out near 15 points.
+//
+// Long leg only. Shorting a strong gap up earns about a quarter as much
+// (+0.52 against +2.21 per trade) and overlaps the long-only ORB book.
+
+gapThr  = input.float(0.25, "Min gap below prior close (%)") / 100.0
+stopPct = input.float(0.05, "Hard stop (% of price)") / 100.0
+useVol  = input.bool(true, "Apply volatility gate")
+volCeil = input.float(0.30, "   skip day above this 20d vol")
+skipWed = input.bool(true, "Skip Wednesday")
+
+// Yesterday's 20-day realised volatility, annualised. lookahead_off means
+// this reads the last completed daily bar, so it never repaints.
+rvol20 = request.security(syminfo.tickerid, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+volOK = not useVol or na(rvol20) or rvol20 < volCeil
+
+hET = hour(time, "America/New_York")
+mET = minute(time, "America/New_York")
+etMin = hET * 60 + mET
+dow = dayofweek(time, "America/New_York")
+skip = skipWed and dow == dayofweek.wednesday
+rth = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+rthS = rth and not nz(rth[1], false)
+
+// Prior session's RTH close, captured as the session rolls over.
+var float prevClose = na
+var float runClose = na
+if rth
+    runClose := close
+if rthS and not na(runClose[1])
+    prevClose := runClose[1]
+
+var float cE = na
+var float cS = na
+var int cBar = na
+var line cEl = na
+var line cSl = na
+var bool cDn = false
+cDay = year * 10000 + month * 100 + dayofmonth
+dChg = ta.change(cDay) != 0
+if dChg
+    cDn := false
+
+plotEnt = na(cE) ? na : cE
+plotSL = na(cE) ? na : cS
+
+// The gap is only readable on the first RTH bar of the session.
+if rthS and volOK and not cDn and not skip and not na(prevClose) and barstate.isconfirmed
+    gap = (open - prevClose) / prevClose
+    if gap <= -gapThr
+        sz = math.min(math.abs(open - prevClose), open * stopPct)
+        cE := open
+        cS := open - sz
+        cBar := bar_index
+        cEl := line.new(bar_index, cE, bar_index + 5, cE, color=color.yellow, width=3, extend=extend.right)
+        cSl := line.new(bar_index, cS, bar_index + 5, cS, color=color.red, width=3, extend=extend.right)
+        label.new(bar_index, low, "GAP LONG\n" + str.tostring(gap * 100, "#.##") + "%", color=color.aqua, textcolor=color.black, style=label.style_label_up, size=size.normal)
+
+if not na(cE)
+    rsn = ""
+    px = 0.0
+    if low <= cS
+        rsn := "SL"
+        px := cS
+    else if etMin >= 955 or dChg
+        rsn := "EOD"
+        px := close
+    if rsn != ""
+        pnl = px - cE
+        endBar = math.max(bar_index, cBar + 5)
+        line.set_x2(cEl, endBar)
+        line.set_x2(cSl, endBar)
+        line.set_extend(cEl, extend.none)
+        line.set_extend(cSl, extend.none)
+        clr = pnl >= 0 ? color.green : color.red
+        label.new(bar_index, px, "GAP " + rsn + " " + str.tostring(pnl, "+#.#"), color=clr, textcolor=color.white, style=label.style_label_down, size=size.small)
+        cE := na
+        cDn := true
+
+// A gap that qualified on size but was blocked by a filter, so you can see
+// what the gates are costing you.
+blocked = rthS and not cDn and not na(prevClose) and (open - prevClose) / prevClose <= -gapThr and (not volOK or skip)
+plotshape(blocked, "blocked by filter", shape.xcross, location.belowbar, color=color.new(color.gray, 40), size=size.tiny)
+
+plot(plotEnt, "entry", color=color.new(color.yellow, 0), linewidth=2, style=plot.style_cross)
+plot(plotSL, "stop", color=color.new(color.red, 0), linewidth=2, style=plot.style_cross)
+plot(rth ? prevClose : na, "prior RTH close", color=color.new(color.gray, 40), style=plot.style_linebr)
