@@ -32,6 +32,21 @@ nákladech závislé úplně — přepočítat, až bude známa skutečná komis
   takže to není jen růst zlata), ale hrana $4,6 / $3,9 na MGC a obchod po
   nákladech ~$3,5 skoro mizí; se skluzem 2 ticky je zlatý účet ztrátový.
 
+## 1b. Kandidát: ORB na Dow (MYM) — rozhodnout podle skutečných nákladů
+
+ORB na YM: hrubě +$3,88 na MYM a obchod, kladný všech 8 let, denní korelace
+s NQ knihou 0,42. Přidán ke knize (2 MYM na 1 MNQ, žebříček rezerva ÷ 700 /
+÷ 800, max 4 jednotky):
+
+| náklad / mikro | bez YM: eval · funded · výplaty · medián | s YM: eval · funded · výplaty · medián |
+|---|---|---|
+| $0,50 | 89,9 · 90,2 · 97,5 · $134 250 | 100 · 100 · 100 · $152 250 |
+| $1,00 | 88,8 · 87,9 · 96,0 · $116 250 | 93,7 · 95,4 · 99,5 · $125 250 |
+
+Na 2018–21 (při $1) eval 81,9 → 86,8 %. Zlepšení je v obou obdobích, ale
+hrana na obchod je malá, takže zavést až po ověření skutečné komise a skluzu.
+S&P (MES) zamítnut — po nákladech ztrátový 2018–2020.
+
 ## 2. Kniha — beze změny
 
 ORB 15 min long + VWAP pásmo (SL 25 / TP 100) na MNQ, volatilitní brána 0,30,
