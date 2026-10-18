@@ -50,23 +50,40 @@ skip it.
 
 ---
 
-## Sizing — 3 MNQ throughout
+## Sizing — 3 / 2 / 3 MNQ
 
-| stage | need | what a bust costs | survives | median |
-|-------|------|-------------------|----------|--------|
-| evaluation | +$3,000 | one $150 fee | **75.9%** | 20 days |
-| first funded cycle | +$4,000 | the seat | **73.1%** | 26 days |
-| repeat cycles | +$2,000 | the seat | **88.0%** | 13 days |
+| stage | need | what a bust costs | size | survives | median |
+|-------|------|-------------------|------|----------|--------|
+| evaluation | +$3,000 | one $150 fee | **3 MNQ** | 75.9% | 20 days |
+| first funded cycle | +$4,000 | **the seat** | **2 MNQ** | **92.2%** | 56 days |
+| repeat cycles | +$2,000 | the seat | **3 MNQ** | 88.0% | 13 days |
 
-Daily loss stop **$300**. Day profit cap **$1,450**. Never exceed 3 MNQ —
-at 4 MNQ and beyond the extra bust rate outruns the extra speed, and past
-5 MNQ the 5-day payout floor caps the gain anyway.
+Daily loss stop **$300** at 3 MNQ, **$240** at 2 MNQ. Day profit cap $1,450.
 
-The repeat cycle survives far better than the other two because it starts at
-$52,000 against a **frozen** $50,100 line: $1,900 of cushion that can no
-longer chase you upward. It is the easiest barrier in the lifecycle.
+The middle stage is the one that deserves caution, and it is the only one.
+An evaluation bust costs a fee, so haste there is nearly free. A repeat cycle
+starts at $52,000 against a **frozen** $50,100 line — $1,900 of cushion that
+can no longer chase you — so it survives 88% even at 3 MNQ. The first funded
+cycle has neither property: the line is still trailing, the target is the
+largest of the three at +$4,000, and losing it costs a seat worth $1,800
+every two weeks thereafter.
 
----
+Easing that stage from 3 to 2 MNQ pays for itself twice over:
+
+| | 3 / 3 / 3 | **3 / 2 / 3** | 3 / 1 / 3 |
+|---|---|---|---|
+| median, 24 months | $112,500 | **$123,000** | $96,000 |
+| p10 | $68,250 | **$78,750** | $51,750 |
+| first payout | 4.1 mo | 4.6 mo | 6.8 mo |
+| rebuilds | 4.75 | **2.38** | 1.70 |
+
+Going further, to 1 MNQ, overshoots: survival reaches 100% but the stage takes
+5.5 months, and the delay into the repeat loop costs more than the safety is
+worth.
+
+A ramp that sizes up once the line locks at +$2,100 was also tested and is
+dominated — at 1 MNQ it takes so long to reach the lock that flat 2 MNQ beats
+it on survival *and* on time.
 
 ## What to expect over 24 months
 
