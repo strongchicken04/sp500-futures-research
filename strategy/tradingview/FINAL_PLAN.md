@@ -7,6 +7,20 @@ Všechny dřívější simulace počítaly bez poplatků a skluzu. Teď je v nic
 Kniha dělá v průměru 4,6 obchodu denně, takže náklady seberou zhruba čtvrtinu
 hrany. Všechna čísla níže už jsou po nákladech (`scripts/cost_check.py`).
 
+$1,75 je konzervativní odhad. V sim prostředí propky bude skluz spíš menší
+(tržní příkaz ale pořád platí spread, stop se plní až za spouští). Citlivost
+na náklady za MNQ a obchod:
+
+| náklad / MNQ | pevně 3/2/3: eval · funded · výplaty · medián 5 účtů | žebříček 400/500/400: eval · funded · výplaty · medián |
+|---|---|---|
+| $0,00 | 77,4 · 91,1 · 93,6 · $131 250 | 92,2 · 92,4 · 98,5 · $152 250 |
+| $0,50 | 74,1 · 87,8 · 91,4 · $132 000 | 89,9 · 90,2 · 97,5 · $134 250 |
+| $1,00 | 70,3 · 85,6 · 89,2 · $114 000 | 88,8 · 87,9 · 96,0 · $116 250 |
+| $1,75 | 60,5 · 72,6 · 81,0 · $87 000 | 77,4 · 80,2 · 88,4 · $97 500 |
+
+Žebříček vyhrává při každé úrovni nákladů. Russell a zlato jsou na
+nákladech závislé úplně — přepočítat, až bude známa skutečná komise.
+
 ## 1. Co neobchodovat
 
 - **Reverzace po gapu dolů** — artefakt backtestu (stop se nekontroloval
