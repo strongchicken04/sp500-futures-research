@@ -84,13 +84,21 @@ def dollars(ts, pp):
     return [Trade(t.date, t.points * pp, t.strat) for t in ts]
 
 
-def book(c, reg, ceiling=0.30, with_wed=False, mnq=1, gc_micros=0):
-    """Dollar-denominated trades for `mnq` MNQ plus optional gold."""
+def book(c, reg, ceiling=0.30, with_wed=False, mnq=1, gc_micros=0,
+         legacy=False):
+    """Dollar-denominated trades for `mnq` MNQ plus optional gold.
+
+    The book is ORB + VWAP band. The gap reversal (no edge once its entry
+    bar is counted) and Monday/Friday (losses too wide) were removed;
+    legacy=True restores them for comparison.
+    """
     def g(ts):
         return [t for t in ts if reg.get(t.date, 9.0) < ceiling]
-    parts = [c["s1"], c["vg"], c["s8"], c["mf"]]
+    parts = [c["s1"], c["vg"]]
+    if legacy:
+        parts += [c["s8"], c["mf"]]
     if with_wed:
-        parts += list(c["wed"].values())
+        parts += [v for k, v in c["wed"].items() if k in ("s1", "vg")]
     nq = dollars(merge(*[g(p) for p in parts]), 2.0 * mnq)
     if gc_micros:
         nq = merge(nq, dollars(c["gc"], 10.0 * gc_micros))
