@@ -15,6 +15,18 @@ from AlgorithmImports import *
 #             VBD  first 5m close below VWAP - 20 bp (after 09:40)
 #   MODE "C"  PDL / PDH  first RTH minute touching the prior day's low / high
 #             ONL / ONH  first RTH minute touching the overnight low / high
+#   MODE "D"  O5U / O5D  09:35, after an up / down first 5-minute candle
+#             IBU / IBD  first 5m close above / below the 09:30-10:30 range
+#             NZU / NZD  first half-hour close outside the "noise area"
+#                        (Zarattini, Aziz & Barbon 2024): max/min(open, prior
+#                        close) x (1 +/- the 14-day mean absolute move from
+#                        the open at that time of day)
+#   MODE "E"  IHT / ILT  first minute touching the 09:30-10:30 high / low
+#                        after 10:30
+#             VAB / VAA  opened below / above the prior day's value area and
+#                        a 5m bar closes back inside it (the "80% rule")
+#             MDU / MDD  12:00 with price 30 bp above / below VWAP
+#             CLU / CLD  15:00 with the day up / down from the 09:30 open
 #
 # Entry is the close of the signalling bar; tracking starts on the next
 # minute, so nothing inside the signal bar counts.
@@ -47,6 +59,8 @@ class CondBracketExporter(QCAlgorithm):
         self.day = None
         self.trk = []
         self.pc = self.pdh = self.pdl = None
+        self.vah = self.val = None
+        self.noise = {}
         self.on_h = self.on_l = None
         self._reset_day()
 
@@ -58,6 +72,9 @@ class CondBracketExporter(QCAlgorithm):
         self.orh = self.orl = None
         self.b5 = None
         self.done = set()
+        self.ibh = self.ibl = None
+        self.prof = {}
+        self.va_open = 0
 
     # ------------------------------------------------------------------
     def OnData(self, slice):
@@ -104,34 +121,50 @@ class CondBracketExporter(QCAlgorithm):
             self.orh = h if self.orh is None else max(self.orh, h)
             self.orl = l if self.orl is None else min(self.orl, l)
 
+        if hm <= 10 * 60 + 30:
+            self.ibh = h if self.ibh is None else max(self.ibh, h)
+            self.ibl = l if self.ibl is None else min(self.ibl, l)
+        key = round((h + l + c) / 3.0)
+        self.prof[key] = self.prof.get(key, 0.0) + v
+        # noise area: absolute move from the open at this minute of the day
+        mv = abs(c / self.o930 - 1.0)
+        hist = self.noise.setdefault(hm, [])
+        sigma = sum(hist) / len(hist) if len(hist) >= 14 else None
+        hist.append(mv)
+        if len(hist) > 14:
+            hist.pop(0)
+
         if hm == 16 * 60:
             self.pc, self.pdh, self.pdl = c, self.rth_h, self.rth_l
+            self._value_area()
             return
         if self.pc is None or hm > 15 * 60:
             return
 
+        b = self.b5
+        if b is None:
+            self.b5 = b = [h, l, c]
+        else:
+            b[0], b[1], b[2] = max(b[0], h), min(b[1], l), c
+        bar5 = hm % 5 == 0
+        if bar5:
+            self.b5 = None
+        cl = b[2]
+
         if MODE == "A" and hm in TIMES:
             self._open(TIMES[hm], hm, c, vwap)
 
-        if MODE == "B":
-            b = self.b5
-            if b is None:
-                self.b5 = b = [h, l, c]
-            else:
-                b[0], b[1], b[2] = max(b[0], h), min(b[1], l), c
-            if hm % 5 == 0:
-                self.b5 = None
-                cl = b[2]
-                if hm > 9 * 60 + 45:
-                    if cl > self.orh and cl > vwap:
-                        self._first("ORB", hm, cl, vwap)
-                    if cl < self.orl and cl < vwap:
-                        self._first("ORS", hm, cl, vwap)
-                if hm >= 9 * 60 + 40:
-                    if cl > vwap * 1.002:
-                        self._first("VBU", hm, cl, vwap)
-                    if cl < vwap * 0.998:
-                        self._first("VBD", hm, cl, vwap)
+        if MODE == "B" and bar5:
+            if hm > 9 * 60 + 45:
+                if cl > self.orh and cl > vwap:
+                    self._first("ORB", hm, cl, vwap)
+                if cl < self.orl and cl < vwap:
+                    self._first("ORS", hm, cl, vwap)
+            if hm >= 9 * 60 + 40:
+                if cl > vwap * 1.002:
+                    self._first("VBU", hm, cl, vwap)
+                if cl < vwap * 0.998:
+                    self._first("VBD", hm, cl, vwap)
 
         if MODE == "C":
             if l <= self.pdl:
@@ -142,6 +175,63 @@ class CondBracketExporter(QCAlgorithm):
                 self._first("ONL", hm, c, vwap)
             if self.onh is not None and h >= self.onh:
                 self._first("ONH", hm, c, vwap)
+
+        if MODE == "D":
+            if hm == 9 * 60 + 35:
+                if c > self.o930:
+                    self._first("O5U", hm, c, vwap)
+                elif c < self.o930:
+                    self._first("O5D", hm, c, vwap)
+            if bar5 and hm > 10 * 60 + 30:
+                if cl > self.ibh:
+                    self._first("IBU", hm, cl, vwap)
+                if cl < self.ibl:
+                    self._first("IBD", hm, cl, vwap)
+            if hm % 30 == 0 and hm >= 10 * 60 and sigma is not None:
+                up = max(self.o930, self.pc) * (1.0 + sigma)
+                dn = min(self.o930, self.pc) * (1.0 - sigma)
+                if c > up:
+                    self._first("NZU", hm, c, vwap)
+                if c < dn:
+                    self._first("NZD", hm, c, vwap)
+
+        if MODE == "E":
+            if hm > 10 * 60 + 30:
+                if h >= self.ibh:
+                    self._first("IHT", hm, c, vwap)
+                if l <= self.ibl:
+                    self._first("ILT", hm, c, vwap)
+            if hm == 9 * 60 + 31 and self.vah is not None:
+                self.va_open = -1 if self.o930 < self.val else (1 if self.o930 > self.vah else 0)
+            if bar5 and self.va_open != 0 and self.val <= cl <= self.vah:
+                self._first("VAB" if self.va_open < 0 else "VAA", hm, cl, vwap)
+            if hm == 12 * 60:
+                if c > vwap * 1.003:
+                    self._first("MDU", hm, c, vwap)
+                if c < vwap * 0.997:
+                    self._first("MDD", hm, c, vwap)
+            if hm == 15 * 60:
+                self._first("CLU" if c > self.o930 else "CLD", hm, c, vwap)
+
+    def _value_area(self):
+        """70% of the session's volume around its point of control."""
+        if not self.prof:
+            return
+        px = sorted(self.prof)
+        tot = sum(self.prof.values())
+        poc = max(px, key=lambda k: self.prof[k])
+        i = j = px.index(poc)
+        acc = self.prof[poc]
+        while acc < 0.7 * tot and (i > 0 or j < len(px) - 1):
+            lo = self.prof[px[i - 1]] if i > 0 else -1
+            hi = self.prof[px[j + 1]] if j < len(px) - 1 else -1
+            if hi >= lo:
+                j += 1
+                acc += hi
+            else:
+                i -= 1
+                acc += lo
+        self.val, self.vah = px[i], px[j]
 
     # ------------------------------------------------------------------
     def _first(self, typ, hm, px, vwap):
