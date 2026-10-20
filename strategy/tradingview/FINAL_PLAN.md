@@ -1,3 +1,22 @@
+# ⚠️ AKTUALIZACE 2026-10-20 — zprávy (CPI, NFP, FOMC): fade velké svíčky
+
+Testováno 2018–2025 na NQ, ES a YM (`news_fade_exporter.py`, `score_news.py`).
+
+- **Fade 08:30 svíčky (CPI, NFP, PPI…) — žádná hrana** na žádném indexu, ani
+  k open, ani k 50 %, s žádným stopem/časem. Fade libovolné velké svíčky
+  (climax) také ne. Fade svíčky FOMC prohlášení ve 14:00 také ne.
+- **Fade první 5min svíčky tiskové konference FOMC (14:30–14:35 ET) — ANO.**
+  Kladný v každé variantě stopu i výstupu, v obou obdobích a na všech třech
+  indexech (NQ IS +10 až +26 b., OOS +27 až +76 b.; ES i YM stejně).
+  Pravidlo: vstup proti svíčce na jejím close (14:35), stop za jejím
+  extrémem + 0,25 × rozpětí, výstup 15:35. NQ: 63 obchodů, 41 % výher,
+  průměr +51 b., medián −7 b., 6 z 8 let kladných. Malý vzorek (8×/rok),
+  zisk dělá pár velkých reverzí.
+- FOMC je vždy středa, kdy zbytek knihy neobchoduje → žádný překryv.
+  Doporučení: **1 MNQ na jednotku** (v evaluaci tedy 2 MNQ). Indikátor
+  `lucid_5_fomc_fade.pine`.
+- Poslední půlhodina (Gao a kol.) a drift před FOMC: nevýznamné.
+
 # ⚠️ AKTUALIZACE 2026-10-18 (skutečné komise) — platí přednostně před vším níže
 
 Čitelná verze plánu je v Claude Docs („Lucid Flex 50K — finální plán").

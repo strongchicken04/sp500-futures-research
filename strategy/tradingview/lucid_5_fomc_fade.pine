@@ -1,0 +1,69 @@
+// @version=5
+indicator("Lucid 5 — FOMC Press Conference Fade", overlay=true, max_labels_count=200, max_lines_count=200)
+
+// On an FOMC day, trade against the first 5-minute candle of the press
+// conference (14:30-14:35 ET). Entry at that candle's close, stop beyond its
+// far extreme + 0.25 x its range, exit at 15:35 ET. 5-minute chart only.
+//
+// Tested 2018-2025 on NQ, ES and YM (63 meetings): positive in every
+// stop/exit variant, in both halves and on all three indices. Around 60% of
+// trades lose small; the profit comes from a few big reversals. Fading the
+// 08:30 data candles (CPI, NFP...) or the 14:00 statement candle had no edge.
+
+dates = input.string("2024-01-31,2024-03-20,2024-05-01,2024-06-12,2024-07-31,2024-09-18,2024-11-07,2024-12-18,2025-01-29,2025-03-19,2025-05-07,2025-06-18,2025-07-30,2025-09-17,2025-10-29,2025-12-10,2026-01-28,2026-03-18,2026-04-29,2026-06-17,2026-07-29,2026-09-16,2026-10-28,2026-12-09", "FOMC dates (YYYY-MM-DD, comma separated)")
+stopK   = input.float(0.25, "Stop beyond candle extreme (x candle range)")
+exitMin = input.int(60, "Exit after (minutes)")
+
+yy = year(time, "America/New_York")
+mo = month(time, "America/New_York")
+dd = dayofmonth(time, "America/New_York")
+ds = str.tostring(yy) + "-" + (mo < 10 ? "0" : "") + str.tostring(mo) + "-" + (dd < 10 ? "0" : "") + str.tostring(dd)
+isFomc = str.contains(dates, ds)
+etMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")
+is5 = timeframe.period == "5"
+
+var float fE = na
+var float fS = na
+var int fDir = 0
+var int fBar = na
+var line fEl = na
+var line fSl = na
+
+// The 14:30 bar (opens 14:30, closes 14:35) is the press-conference candle.
+if is5 and isFomc and etMin == 870 and barstate.isconfirmed and na(fE)
+    rng = high - low
+    fDir := close > open ? -1 : close < open ? 1 : 0
+    if fDir != 0
+        fE := close
+        fS := fDir == 1 ? low - syminfo.mintick - stopK * rng : high + syminfo.mintick + stopK * rng
+        fBar := bar_index
+        fEl := line.new(bar_index, fE, bar_index + 12, fE, color=color.yellow, width=3, extend=extend.right)
+        fSl := line.new(bar_index, fS, bar_index + 12, fS, color=color.red, width=3, extend=extend.right)
+        label.new(bar_index, fDir == 1 ? low : high, fDir == 1 ? "FOMC FADE LONG" : "FOMC FADE SHORT", color=fDir == 1 ? color.green : color.red, textcolor=color.white, style=fDir == 1 ? label.style_label_up : label.style_label_down, size=size.normal)
+
+// Stop first, then the time exit on the bar that closes at 14:35 + exitMin.
+if not na(fE) and bar_index > fBar
+    rsn = ""
+    px = 0.0
+    if (fDir == 1 and low <= fS) or (fDir == -1 and high >= fS)
+        rsn := "SL"
+        px := fS
+    else if etMin + 5 >= 875 + exitMin or etMin >= 955
+        rsn := "EXIT"
+        px := close
+    if rsn != ""
+        pnl = fDir * (px - fE)
+        line.set_x2(fEl, bar_index)
+        line.set_x2(fSl, bar_index)
+        line.set_extend(fEl, extend.none)
+        line.set_extend(fSl, extend.none)
+        label.new(bar_index, px, "FOMC " + rsn + " " + str.tostring(pnl, "+#.##"), color=pnl >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
+        fE := na
+
+plot(fE, "entry", color=color.yellow, style=plot.style_linebr, linewidth=2)
+plot(na(fE) ? na : fS, "stop", color=color.red, style=plot.style_linebr, linewidth=2)
+
+var table tb = table.new(position.top_right, 1, 1, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    msg = not is5 ? "FOMC FADE: use a 5-minute chart" : isFomc ? "FOMC TODAY — fade the 14:30 candle at 14:35" : "no FOMC today"
+    table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not is5 ? color.red : isFomc ? color.new(color.orange, 20) : color.new(color.gray, 50))
