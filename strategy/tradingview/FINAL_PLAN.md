@@ -1,3 +1,25 @@
+# 2026-10-20 — myšlenka: rychlý pass evaluace sázkou s negativním RR
+
+`scripts/payoff_shape.py` (čistá pravidla), `daily_bracket_exporter.py` +
+`scripts/score_bracket.py` (NQ 2018–2025, 1 sázka denně, stop uvnitř DD čáry,
+max 40 MNQ, náklady $1/MNQ).
+
+- Bez hrany nejde pass zvýšit tvarem výplaty nad ~45 %. Nejlepší tvar pro
+  pravidla Lucid: výhra ~$1 000, ztráta ~$1 900 (WR 66 %) → 45,5 % za 3 dny.
+  Velmi negativní RR (1:5) i pozitivní RR jsou horší (27–35 %).
+- Na skutečných datech NQ: nejlepší sázky 33–41 % na pokus (OOS), 3–8 dní.
+- Očekávání na jeden úspěšný pass (poplatek $150):
+
+| postup | pass/pokus | pokusů | poplatky | obchodních dní |
+|---|---|---|---|---|
+| sázka long 10:00, $750, TP 20 bp / SL 50 bp | 39,7 % | 2,5 | $378 | 15 |
+| sázka long 9:31, $1 450, TP 30 bp / SL 40 bp | 35,4 % | 2,8 | $424 | 11 |
+| kniha, žebříček (současný plán) | 93,7 % | 1,07 | $160 | 61 (průměr) |
+| kniha, pevně 6 jednotek | 54,2 % | 1,8 | $277 | 21 |
+
+Jen pro evaluaci (bust stojí jen poplatek); funded vždy kniha. Ověřit, že
+Lucid takový styl a velikost (až 40 MNQ) povoluje.
+
 # ⚠️ AKTUALIZACE 2026-10-20 — zprávy (CPI, NFP, FOMC): fade velké svíčky
 
 Testováno 2018–2025 na NQ, ES a YM (`news_fade_exporter.py`, `score_news.py`).
