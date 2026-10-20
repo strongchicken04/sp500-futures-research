@@ -1,0 +1,97 @@
+// @version=5
+indicator("Lucid 6 — Noise Area Momentum", overlay=true, max_labels_count=500, max_lines_count=500)
+
+// Zarattini, Aziz & Barbon (2024), "Beat the Market", on NQ. Long and short.
+// sigma(t) = average over the last 14 sessions of |price at time t / 09:30
+// open - 1|. Upper band = max(open, prior close) x (1 + sigma), lower band =
+// min(open, prior close) x (1 - sigma). Decisions only at :00 and :30 from
+// 10:00 to 15:30 ET: long when the close is above the upper band, short when
+// below the lower band. A long exits when the close is below max(upper band,
+// VWAP), a short when above min(lower band, VWAP); an opposite signal
+// reverses. Flat at 15:55. Use a 1-, 5- or 30-minute chart.
+//
+// NQ 2018-2025, $1 cost per MNQ: about 1 trade a day, 40% winners, +5.5 pt
+// per trade 2018-2021 and +9.4 pt 2022-2025, 7 of 8 years positive.
+
+lookback = input.int(14, "Sessions for the noise average")
+useVol   = input.bool(true, "Volatility gate (skip if NQ 20d vol >= ceiling)")
+volCeil  = input.float(0.30, "   vol ceiling")
+volSym   = input.string("CME_MINI:NQ1!", "   vol gate symbol")
+
+rvol20 = request.security(volSym, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+volOK = not useVol or na(rvol20) or rvol20 < volCeil
+
+oMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")
+cMin = hour(time_close, "America/New_York") * 60 + minute(time_close, "America/New_York")
+tfOK = timeframe.isintraday and timeframe.multiplier <= 30 and 30 % timeframe.multiplier == 0
+
+var float dOpen = na
+var float pClose = na
+var float lastClose = na
+var float pv = 0.0
+var float vv = 0.0
+if oMin == 570
+    pClose := lastClose
+    dOpen := open
+    pv := 0.0
+    vv := 0.0
+inRth = cMin > 570 and cMin <= 960 and not na(dOpen)
+if inRth
+    pv += hlc3 * volume
+    vv += volume
+vw = vv > 0 ? pv / vv : na
+if cMin == 960
+    lastClose := close
+
+var array<float> buf = array.new<float>(12 * lookback, na)
+var array<int> cnt = array.new<int>(12, 0)
+var float ub = na
+var float lb = na
+var int pos = 0
+var float ent = na
+var int entBar = na
+
+isCheck = tfOK and inRth and cMin >= 600 and cMin <= 930 and cMin % 30 == 0 and barstate.isconfirmed
+if isCheck
+    idx = int((cMin - 600) / 30)
+    n = array.get(cnt, idx)
+    sigma = 0.0
+    if n >= lookback
+        s = 0.0
+        for k = 0 to lookback - 1
+            s += array.get(buf, idx * lookback + k)
+        sigma := s / lookback
+    array.set(buf, idx * lookback + n % lookback, math.abs(close / dOpen - 1.0))
+    array.set(cnt, idx, n + 1)
+    if n >= lookback and not na(pClose)
+        ub := math.max(dOpen, pClose) * (1.0 + sigma)
+        lb := math.min(dOpen, pClose) * (1.0 - sigma)
+        sig = close > ub ? 1 : close < lb ? -1 : 0
+        if pos != 0
+            out = pos == 1 ? close < math.max(ub, vw) : close > math.min(lb, vw)
+            if out or (sig != 0 and sig != pos)
+                pnl = pos * (close - ent)
+                label.new(bar_index, close, "NZ EXIT " + str.tostring(pnl, "+#.##"), color=pnl >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
+                pos := 0
+                ent := na
+        if pos == 0 and sig != 0 and volOK
+            pos := sig
+            ent := close
+            entBar := bar_index
+            label.new(bar_index, close, sig == 1 ? "NZ LONG" : "NZ SHORT", color=sig == 1 ? color.green : color.red, textcolor=color.white, style=sig == 1 ? label.style_label_up : label.style_label_down, size=size.normal)
+
+if pos != 0 and tfOK and cMin >= 955 and cMin <= 960 and barstate.isconfirmed
+    pnl = pos * (close - ent)
+    label.new(bar_index, close, "NZ EOD " + str.tostring(pnl, "+#.##"), color=pnl >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
+    pos := 0
+    ent := na
+
+plot(inRth ? ub : na, "upper band", color=color.new(color.green, 30), style=plot.style_stepline)
+plot(inRth ? lb : na, "lower band", color=color.new(color.red, 30), style=plot.style_stepline)
+plot(inRth ? vw : na, "VWAP", color=color.new(color.aqua, 30))
+plot(pos != 0 ? ent : na, "entry", color=color.yellow, style=plot.style_linebr, linewidth=2)
+
+var table tb = table.new(position.top_right, 1, 1, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    msg = not tfOK ? "NOISE MOMENTUM: use a 1/5/30-minute chart" : not volOK ? "VOL TOO HIGH — no new trades" : pos == 1 ? "LONG from " + str.tostring(ent, format.mintick) : pos == -1 ? "SHORT from " + str.tostring(ent, format.mintick) : "flat — next check at :00/:30"
+    table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not tfOK or not volOK ? color.red : pos != 0 ? color.new(color.orange, 20) : color.new(color.gray, 50))

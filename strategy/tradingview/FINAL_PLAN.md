@@ -1,3 +1,21 @@
+# 2026-10-20 (večer) — velké hledání denních strategií: výsledek
+
+Testováno ~40 000 kombinací signál × filtr × cíl/stop (`cond_bracket_*`,
+`score_cond_bracket.py`, `score_plateau.py`) + kandidáti z veřejných zdrojů
+(dva výzkumní agenti). Hlavní zjištění:
+
+- **Vysoký winrate bez hrany pass nezvedá** (~40 % na pokus, potvrzeno
+  simulací i literaturou). Gap fill, střed overnight range, IB statistiky
+  apod. mají winrate jen na úrovni náhody.
+- **Nejlepší denní strategie: noise-area momentum** (Zarattini, Aziz & Barbon
+  2024), long i short, ~1 obchod denně, WR ~40 %, +5,5 b./obchod 2018–21 a
+  +9,4 b. 2022–25 (t ≈ 3 v obou), 7 z 8 let kladných. Indikátor
+  `lucid_6_noise_momentum.pine`.
+- Přidáno ke knize 1 MNQ na jednotku: eval 91,6 % (místo 94,7 %) ale za
+  31 dní místo 45; první funded 98,6 %; medián 5 účtů / 24 m $161k místo
+  $116k, p10 $53k místo $26k.
+- Lunch effect, poslední půlhodina (Baltussen), gap fill: na NQ nefungují.
+
 # 2026-10-20 — myšlenka: rychlý pass evaluace sázkou s negativním RR
 
 `scripts/payoff_shape.py` (čistá pravidla), `daily_bracket_exporter.py` +
