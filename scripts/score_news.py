@@ -74,7 +74,9 @@ def outcome(e, ti, sj, hi, follow=False):
         pts = mtm
         if loss is not None:
             pts = max(pts, -loss)
-    risk = loss if loss is not None else e["rng"]
+    # A stop just past a candle that closed on its extreme can be one tick
+    # away; floor the risk at a quarter of the candle so R stays meaningful.
+    risk = max(loss, 0.25 * e["rng"]) if loss is not None else e["rng"]
     return pts, risk
 
 
@@ -86,13 +88,13 @@ def tstat(v):
 
 
 def grid(evs, follow):
-    tis = [None] + list(range(len(FB)))
-    sjs = [None] + list(range(len(STOP_NAMES)))
+    # A prop account needs a hard stop: for a fade that is a stop level, for
+    # a follow it is a retracement level toward the candle's open.
+    tis = list(range(len(FB))) if follow else [None] + list(range(len(FB)))
+    sjs = [None] + list(range(len(STOP_NAMES))) if follow else list(range(len(STOP_NAMES)))
     his = [1, 3, 5, None]          # 15m, 60m, 180m, 15:55
     for ti in tis:
         for sj in sjs:
-            if ti is None and sj is None:
-                continue
             for hi in his:
                 yield (ti, sj, hi), [outcome(e, ti, sj, hi, follow) for e in evs]
 
@@ -101,6 +103,8 @@ def rname(key, follow):
     ti, sj, hi = key
     tg = "-" if ti is None else f"{FB[ti]:g}body"
     sp = "-" if sj is None else STOP_NAMES[sj]
+    if follow:   # targets beyond the extreme, stop on a retracement
+        tg, sp = ("-" if sj is None else "past " + STOP_NAMES[sj]), ("-" if ti is None else f"{FB[ti]:g}body back")
     hz = "EOD" if hi is None else f"{HZ[hi]}m"
     return f"{'FOLLOW' if follow else 'FADE'} tgt {tg:<9} stop {sp:<9} time {hz}"
 
@@ -136,6 +140,29 @@ def family_report(name, evs):
     print(f"{'':<34}   your rule (fade->open, stop past extreme, EOD): "
           f"IS {u_is['R']:+.3f}R t{u_is['tR']:+.1f}  OOS {u_oos['R']:+.3f}R t{u_oos['tR']:+.1f}")
     return {"name": name, "key": key, "follow": follow, "is": s_is, "oos": s_oos}
+
+
+def user_table(fams):
+    """The idea as stated: fade the release candle toward its open or halfway."""
+    print("\n== your idea: fade the candle; IS 2018-21 | OOS 2022-25, mean points (R)")
+    rules = [(5, 0, None, "to open, stop past extreme, EOD"),
+             (5, 2, None, "to open, stop extreme+0.25R, EOD"),
+             (2, 0, None, "to 50%, stop past extreme, EOD"),
+             (2, 2, 3, "to 50%, stop extreme+0.25R, 60m"),
+             (5, 2, 3, "to open, stop extreme+0.25R, 60m")]
+    for key in sorted(fams):
+        inst, lab, thr = key
+        if not (lab.startswith(("08:30 5m", "FOMC", "ANY")) and thr in (0.0, 2.5, 3.0)):
+            continue
+        evs = fams[key]
+        print(f"  {inst} {lab} ratio>={thr:g}")
+        for ti, sj, hi, name in rules:
+            row = []
+            for part in ([e for e in evs if e["ymd"] < SPLIT], [e for e in evs if e["ymd"] >= SPLIT]):
+                rs = [outcome(e, ti, sj, hi) for e in part]
+                s_ = summarise(rs)
+                row.append(f"n{s_['n']:4} {s_['pts']:+7.1f}pt ({s_['R']:+.2f}R t{s_['tR']:+.1f})")
+            print(f"     {name:<36} {row[0]} | {row[1]}")
 
 
 def side_tests(side):
@@ -185,6 +212,7 @@ def main():
             out.append(r)
     good = [r["name"] for r in out if r["oos"]["tR"] >= 2.0]
     print(f"\n{len(out)} families; OOS t >= 2: {', '.join(good) or 'none'}")
+    user_table(fams)
     side_tests(side)
 
 
