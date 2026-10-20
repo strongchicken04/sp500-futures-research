@@ -6,9 +6,12 @@ band distance x direction (with the break, or fading it) x target x stop in
 ATR units is scored on 2018-2021 and reported on 2022-2025, both per trade
 (expectancy in ATR, win rate) and as an evaluation sprint.
 
-Touches come from a basis-point grid, so each target is taken at the grid
-level at or above it (harder to reach) and each stop at the level at or
-below it (hit sooner): the rounding always works against the rule.
+Touches come from a basis-point grid, so each target and stop is moved to the
+nearest grid level and the trade is paid at that level: an exact simulation
+of a bracket within a few percent of the nominal one. (Rounding the target up
+and the stop down while paying the nominal amounts, tried first, biased every
+cell by about -1% of ATR per trade and made the existing VWAP band rule look
+edgeless.)
 
 Usage: score_vwap_atr.py SCRATCH_DIR
 """
@@ -76,10 +79,11 @@ def lvl_dn(bp):
 
 
 def result(r, side, kt, ks, atr):
-    tp, sl = kt * atr, ks * atr
-    ti, si = lvl_up(tp / r["e"] * 1e4), lvl_dn(sl / r["e"] * 1e4)
-    if ti is None:
+    ti = min(range(len(LEVELS)), key=lambda i: abs(LEVELS[i] - kt * atr / r["e"] * 1e4))
+    si = min(range(len(LEVELS)), key=lambda i: abs(LEVELS[i] - ks * atr / r["e"] * 1e4))
+    if kt * atr / r["e"] * 1e4 > LEVELS[-1] * 1.1:
         return None
+    tp, sl = r["e"] * LEVELS[ti] / 1e4, r["e"] * LEVELS[si] / 1e4
     fav, adv = (r["up"], r["dn"]) if side == 1 else (r["dn"], r["up"])
     t, s = fav[ti], adv[si]
     if s >= 0 and (t < 0 or s <= t):
