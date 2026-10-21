@@ -89,9 +89,9 @@ class OrbTrailExporter(QCAlgorithm):
                 continue
             ex = None
             if l <= p["sl"]:
-                ex = p["sl"]
+                ex = min(p["sl"], o)        # a stop above the market fills at the open
             elif p["tp"] is not None and h >= p["tp"]:
-                ex = p["tp"]
+                ex = max(p["tp"], o)
             elif hm >= EOD:
                 ex = c
             if ex is not None:
