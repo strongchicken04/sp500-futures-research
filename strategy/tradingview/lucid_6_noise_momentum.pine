@@ -90,6 +90,10 @@ plot(inRth ? ub : na, "upper band", color=color.new(color.green, 30), style=plot
 plot(inRth ? lb : na, "lower band", color=color.new(color.red, 30), style=plot.style_stepline)
 plot(inRth ? vw : na, "VWAP", color=color.new(color.aqua, 30))
 plot(pos != 0 ? ent : na, "entry", color=color.yellow, style=plot.style_linebr, linewidth=2)
+// Where the next :00/:30 check would close the position (it is a close-of-
+// bar exit at the check, not a resting stop order).
+exitLvl = pos == 1 ? math.max(ub, vw) : pos == -1 ? math.min(lb, vw) : na
+plot(inRth ? exitLvl : na, "exit level", color=color.new(color.orange, 0), style=plot.style_linebr, linewidth=2)
 
 var table tb = table.new(position.top_right, 1, 1, bgcolor=color.new(color.black, 30))
 if barstate.islast
