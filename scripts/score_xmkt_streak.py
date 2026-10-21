@@ -31,7 +31,7 @@ from final_lifecycle import flat  # noqa: E402
 from ladder_sim import outcomes  # noqa: E402
 from score_cond_bracket import parse, add_daily, FILTERS, LEVELS  # noqa: E402
 
-TICK_BP = {"NQ": 0.17, "ES": 0.6, "YM": 0.3, "RTY": 0.5, "GC": 0.5, "CL": 1.4, "ZN": 1.4}
+TICK_BP = {"NQ": 0.17, "NQovn": 0.17, "ES": 0.6, "YM": 0.3, "RTY": 0.5, "GC": 0.5, "CL": 1.4, "ZN": 1.4}
 COMM_BP = 0.3
 PAIRS = [(ti, si) for ti in range(len(LEVELS)) for si in range(len(LEVELS))
          if 1.5 <= LEVELS[si] / LEVELS[ti] <= 3.34]
@@ -50,6 +50,13 @@ def load(sp):
             for r in rs:
                 r["inst"] = inst
             rows += rs
+    p = f"{sp}/ONITE_NQ_tags.txt"          # NQ overnight session (Asian range / London)
+    if os.path.exists(p):
+        rs = parse([p])
+        add_daily(rs)
+        for r in rs:
+            r["inst"] = "NQovn"
+        rows += rs
     rs = parse([f"{sp}/{x}_tags.txt" for x in ("CBC", "CBD", "CBE")])
     add_daily(rs)
     for r in rs:
