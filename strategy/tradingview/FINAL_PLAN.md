@@ -1,3 +1,19 @@
+# 2026-10-21 — EVALUACE: sprint, ne kniha
+
+Rozhoduje očekávaný čas a cena do funded účtu, ne pass na pokus
+(`scripts/eval_speed.py`). Evaluace stojí $90.
+
+- **Sprint:** každý den long NQ na close svíčky 09:30–09:31, cíl +0,20 %,
+  stop −0,40 %, velikost tak, aby ztráta ≤ $1 900 (výhra ~$1 000), jinak
+  flat 15:55. 3 výhry = pass (nejlepší den ~33 % → konzistence OK), jedna
+  ztráta = konec pokusu. ~35 % pass na pokus, ~5 dní na pokus →
+  **~13,5 obchodních dní a ~$260 poplatků do funded** (kniha: ~93 dní, ~$110).
+- Indikátor `lucid_7_eval_sprint.pine` (1min graf MNQ).
+- Copytrading stejného sprintu na víc evaluací nic nepřidá (stejný výsledek);
+  souběžné pokusy jen s různými vstupy.
+- Funded fáze: kniha (ORB 5min graf + VWAP pásmo + noise momentum), velikost
+  rezerva ÷ 700, max 3 jednotky.
+
 # ⚠️ OPRAVA 2026-10-21 — ORB byl v backtestu nadhodnocen
 
 Backtest ORB (NQ i Dow) zavíral obchod na trailing stopu za cenu stopu i
