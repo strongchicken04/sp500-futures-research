@@ -51,6 +51,13 @@ def parse(paths):
             for k, x in zip(FEATS, f[5:14]):
                 r[k] = float(x)
             r["blend"] = (r["c5r"] + r["atr5"]) / 2.0
+            # scale-free versions, so terciles compare like with like across
+            # 2018 (NQ ~6,500) and 2025 (NQ ~21,000)
+            r["c5r/atr5"] = r["c5r"] / r["atr5"] if r["atr5"] > 0 else 1.0
+            r["body/rng"] = r["c5b"] / r["c5r"] if r["c5r"] > 0 else 0.0
+            r["atrd %"] = r["atrd"] / r["e"] * 100
+            r["dist/atr5"] = abs(r["dist"]) / r["atr5"] if r["atr5"] > 0 else 0.0
+            r["vslp/atr5"] = r["vslp"] / r["atr5"] * (1 if r["type"][0] == "U" else -1) if r["atr5"] > 0 else 0.0
             rows.append(r)
     return rows
 
@@ -84,6 +91,9 @@ def summary(rs, side_of, tp_of):
     for part in ([r for r in rs if r["ymd"][:4] < SPLIT], [r for r in rs if r["ymd"][:4] >= SPLIT]):
         v = [trade(r, side_of(r), tp_of(r)) for r in part]
         p = [x for x, _ in v]
+        if not p:
+            out.append((0.0, 0.0, 0.0, 0.0, 0))
+            continue
         wr = sum(1 for x in p if x > 0) / len(p) * 100
         base = st.mean(b for _, b in v) * 100
         out.append((st.mean(p), tstat(p), wr, wr - base, len(p)))
@@ -118,9 +128,10 @@ def main():
             print(f"     2018-21 {fmt(o[0])}   |   2022-25 {fmt(o[1])}   n {o[0][4]}+{o[1][4]}")
             best.append((ev, d, mode, x, target, tp_of, side_of, rs))
     best.sort(key=lambda z: -z[0])
-    ev, d, mode, x, target, tp_of, side_of, rs = best[0]
+    pick = [b for b in best if b[1] == 20 and b[2] == "with"] or best
+    ev, d, mode, x, target, tp_of, side_of, rs = pick[0]
     print(f"\n== feature terciles for the best rule: band {d} bp {mode}, TP from {x} (median {target} pt)")
-    for f in FEATS + ["hm"]:
+    for f in ["c5r/atr5", "body/rng", "cloc", "rvol5", "atrd %", "rv20", "dist/atr5", "vslp/atr5", "hm"]:
         vals = sorted(r[f] for r in rs if r["ymd"][:4] < SPLIT)
         q1, q2 = vals[len(vals) // 3], vals[2 * len(vals) // 3]
         line = []
