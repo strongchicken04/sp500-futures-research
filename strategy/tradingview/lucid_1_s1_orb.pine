@@ -9,6 +9,8 @@ indicator("Lucid 1/3 — S1 ORB 15min Long", overlay=true, max_labels_count=500,
 // Exit  : SL hit or EOD 15:55 ET
 // Skip Wed. Re-enters after every exit; never two positions at once.
 // Same script on MNQ and MYM (Dow); the vol gate reads NQ on both.
+// USE A 5-MINUTE CHART: the 20-EMA trail on a 1-minute chart exits and
+// re-enters ~20 times a day and loses after costs (2018-2025 test).
 // =========================================================================
 
 showHist = input.bool(true, "Show historical entries/exits")
@@ -89,7 +91,8 @@ if not na(sEntry)
     exPx = 0.0
     if low <= sSL
         exReason := "SL"
-        exPx := sSL
+        // a trailed stop above the market fills at the open, not at the stop
+        exPx := math.min(sSL, open)
     else if isEOD or dayChg
         exReason := "EOD"
         exPx := close

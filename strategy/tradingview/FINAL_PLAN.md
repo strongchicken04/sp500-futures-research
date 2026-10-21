@@ -1,3 +1,23 @@
+# ⚠️ OPRAVA 2026-10-21 — ORB byl v backtestu nadhodnocen
+
+Backtest ORB (NQ i Dow) zavíral obchod na trailing stopu za cenu stopu i
+tehdy, když 20-EMA byla nad posledním close – tedy nad trhem. Ve skutečnosti
+se pozice zavře za open další svíčky. Po opravě (`*_fill.py`):
+
+| | před opravou | po opravě |
+|---|---|---|
+| ORB NQ, body/obchod 2018–21 / 2022–25 | +2,4 / +5,7 (t 5,4 / 6,5) | +0,6 / +1,6 (t 1,4 / 1,8) |
+| ORB Dow, $/MYM 2018–21 / 2022–25 | +2,2 / +6,0 | +0,5 / +3,3 |
+
+Celá kniha (ORB + VWAP pásmo + Dow + noise momentum), `book_after_fix.py`:
+nejlepší velikost je žebříček rezerva ÷ 700, max 3 jednotky: eval 81,5 % za
+~40 dní, první funded 79 %, výplaty 88 %, medián 5 účtů / 24 m ≈ $88k,
+p10 ≈ $7k. Noise momentum je teď nosná část knihy.
+
+ORB na 1min grafu (trailing 20-EMA na 1 min) obchoduje ~20× denně a po
+nákladech prodělává (pass 8–17 %). Používat jen 5min graf. Indikátor
+`lucid_1_s1_orb.pine` opraven (výstup za open, ne za stop).
+
 # 2026-10-20 (večer) — velké hledání denních strategií: výsledek
 
 Testováno ~40 000 kombinací signál × filtr × cíl/stop (`cond_bracket_*`,
