@@ -8,3 +8,7 @@
    09:31 alone                days to first funded  12.6  (median  10)   fees $  227
    RS + 09:31 (2 accounts)    days to first funded   8.7  (median   7)   fees $  311
    RS copied on 2 accounts    days to first funded  12.3  (median  10)   fees $  329
+
+With the RS sprint at target 0.20% / stop 0.30% on account A (same window 120):
+--- 2018-2021: RS alone 11.9 days ($202) | RS + 09:31 two accounts 7.1 days ($300) | RS copied 11.9 ($404)
+--- 2022-2025: RS alone 10.2 days ($179) | RS + 09:31 two accounts 7.3 days ($305) | RS copied 10.2 ($359)
