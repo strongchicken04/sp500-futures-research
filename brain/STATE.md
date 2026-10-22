@@ -1,15 +1,14 @@
 # Brain state
 
-heartbeat: 2026-10-22T22:14Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T22:35Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
-9. VWAP trend (Zarattini & Aziz 2023): VWTREND running on QC
-   (tag W,<variant>,date,gross,entries,rv; cost 0.75 pt per entry).
 
 ## Done this shift
+- 9. VWAP trend (Zarattini & Aziz): rejected, OOS t<=1.5, corr 0.5 with noise momentum.
 - 7. Noise on ES/YM: rejected (ES weaker and 0.69 correlated with NQ; YM no edge).
 - Intraday momentum (Gao et al. 2018): rejected, flips sign in 2022-25.
 - 2. RS as funded leg: candidate, +4.6 / +9.6 pt/trade with a 1.25%/1.25% bracket; book median

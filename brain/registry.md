@@ -23,6 +23,7 @@ Status: `live-eval` / `live-funded` (in the plan), `candidate`, `rejected`,
 | Month-end Treasury long (ZN last trading day 09:00-15:00) | rejected | +2.6 / +0.5 ticks (t 1.5 / 0.2), negative 2023-2025; ZN RTH drift on other days -1.0 / -2.1 ticks (idea: bonds fall in the US day session) | zn_month_end.py, zn_daily_exporter.py |
 | Intraday momentum (Gao et al. 2018): sign of prior close to 10:00 (or 10:00-15:30) return, trade 15:30-15:55 | rejected | both agree +3.3 pt (t 2.3) in 2018-21 but -2.6 pt (t -1.4) in 2022-25; single predictors also flip sign | intraday_momentum.py |
 | Noise momentum on ES / YM (Lucid 6 live rules, hard stop) | rejected | per micro net: NQ +$11.3 / +$14.1, ES +$6.1 / +$3.9 (t 2.6 / 1.3, daily corr with NQ 0.69 - little diversification), YM +$0.8 / -$0.8 | noise_markets.py, live_spec_exporter.py (ls_noise_ES/YM) |
+| VWAP trend (Zarattini & Aziz 2023): always in, long above / short below RTH VWAP; 1/5/15-min bars, 5-min with 0.10% buffer | rejected | net per day (gated): 15-min +8.9 / +6.5 pt (t 2.9 / 1.1), buffer +8.0 / +8.3 (t 2.3 / 1.5); daily sd ~150 pt, corr 0.5 with noise momentum, losing years in both halves | vwap_trend_exporter.py, score_vwap_trend.py |
 | ORB with 1-min EMA trail | rejected | ~20 trades/day, pass 8-17% | score_orb_trail.py |
 | Gap-down reversal, Mon/Fri hold, ON-level fade, 1-min micro-drop | rejected | backtest artefacts | |
 | Small-gap fill, ON midpoint rule, IB stats, lunch effect, last half hour, pre-FOMC drift, FOMC relief rally | rejected | at/below random baseline | |
