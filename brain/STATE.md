@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-22T21:36Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T21:34Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -8,7 +8,6 @@ last shift: 2026-10-23 (running)
    exit; does it add to noise momentum + VWAP band?
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
-5. Month-end ZN long (last trading day 09:00-15:00): run zn_daily_exporter.py.
 7. Noise momentum ES/YM versions (needs an exporter run; exits done).
 
 ## Done this shift
@@ -21,7 +20,7 @@ last shift: 2026-10-23 (running)
   targets and partial targets lower the edge. Regime filter: none (item 3).
 - 4. Treasury auctions: BLOCKED, api.fiscaldata.treasury.gov refused by the network policy;
   ZN daily exporter (zn_daily_exporter.py) written for month-end and auctions once a calendar exists.
-- 5. Turn-of-month NQ: rejected (TOM days not better than other days in 2022-25).
+- 5. Month-end ZN: rejected (+2.6 / +0.5 ticks). Turn-of-month NQ: rejected (TOM days not better than other days in 2022-25).
 - 1. RS variants: none better than the live rule in both halves; independent export
   replicates the live RS sprint (alignment and fills confirmed). Plan unchanged.
 - 8. Live-spec audit DONE: Lucid 2 rewritten to the band break (+3.6 / +3.0 vs +2.3 / +0.7 pt);

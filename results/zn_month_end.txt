@@ -1,0 +1,13 @@
+2000 ZN days, 95 month ends
+
+--- 2018-2021
+  09:00-15:00 last day      +2.57 ticks t+1.5 n  48 WR  60%
+  09:00-15:00 other days    -0.99 ticks t-2.0 n 953 WR  47%
+  09:00-15:00 last 2 days   +0.71 ticks t+0.5 n  96 WR  54%
+  08:20-15:00 last day      +1.47 ticks t+0.8 n  48 WR  50%
+--- 2022-2025
+  09:00-15:00 last day      +0.54 ticks t+0.2 n  47 WR  49%
+  09:00-15:00 other days    -2.12 ticks t-3.1 n 952 WR  44%
+  09:00-15:00 last 2 days   +2.91 ticks t+1.9 n  94 WR  57%
+  08:20-15:00 last day      -0.05 ticks t-0.0 n  47 WR  49%
+last day 09-15 by year: 2018 +2.0  2019 +6.7  2020 +1.8  2021 -0.2  2022 +9.5  2023 -0.7  2024 -5.0  2025 -1.9
