@@ -1,0 +1,20 @@
+target 15 bp / stop 30 bp   pass 44.7% / 45.7%   days  14.4 /  13.2   fees $ 201 / $ 197
+target 15 bp / stop 40 bp   pass 44.8% / 53.5%   days  17.5 /  15.4   fees $ 201 / $ 168
+target 15 bp / stop 50 bp   pass 36.3% / 56.4%   days  24.4 /  17.1   fees $ 248 / $ 160
+target 20 bp / stop 30 bp   pass 48.8% / 48.7%   days  10.6 /  10.8   fees $ 185 / $ 185
+target 20 bp / stop 40 bp   pass 47.9% / 51.5%   days  13.4 /  13.0   fees $ 188 / $ 175
+target 20 bp / stop 50 bp   pass 40.1% / 56.2%   days  19.4 /  14.6   fees $ 224 / $ 160
+target 25 bp / stop 30 bp   pass 41.1% / 45.7%   days  11.5 /  10.8   fees $ 219 / $ 197
+target 25 bp / stop 40 bp   pass 45.6% / 50.9%   days  12.1 /  11.0   fees $ 198 / $ 177
+target 25 bp / stop 50 bp   pass 36.7% / 55.5%   days  17.9 /  13.3   fees $ 245 / $ 162
+target 30 bp / stop 30 bp   pass 37.2% / 42.5%   days  13.0 /  12.7   fees $ 242 / $ 212
+target 30 bp / stop 40 bp   pass 44.7% / 47.9%   days  11.5 /  10.7   fees $ 201 / $ 188
+target 30 bp / stop 50 bp   pass 43.6% / 57.3%   days  13.2 /  10.5   fees $ 207 / $ 157
+target 40 bp / stop 30 bp   pass 30.0% / 42.7%   days  16.2 /  11.5   fees $ 300 / $ 211
+target 40 bp / stop 40 bp   pass 31.5% / 41.5%   days  16.1 /  13.0   fees $ 286 / $ 217
+target 40 bp / stop 50 bp   pass 34.1% / 48.0%   days  15.5 /  10.9   fees $ 264 / $ 187
+target 50 bp / stop 30 bp   pass 28.3% / 36.5%   days  18.0 /  13.7   fees $ 318 / $ 247
+target 50 bp / stop 40 bp   pass 35.1% / 39.3%   days  15.4 /  12.9   fees $ 257 / $ 229
+target 50 bp / stop 50 bp   pass 31.7% / 41.7%   days  17.6 /  13.1   fees $ 284 / $ 216
+
+chosen on 2018-21 (fewest days): target 20 / stop 30 bp -> 2022-25 pass 48.7%, 10.8 days, fees $185

@@ -1,3 +1,13 @@
+# 2026-10-23 — EVALUACE: RS sprint se stopem 0,30 % je asi o 2 dny rychlejší
+
+`scripts/rs_sprint_shape.py` (stejný RS signál, velikost tak, aby stop stál
+~1 900 $): target 0,20 % / stop 0,30 % → pass 48,8 % / 48,7 %, **10,6 / 10,8
+obchodního dne** do passu, poplatky 185 / 185 $. Současné 0,20 / 0,40 %:
+47,9 % / 51,5 %, 13,4 / 13,0 dne, 188 / 175 $. Sousední buňky (0,25 / 0,30,
+0,30 / 0,40) to potvrzují. Návrh: v Lucid 8 nastav **Stop (% of price) =
+0,30** (velikost se přepočítá sama, výhra ~1 270 $, pass = 3 výhry).
+Výchozí hodnoty indikátoru jsem neměnil – rozhodneš ty.
+
 # 2026-10-23 — EVALUACE: dva účty = rychlejší první funded, ale dražší
 
 `scripts/two_account_sprint.py` (každý účet po bustu kupuje novou evaluaci 90 $):
