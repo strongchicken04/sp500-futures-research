@@ -1,0 +1,8 @@
+ONL gap-up: 212 trades, +7.92 / +9.10 pt per trade (2018-21 / 2022-25)
+
+  live fixed + ONL 0 MNQ/unit        ev  61.3/38.7/ 23   f1  64.6/35.4/ 29   rp  78.9/21.1/ 11
+      5 accounts 24m: p10 5,250  median 68,250  p90 121,500
+  live fixed + ONL 1 MNQ/unit        ev  65.6/34.4/ 24   f1  68.4/31.6/ 29   rp  79.5/20.5/ 10
+      5 accounts 24m: p10 -2,250  median 50,250  p90 123,000
+  live fixed + ONL 2 MNQ/unit        ev  68.0/32.0/ 24   f1  72.6/27.4/ 30   rp  80.2/19.8/ 10
+      5 accounts 24m: p10 24,000  median 86,250  p90 149,250

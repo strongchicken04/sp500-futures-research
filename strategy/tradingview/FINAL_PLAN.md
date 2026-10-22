@@ -1,3 +1,20 @@
+# 2026-10-23 — kniha: průměr místo mediánu (medián u kopírovaných účtů skáče)
+
+Medián simulace 5 kopírovaných účtů skáče po 5 × 1 800 $, proto
+`scripts/book_compare.py` počítá **průměrnou hotovost za 24 měsíců na jeden
+účet** (po poplatcích 90 $, ±60 $ šum simulace):
+
+| kniha | pass eval | průměr na účet | bez výplaty |
+|---|---|---|---|
+| výzkumná kniha | 55,6 % | 11 300 $ | 10,6 % |
+| živá se starým Lucid 2 | 62,4 % | 11 500 $ | 12,0 % |
+| **živá opravená** (Lucid 2 pásmo, Lucid 6 se stopem) | 61,3 % | **13 100 $** | 7,9 % |
+| opravená + RS noha | 56,9 % | **16 400 $** | 0 % |
+| opravená + RS + ONL gap-up 2 MNQ | 59,1 % | 23 000 $ | 0 % |
+
+RS noha přidává konzistentně. ONL gap-up je nemonotónní (1 MNQ horší,
+2 MNQ lepší) – citlivé na historickou cestu, zatím bez doporučení.
+
 # 2026-10-23 — EVALUACE: RS sprint se stopem 0,30 % je asi o 2 dny rychlejší
 
 `scripts/rs_sprint_shape.py` (stejný RS signál, velikost tak, aby stop stál

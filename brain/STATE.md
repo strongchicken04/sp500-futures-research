@@ -1,19 +1,19 @@
 # Brain state
 
-heartbeat: 2026-10-22T22:22Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T22:33Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
 
-10. Book add-ons: FOMC press-conference fade (lucid_5, 8/yr) and overnight-low touch on
-    gap-up days (onl_gapup_book.py, 25/yr) added to the fixed live book: marginal effect.
 11. Importer: WebSearch for published intraday index-futures effects (2023-2026), write
     exact rules, test the ones that fit existing exports first.
 12. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- 10. Book add-ons: RS leg +$3.3k mean per account (robust); ONL gap-up inconclusive (non-monotonic);
+  FOMC fade too rare. Lifecycle medians are lumpy: use book_compare.py means from now on.
 - Two accounts with RS 0.20/0.30 + 09:31: first funded 7.1 / 7.3 days, fees ~$300.
 - RS + 14:30 fallback: rejected (unstable fallback).
 - RS sprint shape: 0.20% / 0.30% is ~2 days faster than 0.20/0.40 in both halves, same fees (recommendation).
