@@ -1,3 +1,17 @@
+# 2026-10-23 — FUNDED: Lucid 2 opraven (VWAP pásmo), kniha změřená na živých pravidlech
+
+`live_spec_exporter.py` přepočítal indikátory přesně tak, jak jsou napsané:
+- **Lucid 2 (starý)**, prosté křížení VWAP: +2,3 / +0,7 bodu na obchod
+  (2018–21 / 2022–25, s náklady a filtrem volatility), na 1min grafu ≈ 0.
+- **Lucid 2 (nový)**, průraz pásma VWAP ±0,20 % na 5min grafu, jen první obchod
+  dne: +3,6 / +3,0 bodu. Indikátor je přepsaný, **používej 5min graf**.
+- **Lucid 6** živá pravidla sedí s výzkumem (+5,1 / +8,9); se stopem 0,50 %
+  +5,7 / +8,7 a nejhorší obchod −128 místo −218 bodů.
+
+Kniha ORB + VWAP + noise, ladder 400/500/400, 5 účtů 24 měsíců:
+starý Lucid 2 medián 51 000 $ (p10 −3 000 $), **opravená kniha medián
+68 000 $ (p10 +5 000 $)**, pass evaluace knihou 61 %.
+
 # 2026-10-23 — FUNDED: noise momentum s pevným stopem 0,50 %
 
 `scripts/noise_variants.py`: pevný stop 0,50 % od vstupu ponechá edge

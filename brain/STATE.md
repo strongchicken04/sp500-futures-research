@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-22T21:25Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T21:36Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -10,8 +10,6 @@ last shift: 2026-10-23 (running)
    (research it); short before 13:00 auction, long after.
 5. Month-end ZN long (last trading day 09:00-15:00): run zn_daily_exporter.py.
 7. Noise momentum ES/YM versions (needs an exporter run; exits done).
-8. Re-verify VWAP band and noise momentum exports with an independent
-   exporter (fills, costs) — the book's remaining edge rests on them.
 
 ## Done this shift
 - 3. Regime map: no regime filter survives both halves (results/regime_map.txt).
@@ -26,7 +24,8 @@ last shift: 2026-10-23 (running)
 - 5. Turn-of-month NQ: rejected (TOM days not better than other days in 2022-25).
 - 1. RS variants: none better than the live rule in both halves; independent export
   replicates the live RS sprint (alignment and fills confirmed). Plan unchanged.
-- 8. Live-spec audit: Lucid 2 trades a plain VWAP cross once a day, the book used a 0.20% band
+- 8. Live-spec audit DONE: Lucid 2 rewritten to the band break (+3.6 / +3.0 vs +2.3 / +0.7 pt);
+  noise live rules replicate; book on fixed live rules median $68k vs $51k. Old note: Lucid 2 trades a plain VWAP cross once a day, the book used a 0.20% band
   break up to twice a day. live_spec_exporter (LSVWAP, LSNOISE) + ZNDAY running on QC;
   score with scripts/score_live_spec.py.
 
