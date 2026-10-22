@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-22",
+  "summary": "Evaluace: nejlepší cesta je RS sprint (NQ silnější než ES od otevření + nad VWAP). Pass 48 % (2018–21) / 52 % (2022–25) na pokus, v průměru ~13 obchodních dní a ~2 evaluace (~$180) do passu. Obyčejný sprint 09:31 long má 36 %.\n\nFunded kniha: po opravě fillu trailovaného stopu ORB oslabil asi o 75 %. Kniha ORB + VWAP + noise: eval 80 % (59 % / 98 %), ~45 dní, lifecycle medián ~$70k. Nosné části jsou noise momentum a VWAP pásmo.\n\nCo se hledalo a nenašlo: signál na dlouhé série výher (190k pravidel, ML, jiné trhy) – nic nepřežilo roky 2022–25.\n\nDalší kroky: noční směna začne frontou – varianty RS sprintu, RS pro knihu, mapa režimů.",
+  "title": "Výchozí stav před první noční směnou",
+  "verdicts": [
+    {
+      "name": "RS sprint",
+      "status": "live-eval"
+    },
+    {
+      "name": "Noise momentum",
+      "status": "live-funded"
+    },
+    {
+      "name": "VWAP pásmo",
+      "status": "live-funded"
+    },
+    {
+      "name": "ORB",
+      "status": "live-funded"
+    },
+    {
+      "name": "ORB s 1min trailem",
+      "status": "rejected"
+    }
+  ]
+}

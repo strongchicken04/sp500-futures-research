@@ -1,0 +1,11 @@
+{
+  "files": "book_after_fix.py",
+  "isVal": 59,
+  "name": "Kniha (ORB + VWAP + noise), ladder room/700, max 3",
+  "oosVal": 98,
+  "order": 6,
+  "reached": "live",
+  "result": "eval 80 % (59 % / 98 %), lifecycle medián ~$70k",
+  "status": "live-funded",
+  "unit": "% pass eval"
+}

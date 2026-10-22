@@ -1,0 +1,8 @@
+{
+  "diedAt": "oos",
+  "files": "score_rs_variants.py",
+  "name": "Varianty RS sprintu: kontroly 5/30 min, 10–11 h, práh podle volatility, EMA21, vs YM, vs RTY, všechny 3 indexy, průměr 3",
+  "order": 1.5,
+  "result": "žádná nepřekoná živé pravidlo v obou obdobích; 5min rychlejší (14 / 12 dní), ale pass jen 42 %; RTY nejhorší",
+  "status": "rejected"
+}

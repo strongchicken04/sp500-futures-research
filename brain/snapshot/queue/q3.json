@@ -1,0 +1,6 @@
+{
+  "note": "hotovo: žádný filtr režimu nevychází v obou obdobích; opravena díra ve filtru volatility 2025",
+  "order": 3,
+  "status": "done",
+  "title": "Mapa režimů trhu"
+}

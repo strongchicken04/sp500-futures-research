@@ -467,7 +467,8 @@ td.res { color: var(--muted); }
   function setSt(id, cls, val) { const el = $(id); el.className = "st " + cls; el.querySelector("b").textContent = val; }
   function renderStrip() {
     const m = mode(), s = S.status;
-    setSt("#s-core", S.db === "on" ? "ok" : S.db === "off" ? "bad" : "", S.db === "on" ? "online" : S.db === "off" ? "offline" : "připojuji");
+    setSt("#s-core", S.db === "on" ? "ok" : S.db === "snap" ? "warn" : S.db === "off" ? "bad" : "",
+      S.db === "on" ? "online" : S.db === "snap" ? `snímek ${S.taken ? fDay.format(Date.parse(S.taken)) + " " + fHM.format(Date.parse(S.taken)) : ""}` : S.db === "off" ? "offline" : "připojuji");
     setSt("#s-shift", m.cls, m.word);
     setSt("#s-qc", !s || !s.qc ? "" : s.qc === "ok" ? "ok" : "bad", !s || !s.qc ? "–" : s.qc === "ok" ? "ok" : "chybí");
     const inc = S.strategies.filter((d) => d.audit).length;
@@ -790,11 +791,24 @@ td.res { color: var(--muted); }
   setInterval(tick, 1000);
   requestAnimationFrame(loop);
 
+  // ---------- offline snapshot (jarvis_offline.html carries window.JARVIS_SNAPSHOT) ----------
+  function loadSnapshot() {
+    const X = window.JARVIS_SNAPSHOT;
+    if (!X) return false;
+    const by = (a, k, dir) => [...(a || [])].sort((x, y) => (x[k] > y[k] ? 1 : -1) * (dir === "desc" ? -1 : 1));
+    const b = X.brain || {};
+    Object.assign(S, { status: b.status || null, metrics: b.metrics || null, stats: b.stats || null, account: b.account || null,
+      log: b.log && Array.isArray(b.log.events) ? b.log.events : [], queue: by(X.queue, "order"), strategies: by(X.strategies, "order"),
+      reports: by(X.reports, "date", "desc"), indicators: by(X.indicators, "order"), db: "snap", taken: X.taken || null });
+    refresh();
+    return true;
+  }
+
   // ---------- live data ----------
   const docs = (snap) => snap.docs.map((d) => Object.assign({ _id: d.id }, d.data()));
   (async () => {
     const db = window.claude ? await window.claude.use("db") : null;
-    if (!db) { S.db = "off"; refresh(); return; }
+    if (!db) { if (!loadSnapshot()) { S.db = "off"; refresh(); } return; }
     S.db = "on"; refresh();
     const fail = () => { S.db = "off"; refresh(); };
     const one = (path, key, fn) => db.doc(path).onSnapshot((s) => { S[key] = s.exists ? s.data() : null; fn(); }, fail);

@@ -1,0 +1,8 @@
+{
+  "diedAt": "is",
+  "files": "score_news.py",
+  "name": "Fade svíček zpráv 08:30, fade FOMC statementu 14:00, climax fade",
+  "order": 14,
+  "result": "bez edge",
+  "status": "rejected"
+}

@@ -1,0 +1,8 @@
+{
+  "diedAt": "cost",
+  "files": "score_vwap_feat.py, score_vwap_fine.py",
+  "name": "Adaptivní TP ze svíčky/ATR na VWAP pásmu; malé targety 1–5 % ATR",
+  "order": 15,
+  "result": "po nákladech ~náhoda",
+  "status": "rejected"
+}

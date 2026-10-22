@@ -101,6 +101,10 @@ English.
     arc|gold|ok|bad}]}}` whenever the recommended plan's numbers change.
   - `reports/YYYY-MM-DD`: `{date, title, summary (Czech, plain text), verdicts:
     [{name, status}]}` with the morning report.
+- At the end of each shift refresh the offline copy: ArtifactData `list` of
+  brain, strategies, queue, indicators and reports with
+  `out_dir=brain/snapshot`, then `python3 brain/bin/build_offline.py`, commit
+  `brain/jarvis_offline.html` (works as a plain file with the embedded data).
 - Never print, log or commit QC credentials.
 - Stop starting new QC runs after 11:30 Prague; by 12:00 the report must be
   written and pushed.

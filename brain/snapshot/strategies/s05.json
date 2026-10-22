@@ -1,0 +1,25 @@
+{
+  "edge": 0.9,
+  "files": "lucid_1_s1_orb.pine, s1_true_vwap_fill.py",
+  "isVal": -0.4,
+  "name": "ORB 15 min long + VWAP, 20 EMA trail na 5 min, re-entry (slabé)",
+  "note": "Slabé samo o sobě, ale kniha bez ORB má medián ~$13k místo ~$67k.",
+  "oosVal": 0.9,
+  "order": 5,
+  "reached": "live",
+  "result": "po opravě fillu +0,6 / +1,6 pt hrubě; 2018–21 čistě ~0",
+  "short": "ORB · pt/obchod 22–25",
+  "status": "live-funded",
+  "unit": "pt/obchod net",
+  "years": {
+    "2018": -0.4,
+    "2019": -0.6,
+    "2020": -0.9,
+    "2021": 0.4,
+    "2022": 0.5,
+    "2023": 3.2,
+    "2024": -0.3,
+    "2025": 0.2
+  },
+  "yearsUnit": "pt na obchod po nákladech"
+}

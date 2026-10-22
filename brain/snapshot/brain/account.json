@@ -1,0 +1,40 @@
+{
+  "rules": [
+    [
+      "Účet",
+      "Lucid Flex 50K"
+    ],
+    [
+      "Cíl evaluace",
+      "+3 000 $"
+    ],
+    [
+      "Drawdown",
+      "2 000 $ EOD trailing, zamkne se na +100 $ po EOD nad +2 100 $"
+    ],
+    [
+      "Consistency",
+      "nejlepší den max. 50 % zisku"
+    ],
+    [
+      "Denní strop zisku",
+      "~1 450 $"
+    ],
+    [
+      "Poplatek",
+      "90 $ za evaluaci"
+    ],
+    [
+      "Max. velikost",
+      "4 NQ / 40 MNQ"
+    ],
+    [
+      "Funded výplaty",
+      "první po +4 000 $ (1 800 $ pro tebe), pak každých +2 000 $, nejdřív po 5 dnech"
+    ],
+    [
+      "Copytrading",
+      "povolen"
+    ]
+  ]
+}

@@ -1,0 +1,867 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body style="margin:0">
+<title>J.A.R.V.I.S. NQ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: vault-style research terminal. Status strip + tab nav on top; one screen per tab
+   (brain, kill funnel, strategies, evaluation, funded, night shift, ask). Panels with a warm
+   CRT edge glow on a slate grid, mint bars, pink for what died, amber for the core.
+   Deliberately dark only. */
+:root {
+  --bg: #121822;
+  --bg2: #1b2130;
+  --grid: rgba(94, 240, 200, 0.055);
+  --panel: rgba(22, 30, 42, 0.82);
+  --panel2: rgba(30, 38, 54, 0.9);
+  --edge: rgba(240, 176, 136, 0.34);
+  --edge-soft: rgba(240, 176, 136, 0.12);
+  --line: #2c3a4c;
+  --mint: #5ef0c8;
+  --mint-dim: rgba(94, 240, 200, 0.16);
+  --pink: #ff5c8a;
+  --pink-dim: rgba(255, 92, 138, 0.16);
+  --amber: #ffb347;
+  --amber-dim: rgba(255, 179, 71, 0.16);
+  --lilac: #b9a6ff;
+  --fg: #d5dfe8;
+  --muted: #8a99ab;
+  --faint: #56667b;
+  --f: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+html { background: var(--bg); }
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(185, 166, 255, 0.10), transparent 70%),
+    linear-gradient(var(--bg2), var(--bg) 60%);
+  background-attachment: fixed;
+  color: var(--fg);
+  font-family: var(--f);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 60;
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.13) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45));
+}
+.wrap { position: relative; z-index: 1; max-width: 1360px; margin: 0 auto; }
+:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+button { font-family: var(--f); }
+
+/* status strip + nav */
+.strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding-block: 12px 8px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+.brand { font-weight: 700; letter-spacing: 0.3em; color: var(--fg); font-size: 13px; }
+.brand small { display: block; color: var(--faint); font-weight: 500; letter-spacing: 0.18em; font-size: 9px; }
+.st { color: var(--muted); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.st::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; }
+.st b { font-weight: 600; }
+.st.ok b { color: var(--mint); } .st.ok::before { color: var(--mint); background: var(--mint); }
+.st.warn b { color: var(--amber); } .st.warn::before { background: var(--amber); }
+.st.bad b { color: var(--pink); } .st.bad::before { background: var(--pink); }
+.strip .sp { flex: 1; }
+.clock { color: var(--fg); font-size: 15px; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
+.clock span { display: block; font-size: 9px; color: var(--faint); letter-spacing: 0.2em; text-align: right; }
+nav.tabs { display: flex; gap: 2px; overflow-x: auto; border-bottom: 1px solid var(--line); scrollbar-width: none; }
+nav.tabs button { background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 9px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+nav.tabs button:hover { color: var(--fg); }
+nav.tabs button[aria-selected="true"] { color: var(--mint); border-bottom-color: var(--mint); background: linear-gradient(transparent, var(--mint-dim)); }
+
+/* page heading */
+.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin: 22px 0 16px; }
+.head h1 { margin: 0; font-size: clamp(18px, 3.4vw, 26px); font-weight: 700; letter-spacing: 0.42em; text-transform: uppercase; color: var(--fg); }
+.head h1 em { font-style: normal; color: var(--mint); text-shadow: 0 0 14px rgba(94, 240, 200, 0.35); }
+.head p { margin: 0; color: var(--muted); font-size: 12px; }
+
+/* panels */
+.panel { position: relative; background: var(--panel); border: 1px solid var(--edge); box-shadow: 0 0 22px var(--edge-soft), inset 0 0 26px rgba(240, 176, 136, 0.04); padding: 14px 14px 16px; min-width: 0; }
+.panel::before { content: ""; position: absolute; top: -1px; left: -1px; width: 12px; height: 12px; border-top: 2px solid var(--mint); border-left: 2px solid var(--mint); }
+.ptitle { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0 0 12px; font-size: 11px; }
+.ptitle h2 { margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg); }
+.ptitle h2::before { content: "■ "; color: var(--mint); }
+.ptitle span { color: var(--faint); letter-spacing: 0.04em; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.stack { display: grid; gap: 16px; min-width: 0; }
+@media (max-width: 960px) { .grid2, .grid3 { grid-template-columns: minmax(0, 1fr); } }
+.empty { color: var(--muted); border: 1px dashed var(--line); padding: 12px; font-size: 12px; }
+.note { color: var(--faint); font-size: 11px; margin-top: 8px; }
+
+/* brain */
+.brain { position: relative; height: clamp(320px, 52vw, 520px); overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(255, 179, 71, 0.07), transparent 60%); }
+.brain canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.counters { position: absolute; top: 10px; left: 12px; display: grid; gap: 8px; pointer-events: none; }
+.counters div { font-size: 22px; font-weight: 700; color: var(--fg); line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 0 0 10px rgba(0, 0, 0, 0.8); }
+.counters small { display: block; font-size: 9px; font-weight: 600; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-top: 3px; }
+.tip { position: absolute; pointer-events: none; background: rgba(10, 14, 20, 0.92); border: 1px solid var(--mint); padding: 7px 9px; font-size: 11px; max-width: 260px; z-index: 3; }
+.tip b { display: block; color: var(--mint); margin-bottom: 2px; }
+.legend { position: absolute; bottom: 10px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 10px; color: var(--muted); letter-spacing: 0.08em; pointer-events: none; }
+.legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.now { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; margin-top: 12px; font-size: 12px; }
+.now .lbl { color: var(--faint); letter-spacing: 0.16em; text-transform: uppercase; font-size: 10px; }
+.now .task { color: var(--fg); flex: 1; min-width: 200px; }
+
+/* bars */
+.bars { display: grid; gap: 7px; }
+.bar { display: grid; grid-template-columns: 34px minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; align-items: center; font-size: 12px; }
+.bar .n { text-align: right; color: var(--fg); font-variant-numeric: tabular-nums; font-weight: 600; }
+.bar .lab { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar .trk { height: 9px; background: rgba(94, 240, 200, 0.06); }
+.bar .fill { height: 100%; background: var(--mint); box-shadow: 0 0 8px rgba(94, 240, 200, 0.4); }
+.bar .fill.pink { background: var(--pink); box-shadow: 0 0 8px rgba(255, 92, 138, 0.4); }
+.bar .fill.amber { background: var(--amber); box-shadow: 0 0 8px rgba(255, 179, 71, 0.4); }
+.bar .fill.lilac { background: var(--lilac); }
+
+/* funnel */
+.funnel { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 6px; align-items: end; height: 230px; padding-top: 20px; }
+.stage { display: grid; grid-template-rows: 1fr auto; height: 100%; cursor: pointer; border: 1px solid transparent; padding: 0 2px; background: transparent; color: inherit; text-align: center; }
+.stage:hover, .stage[aria-pressed="true"] { border-color: var(--line); background: rgba(255, 255, 255, 0.02); }
+.stage .col { display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; gap: 2px; }
+.stage .dead { background: linear-gradient(var(--pink), rgba(255, 92, 138, 0.35)); box-shadow: 0 0 12px rgba(255, 92, 138, 0.35); min-height: 2px; }
+.stage .alive { background: linear-gradient(var(--mint), rgba(94, 240, 200, 0.3)); min-height: 2px; }
+.stage .k { font-size: 12px; font-weight: 700; color: var(--pink); font-variant-numeric: tabular-nums; }
+.stage .k.ok { color: var(--mint); }
+.stage .nm { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 6px 0 2px; line-height: 1.25; min-height: 34px; }
+.funnel-wrap { overflow-x: auto; }
+.funnel-wrap .funnel { min-width: 640px; }
+.kill-sum { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 12px; margin-top: 10px; color: var(--muted); }
+.kill-sum b { color: var(--pink); font-size: 16px; } .kill-sum b.ok { color: var(--mint); }
+
+/* tables */
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 620px; font-size: 12px; }
+th { text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); padding: 6px 8px; border-bottom: 1px solid var(--line); }
+td { padding: 8px; border-bottom: 1px solid rgba(44, 58, 76, 0.6); vertical-align: top; }
+tr.click { cursor: pointer; } tr.click:hover td { background: rgba(94, 240, 200, 0.04); }
+td.nm { color: var(--fg); border-left: 2px solid var(--line); }
+td.nm.live-eval, td.nm.live-funded { border-left-color: var(--mint); }
+td.nm.candidate { border-left-color: var(--amber); } td.nm.rejected { border-left-color: var(--pink); }
+td.res { color: var(--muted); }
+.chip { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; padding: 2px 6px; border: 1px solid currentColor; white-space: nowrap; text-transform: uppercase; }
+.chip.live-eval, .chip.live-funded, .chip.ok { color: var(--mint); background: var(--mint-dim); }
+.chip.candidate, .chip.warn { color: var(--amber); background: var(--amber-dim); }
+.chip.rejected, .chip.bad { color: var(--pink); background: var(--pink-dim); }
+.chip.idea, .chip.off { color: var(--muted); }
+
+/* strategy list + detail */
+.slist { display: grid; gap: 4px; max-height: 640px; overflow-y: auto; }
+.sitem { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; text-align: left; background: transparent; color: var(--fg); border: 1px solid transparent; border-left: 2px solid var(--line); padding: 7px 9px; cursor: pointer; font-size: 12px; }
+.sitem:hover { border-color: var(--line); }
+.sitem[aria-pressed="true"] { border-color: var(--mint); background: var(--mint-dim); }
+.sitem.live-eval, .sitem.live-funded { border-left-color: var(--mint); } .sitem.candidate { border-left-color: var(--amber); } .sitem.rejected { border-left-color: var(--pink); }
+.sitem span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.detail h3 { margin: 0 0 8px; font-size: 15px; font-weight: 600; color: var(--fg); text-wrap: balance; }
+.rings { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0; }
+.ring { width: 96px; text-align: center; }
+.ring svg { width: 96px; height: 96px; display: block; }
+.ring small { display: block; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+.pipe { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 3px; margin: 10px 0 4px; }
+.pipe i { height: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line); }
+.pipe i.ok { background: var(--mint); border-color: var(--mint); }
+.pipe i.dead { background: var(--pink); border-color: var(--pink); }
+.pipe-lbl { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 3px; font-size: 8px; color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.2; }
+.kv { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 6px 12px; font-size: 12px; margin-top: 12px; }
+.kv dt { color: var(--faint); letter-spacing: 0.12em; text-transform: uppercase; font-size: 10px; padding-top: 2px; }
+.kv dd { margin: 0; color: var(--fg); overflow-wrap: anywhere; }
+.yrs svg { width: 100%; height: 150px; display: block; }
+
+/* tiles + rules */
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tile { border-left: 2px solid var(--mint); padding: 2px 0 2px 10px; min-width: 0; }
+.tile .l { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.tile .v { font-size: 20px; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.tile .s { font-size: 11px; color: var(--faint); }
+.tile.gold { border-color: var(--amber); } .tile.gold .v { color: var(--amber); }
+.tile.ok { border-color: var(--mint); } .tile.ok .v { color: var(--mint); }
+.tile.bad { border-color: var(--pink); } .tile.bad .v { color: var(--pink); }
+.tile.arc .v { color: var(--mint); }
+.rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 12px; }
+.rules li { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 10px; border-bottom: 1px solid rgba(44, 58, 76, 0.5); padding-bottom: 6px; }
+.rules li span:first-child { color: var(--faint); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding-top: 2px; }
+.chart svg { width: 100%; height: 190px; display: block; }
+
+/* fleet */
+.fleet { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.card { background: var(--panel2); border: 1px solid var(--line); padding: 12px; min-width: 0; }
+.card h4 { margin: 0 0 6px; font-size: 13px; color: var(--fg); }
+.card h4 small { color: var(--faint); font-weight: 500; font-size: 10px; margin-left: 6px; }
+.card dl { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 3px 8px; margin: 10px 0 0; font-size: 11px; }
+.card dt { color: var(--faint); } .card dd { margin: 0; color: var(--muted); overflow-wrap: anywhere; }
+
+/* night */
+.count { font-size: 30px; font-weight: 700; color: var(--amber); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; line-height: 1.1; }
+.sched { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 3px; margin-top: 12px; }
+.sched i { height: 18px; background: var(--mint-dim); border: 1px solid var(--line); }
+.sched i.past { background: transparent; } .sched i.now { background: var(--mint); box-shadow: 0 0 10px rgba(94, 240, 200, 0.5); }
+.sched-l { display: flex; justify-content: space-between; font-size: 10px; color: var(--faint); margin-top: 3px; }
+.queue { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; counter-reset: q; }
+.queue li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; padding: 6px 0; border-top: 1px solid rgba(44, 58, 76, 0.6); counter-increment: q; font-size: 12px; }
+.queue li::before { content: counter(q, decimal-leading-zero); color: var(--faint); }
+.queue .t { color: var(--fg); } .queue .n { display: block; color: var(--muted); font-size: 11px; }
+.queue li > .chip { align-self: start; }
+.queue li.done .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
+.log { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; max-height: 460px; overflow-y: auto; }
+.log li { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(44, 58, 76, 0.45); font-size: 12px; }
+.log time { color: var(--faint); }
+.log .sp { color: var(--mint); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; margin-right: 6px; }
+.rep-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.rep-tabs button { background: transparent; color: var(--muted); border: 1px solid var(--line); padding: 3px 8px; font-size: 11px; cursor: pointer; }
+.rep-tabs button[aria-pressed="true"] { color: var(--mint); border-color: var(--mint); }
+.rep h3 { margin: 0 0 8px; font-size: 14px; color: var(--fg); }
+.rep .body { white-space: pre-wrap; max-width: 80ch; font-size: 12.5px; }
+.verdicts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+/* chat */
+.chat { display: grid; gap: 10px; max-height: 520px; overflow-y: auto; }
+.msg { max-width: 82ch; padding: 9px 12px; border: 1px solid var(--line); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12.5px; }
+.msg.you { justify-self: end; border-color: var(--amber); background: var(--amber-dim); }
+.msg.ai { justify-self: start; background: var(--mint-dim); border-color: rgba(94, 240, 200, 0.4); }
+.msg.ai::before { content: "J.A.R.V.I.S."; display: block; font-size: 9px; letter-spacing: 0.26em; color: var(--mint); margin-bottom: 4px; }
+.msg.err { color: var(--pink); border-color: var(--pink); }
+.suggest { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 10px; }
+.suggest button { background: transparent; color: var(--mint); border: 1px solid var(--line); padding: 4px 10px; font-size: 12px; cursor: pointer; }
+.suggest button:hover { border-color: var(--mint); }
+.ask { display: flex; gap: 8px; }
+.ask textarea { flex: 1; min-width: 0; resize: vertical; min-height: 44px; font-family: var(--f); font-size: 13px; color: var(--fg); background: rgba(10, 14, 20, 0.7); border: 1px solid var(--line); padding: 9px 10px; }
+.ask textarea:focus { outline: none; border-color: var(--mint); }
+.btn { border: 1px solid var(--mint); background: var(--mint); color: var(--bg); font-weight: 700; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 16px; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--mint); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+
+@media (max-width: 560px) {
+  .tiles { grid-template-columns: minmax(0, 1fr); }
+  .rules li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .kv { grid-template-columns: minmax(0, 1fr); }
+  .counters { right: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 10px; }
+  .counters div { font-size: 16px; }
+  .brain { height: 460px; }
+  .brain canvas { top: 104px; height: calc(100% - 104px); }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+  <div class="strip">
+    <div class="brand">J.A.R.V.I.S.<small>NQ · Lucid Flex 50K</small></div>
+    <span class="st" id="s-core">Jádro <b>připojuji</b></span>
+    <span class="st" id="s-shift">Směna <b>–</b></span>
+    <span class="st" id="s-qc">QC <b>–</b></span>
+    <span class="st ok" id="s-live">Živé obchodování <b>vyp</b></span>
+    <span class="st" id="s-inc">Incidenty <b>–</b></span>
+    <span class="st ok">Režim <b>výzkum</b></span>
+    <span class="sp"></span>
+    <div class="clock" id="clock">--:--:--<span>PRAHA</span></div>
+  </div>
+  <nav class="tabs" id="tabs" role="tablist">
+    <button role="tab" data-t="vyzkum">Výzkum</button>
+    <button role="tab" data-t="filtr">Filtr</button>
+    <button role="tab" data-t="strategie">Strategie</button>
+    <button role="tab" data-t="evaluace">Evaluace</button>
+    <button role="tab" data-t="funded">Funded</button>
+    <button role="tab" data-t="noc">Noční směna</button>
+    <button role="tab" data-t="dotaz">Dotaz</button>
+  </nav>
+
+  <!-- VÝZKUM -->
+  <section data-page="vyzkum">
+    <div class="head"><h1>Výzkumný <em>mozek</em></h1><p>co jádro ví a na čem pracuje</p></div>
+    <div class="grid2">
+      <div class="panel">
+        <div class="ptitle"><h2>Mozek — živě</h2><span>každá velká tečka je jedna strategie z registru · táhni pro otočení</span></div>
+        <div class="brain" id="brain">
+          <canvas id="cv" aria-label="Koule strategií obarvená podle stavu"></canvas>
+          <div class="counters" id="counters"></div>
+          <div class="tip" id="tip" hidden></div>
+          <div class="legend"><span><i style="background:var(--mint)"></i>živě</span><span><i style="background:var(--amber)"></i>kandidát</span><span><i style="background:var(--pink)"></i>zamítnuto</span><span><i style="background:var(--lilac)"></i>nápad</span><span>malé tečky = jen výplň</span></div>
+        </div>
+        <div class="now"><span class="lbl">Teď</span><span class="task" id="now-task">–</span><span class="lbl" id="now-hb"></span></div>
+      </div>
+      <div class="stack">
+        <div class="panel"><div class="ptitle"><h2>Strategie · podle stavu</h2></div><div class="bars" id="b-status"></div></div>
+        <div class="panel"><div class="ptitle"><h2>Zamítnuté · kde skončily</h2><span>proklik do filtru</span></div><div class="bars" id="b-died"></div></div>
+        <div class="panel"><div class="ptitle"><h2>Fronta · dnešní noc</h2></div><div class="bars" id="b-queue"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTR -->
+  <section data-page="filtr" hidden>
+    <div class="head"><h1>Filtr <em>pravdy</em></h1><p>každá strategie musí projít všemi branami · růžová = kde umřela</p></div>
+    <div class="panel">
+      <div class="ptitle"><h2>Kill funnel</h2><span>klikni na bránu a tabulka ukáže, kdo tam skončil</span></div>
+      <div class="funnel-wrap"><div class="funnel" id="funnel"></div></div>
+      <div class="kill-sum" id="kill-sum"></div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <div class="ptitle"><h2>Záznamy</h2><span id="ledger-meta"></span></div>
+      <div class="tbl"><table><thead><tr><th>Strategie</th><th>Stav</th><th>Došla do</th><th>Výsledek (2018–21 | 2022–25)</th></tr></thead><tbody id="ledger"></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- STRATEGIE -->
+  <section data-page="strategie" hidden>
+    <div class="head"><h1>Strategie <em>detail</em></h1><p>výsledky vždy zvlášť pro 2018–21 (ladění) a 2022–25 (nezávislý test)</p></div>
+    <div class="grid2" style="grid-template-columns:minmax(0,0.9fr) minmax(0,1.4fr)">
+      <div class="panel"><div class="ptitle"><h2>Registr</h2><span id="reg-meta"></span></div><div class="slist" id="slist"></div></div>
+      <div class="panel detail" id="detail"><div class="empty">Vyber strategii vlevo.</div></div>
+    </div>
+  </section>
+
+  <!-- EVALUACE -->
+  <section data-page="evaluace" hidden>
+    <div class="head"><h1>Evaluace <em>sprint</em></h1><p>cíl: projít evaluací co nejrychleji a nejlevněji</p></div>
+    <div class="grid2">
+      <div class="stack">
+        <div class="panel"><div class="ptitle"><h2>Doporučená cesta</h2><span id="ev-cap"></span></div><div class="tiles" id="ev-tiles"></div></div>
+        <div class="panel chart"><div class="ptitle"><h2>Šance na funded účet</h2><span>podle počtu koupených evaluací</span></div><div id="ev-chart"></div></div>
+      </div>
+      <div class="stack">
+        <div class="panel"><div class="ptitle"><h2>Pravidla sprintu</h2></div><ul class="rules" id="ev-rules"></ul></div>
+        <div class="panel"><div class="ptitle"><h2>Účet</h2><span>Lucid Flex 50K</span></div><ul class="rules" id="acct"></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNDED -->
+  <section data-page="funded" hidden>
+    <div class="head"><h1>Funded <em>kniha</em></h1><p>po passu se obchoduje kniha strategií</p></div>
+    <div class="grid2">
+      <div class="panel"><div class="ptitle"><h2>Kniha</h2><span id="bk-cap"></span></div><div class="tiles" id="bk-tiles"></div></div>
+      <div class="panel"><div class="ptitle"><h2>Strategie v knize</h2></div><div class="bars" id="bk-parts"></div></div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <div class="ptitle"><h2>Indikátory</h2><span>TradingView · co je zapojené a v jakém stavu</span></div>
+      <div class="fleet" id="fleet"></div>
+    </div>
+  </section>
+
+  <!-- NOC -->
+  <section data-page="noc" hidden>
+    <div class="head"><h1>Noční <em>směna</em></h1><p>23:07–11:07 Praha · každou hodinu · do vyčerpání usage</p></div>
+    <div class="grid3">
+      <div class="panel">
+        <div class="ptitle"><h2>Další probuzení</h2></div>
+        <div class="count" id="count">--:--:--</div>
+        <div class="note" id="count-sub"></div>
+        <div class="sched" id="sched"></div>
+        <div class="sched-l"><span>23:07</span><span>05:07</span><span>11:07</span></div>
+        <div class="note" id="shift-note"></div>
+      </div>
+      <div class="panel"><div class="ptitle"><h2>Fronta</h2><span id="q-meta"></span></div><ol class="queue" id="queue"></ol></div>
+      <div class="panel"><div class="ptitle"><h2>Záznam</h2><span id="log-meta"></span></div><ul class="log" id="log"></ul></div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <div class="ptitle"><h2>Ranní report</h2><span id="rep-meta"></span></div>
+      <div class="rep-tabs" id="rep-tabs"></div>
+      <div class="rep" id="rep"><div class="empty">První report přijde po noční směně, nejpozději ve 12:00.</div></div>
+    </div>
+  </section>
+
+  <!-- DOTAZ -->
+  <section data-page="dotaz" hidden>
+    <div class="head"><h1>Zeptej se <em>jádra</em></h1><p>odpovídá česky jen z dat v aplikaci</p></div>
+    <div class="panel">
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <div class="suggest" id="suggest">
+        <button type="button">Co dnes v noci testuješ?</button>
+        <button type="button">Jak mám zítra jet evaluaci?</button>
+        <button type="button">Která strategie knihy je nejslabší?</button>
+        <button type="button">Co znamená incident u VWAP?</button>
+      </div>
+      <form class="ask" id="ask-form">
+        <textarea id="ask" rows="2" placeholder="Napiš otázku… (Enter odešle)"></textarea>
+        <button class="btn" id="send" type="submit">Odeslat</button>
+        <button class="btn ghost" id="stop" type="button" hidden>Stop</button>
+      </form>
+      <div class="note" id="ask-note">Dotaz spotřebuje tvoje vlastní usage Claude. Při prvním dotazu se stránka zeptá na povolení.</div>
+    </div>
+  </section>
+</div>
+
+<script>window.JARVIS_SNAPSHOT = {"taken": "2026-10-22T21:46:32Z", "brain": {"account": {"rules": [["Účet", "Lucid Flex 50K"], ["Cíl evaluace", "+3 000 $"], ["Drawdown", "2 000 $ EOD trailing, zamkne se na +100 $ po EOD nad +2 100 $"], ["Consistency", "nejlepší den max. 50 % zisku"], ["Denní strop zisku", "~1 450 $"], ["Poplatek", "90 $ za evaluaci"], ["Max. velikost", "4 NQ / 40 MNQ"], ["Funded výplaty", "první po +4 000 $ (1 800 $ pro tebe), pak každých +2 000 $, nejdřív po 5 dnech"], ["Copytrading", "povolen"]]}, "log": {"events": [{"sphere": "Kodér", "t": "2026-10-22T21:31:00Z", "text": "Lucid 2 přepsán na průraz pásma VWAP ±0,20 % (5min graf), stop a target až od další svíčky."}, {"sphere": "Optimalizátor", "t": "2026-10-22T21:30:00Z", "text": "Kniha na živých pravidlech: s opraveným Lucid 2 medián 68 000 $ (p10 +5 000 $), se starým 51 000 $ (p10 −3 000 $)."}, {"sphere": "Backtester", "t": "2026-10-22T21:29:00Z", "text": "Export živých pravidel: starý Lucid 2 +2,3 / +0,7 b., pásmo 0,20 % +3,6 / +3,0 b.; noise sedí (+5,1 / +8,9)."}, {"sphere": "Kodér", "t": "2026-10-22T21:26:00Z", "text": "Panel J.A.R.V.I.S. přestavěn do stylu výzkumného terminálu: mozek, filtr, strategie, evaluace, funded, noc."}, {"sphere": "Backtester", "t": "2026-10-22T21:24:00Z", "text": "RS varianty: žádná nepřekoná živé pravidlo v obou obdobích. Nezávislý export zopakoval RS sprint (46 % / 52 %)."}, {"sphere": "Backtester", "t": "2026-10-22T21:25:00Z", "text": "Lucid 2 (VWAP) se liší od backtestu: indikátor = křížení VWAP 1× denně, backtest = průraz pásma ±0,20 % až 2× denně."}, {"sphere": "Kodér", "t": "2026-10-22T21:17:00Z", "text": "Lucid 6 (noise momentum): nový vstup Hard stop 0,50 %."}, {"sphere": "Optimalizátor", "t": "2026-10-22T21:16:00Z", "text": "Noise momentum: stop 0,50 % = stejný edge, nejhorší obchod −128 místo −221 b."}, {"sphere": "Backtester", "t": "2026-10-22T21:15:00Z", "text": "Přelom měsíce na NQ zamítnut. Aukce dluhopisů blokované: síť nepustí na treasury.gov."}, {"sphere": "Backtester", "t": "2026-10-22T21:14:00Z", "text": "Overnight long po 3+ červených dnech: +28,6 / +19,0 bp za noc, kladné každý rok. Kandidát."}, {"sphere": "Systémový manažer", "t": "2026-10-22T21:13:00Z", "text": "Mapa režimů: žádný filtr platný v obou obdobích. Kniha beze změny."}, {"sphere": "Backtester", "t": "2026-10-22T21:12:00Z", "text": "Oprava dat: tabulka volatility končila v polovině 2025, filtr potichu vyřadil 132 dní."}, {"sphere": "Systém", "t": "2026-10-22T21:08:00Z", "text": "Noční směna začala. Data obnovena, QC přístup OK."}]}, "metrics": {"book": {"caption": "ORB + VWAP pásmo + noise · ladder 400/500/400 · živá pravidla", "tiles": [{"label": "Pass evaluace knihou", "sub": "na živých pravidlech", "tone": "ok", "value": "61 %"}, {"label": "5 účtů · 24 měsíců", "sub": "medián; p10 +$5k", "tone": "arc", "value": "~$68k"}, {"label": "Se starým Lucid 2", "sub": "medián; p10 −$3k", "tone": "bad", "value": "~$51k"}, {"label": "ORB po opravě fillu", "sub": "po nákladech na obchod", "tone": "gold", "value": "−0,4 / +0,9 pt"}]}, "eval": {"caption": "RS sprint · +0,20 % / −0,40 %", "fee": 90, "p": 0.5, "rules": [["Trh", "MNQ, 1min graf, indikátor Lucid 8"], ["Kontroly", "10:00, 11:00, 13:00, 14:30 ET (16:00, 17:00, 19:00, 20:30 Praha)"], ["Long", "NQ od otevření o víc než 0,15 % silnější než ES a cena nad VWAP"], ["Short", "zrcadlově: o 0,15 % slabší a pod VWAP"], ["Obchod", "jen první signál dne"], ["Target / stop", "+0,20 % / −0,40 % ceny, flat 15:55"], ["Velikost", "stop = max. ztráta 1 900 $ (~1 000 $ výhra)"], ["Pass", "3 výhry (nejlepší den ~1/3 zisku); prohra ukončí pokus"]], "tiles": [{"label": "Pass na pokus", "sub": "2018–21 / 2022–25", "tone": "arc", "value": "48 / 52 %"}, {"label": "Dní do passu", "sub": "obchodních dní v průměru", "tone": "gold", "value": "~13"}, {"label": "Poplatky do passu", "sub": "≈ 2 evaluace po $90", "value": "~$180"}, {"label": "Základ: 09:31 long", "sub": "obyčejný sprint pro srovnání", "value": "36 %"}]}}, "stats": {"dataSets": 69}, "status": {"heartbeat": "2026-10-22T21:34:00Z", "phase": "working", "qc": "ok", "runs": 2, "shift": "2026-10-23", "sphere": "importer", "task": "ZN konec měsíce zamítnut. Další: RS signál pro funded knihu a noise na ES/YM."}}, "indicators": [{"chart": "MNQ 5 min", "file": "lucid_1_s1_orb.pine", "name": "Lucid 1 — ORB", "note": "exit trailu za min(stop, open)", "order": 5, "role": "funded kniha (slabé)", "status": "live", "_id": "i1"}, {"chart": "MNQ 5 min (povinně)", "file": "lucid_2_vwap.pine", "name": "Lucid 2 — VWAP Band", "note": "přepsáno: průraz pásma 0,20 %, 1× denně", "order": 4, "role": "funded kniha", "status": "live", "_id": "i2"}, {"chart": "–", "file": "lucid_3_monfri.pine", "name": "Lucid 3 — Mon/Fri", "order": 7, "role": "vyřazeno z plánu", "status": "off", "_id": "i3"}, {"chart": "–", "file": "lucid_4_coc.pine", "name": "Lucid 4 — COC", "order": 8, "role": "mimo plán", "status": "off", "_id": "i4"}, {"chart": "1 min", "file": "lucid_5_fomc_fade.pine", "name": "Lucid 5 — FOMC Fade", "order": 6, "role": "kandidát, 8× ročně", "status": "off", "_id": "i5"}, {"chart": "1 / 5 / 30 min", "file": "lucid_6_noise_momentum.pine", "name": "Lucid 6 — Noise Momentum", "note": "nově pevný stop 0,50 %", "order": 3, "role": "funded kniha", "status": "live", "_id": "i6"}, {"chart": "MNQ 1 min", "file": "lucid_7_eval_sprint.pine", "name": "Lucid 7 — Eval Sprint 09:31", "order": 2, "role": "evaluace (záloha)", "status": "backup", "_id": "i7"}, {"chart": "MNQ 1 min", "file": "lucid_8_rs_sprint.pine", "name": "Lucid 8 — RS Sprint", "note": "kontroly 10:00 / 11:00 / 13:00 / 14:30", "order": 1, "role": "evaluace (hlavní)", "status": "live", "_id": "i8"}], "queue": [{"note": "hotovo: žádná varianta nepřekoná živé pravidlo; nezávislý export ho zopakoval (46 % / 52 %)", "order": 1, "status": "done", "title": "RS sprint: robustnost a varianty", "_id": "q1"}, {"note": "bracket grid + trailing exit; přidá něco k noise momentum a VWAP pásmu?", "order": 2, "status": "waiting", "title": "RS signál pro funded knihu", "_id": "q2"}, {"note": "hotovo: žádný filtr režimu nevychází v obou obdobích; opravena díra ve filtru volatility 2025", "order": 3, "status": "done", "title": "Mapa režimů trhu", "_id": "q3"}, {"note": "BLOKOVÁNO: síť nepustí na treasury.gov pro kalendář aukcí; ZN exporter připraven", "order": 4, "status": "waiting", "title": "Aukce státních dluhopisů (ZN)", "_id": "q4"}, {"note": "zamítnuto: NQ přelom měsíce i ZN poslední den (+2,6 / +0,5 ticku)", "order": 5, "status": "done", "title": "Konec a přelom měsíce", "_id": "q5"}, {"note": "kandidát: +28,6 / +19,0 bp za noc, kladné každý rok; ověřit, zda Lucid dovoluje držet přes noc", "order": 6, "status": "done", "title": "Overnight long po 3 červených dnech", "_id": "q6"}, {"note": "pevný stop 0,50 %: stejný edge, nejhorší obchod −128 místo −221 b.; targety edge snižují. Verze ES/YM později.", "order": 7, "status": "done", "title": "Varianty noise momentum", "_id": "q7"}, {"note": "hotovo: Lucid 2 opraven (+3,6 / +3,0 b. místo +2,3 / +0,7); noise sedí; kniha medián 68 000 $ místo 51 000 $", "order": 8, "status": "done", "title": "Nezávislé ověření VWAP pásma a noise momentum", "_id": "q8"}], "reports": [{"date": "2026-10-22", "summary": "Evaluace: nejlepší cesta je RS sprint (NQ silnější než ES od otevření + nad VWAP). Pass 48 % (2018–21) / 52 % (2022–25) na pokus, v průměru ~13 obchodních dní a ~2 evaluace (~$180) do passu. Obyčejný sprint 09:31 long má 36 %.\n\nFunded kniha: po opravě fillu trailovaného stopu ORB oslabil asi o 75 %. Kniha ORB + VWAP + noise: eval 80 % (59 % / 98 %), ~45 dní, lifecycle medián ~$70k. Nosné části jsou noise momentum a VWAP pásmo.\n\nCo se hledalo a nenašlo: signál na dlouhé série výher (190k pravidel, ML, jiné trhy) – nic nepřežilo roky 2022–25.\n\nDalší kroky: noční směna začne frontou – varianty RS sprintu, RS pro knihu, mapa režimů.", "title": "Výchozí stav před první noční směnou", "verdicts": [{"name": "RS sprint", "status": "live-eval"}, {"name": "Noise momentum", "status": "live-funded"}, {"name": "VWAP pásmo", "status": "live-funded"}, {"name": "ORB", "status": "live-funded"}, {"name": "ORB s 1min trailem", "status": "rejected"}], "_id": "2026-10-22"}], "strategies": [{"extra": {"label": "pass 22–25", "max": 100, "unit": "%", "v": 52}, "files": "lucid_8_rs_sprint.pine, score_multi_feature.py", "isVal": 1.8, "name": "RS sprint: NQ−ES od otevření > 0,15 % a nad VWAP (zrcadlově short), 10:00/11:00/13:00/14:30, +0,20 %/−0,40 %", "note": "Nezávislý exporter (2026-10-23) výsledek zopakoval: pass 46 % / 52 %. Žádná varianta (5min, 30min, YM, RTY, EMA, volatilita) není lepší v obou obdobích.", "oosVal": 3.1, "order": 1, "reached": "live", "result": "pass 48 % / 52 % na pokus, ~13 dní", "status": "live-eval", "unit": "bp/obchod", "years": {"2018": 2.2, "2019": -0.2, "2020": 4, "2021": 1, "2022": 2, "2023": 2.2, "2024": 5.1, "2025": 3.4}, "yearsUnit": "bp na obchod", "_id": "s01"}, {"files": "lucid_7_eval_sprint.pine, bias_sprint.py", "isVal": 39, "name": "Sprint 09:31, bias podle 50denního trendu, +0,20 %/−0,40 % (záloha)", "oosVal": 39, "order": 2, "reached": "live", "result": "pass 39 % / 39 %, ~13 dní", "status": "live-eval", "unit": "% pass", "_id": "s02"}, {"edge": 9.2, "files": "lucid_6_noise_momentum.pine, score_noise_tod.py", "isVal": 6.1, "name": "Noise-area momentum (Zarattini 2024), long i short, pevný stop 0,50 %", "note": "Nezávislý export živých pravidel: +5,1 / +8,9 b. bez stopu, +5,7 / +8,7 se stopem 0,50 %, nejhorší obchod −128 místo −218.", "oosVal": 9.2, "order": 3, "reached": "live", "result": "+6,1 / +9,2 pt/obchod se stopem (+5,5 / +9,4 bez), nejhorší obchod −128 vs −221 pt", "short": "noise momentum · pt/obchod 22–25", "status": "live-funded", "unit": "pt/obchod", "years": {"2018": 7.1, "2019": -0.3, "2020": 6.9, "2021": 7.8, "2022": 9.6, "2023": 8.8, "2024": 9.5, "2025": 9.5}, "yearsUnit": "pt na obchod (bez stopu)", "_id": "s03"}, {"audit": false, "edge": 3, "files": "lucid_2_vwap.pine", "isVal": 3.6, "name": "VWAP pásmo: průraz VWAP ±0,20 % na 5min grafu, SL 25 / TP 100 pt, 1× denně (Lucid 2 přepsán 2026-10-23)", "note": "Incident vyřešen: indikátor teď obchoduje stejné pravidlo jako backtest. Používej 5min graf.", "oosVal": 3, "order": 4, "reached": "live", "result": "živá pravidla +3,6 / +3,0 pt/obchod (starý Lucid 2 s křížením VWAP: +2,3 / +0,7)", "short": "VWAP pásmo · pt/obchod 22–25", "status": "live-funded", "unit": "pt/obchod", "years": {"2018": -2.6, "2019": 2, "2020": 1.2, "2021": 8.1, "2022": 1.5, "2023": 0.4, "2024": 4.8, "2025": 1.2}, "yearsUnit": "pt na obchod (backtest, bez filtru)", "_id": "s04"}, {"edge": 0.9, "files": "lucid_1_s1_orb.pine, s1_true_vwap_fill.py", "isVal": -0.4, "name": "ORB 15 min long + VWAP, 20 EMA trail na 5 min, re-entry (slabé)", "note": "Slabé samo o sobě, ale kniha bez ORB má medián ~$13k místo ~$67k.", "oosVal": 0.9, "order": 5, "reached": "live", "result": "po opravě fillu +0,6 / +1,6 pt hrubě; 2018–21 čistě ~0", "short": "ORB · pt/obchod 22–25", "status": "live-funded", "unit": "pt/obchod net", "years": {"2018": -0.4, "2019": -0.6, "2020": -0.9, "2021": 0.4, "2022": 0.5, "2023": 3.2, "2024": -0.3, "2025": 0.2}, "yearsUnit": "pt na obchod po nákladech", "_id": "s05"}, {"files": "book_after_fix.py", "isVal": 59, "name": "Kniha (ORB + VWAP + noise), ladder room/700, max 3", "oosVal": 98, "order": 6, "reached": "live", "result": "eval 80 % (59 % / 98 %), lifecycle medián ~$70k", "status": "live-funded", "unit": "% pass eval", "_id": "s06"}, {"files": "s1_YM_fill.py", "name": "Dow ORB (MYM) (slabé)", "order": 7, "reached": "oos", "result": "po opravě fillu +$0,5 / +$3,3 na MYM hrubě", "status": "candidate", "_id": "s07"}, {"files": "lucid_5_fomc_fade.pine", "name": "FOMC fade svíčky 14:30–14:35 (tisková konference)", "order": 8, "reached": "years", "result": "kladné v každé buňce, NQ/ES/YM; 8× ročně", "status": "candidate", "_id": "s08"}, {"files": "onl_gapup_book.py", "name": "Dotek overnight low v den gapu nahoru, long", "order": 9, "reached": "oos", "result": "WR 74 %, +12 pb nad náhodou; 25× ročně", "status": "candidate", "_id": "s09"}, {"files": "score_vwap_atr.py", "name": "Široké VWAP pásmo 60 bp, TP 15 % ATR / SL 20–30 % ATR (malé)", "order": 10, "reached": "oos", "result": "WR 61–68 %, +1,5 % ATR v obou polovinách", "status": "candidate", "_id": "s10"}, {"diedAt": "cost", "files": "score_orb_trail.py", "name": "ORB s 1min EMA trailem", "order": 11, "result": "~20 obchodů denně, pass 8–17 %", "status": "rejected", "_id": "s11"}, {"diedAt": "audit", "files": "", "name": "Gap-down reverzal, Po/Pá hold, fade ON úrovní, 1min micro-drop", "order": 12, "result": "artefakty backtestu", "status": "rejected", "_id": "s12"}, {"diedAt": "random", "files": "", "name": "Small-gap fill, ON midpoint, IB statistiky, polední efekt, poslední půlhodina, pre-FOMC drift, FOMC relief rally", "order": 13, "result": "na úrovni náhody nebo pod ní", "status": "rejected", "_id": "s13"}, {"diedAt": "is", "files": "score_news.py", "name": "Fade svíček zpráv 08:30, fade FOMC statementu 14:00, climax fade", "order": 14, "result": "bez edge", "status": "rejected", "_id": "s14"}, {"diedAt": "cost", "files": "score_vwap_feat.py, score_vwap_fine.py", "name": "Adaptivní TP ze svíčky/ATR na VWAP pásmu; malé targety 1–5 % ATR", "order": 15, "result": "po nákladech ~náhoda", "status": "rejected", "_id": "s15"}, {"diedAt": "oos", "files": "score_multi_feature.py", "name": "RSI(2) reverze, trend pullback, momentum konfluence, VIX přepínač, value-area acceptance, logistický model", "order": 16, "result": "žádný stabilní edge", "status": "rejected", "_id": "s16"}, {"diedAt": "oos", "files": "score_xmkt_streak.py, ml_streak.py", "name": "Brackety ES / zlato / ropa / Russell / 10Y / NQ overnight; ML výběr obchodů; 190k pravidel na série výher", "order": 17, "result": "edge nepřežije 2022–25", "status": "rejected", "_id": "s17"}, {"diedAt": "oos", "files": "regime_map.py", "name": "Filtry režimu pro knihu (VIX, 20denní volatilita, 50denní trend, den v týdnu)", "order": 18, "result": "žádné rozdělení neplatí v obou obdobích; bez ORB kniha medián ~$13k vs ~$67k", "status": "rejected", "_id": "s18"}, {"files": "overnight_after_downs.py", "isVal": 28.6, "name": "Overnight long po 3+ červených dnech (NQ, close 15:55 → open 09:30)", "note": "Otázka pro tradera: dovoluje Lucid Flex držet pozici přes noc?", "oosVal": 19, "order": 9.5, "reached": "audit", "result": "+28,6 / +19,0 bp za noc (t 2,5 / 1,7), kladné všech 8 let, ~20× ročně", "status": "candidate", "unit": "bp/noc", "years": {"2018": 40.2, "2019": 18.4, "2020": 35, "2021": 24.5, "2022": 11.1, "2023": 20, "2024": 39, "2025": 14.3}, "yearsUnit": "bp za noc", "_id": "s19"}, {"diedAt": "oos", "files": "turn_of_month.py", "name": "Přelom měsíce NQ (poslední den + první 3 dny)", "order": 13.5, "result": "dny TOM v 2022–25 nejsou lepší než ostatní; 4denní hold +49 / +14 bp, t 1,3 / 0,4", "status": "rejected", "_id": "s20"}, {"diedAt": "oos", "files": "score_rs_variants.py", "name": "Varianty RS sprintu: kontroly 5/30 min, 10–11 h, práh podle volatility, EMA21, vs YM, vs RTY, všechny 3 indexy, průměr 3", "order": 1.5, "result": "žádná nepřekoná živé pravidlo v obou obdobích; 5min rychlejší (14 / 12 dní), ale pass jen 42 %; RTY nejhorší", "status": "rejected", "_id": "s21"}, {"diedAt": "oos", "files": "zn_month_end.py", "name": "Konec měsíce: long ZN poslední obchodní den 09:00–15:00", "order": 13.6, "result": "+2,6 / +0,5 ticku (t 1,5 / 0,2), 2023–2025 záporné", "status": "rejected", "_id": "s22"}]};</script>
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const h = (tag, attrs, ...kids) => {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v == null) continue;
+      if (k === "class") el.className = v; else if (k === "text") el.textContent = v; else el.setAttribute(k, v);
+    }
+    for (const kid of kids) if (kid != null) el.append(kid);
+    return el;
+  };
+  const NS = "http://www.w3.org/2000/svg";
+  const sv = (tag, attrs) => { const el = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v); return el; };
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const css = getComputedStyle(document.documentElement);
+  const C = Object.fromEntries(["mint", "pink", "amber", "lilac", "muted", "faint", "fg", "line"].map((k) => [k, css.getPropertyValue("--" + k).trim()]));
+
+  const S = { status: null, metrics: null, stats: null, account: null, queue: [], strategies: [], reports: [], log: [], indicators: [], db: "wait" };
+  const STATUS = { "live-eval": "eval · živě", "live-funded": "funded · živě", candidate: "kandidát", rejected: "zamítnuto", idea: "nápad" };
+  const STAGES = [
+    ["idea", "Nápad"], ["is", "Backtest 2018–21"], ["cost", "Náklady a fills"], ["plateau", "Okolí parametrů"],
+    ["random", "Proti náhodě"], ["oos", "Test 2022–25"], ["years", "Roky a režimy"], ["audit", "Kontrola chyb"], ["live", "Živě"],
+  ];
+  const SIDX = Object.fromEntries(STAGES.map(([k], i) => [k, i]));
+  const stageOf = (d) => d.status === "rejected" ? SIDX[d.diedAt] ?? 1 : SIDX[d.reached] ?? (String(d.status).startsWith("live") ? 8 : 0);
+  const colorOf = (st) => String(st).startsWith("live") ? C.mint : st === "candidate" ? C.amber : st === "rejected" ? C.pink : C.lilac;
+
+  // ---------- tabs ----------
+  const TABS = [...document.querySelectorAll("#tabs button")].map((b) => b.dataset.t);
+  function show(t) {
+    if (!TABS.includes(t)) t = "vyzkum";
+    for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", String(b.dataset.t === t));
+    for (const p of document.querySelectorAll("[data-page]")) p.hidden = p.dataset.page !== t;
+    try { history.replaceState(null, "", "#" + t); } catch (_) {}
+    if (t === "vyzkum") sizeBrain();
+  }
+  $("#tabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) show(b.dataset.t); });
+
+  // ---------- time ----------
+  const fH = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Prague", hour: "2-digit", hourCycle: "h23" });
+  const fClock = new Intl.DateTimeFormat("cs-CZ", { timeZone: "Europe/Prague", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
+  const fHM = new Intl.DateTimeFormat("cs-CZ", { timeZone: "Europe/Prague", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+  const fDay = new Intl.DateTimeFormat("cs-CZ", { timeZone: "Europe/Prague", weekday: "short", day: "numeric", month: "numeric" });
+  const WAKE = [23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const pH = (ms) => +fH.format(ms);
+  const inShift = (ms) => { const x = pH(ms); return x >= 23 || x < 12; };
+  function nextWake(now) {
+    const d = new Date(now); d.setUTCSeconds(0, 0);
+    let t = d.getTime() + ((7 - d.getUTCMinutes() + 60) % 60) * 60000;
+    if (t <= now) t += 3600000;
+    for (let i = 0; i < 26; i++) { if (WAKE.includes(pH(t))) return t; t += 3600000; }
+    return t;
+  }
+  let wakeAt = nextWake(Date.now());
+  const pad = (n) => String(n).padStart(2, "0");
+  function ago(iso) {
+    const ms = Date.now() - Date.parse(iso);
+    if (!isFinite(ms)) return "";
+    const m = Math.max(0, Math.round(ms / 60000));
+    if (m < 1) return "právě teď"; if (m < 60) return `před ${m} min`;
+    const hr = Math.round(m / 60); return hr < 48 ? `před ${hr} h` : `před ${Math.round(hr / 24)} dny`;
+  }
+  function mode() {
+    const s = S.status, now = Date.now();
+    if (!s) return { word: S.db === "off" ? "offline" : "bez dat", cls: "bad", work: false };
+    const age = s.heartbeat ? (now - Date.parse(s.heartbeat)) / 60000 : Infinity;
+    if (s.phase === "blocked") return { word: "zablokováno", cls: "bad", work: false };
+    if ((s.phase === "working" || s.phase === "report") && age < 50) return { word: s.phase === "report" ? "píše report" : "pracuje", cls: "ok", work: true };
+    if (s.phase === "working" && inShift(now)) return { word: "čeká na reset", cls: "warn", work: false };
+    if (inShift(now)) return { word: "v pohotovosti", cls: "warn", work: false };
+    return { word: "mimo směnu", cls: "", work: false };
+  }
+
+  // ---------- status strip ----------
+  function setSt(id, cls, val) { const el = $(id); el.className = "st " + cls; el.querySelector("b").textContent = val; }
+  function renderStrip() {
+    const m = mode(), s = S.status;
+    setSt("#s-core", S.db === "on" ? "ok" : S.db === "snap" ? "warn" : S.db === "off" ? "bad" : "",
+      S.db === "on" ? "online" : S.db === "snap" ? `snímek ${S.taken ? fDay.format(Date.parse(S.taken)) + " " + fHM.format(Date.parse(S.taken)) : ""}` : S.db === "off" ? "offline" : "připojuji");
+    setSt("#s-shift", m.cls, m.word);
+    setSt("#s-qc", !s || !s.qc ? "" : s.qc === "ok" ? "ok" : "bad", !s || !s.qc ? "–" : s.qc === "ok" ? "ok" : "chybí");
+    const inc = S.strategies.filter((d) => d.audit).length;
+    setSt("#s-inc", inc ? "warn" : "ok", String(inc));
+    $("#now-task").textContent = s && s.task ? s.task : "Čekám na první hlášení jádra.";
+    $("#now-hb").textContent = s && s.heartbeat ? `puls ${ago(s.heartbeat)}` : "";
+  }
+
+  // ---------- bars ----------
+  function bars(el, rows, onClick) {
+    const max = Math.max(1, ...rows.map((r) => r.n));
+    el.replaceChildren(...rows.map((r) => {
+      const row = h("div", { class: "bar", role: onClick ? "button" : null, tabindex: onClick ? "0" : null, style: onClick ? "cursor:pointer" : null },
+        h("span", { class: "n", text: String(r.n) }), h("span", { class: "lab", text: r.label, title: r.label }),
+        h("span", { class: "trk" }, h("span", { class: "fill " + (r.tone || ""), style: `display:block;width:${(r.n / max) * 100}%` })));
+      if (onClick) { row.onclick = () => onClick(r); row.onkeydown = (e) => { if (e.key === "Enter") onClick(r); }; }
+      return row;
+    }));
+  }
+
+  // ---------- VÝZKUM ----------
+  function renderResearch() {
+    const st = S.strategies;
+    const live = st.filter((d) => String(d.status).startsWith("live")).length;
+    const cand = st.filter((d) => d.status === "candidate").length;
+    const rej = st.filter((d) => d.status === "rejected").length;
+    const cnt = [[st.length, "strategií v registru"], [live, "živě"], [cand, "kandidátů"], [rej, "zamítnuto"]];
+    if (S.stats && S.stats.dataSets != null) cnt.push([S.stats.dataSets, "datových sad z QC"]);
+    cnt.push([S.reports.length, "reportů"]);
+    $("#counters").replaceChildren(...cnt.map(([n, l]) => h("div", {}, String(n), h("small", { text: l }))));
+    bars($("#b-status"), [
+      { n: st.filter((d) => d.status === "live-eval").length, label: "eval · živě", tone: "" },
+      { n: st.filter((d) => d.status === "live-funded").length, label: "funded · živě", tone: "" },
+      { n: cand, label: "kandidáti", tone: "amber" }, { n: rej, label: "zamítnuto", tone: "pink" },
+      { n: st.filter((d) => d.status === "idea").length, label: "nápady", tone: "lilac" },
+    ]);
+    const died = STAGES.map(([k, l]) => ({ k, n: st.filter((d) => d.status === "rejected" && stageOf(d) === SIDX[k]).length, label: l, tone: "pink" })).filter((r) => r.n);
+    if (died.length) bars($("#b-died"), died, (r) => { funnelSel = r.k; renderFunnel(); show("filtr"); });
+    else $("#b-died").replaceChildren(h("div", { class: "empty", text: "Zatím nic zamítnutého." }));
+    const q = S.queue;
+    if (q.length) bars($("#b-queue"), [
+      { n: q.filter((d) => d.status === "running").length, label: "běží", tone: "" },
+      { n: q.filter((d) => (d.status || "waiting") === "waiting").length, label: "čeká", tone: "lilac" },
+      { n: q.filter((d) => d.status === "done").length, label: "hotovo", tone: "amber" },
+    ]);
+    else $("#b-queue").replaceChildren(h("div", { class: "empty", text: "Fronta je prázdná." }));
+    buildNodes();
+  }
+
+  // brain canvas: rotating sphere, strategies as nodes, amber core
+  const cv = $("#cv"), ctx = cv.getContext("2d"), tip = $("#tip");
+  let W = 0, H = 0, rotY = 0.6, rotX = -0.25, drag = null, nodes = [], dust = [], hover = null;
+  const fib = (n, i) => { const y = 1 - (i + 0.5) / n * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963; return [Math.cos(th) * r, y, Math.sin(th) * r]; };
+  for (let i = 0; i < 900; i++) { const p = fib(900, i); const j = 0.96 + Math.random() * 0.1; dust.push([p[0] * j, p[1] * j, p[2] * j, Math.random()]); }
+  function buildNodes() {
+    const st = S.strategies;
+    nodes = st.map((d, i) => { const p = fib(Math.max(st.length, 1), i); const r = 0.78; return { d, p: [p[0] * r, p[1] * r, p[2] * r] }; });
+  }
+  function sizeBrain() {
+    const r = cv.getBoundingClientRect(); if (!r.width) return;
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function proj(p) {
+    const cy = Math.cos(rotY), sy = Math.sin(rotY), cx = Math.cos(rotX), sx = Math.sin(rotX);
+    let x = p[0] * cy + p[2] * sy, z = -p[0] * sy + p[2] * cy;
+    let y = p[1] * cx - z * sx; z = p[1] * sx + z * cx;
+    const R = Math.min(W, H) * 0.4, f = 2.6 / (2.6 + z);
+    return [W / 2 + x * R * f, H / 2 + y * R * f, z, f];
+  }
+  function draw(t) {
+    if (!W) return;
+    ctx.clearRect(0, 0, W, H);
+    const work = mode().work, R = Math.min(W, H) * 0.4;
+    // core
+    const pulse = 0.85 + 0.15 * Math.sin((reduced ? 0 : t) / (work ? 300 : 900));
+    let g = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, R * 0.55);
+    g.addColorStop(0, "rgba(255,240,200,0.95)"); g.addColorStop(0.08, "rgba(255,179,71,0.85)");
+    g.addColorStop(0.3, "rgba(255,140,60,0.22)"); g.addColorStop(1, "rgba(255,120,60,0)");
+    ctx.globalAlpha = pulse; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(W / 2, H / 2, R * 0.55, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+    // orbit rings
+    ctx.strokeStyle = "rgba(255,179,71,0.25)"; ctx.lineWidth = 1;
+    for (let k = 0; k < 3; k++) {
+      ctx.beginPath();
+      for (let a = 0; a <= 64; a++) {
+        const th = (a / 64) * Math.PI * 2, tilt = 0.5 + k * 0.6;
+        const p = proj([Math.cos(th) * 0.92, Math.sin(th) * Math.sin(tilt) * 0.92, Math.sin(th) * Math.cos(tilt) * 0.92]);
+        a ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]);
+      }
+      ctx.stroke();
+    }
+    // dust
+    for (const d of dust) {
+      const p = proj(d);
+      ctx.fillStyle = p[2] < 0 ? "rgba(255,150,170,0.75)" : "rgba(185,166,255,0.28)";
+      const s = (0.6 + d[3] * 1.2) * p[3];
+      ctx.fillRect(p[0], p[1], s, s);
+    }
+    // nodes, back to front
+    const pr = nodes.map((n) => ({ n, p: proj(n.p) })).sort((a, b) => b.p[2] - a.p[2]);
+    for (const { n, p } of pr) {
+      const c = colorOf(n.d.status), r = (n === hover ? 7 : 4.5) * p[3];
+      ctx.shadowColor = c; ctx.shadowBlur = 12; ctx.fillStyle = c;
+      ctx.globalAlpha = p[2] > 0.3 ? 0.55 : 1;
+      ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 7); ctx.fill();
+      ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+      n.sx = p[0]; n.sy = p[1];
+    }
+    if (!drag && !reduced) rotY += work ? 0.004 : 0.0015;
+  }
+  function loop(t) { if (!document.querySelector('[data-page="vyzkum"]').hidden) draw(t); if (!reduced) requestAnimationFrame(loop); }
+  cv.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, y: e.clientY, ry: rotY, rx: rotX }; cv.setPointerCapture(e.pointerId); cv.style.cursor = "grabbing"; });
+  cv.addEventListener("pointerup", () => { drag = null; cv.style.cursor = "grab"; });
+  cv.addEventListener("pointermove", (e) => {
+    const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (drag) { rotY = drag.ry + (e.clientX - drag.x) * 0.008; rotX = Math.max(-1.2, Math.min(1.2, drag.rx + (e.clientY - drag.y) * 0.008)); if (reduced) draw(0); return; }
+    let best = null, bd = 14;
+    for (const n of nodes) { const d = Math.hypot((n.sx || -99) - x, (n.sy || -99) - y); if (d < bd) { bd = d; best = n; } }
+    hover = best;
+    if (best) {
+      tip.hidden = false;
+      tip.replaceChildren(h("b", { text: STATUS[best.d.status] || best.d.status }), h("div", { text: best.d.name || "" }), h("div", { style: "color:var(--muted);margin-top:3px", text: best.d.result || "" }));
+      tip.style.left = Math.min(x + 14, r.width - 270) + "px"; tip.style.top = Math.min(y + 10, r.height - 90) + "px";
+    } else tip.hidden = true;
+    if (reduced) draw(0);
+  });
+  cv.addEventListener("pointerleave", () => { hover = null; tip.hidden = true; });
+  cv.addEventListener("click", () => { if (hover) { selId = hover.d._id; renderStrategies(); show("strategie"); } });
+  new ResizeObserver(() => { sizeBrain(); draw(performance.now()); }).observe(cv);
+
+  // ---------- FILTR ----------
+  let funnelSel = null;
+  function renderFunnel() {
+    const st = S.strategies;
+    const passed = (i) => st.filter((d) => d.status === "rejected" ? stageOf(d) > i : stageOf(d) >= i).length;
+    const diedAt = (i) => st.filter((d) => d.status === "rejected" && stageOf(d) === i).length;
+    const max = Math.max(1, st.length);
+    $("#funnel").replaceChildren(...STAGES.map(([k, l], i) => {
+      const dead = diedAt(i), pass = passed(i);
+      const b = h("button", { class: "stage", type: "button", "aria-pressed": String(funnelSel === k), title: l },
+        h("div", { class: "col" },
+          dead ? h("span", { class: "k", text: "−" + dead }) : h("span", { class: "k ok", text: String(pass) }),
+          h("div", { class: "dead", style: `height:${(dead / max) * 150}px` }),
+          h("div", { class: "alive", style: `height:${(pass / max) * 150}px` })),
+        h("div", { class: "nm", text: l }));
+      b.onclick = () => { funnelSel = funnelSel === k ? null : k; renderFunnel(); };
+      return b;
+    }));
+    const live = st.filter((d) => String(d.status).startsWith("live")).length;
+    $("#kill-sum").replaceChildren(
+      h("span", {}, h("b", { text: String(st.filter((d) => d.status === "rejected").length) }), " zamítnuto"),
+      h("span", {}, h("b", { class: "ok", text: String(live) }), " živě"),
+      h("span", {}, h("b", { style: "color:var(--amber)", text: String(st.filter((d) => d.status === "candidate").length) }), " kandidátů čeká"));
+    const rows = st.filter((d) => !funnelSel || stageOf(d) === SIDX[funnelSel]);
+    $("#ledger-meta").textContent = funnelSel ? `brána: ${STAGES[SIDX[funnelSel]][1]} · ${rows.length}` : `${rows.length} záznamů`;
+    $("#ledger").replaceChildren(...(rows.length ? rows.map((d) => {
+      const tr = h("tr", { class: "click" },
+        h("td", { class: "nm " + d.status, text: d.name || "" }),
+        h("td", {}, h("span", { class: "chip " + d.status, text: STATUS[d.status] || d.status }), d.audit ? h("span", { class: "chip warn", style: "margin-left:4px", text: "kontrola" }) : null),
+        h("td", { text: (d.status === "rejected" ? "✕ " : "") + STAGES[stageOf(d)][1] }),
+        h("td", { class: "res", text: d.result || "" }));
+      tr.onclick = () => { selId = d._id; renderStrategies(); show("strategie"); };
+      return tr;
+    }) : [h("tr", {}, h("td", { colspan: "4", class: "empty", text: "Žádné záznamy." }))]));
+  }
+
+  // ---------- STRATEGIE ----------
+  let selId = null;
+  function ring(val, max, label, unit, color) {
+    const r = 38, c = 2 * Math.PI * r, frac = Math.max(0, Math.min(1, Math.abs(val) / max));
+    const s = sv("svg", { viewBox: "0 0 96 96" });
+    s.append(sv("circle", { cx: 48, cy: 48, r, fill: "none", stroke: C.line, "stroke-width": 6 }));
+    s.append(sv("circle", { cx: 48, cy: 48, r, fill: "none", stroke: val < 0 ? C.pink : color, "stroke-width": 6, "stroke-dasharray": `${frac * c} ${c}`, transform: "rotate(-90 48 48)", "stroke-linecap": "round" }));
+    const tx = sv("text", { x: 48, y: 52, "text-anchor": "middle", fill: C.fg, "font-size": 15, "font-weight": 700, "font-family": "IBM Plex Mono, monospace" });
+    tx.textContent = (val > 0 ? "+" : "") + String(val).replace(".", ",");
+    s.append(tx);
+    return h("div", { class: "ring" }, s, h("small", { text: `${label} · ${unit}` }));
+  }
+  function yearChart(years, unit) {
+    const ks = Object.keys(years).sort(), vs = ks.map((k) => years[k]);
+    const w = 560, hh = 150, pl = 34, pb = 20, max = Math.max(1, ...vs.map(Math.abs));
+    const s = sv("svg", { viewBox: `0 0 ${w} ${hh}`, preserveAspectRatio: "none" });
+    const y0 = (hh - pb) / 2 + 4, sc = (hh - pb) / 2 - 10;
+    s.append(sv("line", { x1: pl, x2: w, y1: y0, y2: y0, stroke: C.line }));
+    const bw = (w - pl) / ks.length;
+    ks.forEach((k, i) => {
+      const v = vs[i], bh = Math.abs(v) / max * sc, x = pl + i * bw + bw * 0.2;
+      s.append(sv("rect", { x, y: v >= 0 ? y0 - bh : y0, width: bw * 0.6, height: Math.max(1, bh), fill: v >= 0 ? (k >= "2022" ? C.mint : "rgba(94,240,200,0.55)") : C.pink }));
+      const lt = sv("text", { x: x + bw * 0.3, y: hh - 4, "text-anchor": "middle", fill: C.muted, "font-size": 10, "font-family": "IBM Plex Mono, monospace" }); lt.textContent = k; s.append(lt);
+      const vt = sv("text", { x: x + bw * 0.3, y: v >= 0 ? y0 - bh - 4 : y0 + bh + 11, "text-anchor": "middle", fill: C.fg, "font-size": 10, "font-family": "IBM Plex Mono, monospace" });
+      vt.textContent = (v > 0 ? "+" : "") + String(v).replace(".", ","); s.append(vt);
+    });
+    const ut = sv("text", { x: 2, y: 12, fill: C.faint, "font-size": 9, "font-family": "IBM Plex Mono, monospace" }); ut.textContent = unit; s.append(ut);
+    return h("div", { class: "yrs" }, s);
+  }
+  function renderStrategies() {
+    const st = S.strategies;
+    $("#reg-meta").textContent = `${st.length} záznamů`;
+    if (!selId && st.length) selId = (st.find((d) => d.status === "live-eval") || st[0])._id;
+    $("#slist").replaceChildren(...st.map((d) => {
+      const b = h("button", { class: "sitem " + d.status, type: "button", "aria-pressed": String(d._id === selId) },
+        h("span", { text: d.name || "" }), h("span", { class: "chip " + d.status, text: STATUS[d.status] || d.status }));
+      b.onclick = () => { selId = d._id; renderStrategies(); };
+      return b;
+    }));
+    const d = st.find((x) => x._id === selId);
+    if (!d) { $("#detail").replaceChildren(h("div", { class: "empty", text: st.length ? "Vyber strategii vlevo." : "Registr se načte z jádra." })); return; }
+    const si = stageOf(d), dead = d.status === "rejected";
+    const kids = [
+      h("div", { class: "ptitle" }, h("h2", { text: "Detail strategie" }), h("span", { text: d.files || "" })),
+      h("h3", { text: d.name || "" }),
+      h("div", {}, h("span", { class: "chip " + d.status, text: STATUS[d.status] || d.status }), d.audit ? h("span", { class: "chip warn", style: "margin-left:6px", text: "probíhá kontrola" }) : null),
+      h("div", { class: "pipe" }, ...STAGES.map((_, i) => h("i", { class: dead ? (i < si ? "ok" : i === si ? "dead" : "") : (i <= si ? "ok" : "") }))),
+      h("div", { class: "pipe-lbl" }, ...STAGES.map(([, l]) => h("span", { text: l }))),
+    ];
+    if (d.isVal != null && d.oosVal != null) {
+      const mx = Math.max(Math.abs(d.isVal), Math.abs(d.oosVal)) * 1.3 || 1;
+      kids.push(h("div", { class: "rings" }, ring(d.isVal, mx, "2018–21", d.unit || "", C.mint), ring(d.oosVal, mx, "2022–25", d.unit || "", C.mint),
+        d.extra ? ring(d.extra.v, d.extra.max || Math.abs(d.extra.v) * 1.3, d.extra.label, d.extra.unit || "", C.amber) : null));
+    }
+    if (d.years && Object.keys(d.years).length) kids.push(h("div", { class: "ptitle", style: "margin-top:8px" }, h("h2", { text: "Podle roku" }), h("span", { text: d.yearsUnit || d.unit || "" })), yearChart(d.years, d.yearsUnit || d.unit || ""));
+    kids.push(h("dl", { class: "kv" }, h("dt", { text: "Výsledek" }), h("dd", { text: d.result || "–" }),
+      d.note ? h("dt", { text: "Poznámka" }) : null, d.note ? h("dd", { text: d.note }) : null,
+      h("dt", { text: dead ? "Skončila" : "Došla do" }), h("dd", { text: STAGES[si][1] })));
+    $("#detail").replaceChildren(...kids);
+  }
+
+  // ---------- EVALUACE / FUNDED ----------
+  function tile(t) { return h("div", { class: "tile " + (t.tone || "") }, h("div", { class: "l", text: t.label || "" }), h("div", { class: "v", text: t.value || "–" }), t.sub ? h("div", { class: "s", text: t.sub }) : null); }
+  function rulesList(el, items) { el.replaceChildren(...items.map(([k, v]) => h("li", {}, h("span", { text: k }), h("span", { text: v })))); }
+  function evChart(p, fee) {
+    const w = 560, hh = 190, pl = 36, pb = 26, N = 6;
+    const s = sv("svg", { viewBox: `0 0 ${w} ${hh}` });
+    for (const g of [0, 25, 50, 75, 100]) {
+      const y = 8 + (1 - g / 100) * (hh - pb - 8);
+      s.append(sv("line", { x1: pl, x2: w - 8, y1: y, y2: y, stroke: C.line, "stroke-dasharray": g ? "2 4" : "" }));
+      const t = sv("text", { x: pl - 6, y: y + 3, "text-anchor": "end", fill: C.faint, "font-size": 10, "font-family": "IBM Plex Mono, monospace" }); t.textContent = g + " %"; s.append(t);
+    }
+    const bw = (w - pl - 8) / N;
+    for (let k = 1; k <= N; k++) {
+      const c = 1 - Math.pow(1 - p, k), x = pl + (k - 1) * bw + bw * 0.18, y = 8 + (1 - c) * (hh - pb - 8);
+      s.append(sv("rect", { x, y, width: bw * 0.64, height: hh - pb - y, fill: k <= 2 ? C.mint : "rgba(94,240,200,0.4)" }));
+      const v = sv("text", { x: x + bw * 0.32, y: y - 5, "text-anchor": "middle", fill: C.fg, "font-size": 11, "font-weight": 700, "font-family": "IBM Plex Mono, monospace" }); v.textContent = Math.round(c * 100) + " %"; s.append(v);
+      const l = sv("text", { x: x + bw * 0.32, y: hh - 8, "text-anchor": "middle", fill: C.muted, "font-size": 10, "font-family": "IBM Plex Mono, monospace" }); l.textContent = `${k}× · $${k * fee}`; s.append(l);
+    }
+    return s;
+  }
+  function renderPlans() {
+    const m = S.metrics;
+    const ev = m && m.eval, bk = m && m.book;
+    if (ev && Array.isArray(ev.tiles)) { $("#ev-tiles").replaceChildren(...ev.tiles.map(tile)); $("#ev-cap").textContent = ev.caption || ""; }
+    else $("#ev-tiles").replaceChildren(h("div", { class: "empty", text: "Čísla evaluace se načtou z jádra." }));
+    const p = ev && ev.p ? ev.p : null, fee = (ev && ev.fee) || 90;
+    $("#ev-chart").replaceChildren(p ? evChart(p, fee) : h("div", { class: "empty", text: "Pravděpodobnost passu se načte z jádra." }),
+      h("div", { class: "note", text: p ? `Při ${Math.round(p * 100)} % na pokus: kumulativní šance projít aspoň jednou, pod sloupcem cena koupených evaluací.` : "" }));
+    rulesList($("#ev-rules"), ev && Array.isArray(ev.rules) ? ev.rules : []);
+    if (bk && Array.isArray(bk.tiles)) { $("#bk-tiles").replaceChildren(...bk.tiles.map(tile)); $("#bk-cap").textContent = bk.caption || ""; }
+    else $("#bk-tiles").replaceChildren(h("div", { class: "empty", text: "Čísla knihy se načtou z jádra." }));
+    const parts = S.strategies.filter((d) => d.status === "live-funded" && d.edge != null);
+    if (parts.length) bars($("#bk-parts"), parts.map((d) => ({ n: d.edge, label: d.short || d.name, tone: d.audit ? "amber" : "" })));
+    else $("#bk-parts").replaceChildren(h("div", { class: "empty", text: "Složení knihy se načte z jádra." }));
+    const a = S.account;
+    rulesList($("#acct"), a && Array.isArray(a.rules) ? a.rules : []);
+    const ind = S.indicators;
+    $("#fleet").replaceChildren(...(ind.length ? ind.map((d) => h("div", { class: "card" },
+      h("h4", {}, d.name || "", h("small", { text: d.file || "" })),
+      h("span", { class: "chip " + (d.status === "live" ? "ok" : d.status === "audit" ? "warn" : d.status === "backup" ? "warn" : "off"), text: d.status === "live" ? "zapojeno" : d.status === "audit" ? "kontrola" : d.status === "backup" ? "záloha" : "vypnuto" }),
+      h("dl", {}, h("dt", { text: "role" }), h("dd", { text: d.role || "" }), h("dt", { text: "graf" }), h("dd", { text: d.chart || "" }), d.note ? h("dt", { text: "pozn." }) : null, d.note ? h("dd", { text: d.note }) : null)))
+      : [h("div", { class: "empty", text: "Seznam indikátorů se načte z jádra." })]));
+  }
+
+  // ---------- NOC ----------
+  function renderNight() {
+    const q = S.queue, el = $("#queue");
+    el.replaceChildren(...(q.length ? q.map((d) => {
+      const s = d.status || "waiting";
+      return h("li", { class: s }, h("div", {}, h("span", { class: "t", text: d.title || "" }), d.note ? h("span", { class: "n", text: d.note }) : null),
+        h("span", { class: "chip " + (s === "running" ? "ok" : s === "done" ? "off" : "warn"), text: s === "running" ? "běží" : s === "done" ? "hotovo" : "čeká" }));
+    }) : [h("li", { class: "empty", style: "display:block", text: "Fronta je prázdná." })]));
+    $("#q-meta").textContent = q.length ? `${q.filter((d) => d.status === "done").length}/${q.length} hotovo` : "";
+    const ev = S.log;
+    $("#log").replaceChildren(...(ev.length ? ev.slice(0, 60).map((e) => {
+      const t = Date.parse(e.t);
+      return h("li", {}, h("time", { text: isFinite(t) ? fHM.format(t) : "" }), h("div", {}, e.sphere ? h("span", { class: "sp", text: e.sphere }) : null, e.text || ""));
+    }) : [h("li", { class: "empty", style: "display:block", text: "Zatím žádné záznamy." })]));
+    const last = ev[0] && Date.parse(ev[0].t);
+    $("#log-meta").textContent = isFinite(last) ? fDay.format(last) : "";
+    renderReports();
+  }
+  let repSel = null;
+  function renderReports() {
+    const r = S.reports;
+    if (!r.length) return;
+    if (!repSel || !r.find((d) => d._id === repSel)) repSel = r[0]._id;
+    $("#rep-tabs").replaceChildren(...r.map((d) => { const b = h("button", { type: "button", "aria-pressed": String(d._id === repSel), text: d.date || d._id }); b.onclick = () => { repSel = d._id; renderReports(); }; return b; }));
+    const d = r.find((x) => x._id === repSel), v = Array.isArray(d.verdicts) ? d.verdicts : [];
+    $("#rep").replaceChildren(h("h3", { text: d.title || "" }), h("div", { class: "body", text: d.summary || "" }),
+      v.length ? h("div", { class: "verdicts" }, ...v.map((x) => h("span", { class: "chip " + (x.status || "idea"), text: `${x.name}: ${STATUS[x.status] || x.status || ""}` }))) : null);
+    $("#rep-meta").textContent = `${r.length} ${r.length === 1 ? "report" : r.length < 5 ? "reporty" : "reportů"}`;
+  }
+  function renderSched() {
+    const now = Date.now(), idx = WAKE.indexOf(pH(now)), on = inShift(now);
+    $("#sched").replaceChildren(...WAKE.map((x, i) => h("i", { class: on && idx >= 0 ? (i < idx ? "past" : i === idx ? "now" : "") : "", title: `${pad(x)}:07` })));
+  }
+  function tick() {
+    const now = Date.now();
+    $("#clock").firstChild.textContent = fClock.format(now);
+    if (now >= wakeAt) { wakeAt = nextWake(now); renderSched(); }
+    const s = Math.max(0, Math.round((wakeAt - now) / 1000));
+    $("#count").textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
+    $("#count-sub").textContent = `další probuzení v ${fHM.format(wakeAt)} (${fDay.format(wakeAt)})`;
+    $("#shift-note").textContent = inShift(now) ? "Směna běží. Když dojde usage, jádro počká na reset a další probuzení pokračuje." : "Mimo směnu. Report z poslední noci je níže.";
+    renderStrip();
+  }
+
+  function refresh() { renderStrip(); renderResearch(); renderFunnel(); renderStrategies(); renderPlans(); renderNight(); }
+  show((location.hash || "").slice(1));
+  refresh(); renderSched(); tick();
+  setInterval(tick, 1000);
+  requestAnimationFrame(loop);
+
+  // ---------- offline snapshot (jarvis_offline.html carries window.JARVIS_SNAPSHOT) ----------
+  function loadSnapshot() {
+    const X = window.JARVIS_SNAPSHOT;
+    if (!X) return false;
+    const by = (a, k, dir) => [...(a || [])].sort((x, y) => (x[k] > y[k] ? 1 : -1) * (dir === "desc" ? -1 : 1));
+    const b = X.brain || {};
+    Object.assign(S, { status: b.status || null, metrics: b.metrics || null, stats: b.stats || null, account: b.account || null,
+      log: b.log && Array.isArray(b.log.events) ? b.log.events : [], queue: by(X.queue, "order"), strategies: by(X.strategies, "order"),
+      reports: by(X.reports, "date", "desc"), indicators: by(X.indicators, "order"), db: "snap", taken: X.taken || null });
+    refresh();
+    return true;
+  }
+
+  // ---------- live data ----------
+  const docs = (snap) => snap.docs.map((d) => Object.assign({ _id: d.id }, d.data()));
+  (async () => {
+    const db = window.claude ? await window.claude.use("db") : null;
+    if (!db) { if (!loadSnapshot()) { S.db = "off"; refresh(); } return; }
+    S.db = "on"; refresh();
+    const fail = () => { S.db = "off"; refresh(); };
+    const one = (path, key, fn) => db.doc(path).onSnapshot((s) => { S[key] = s.exists ? s.data() : null; fn(); }, fail);
+    one("brain/status", "status", () => { renderStrip(); });
+    one("brain/metrics", "metrics", renderPlans);
+    one("brain/stats", "stats", renderResearch);
+    one("brain/account", "account", renderPlans);
+    db.doc("brain/log").onSnapshot((s) => { const d = s.exists ? s.data() : null; S.log = d && Array.isArray(d.events) ? d.events : []; renderNight(); }, fail);
+    db.collection("queue").orderBy("order").onSnapshot((s) => { S.queue = docs(s); renderNight(); renderResearch(); }, fail);
+    db.collection("strategies").orderBy("order").onSnapshot((s) => { S.strategies = docs(s); refresh(); }, fail);
+    db.collection("reports").orderBy("date", "desc").limit(10).onSnapshot((s) => { S.reports = docs(s); renderNight(); renderResearch(); }, fail);
+    db.collection("indicators").orderBy("order").onSnapshot((s) => { S.indicators = docs(s); renderPlans(); }, fail);
+  })();
+
+  // ---------- ask ----------
+  const turns = []; let ctl = null, sample = null;
+  function bubble(cls, text) { const el = h("div", { class: "msg " + cls, text }); $("#chat").append(el); el.scrollIntoView({ block: "nearest" }); return el; }
+  function rules() {
+    const strip = (a) => a.map(({ _id, ...r }) => r);
+    const snap = { status: S.status, metrics: S.metrics, account: S.account, queue: strip(S.queue), strategies: strip(S.strategies),
+      indicators: strip(S.indicators), reports: strip(S.reports.slice(0, 2)), log: S.log.slice(0, 20), prague_time: fClock.format(Date.now()) };
+    return "Jsi J.A.R.V.I.S., výzkumný asistent českého NQ prop tradera (Lucid Flex 50K). Odpovídej správnou češtinou, stručně, čísla nejdřív. " +
+      "Vycházej jen z dat níže; co v nich není, otevřeně řekni. Doporučuješ, rozhoduje trader.\n\nDATA (JSON):\n" + JSON.stringify(snap).slice(0, 80000);
+  }
+  const ERR = { not_granted: "Dotazy na Claude nejsou pro tuto stránku povolené.", sampling_disabled: "Claude není pro tento účet dostupný.",
+    rate_limited: "Moc dotazů najednou nebo došla usage. Zkus to za chvíli.", session_expired: "Přihlas se prosím znovu.",
+    refused: "Na tohle neodpovím, zkus otázku přeformulovat.", empty_completion: "Odpověď vyšla prázdná, zkus otázku zjednodušit.", prompt_too_large: "Otázka i s daty je moc dlouhá." };
+  const HIDE = ["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"];
+  (async () => { sample = window.claude ? await window.claude.use("sample") : null; if (!sample) { $("#ask-form").hidden = true; $("#suggest").hidden = true; $("#ask-note").textContent = "Dotazy nejsou v tomto zobrazení dostupné."; } })();
+  async function ask(q) {
+    q = q.trim(); if (!q || !sample || ctl) return;
+    bubble("you", q); turns.push({ role: "user", content: q });
+    const out = bubble("ai", "Přemýšlím…");
+    ctl = new AbortController(); $("#send").disabled = true; $("#stop").hidden = false;
+    try {
+      const { text, truncated } = await sample([{ role: "user", content: rules() }, ...turns.slice(-10)], { cache: false, signal: ctl.signal, onText: ({ text }) => { out.textContent = text; } });
+      turns.push({ role: "assistant", content: text }); if (truncated) out.textContent = text + "\n…(zkráceno)";
+    } catch (e) {
+      out.textContent = (e && e.text) || "";
+      if (e && e.code !== "cancelled") { out.classList.add("err"); out.textContent = (out.textContent ? out.textContent + "\n" : "") + (ERR[e.code] || "Spojení se přerušilo. Zkus to znovu."); }
+      if (!out.textContent) out.remove();
+      turns.pop();
+      if (e && HIDE.includes(e.code)) { $("#ask-form").hidden = true; $("#suggest").hidden = true; }
+    } finally { ctl = null; $("#send").disabled = false; $("#stop").hidden = true; }
+  }
+  $("#ask-form").addEventListener("submit", (e) => { e.preventDefault(); const v = $("#ask").value; $("#ask").value = ""; ask(v); });
+  $("#ask").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#ask-form").requestSubmit(); } });
+  $("#stop").addEventListener("click", () => ctl && ctl.abort());
+  $("#suggest").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { show("dotaz"); ask(b.textContent); } });
+})();
+</script>
+
+</body></html>

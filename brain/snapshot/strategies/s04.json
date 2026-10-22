@@ -1,0 +1,26 @@
+{
+  "audit": false,
+  "edge": 3,
+  "files": "lucid_2_vwap.pine",
+  "isVal": 3.6,
+  "name": "VWAP pásmo: průraz VWAP ±0,20 % na 5min grafu, SL 25 / TP 100 pt, 1× denně (Lucid 2 přepsán 2026-10-23)",
+  "note": "Incident vyřešen: indikátor teď obchoduje stejné pravidlo jako backtest. Používej 5min graf.",
+  "oosVal": 3,
+  "order": 4,
+  "reached": "live",
+  "result": "živá pravidla +3,6 / +3,0 pt/obchod (starý Lucid 2 s křížením VWAP: +2,3 / +0,7)",
+  "short": "VWAP pásmo · pt/obchod 22–25",
+  "status": "live-funded",
+  "unit": "pt/obchod",
+  "years": {
+    "2018": -2.6,
+    "2019": 2,
+    "2020": 1.2,
+    "2021": 8.1,
+    "2022": 1.5,
+    "2023": 0.4,
+    "2024": 4.8,
+    "2025": 1.2
+  },
+  "yearsUnit": "pt na obchod (backtest, bez filtru)"
+}

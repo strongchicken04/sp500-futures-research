@@ -1,0 +1,9 @@
+{
+  "chart": "MNQ 5 min (povinně)",
+  "file": "lucid_2_vwap.pine",
+  "name": "Lucid 2 — VWAP Band",
+  "note": "přepsáno: průraz pásma 0,20 %, 1× denně",
+  "order": 4,
+  "role": "funded kniha",
+  "status": "live"
+}

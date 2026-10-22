@@ -1,0 +1,8 @@
+{
+  "files": "score_vwap_atr.py",
+  "name": "Široké VWAP pásmo 60 bp, TP 15 % ATR / SL 20–30 % ATR (malé)",
+  "order": 10,
+  "reached": "oos",
+  "result": "WR 61–68 %, +1,5 % ATR v obou polovinách",
+  "status": "candidate"
+}

@@ -1,0 +1,29 @@
+{
+  "extra": {
+    "label": "pass 22–25",
+    "max": 100,
+    "unit": "%",
+    "v": 52
+  },
+  "files": "lucid_8_rs_sprint.pine, score_multi_feature.py",
+  "isVal": 1.8,
+  "name": "RS sprint: NQ−ES od otevření > 0,15 % a nad VWAP (zrcadlově short), 10:00/11:00/13:00/14:30, +0,20 %/−0,40 %",
+  "note": "Nezávislý exporter (2026-10-23) výsledek zopakoval: pass 46 % / 52 %. Žádná varianta (5min, 30min, YM, RTY, EMA, volatilita) není lepší v obou obdobích.",
+  "oosVal": 3.1,
+  "order": 1,
+  "reached": "live",
+  "result": "pass 48 % / 52 % na pokus, ~13 dní",
+  "status": "live-eval",
+  "unit": "bp/obchod",
+  "years": {
+    "2018": 2.2,
+    "2019": -0.2,
+    "2020": 4,
+    "2021": 1,
+    "2022": 2,
+    "2023": 2.2,
+    "2024": 5.1,
+    "2025": 3.4
+  },
+  "yearsUnit": "bp na obchod"
+}

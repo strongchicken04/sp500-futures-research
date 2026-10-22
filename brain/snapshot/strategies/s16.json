@@ -1,0 +1,8 @@
+{
+  "diedAt": "oos",
+  "files": "score_multi_feature.py",
+  "name": "RSI(2) reverze, trend pullback, momentum konfluence, VIX přepínač, value-area acceptance, logistický model",
+  "order": 16,
+  "result": "žádný stabilní edge",
+  "status": "rejected"
+}

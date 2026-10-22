@@ -1,0 +1,8 @@
+{
+  "diedAt": "oos",
+  "files": "regime_map.py",
+  "name": "Filtry režimu pro knihu (VIX, 20denní volatilita, 50denní trend, den v týdnu)",
+  "order": 18,
+  "result": "žádné rozdělení neplatí v obou obdobích; bez ORB kniha medián ~$13k vs ~$67k",
+  "status": "rejected"
+}

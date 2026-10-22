@@ -1,0 +1,69 @@
+{
+  "events": [
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-22T21:31:00Z",
+      "text": "Lucid 2 přepsán na průraz pásma VWAP ±0,20 % (5min graf), stop a target až od další svíčky."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-22T21:30:00Z",
+      "text": "Kniha na živých pravidlech: s opraveným Lucid 2 medián 68 000 $ (p10 +5 000 $), se starým 51 000 $ (p10 −3 000 $)."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-22T21:29:00Z",
+      "text": "Export živých pravidel: starý Lucid 2 +2,3 / +0,7 b., pásmo 0,20 % +3,6 / +3,0 b.; noise sedí (+5,1 / +8,9)."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-22T21:26:00Z",
+      "text": "Panel J.A.R.V.I.S. přestavěn do stylu výzkumného terminálu: mozek, filtr, strategie, evaluace, funded, noc."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-22T21:24:00Z",
+      "text": "RS varianty: žádná nepřekoná živé pravidlo v obou obdobích. Nezávislý export zopakoval RS sprint (46 % / 52 %)."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-22T21:25:00Z",
+      "text": "Lucid 2 (VWAP) se liší od backtestu: indikátor = křížení VWAP 1× denně, backtest = průraz pásma ±0,20 % až 2× denně."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-22T21:17:00Z",
+      "text": "Lucid 6 (noise momentum): nový vstup Hard stop 0,50 %."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-22T21:16:00Z",
+      "text": "Noise momentum: stop 0,50 % = stejný edge, nejhorší obchod −128 místo −221 b."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-22T21:15:00Z",
+      "text": "Přelom měsíce na NQ zamítnut. Aukce dluhopisů blokované: síť nepustí na treasury.gov."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-22T21:14:00Z",
+      "text": "Overnight long po 3+ červených dnech: +28,6 / +19,0 bp za noc, kladné každý rok. Kandidát."
+    },
+    {
+      "sphere": "Systémový manažer",
+      "t": "2026-10-22T21:13:00Z",
+      "text": "Mapa režimů: žádný filtr platný v obou obdobích. Kniha beze změny."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-22T21:12:00Z",
+      "text": "Oprava dat: tabulka volatility končila v polovině 2025, filtr potichu vyřadil 132 dní."
+    },
+    {
+      "sphere": "Systém",
+      "t": "2026-10-22T21:08:00Z",
+      "text": "Noční směna začala. Data obnovena, QC přístup OK."
+    }
+  ]
+}

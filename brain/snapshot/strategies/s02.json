@@ -1,0 +1,11 @@
+{
+  "files": "lucid_7_eval_sprint.pine, bias_sprint.py",
+  "isVal": 39,
+  "name": "Sprint 09:31, bias podle 50denního trendu, +0,20 %/−0,40 % (záloha)",
+  "oosVal": 39,
+  "order": 2,
+  "reached": "live",
+  "result": "pass 39 % / 39 %, ~13 dní",
+  "status": "live-eval",
+  "unit": "% pass"
+}
