@@ -1,0 +1,8 @@
+--- target 20 / stop 40 bp   (2018-21 | 2022-25)
+   RS alone          pass 47.9%  days  13.4  fees $188  n/yr 206 | pass 51.5%  days  13.0  fees $175  n/yr 210
+   RS + 14:30 day    pass 45.1%  days  12.7  fees $200  n/yr 238 | pass 49.2%  days  12.0  fees $183  n/yr 243
+   14:30 alone       pass  5.9%  days 832.0  fees $1519  n/yr  33 | pass 70.3%  days  78.0  fees $128  n/yr  34
+--- target 20 / stop 30 bp   (2018-21 | 2022-25)
+   RS alone          pass 48.8%  days  10.6  fees $185  n/yr 206 | pass 48.7%  days  10.8  fees $185  n/yr 210
+   RS + 14:30 day    pass 44.8%  days  10.4  fees $201  n/yr 238 | pass 48.6%  days   9.5  fees $185  n/yr 243
+   14:30 alone       pass 12.0%  days 425.3  fees $752  n/yr  33 | pass 72.6%  days  62.6  fees $124  n/yr  34

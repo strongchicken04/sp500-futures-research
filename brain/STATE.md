@@ -8,6 +8,7 @@ last shift: 2026-10-23 (running)
    (research it); short before 13:00 auction, long after.
 
 ## Done this shift
+- RS + 14:30 fallback: rejected (unstable fallback).
 - RS sprint shape: 0.20% / 0.30% is ~2 days faster than 0.20/0.40 in both halves, same fees (recommendation).
 - Two-account sprint (RS + 09:31): first funded ~8 days vs ~13, fees ~$300 vs ~$180 (new eval option).
 - 9. VWAP trend (Zarattini & Aziz): rejected, OOS t<=1.5, corr 0.5 with noise momentum.
