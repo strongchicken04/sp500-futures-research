@@ -1,0 +1,8 @@
+{
+  "diedAt": "oos",
+  "files": "noise_markets.py",
+  "name": "Noise momentum na ES a YM (pravidla Lucid 6, stop 0,50 %)",
+  "order": 13.8,
+  "result": "na micro: NQ +11 / +14 $, ES +6 / +4 $ (korelace s NQ 0,69), YM +0,8 / −0,8 $",
+  "status": "rejected"
+}

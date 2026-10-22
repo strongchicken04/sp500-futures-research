@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-23",
+  "summary": "CO UDĚLAT TY\n1) Nahraj nový Lucid 2 (VWAP) a používej 5min graf. Starý obchodoval prosté křížení VWAP (+2,3 / +0,7 b./obchod), nový průraz pásma ±0,20 % (+3,6 / +3,0 b.). Kniha: medián 68 000 $ místo 51 000 $ (p10 +5 000 $ místo −3 000 $).\n2) Nahraj nový Lucid 6: pevný stop 0,50 %, stejný edge, nejhorší obchod −128 místo −218 b.\n3) Odpověz: dovoluje Lucid Flex držet přes noc?\n\nDOPORUČENÍ (rozhodneš ty)\n• RS sprint se stopem 0,30 %: ~11 dní do passu místo ~13, poplatky stejné (~185 $).\n• Dva účty s různými sprinty (RS + 09:31): první funded za ~8 dní místo ~13, poplatky ~300 $.\n• RS jako funded noha (Target 1,25 / Stop 1,25): kniha medián 74 000 $ místo 68 000 $.\n\nKANDIDÁT\n• Overnight long po 3+ červených dnech: +28,6 / +19,0 bp za noc, kladné všech 8 let.\n\nOVĚŘENO\n• RS sprint nezávisle zopakován (46 % / 52 %). Noise živá pravidla sedí. Opravena díra ve filtru volatility 2025.\n\nZAMÍTNUTO\nVarianty RS, filtry režimu, přelom měsíce NQ, konec měsíce ZN, intradenní momentum, noise na ES/YM, VWAP trend, záloha ve 14:30.\n\nBLOKOVÁNO\nAukce dluhopisů (síť nepustí na treasury.gov).",
+  "title": "Noční směna 23. 10. (průběžně, 00:20)",
+  "verdicts": [
+    {
+      "name": "Lucid 2 VWAP pásmo",
+      "status": "live-funded"
+    },
+    {
+      "name": "Lucid 6 se stopem",
+      "status": "live-funded"
+    },
+    {
+      "name": "RS stop 0,30 %",
+      "status": "candidate"
+    },
+    {
+      "name": "Dva účty",
+      "status": "candidate"
+    },
+    {
+      "name": "RS funded noha",
+      "status": "candidate"
+    },
+    {
+      "name": "Overnight po 3 červených",
+      "status": "candidate"
+    },
+    {
+      "name": "VWAP trend",
+      "status": "rejected"
+    },
+    {
+      "name": "Noise ES/YM",
+      "status": "rejected"
+    }
+  ]
+}

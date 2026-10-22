@@ -1,9 +1,9 @@
 {
-  "heartbeat": "2026-10-22T21:34:00Z",
+  "heartbeat": "2026-10-22T22:18:00Z",
   "phase": "working",
   "qc": "ok",
-  "runs": 2,
+  "runs": 10,
   "shift": "2026-10-23",
-  "sphere": "importer",
-  "task": "ZN konec měsíce zamítnut. Další: RS signál pro funded knihu a noise na ES/YM."
+  "sphere": "optimiser",
+  "task": "RS sprint se stopem 0,30 %: ~11 dní do passu místo ~13. Doporučení pro tebe."
 }

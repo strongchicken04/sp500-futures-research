@@ -1,6 +1,6 @@
 {
-  "note": "bracket grid + trailing exit; přidá něco k noise momentum a VWAP pásmu?",
+  "note": "kandidát: bracket ±1,25 %, +4,6 / +9,6 b./obchod; kniha medián 74 000 $ místo 68 000 $",
   "order": 2,
-  "status": "waiting",
+  "status": "done",
   "title": "RS signál pro funded knihu"
 }

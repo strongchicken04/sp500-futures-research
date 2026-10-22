@@ -1,5 +1,5 @@
 {
-  "note": "pevný stop 0,50 %: stejný edge, nejhorší obchod −128 místo −221 b.; targety edge snižují. Verze ES/YM později.",
+  "note": "hotovo: stop 0,50 % v Lucid 6; ES slabší a s NQ korelované (0,69), YM bez edge",
   "order": 7,
   "status": "done",
   "title": "Varianty noise momentum"

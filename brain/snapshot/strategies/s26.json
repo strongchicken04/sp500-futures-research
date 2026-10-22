@@ -1,0 +1,8 @@
+{
+  "diedAt": "oos",
+  "files": "vwap_trend_exporter.py, score_vwap_trend.py",
+  "name": "VWAP trend (Zarattini & Aziz 2023): vždy v trhu, long nad VWAP, short pod",
+  "order": 13.9,
+  "result": "15min +8,9 / +6,5 b./den (t 2,9 / 1,1), buffer +8,0 / +8,3 (t 2,3 / 1,5); denní výkyv ~150 b., korelace s noise 0,5",
+  "status": "rejected"
+}

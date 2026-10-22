@@ -1,0 +1,11 @@
+{
+  "files": "two_account_sprint.py",
+  "isVal": 7.8,
+  "name": "Evaluace na dvou účtech: RS sprint na jednom, sprint 09:31 (50denní trend) na druhém",
+  "oosVal": 8.7,
+  "order": 1.6,
+  "reached": "years",
+  "result": "první funded za 7,8 / 8,7 dne místo 14,2 / 12,3; poplatky ~300 $ místo ~180 $; stejný sprint na 2 účtech nezrychlí nic",
+  "status": "candidate",
+  "unit": "dní do funded"
+}

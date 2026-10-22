@@ -1,0 +1,8 @@
+{
+  "diedAt": "oos",
+  "files": "intraday_momentum.py",
+  "name": "Intradenní momentum (Gao et al. 2018): směr do 10:00 → obchod 15:30–15:55",
+  "order": 13.7,
+  "result": "2018–21 +3,3 pt (t 2,3), 2022–25 −2,6 pt (t −1,4) – efekt se otočil",
+  "status": "rejected"
+}
