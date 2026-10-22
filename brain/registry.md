@@ -13,6 +13,7 @@ Status: `live-eval` / `live-funded` (in the plan), `candidate`, `rejected`,
 | Dow ORB (MYM) | candidate (weak) | after fill fix +$0.5 / +$3.3 per MYM gross | s1_YM_fill.py |
 | FOMC press-conference fade 14:30-14:35 candle | candidate | positive every cell, NQ/ES/YM; 8/yr | lucid_5_fomc_fade.pine |
 | Overnight-low touch on gap-up day, long | candidate | WR 74%, +12 pp over random; 25/yr | onl_gapup_book.py |
+| Overnight long after 3+ down closes (NQ, 15:55 close to 09:30 open) | candidate | +28.6 / +19.0 bp per night net (t 2.5 / 1.7), positive all 8 years, ~20/yr; no roll artefact (ex-roll +29.3 / +17.6). Needs: does Lucid allow overnight holds? | overnight_after_downs.py |
 | Wide VWAP band 60 bp, TP 15% ATR / SL 20-30% ATR | candidate (small) | WR 61-68%, +1.5% ATR both halves | score_vwap_atr.py |
 | Book (ORB+VWAP+noise), ladder room/700 max 3 | live-funded sizing | eval 80% (59% / 98%), lifecycle median ~$70k | book_after_fix.py |
 | Regime filters for the book (VIX level, 20d realised-vol tercile, 50-day trend, weekday) | rejected | no split holds in both 2018-21 and 2022-25; ORB net -0.4 / +0.9 pt but the book without it: lifecycle median ~$13k vs ~$67k | regime_map.py, results/regime_map.txt |

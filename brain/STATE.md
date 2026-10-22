@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-22T21:13Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T21:24Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -14,7 +14,6 @@ last shift: 2026-10-23 (running)
    (research it); short before 13:00 auction, long after.
 5. Month-end Treasury long (ZN last trading day 09:00-16:00) and turn-of-month
    ES/NQ (Carchano & Pardo).
-6. Overnight long after 3 down closes (NQ, futures 1-minute data).
 7. Noise momentum variants: regime filter, partial target, ES/YM versions.
 8. Re-verify VWAP band and noise momentum exports with an independent
    exporter (fills, costs) — the book's remaining edge rests on them.
@@ -23,6 +22,8 @@ last shift: 2026-10-23 (running)
 - 3. Regime map: no regime filter survives both halves (results/regime_map.txt).
   Fixed: vol-gate panel ended 2025-07, 132 days of 2025 were silently gated out;
   rescore_all.rvol now fills from results/rv20_mfeat.csv. Book +1 pp, unchanged otherwise.
+- 6. Overnight long after 3+ down closes: candidate, +28.6 / +19.0 bp/night, all years positive;
+  ask the owner whether overnight holds are allowed on Lucid Flex.
 - 1. RS variants: exporter rs_variants_exporter.py (rsvar/rs_var_A/B.py) running on QC.
 
 ## Notes for the next shift
