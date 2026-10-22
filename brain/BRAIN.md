@@ -1,0 +1,82 @@
+# Research brain — runbook
+
+Every night 23:00-12:00 Europe/Prague a scheduled wake-up resumes this work.
+Read this file, then `brain/STATE.md` (queue + heartbeat) and
+`brain/registry.md` (everything tested so far). Work until 12:00 Prague or
+until usage runs out; the next hourly wake-up continues where you stopped, so
+always leave STATE.md accurate and everything committed.
+
+Owner: a Czech NQ prop trader (Lucid Flex 50K). Write every message to them
+in correct Czech, plainly, numbers first. Code comments and commit messages in
+English.
+
+## Account rules (confirmed by the owner)
+- Evaluation: +$3,000 target; $2,000 end-of-day trailing drawdown that locks
+  at +$100 once an EOD balance clears +$2,100; best day <= 50% of total
+  profit; day profit cap ~$1,450; fee $90 per evaluation; no time limit.
+- Funded: first payout after +$4,000 (owner receives $1,800), then every
+  +$2,000; payouts every 5 days; drawdown stays locked.
+- Max 4 NQ minis (40 MNQ). Copytrading allowed.
+- Plan: evaluation = sprint (one big bracket trade a day, three wins pass);
+  funded = the book. Evaluation success is measured as EXPECTED TRADING DAYS
+  AND FEES TO A PASS (failed attempts included), not pass rate per attempt.
+
+## The six spheres (one shift runs them in this order, repeatedly)
+1. **Importer** — pick the next idea from STATE.md "queue", or research new
+   ones (WebSearch; WebFetch is usually blocked, rely on snippets and say so;
+   research subagents may be used). Write each as exact rules: market, entry
+   trigger and time, direction, stop, target/exit, filters. Add to registry
+   as `idea`.
+2. **Backtester** — implement with the closest template:
+   `strategy/quantconnect/cond_bracket_exporter.py` (event entries + bracket
+   grid), `multi_feature_exporter.py` (decision times + indicator features),
+   `orb_trail_exporter.py` (path-dependent exits), `xmkt_exporter.py`
+   (other CME markets). Run with `brain/bin/qc_run.sh NAME:path.py`
+   (one QC node: ~15-20 min per run; max ~10,000 order tags per run; reuse the
+   slot project). Data: `brain/bin/restore_data.sh` unpacks all tags to
+   $BRAIN_DATA (default /tmp/brain_data); scorers take that dir.
+3. **Optimiser** — prop-specific versions: sprint bracket for the evaluation
+   (`scripts/eval_speed.py`, `scripts/bias_sprint.py`), sizing for funded
+   (`scripts/book_after_fix.py`, ladder/flat via `scripts/final_lifecycle.py`
+   helpers, `ladder_sim.outcomes`, `mixed_accounts.sim_groups`).
+4. **System manager** — when a strategy works and when not (2018-21 vs
+   2022-25, by year, VIX/realised-vol regime, trend vs range, weekday), and
+   the best combination for the book across regimes.
+5. **Coder** — when a strategy is adopted or changed, update/create the Pine
+   v5 indicator in `strategy/tradingview/` (first line `// @version=5`;
+   simple identifiers; entries/stop/target lines and labels; exits filled at
+   min(stop, open) for longs) and include the full code in the report.
+6. **Interpreter** — at the end of each shift (or when usage is nearly gone)
+   write `brain/reports/YYYY-MM-DD.md` in Czech: what was tested, numbers,
+   verdicts, what changed in the plan, next steps; post the same summary as
+   the session reply. Update `strategy/tradingview/FINAL_PLAN.md` top section
+   when the recommendation changes.
+
+## Guardrails — a result counts only if ALL hold
+1. Rules fixed before looking at results; tune only on 2018-2021; report
+   2022-2025 untouched. Prefer pre-specified rules over grid winners.
+2. Realistic fills: entry at the signal bar's close and tracking from the
+   NEXT bar; a bar touching stop and target = stop; a trailed stop above the
+   market fills at the bar open (this bug inflated ORB by ~75%); costs $1 per
+   micro round trip plus 1 tick slippage on entry and on stops.
+3. Robust across the parameter neighbourhood (average over a block of
+   brackets/thresholds), not one lucky cell; positive in most years.
+4. Beat the random-walk baseline for the same bracket (win rate S/(T+S)) and
+   the plain 09:31-long sprint for evaluation use.
+5. Big claims get an adversarial re-check (look-ahead, same-bar, roll days,
+   cost) before they are reported as findings.
+6. Nothing goes live without the owner; you recommend, they decide.
+
+## Shift mechanics
+- Start: `git pull`, read STATE.md. If `heartbeat` is under 50 minutes old
+  and you did not write it in this context, another shift is active: reply
+  briefly and stop.
+- Update `heartbeat` in STATE.md at least every 45 minutes and after each
+  finished item; commit and push after every finished item (branch
+  `claude/strategy-replication-backtest-yppz7e`; restore
+  `qc_result_MSXB_1792352605.json` before committing).
+- Never print, log or commit QC credentials.
+- Stop starting new QC runs after 11:30 Prague; by 12:00 the report must be
+  written and pushed.
+- If QC credentials are missing, do research/scoring on existing data and
+  say in the report that backtests are blocked.
