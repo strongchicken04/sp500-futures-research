@@ -1,0 +1,12 @@
+  research       ladder K400/500/400 ev  55.6/44.4/ 24   f1  64.9/35.1/ 32   rp  77.3/22.7/ 11
+      5 accounts 24m: p10 -3,000  median 58,500  p90 114,000
+
+  live now       ladder K400/500/400 ev  62.4/37.6/ 31   f1  59.9/40.1/ 39   rp  79.2/20.8/ 15
+      5 accounts 24m: p10 -3,000  median 51,000  p90 123,000
+
+  live fixed     ladder K400/500/400 ev  61.3/38.7/ 23   f1  64.6/35.4/ 29   rp  78.9/21.1/ 11
+      5 accounts 24m: p10 5,250  median 68,250  p90 121,500
+
+  fixed, no ORB  ladder K400/500/400 ev  60.4/39.6/ 27   f1  79.7/17.9/ 69   rp  80.7/19.3/ 15
+      5 accounts 24m: p10 6,000  median 32,250  p90 60,000
+

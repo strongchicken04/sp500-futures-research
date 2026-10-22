@@ -1,0 +1,35 @@
+== P5: Lucid 2 on a 5-min chart (VWAP cross)
+   gate on   2018-21  +2.26 pt t+1.3 n  625 WR  32%  |  2022-25  +0.67 pt t+0.3 n  643 WR  22%
+   gate off  2018-21  +1.27 pt t+0.8 n  764 WR  30%  |  2022-25  +0.10 pt t+0.1 n  777 WR  22%
+   by year (gate on): 2018 -298  2019 -273  2020 +709  2021 +1276  2022 -354  2023 +850  2024 -900  2025 +832
+   exits: EOD 161, SL 892, TP 215
+   worst trades: -26, -26, -26
+
+== P1: Lucid 2 on a 1-min chart (VWAP cross)
+   gate on   2018-21  +0.69 pt t+0.4 n  647 WR  29%  |  2022-25  +0.74 pt t+0.4 n  662 WR  22%
+   gate off  2018-21  +0.79 pt t+0.5 n  789 WR  29%  |  2022-25  +0.95 pt t+0.5 n  801 WR  22%
+   by year (gate on): 2018 -172  2019 -30  2020 +395  2021 +252  2022 +72  2023 +13  2024 +478  2025 -72
+   exits: EOD 140, SL 949, TP 220
+   worst trades: -26, -26, -26
+
+== B5: research band 0.20% (first trade only)
+   gate on   2018-21  +3.63 pt t+2.0 n  644 WR  33%  |  2022-25  +3.04 pt t+1.5 n  650 WR  25%
+   gate off  2018-21  +2.45 pt t+1.5 n  786 WR  32%  |  2022-25  +2.63 pt t+1.4 n  787 WR  25%
+   by year (gate on): 2018 -175  2019 +264  2020 +616  2021 +1631  2022 +196  2023 -95  2024 +1510  2025 +367
+   exits: EOD 182, SL 888, TP 224
+   worst trades: -26, -26, -26
+
+== N0: Lucid 6 noise, published
+   gate on   2018-21  +5.29 pt t+2.7 n  773 WR  38%  |  2022-25  +7.67 pt t+2.5 n  786 WR  42%
+   gate off  2018-21  +5.09 pt t+2.7 n  914 WR  38%  |  2022-25  +8.94 pt t+2.6 n  954 WR  42%
+   by year (gate on): 2018 +1281  2019 -228  2020 +1401  2021 +1632  2022 +1825  2023 +1942  2024 +1988  2025 +277
+   exits: EOD 520, EXIT 1039
+   worst trades: -218, -214, -200
+
+== NS: Lucid 6 noise, 0.50% hard stop
+   gate on   2018-21  +5.65 pt t+3.0 n  773 WR  37%  |  2022-25  +7.07 pt t+2.4 n  786 WR  42%
+   gate off  2018-21  +5.68 pt t+3.3 n  914 WR  37%  |  2022-25  +8.74 pt t+2.6 n  954 WR  41%
+   by year (gate on): 2018 +1564  2019 -302  2020 +1295  2021 +1808  2022 +1667  2023 +2142  2024 +2203  2025 -454
+   exits: EOD 498, EXIT 876, STOP 185
+   worst trades: -128, -126, -126
+
