@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-22T22:35Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T22:22Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -8,6 +8,7 @@ last shift: 2026-10-23 (running)
    (research it); short before 13:00 auction, long after.
 
 ## Done this shift
+- Two-account sprint (RS + 09:31): first funded ~8 days vs ~13, fees ~$300 vs ~$180 (new eval option).
 - 9. VWAP trend (Zarattini & Aziz): rejected, OOS t<=1.5, corr 0.5 with noise momentum.
 - 7. Noise on ES/YM: rejected (ES weaker and 0.69 correlated with NQ; YM no edge).
 - Intraday momentum (Gao et al. 2018): rejected, flips sign in 2022-25.

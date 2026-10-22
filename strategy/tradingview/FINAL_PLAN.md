@@ -1,3 +1,18 @@
+# 2026-10-23 — EVALUACE: dva účty = rychlejší první funded, ale dražší
+
+`scripts/two_account_sprint.py` (každý účet po bustu kupuje novou evaluaci 90 $):
+
+| varianta | dní do prvního funded (2018–21 / 2022–25) | poplatky |
+|---|---|---|
+| RS sprint, 1 účet | 14,2 / 12,3 | 193 / 165 $ |
+| sprint 09:31 (50denní trend), 1 účet | 11,9 / 12,6 | 217 / 227 $ |
+| **RS + 09:31 na dvou účtech** | **7,8 / 8,7** | 301 / 311 $ |
+| RS zkopírovaný na 2 účty | 14,2 / 12,3 | 387 / 329 $ |
+
+Dva účty s RŮZNÝMI signály zkrátí cestu k prvnímu funded asi o 5 dní za
+~130 $ navíc (a druhý účet pak často dojde taky). Kopírovat stejný sprint na
+víc účtů se nevyplatí.
+
 # 2026-10-23 — FUNDED kandidát: RS signál jako další noha knihy
 
 Stejný signál jako RS sprint (Lucid 8), ale s širokým bracketem +1,25 % /

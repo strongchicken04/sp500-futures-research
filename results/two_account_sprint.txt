@@ -1,0 +1,10 @@
+--- 2018-2021  (699 start days)
+   RS alone                   days to first funded  14.2  (median  11)   fees $  193
+   09:31 alone                days to first funded  11.9  (median  10)   fees $  217
+   RS + 09:31 (2 accounts)    days to first funded   7.8  (median   7)   fees $  301
+   RS copied on 2 accounts    days to first funded  14.2  (median  11)   fees $  387
+--- 2022-2025  (762 start days)
+   RS alone                   days to first funded  12.3  (median  10)   fees $  165
+   09:31 alone                days to first funded  12.6  (median  10)   fees $  227
+   RS + 09:31 (2 accounts)    days to first funded   8.7  (median   7)   fees $  311
+   RS copied on 2 accounts    days to first funded  12.3  (median  10)   fees $  329

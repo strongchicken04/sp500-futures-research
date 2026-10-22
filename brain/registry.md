@@ -7,6 +7,7 @@ Status: `live-eval` / `live-funded` (in the plan), `candidate`, `rejected`,
 |---|---|---|---|
 | RS sprint: NQ-ES return since open > 0.15% & above VWAP (mirror short), first of 10:00/11:00/13:00/14:30, +0.20%/-0.40% | live-eval | sprint pass/attempt 48% / 52%, ~13 trading days to pass | lucid_8_rs_sprint.pine, score_multi_feature.py |
 | 09:31 sprint, bias 50-day trend, +0.20%/-0.40% | live-eval (fallback) | pass 39% / 39%, ~13 days | lucid_7_eval_sprint.pine, bias_sprint.py |
+| Two evaluations at once: RS sprint on one account, 09:31 trend sprint on the other | candidate (eval plan) | first funded after 7.8 / 8.7 days vs 14.2 / 12.3 (RS alone), fees ~$300 vs ~$180; copying RS on 2 accounts: no faster, double fees | two_account_sprint.py |
 | Noise-area momentum (Zarattini 2024), long+short, hard stop 0.50% (2026-10-23) | live-funded | +6.1 / +9.2 pt/trade with the stop (+5.5 / +9.4 without), worst trade -128 vs -221 pt; profit targets lower the edge | lucid_6_noise_momentum.pine, score_noise_tod.py |
 | VWAP band 0.20% break on a 5-min chart, SL 25 / TP 100 pt, first trade a day (Lucid 2 rewritten 2026-10-23) | live-funded | live-spec +3.6 / +3.0 pt/trade gated (old Lucid 2 plain cross: +2.3 / +0.7) | lucid_2_vwap.pine, live_spec_exporter.py, score_live_spec.py |
 | ORB 15m long + VWAP, 20-EMA 5m trail, re-entry | live-funded (weak) | after fill fix +0.6 / +1.6 pt gross; ~0 net 2018-21 | lucid_1_s1_orb.pine (5-min chart only), s1_true_vwap_fill.py |
