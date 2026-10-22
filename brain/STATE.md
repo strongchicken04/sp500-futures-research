@@ -1,17 +1,20 @@
 # Brain state
 
-heartbeat: 2026-10-22T22:21Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T22:24Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
 
-11. Importer: WebSearch for published intraday index-futures effects (2023-2026), write
-    exact rules, test the ones that fit existing exports first.
 12. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- 11. Importer (WebSearch): the two best-known published intraday NQ/QQQ systems are already
+  tested (noise momentum, Zarattini/Aziz/Barbon 2024-25 = live; VWAP trend, Zarattini & Aziz
+  = rejected). An arXiv 2026 MNQ study (Mesfin; 14 signal families, 5-min data 2021-25) found
+  none robust under realistic execution - consistent with our rejections. Snippets only
+  (WebFetch blocked). Next importer pass: prop-specific ideas (sprint shapes, account mix).
 - 10. Book add-ons: RS leg +$3.3k mean per account (robust); ONL gap-up inconclusive (non-monotonic);
   FOMC fade too rare. Lifecycle medians are lumpy: use book_compare.py means from now on.
 - Two accounts with RS 0.20/0.30 + 09:31: first funded 7.1 / 7.3 days, fees ~$300.
