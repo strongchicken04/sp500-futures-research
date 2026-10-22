@@ -18,6 +18,7 @@ Status: `live-eval` / `live-funded` (in the plan), `candidate`, `rejected`,
 | Book (ORB+VWAP+noise), ladder room/700 max 3 | live-funded sizing | eval 80% (59% / 98%), lifecycle median ~$70k | book_after_fix.py |
 | Regime filters for the book (VIX level, 20d realised-vol tercile, 50-day trend, weekday) | rejected | no split holds in both 2018-21 and 2022-25; ORB net -0.4 / +0.9 pt but the book without it: lifecycle median ~$13k vs ~$67k | regime_map.py, results/regime_map.txt |
 | Turn of month NQ (last day + first 3 days; RTH or 4-day hold) | rejected | TOM days +3.8 / +13.2 bp RTH vs +1.6 / -1.6 other, close-close TOM not better in 2022-25; 4-day hold +49 / +14 bp, t 1.3 / 0.4 | turn_of_month.py |
+| RS sprint variants: 5-min / 30-min / 10-11 checks, vol-scaled threshold, EMA21 instead of VWAP, vs YM, vs RTY, breadth (all 3), avg of 3 | rejected | none beats the live rule in both halves (block avg over thr 10-25 bp): live 45.4% / 52.1% pass, 16.3 / 13.9 days; 5-min faster (14.3 / 11.7 d) but lower pass 42.1%; RTY worst. Independent export replicates live RS (thr 15: 46.2% / 52.3%) | score_rs_variants.py, results/rs_variants.txt |
 | ORB with 1-min EMA trail | rejected | ~20 trades/day, pass 8-17% | score_orb_trail.py |
 | Gap-down reversal, Mon/Fri hold, ON-level fade, 1-min micro-drop | rejected | backtest artefacts | |
 | Small-gap fill, ON midpoint rule, IB stats, lunch effect, last half hour, pre-FOMC drift, FOMC relief rally | rejected | at/below random baseline | |

@@ -1,13 +1,9 @@
 # Brain state
 
-heartbeat: 2026-10-22T21:17Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T21:25Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
-1. RS sprint robustness and variants: relative strength vs ES AND YM/RTY
-   (sector breadth), 5-minute checks instead of 4 fixed times, threshold
-   scaled by realised volatility, VWAP condition vs EMA condition; adversarial
-   re-check of fills (entry at the check bar close, ES/NQ bar alignment).
 2. RS signal for the funded book (not only sprint): bracket grid + trailing
    exit; does it add to noise momentum + VWAP band?
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
@@ -28,7 +24,11 @@ last shift: 2026-10-23 (running)
 - 4. Treasury auctions: BLOCKED, api.fiscaldata.treasury.gov refused by the network policy;
   ZN daily exporter (zn_daily_exporter.py) written for month-end and auctions once a calendar exists.
 - 5. Turn-of-month NQ: rejected (TOM days not better than other days in 2022-25).
-- 1. RS variants: exporter rs_variants_exporter.py (rsvar/rs_var_A/B.py) running on QC.
+- 1. RS variants: none better than the live rule in both halves; independent export
+  replicates the live RS sprint (alignment and fills confirmed). Plan unchanged.
+- 8. Live-spec audit: Lucid 2 trades a plain VWAP cross once a day, the book used a 0.20% band
+  break up to twice a day. live_spec_exporter (LSVWAP, LSNOISE) + ZNDAY running on QC;
+  score with scripts/score_live_spec.py.
 
 ## Notes for the next shift
 - Credentials: QC_USER_ID / QC_API_TOKEN from the environment (or
