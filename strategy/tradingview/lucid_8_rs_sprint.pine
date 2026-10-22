@@ -1,0 +1,104 @@
+// @version=5
+indicator("Lucid 8 — RS Sprint", overlay=true, max_labels_count=500, max_lines_count=500)
+
+// Evaluation sprint on relative strength. At 10:00, 11:00, 13:00 and 14:30 ET
+// (close of the bar ending then), the first time that
+//   NQ return since the 09:30 open - ES return since the open > +0.15%
+//   and price is above the session VWAP           -> LONG
+//   the difference is below -0.15% and price is below VWAP -> SHORT
+// one trade is taken: target 0.20% of price, stop 0.40%, flat at 15:55.
+// Size so the stop costs at most "Max loss" (~$1,000 win at $1,900).
+// Three wins pass (best day ~1/3 of profit); one loss ends the attempt.
+// NQ 2018-2025 with costs: 48% (2018-21) / 52% (2022-25) of attempts pass,
+// ~13 trading days to a pass on average, vs 36% for the plain 09:31 long.
+// Use a 1-minute MNQ chart.
+
+maxLoss = input.float(1900.0, "Max loss per trade ($)")
+rsThr   = input.float(0.15, "Relative strength threshold (%)") / 100.0
+tgtPct  = input.float(0.20, "Target (% of price)") / 100.0
+stpPct  = input.float(0.40, "Stop (% of price)") / 100.0
+ptValue = input.float(2.0, "$ per point per contract (MNQ = 2)")
+maxCts  = input.int(40, "Max contracts")
+esSym   = input.string("CME_MINI:ES1!", "ES symbol")
+
+esC = request.security(esSym, timeframe.period, close, lookahead=barmerge.lookahead_off)
+esO = request.security(esSym, timeframe.period, open, lookahead=barmerge.lookahead_off)
+
+oMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")
+cMin = hour(time_close, "America/New_York") * 60 + minute(time_close, "America/New_York")
+is1 = timeframe.period == "1"
+isCheck = cMin == 600 or cMin == 660 or cMin == 780 or cMin == 870
+
+var float nqOpen = na
+var float esOpen = na
+var float pv = 0.0
+var float vv = 0.0
+var bool traded = false
+if oMin == 570
+    nqOpen := open
+    esOpen := esO
+    pv := 0.0
+    vv := 0.0
+    traded := false
+inRth = cMin > 570 and cMin <= 960 and not na(nqOpen)
+if inRth
+    pv += hlc3 * volume
+    vv += volume
+vw = vv > 0 ? pv / vv : na
+rs = inRth and not na(esOpen) ? (close / nqOpen - 1.0) - (esC / esOpen - 1.0) : na
+
+var float e = na
+var float tp = na
+var float sl = na
+var int cts = 0
+var int dir = 0
+var int entBar = na
+var line eL = na
+var line tL = na
+var line sL = na
+
+if is1 and isCheck and barstate.isconfirmed and not traded and na(e) and not na(rs)
+    sig = rs > rsThr and close > vw ? 1 : rs < -rsThr and close < vw ? -1 : 0
+    if sig != 0
+        traded := true
+        dir := sig
+        entBar := bar_index
+        e := close
+        tp := close * (1.0 + dir * tgtPct)
+        sl := close * (1.0 - dir * stpPct)
+        cts := math.min(maxCts, math.max(1, int(math.floor(maxLoss / (math.abs(e - sl) * ptValue)))))
+        eL := line.new(bar_index, e, bar_index + 30, e, color=color.yellow, width=2, extend=extend.right)
+        tL := line.new(bar_index, tp, bar_index + 30, tp, color=color.lime, width=2, extend=extend.right)
+        sL := line.new(bar_index, sl, bar_index + 30, sl, color=color.red, width=2, extend=extend.right)
+        label.new(bar_index, dir == 1 ? low : high, "RS " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ\nRS " + str.tostring(rs * 100, "#.##") + "%  win $" + str.tostring(cts * math.abs(tp - e) * ptValue, "#") + " / loss $" + str.tostring(cts * math.abs(e - sl) * ptValue, "#"), color=dir == 1 ? color.blue : color.purple, textcolor=color.white, style=dir == 1 ? label.style_label_up : label.style_label_down, size=size.normal)
+
+if not na(e) and bar_index > entBar
+    rsn = ""
+    px = 0.0
+    if (dir == 1 and low <= sl) or (dir == -1 and high >= sl)
+        rsn := "LOSS"
+        px := dir == 1 ? math.min(sl, open) : math.max(sl, open)
+    else if (dir == 1 and high >= tp) or (dir == -1 and low <= tp)
+        rsn := "WIN"
+        px := dir == 1 ? math.max(tp, open) : math.min(tp, open)
+    else if cMin >= 955
+        rsn := "EOD"
+        px := close
+    if rsn != ""
+        usd = cts * dir * (px - e) * ptValue
+        line.set_x2(eL, bar_index)
+        line.set_x2(tL, bar_index)
+        line.set_x2(sL, bar_index)
+        line.set_extend(eL, extend.none)
+        line.set_extend(tL, extend.none)
+        line.set_extend(sL, extend.none)
+        label.new(bar_index, px, "RS " + rsn + "\n" + (usd >= 0 ? "+$" : "-$") + str.tostring(math.abs(usd), "#"), color=usd >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
+        e := na
+
+plot(inRth ? vw : na, "VWAP", color=color.new(color.aqua, 30))
+
+var table tb = table.new(position.top_right, 1, 2, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    msg = not is1 ? "RS SPRINT: use a 1-minute chart" : not na(e) ? "IN TRADE: " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ  TP " + str.tostring(tp, format.mintick) + "  SL " + str.tostring(sl, format.mintick) : traded ? "done for today" : "waiting: checks 10:00 / 11:00 / 13:00 / 14:30"
+    table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not is1 ? color.red : not na(e) ? color.new(color.orange, 20) : color.new(color.gray, 50))
+    table.cell(tb, 0, 1, "NQ vs ES since open: " + (na(rs) ? "-" : str.tostring(rs * 100, "#.##") + "%") + (na(vw) ? "" : (close > vw ? "  above VWAP" : "  below VWAP")), text_color=color.white)

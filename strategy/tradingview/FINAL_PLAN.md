@@ -1,3 +1,15 @@
+# 2026-10-22 — EVALUACE: RS sprint (lepší než sprint v 9:31)
+
+`multi_feature_exporter.py` + `score_multi_feature.py`: z předem sepsaných
+pravidel (VIX, VWAP, RSI, EMA, volume profile, relative strength) obstálo
+jen **relative strength NQ vs ES + VWAP**: v 10:00/11:00/13:00/14:30 první
+okamžik, kdy NQ od otevření vede nad ES o > 0,15 % a je nad VWAP → long
+(obráceně short). Sprint bracket +0,20 % / −0,40 %. Pass na pokus 48 % /
+52 % (2018–21 / 2022–25) proti 36 % u longu v 9:31, ~13 dní do funded.
+Kladné ve všech variantách prahu a času. Indikátor `lucid_8_rs_sprint.pine`.
+Ostatní pravidla (pullback, momentum, RSI(2), value area, VIX režim) a model
+ze všech indikátorů: bez stabilní hrany.
+
 # 2026-10-21 — EVALUACE: sprint, ne kniha
 
 Rozhoduje očekávaný čas a cena do funded účtu, ne pass na pokus
