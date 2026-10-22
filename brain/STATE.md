@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-22T22:24Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T23:20Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -10,6 +10,7 @@ last shift: 2026-10-23 (running)
 12. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- Funded sizing: flat 3 MNQ per leg beats the ladder in both halves (+$5k / +$11k per account, 24m).
 - 11. Importer (WebSearch): the two best-known published intraday NQ/QQQ systems are already
   tested (noise momentum, Zarattini/Aziz/Barbon 2024-25 = live; VWAP trend, Zarattini & Aziz
   = rejected). An arXiv 2026 MNQ study (Mesfin; 14 signal families, 5-min data 2021-25) found

@@ -1,3 +1,21 @@
+# 2026-10-23 — FUNDED: velikost pozic agresivněji (flat 3 MNQ na nohu)
+
+`scripts/funded_sizing.py`: evaluace se dělá sprintem, takže bust funded
+účtu stojí jen novou evaluaci (~180 $ a ~11 dní). Za takových podmínek se
+ve funded fázi vyplácí větší velikost. Průměrná hotovost na účet za 24 měsíců
+(2018–21 | 2022–25):
+
+| velikost | opravená kniha | opravená + RS |
+|---|---|---|
+| ladder 400/500 (dosavadní plán) | 6 400 $ / 31 700 $ | 19 000 $ / 51 900 $ |
+| **flat 3 MNQ na nohu** | **11 500 $ / 43 000 $** | **27 300 $ / 60 600 $** |
+| flat 4 | 14 400 $ / 45 900 $ | 30 500 $ / 49 500 $ |
+| ladder K300/250 | 13 400 $ / 37 600 $ | 24 800 $ / 47 800 $ |
+
+Pořadí platí v obou obdobích, plato je kolem 3–4 MNQ. Doporučení: ve funded
+fázi 3 MNQ na každou nohu knihy (ORB, VWAP pásmo, noise, případně RS),
+bez ladderu. Rozhodneš ty.
+
 # 2026-10-23 — kniha: průměr místo mediánu (medián u kopírovaných účtů skáče)
 
 Medián simulace 5 kopírovaných účtů skáče po 5 × 1 800 $, proto
