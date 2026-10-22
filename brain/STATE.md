@@ -1,17 +1,16 @@
 # Brain state
 
-heartbeat: 2026-10-22T22:20Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T22:40Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
-7. Noise momentum ES/YM versions: LSNOISE_ES / LSNOISE_YM running on QC; score with
-   score_live_spec.py (pass the files) .
-9. VWAP trend (Zarattini & Aziz 2023): vwap_trend_exporter.py written, run after item 7
+9. VWAP trend (Zarattini & Aziz 2023): VWTREND running on QC
    (tag W,<variant>,date,gross,entries,rv; cost 0.75 pt per entry).
 
 ## Done this shift
+- 7. Noise on ES/YM: rejected (ES weaker and 0.69 correlated with NQ; YM no edge).
 - Intraday momentum (Gao et al. 2018): rejected, flips sign in 2022-25.
 - 2. RS as funded leg: candidate, +4.6 / +9.6 pt/trade with a 1.25%/1.25% bracket; book median
   $74k vs $68k, p10 $12k vs $5k. Owner decides; Lucid 8 can trade it (target 1.25, stop 1.25).
