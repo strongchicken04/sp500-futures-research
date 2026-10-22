@@ -9,14 +9,19 @@ indicator("Lucid 6 — Noise Area Momentum", overlay=true, max_labels_count=500,
 // below the lower band. A long exits when the close is below max(upper band,
 // VWAP), a short when above min(lower band, VWAP); an opposite signal
 // reverses. Flat at 15:55. Use a 1-, 5- or 30-minute chart.
+// Hard stop (added 2026-10-23): exit when price moves 0.50% against the entry
+// (filled at the worse of the stop and the bar open). Same edge, worst trade
+// about -125 pt instead of -220 pt.
 //
-// NQ 2018-2025, $1 cost per MNQ: about 1 trade a day, 40% winners, +5.5 pt
-// per trade 2018-2021 and +9.4 pt 2022-2025, 7 of 8 years positive.
+// NQ 2018-2025, $1 cost per MNQ: about 1 trade a day, 38% winners, +6.1 pt
+// per trade 2018-2021 and +9.2 pt 2022-2025 with the hard stop (+5.5 / +9.4
+// without it).
 
 lookback = input.int(14, "Sessions for the noise average")
 useVol   = input.bool(true, "Volatility gate (skip if NQ 20d vol >= ceiling)")
 volCeil  = input.float(0.30, "   vol ceiling")
 volSym   = input.string("CME_MINI:NQ1!", "   vol gate symbol")
+hardStop = input.float(0.50, "Hard stop (% from entry, 0 = off)") / 100.0
 
 rvol20 = request.security(volSym, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
 volOK = not useVol or na(rvol20) or rvol20 < volCeil
@@ -28,11 +33,13 @@ tfOK = timeframe.isintraday and timeframe.multiplier <= 30 and 30 % timeframe.mu
 var float dOpen = na
 var float pClose = na
 var float lastClose = na
+var int ghost = 0      // direction of a stopped trade until its normal exit
 var float pv = 0.0
 var float vv = 0.0
 if oMin == 570
     pClose := lastClose
     dOpen := open
+    ghost := 0
     pv := 0.0
     vv := 0.0
 inRth = cMin > 570 and cMin <= 960 and not na(dOpen)
@@ -51,6 +58,18 @@ var int pos = 0
 var float ent = na
 var int entBar = na
 
+// hard stop, checked on every bar after the entry bar
+stopLvl = pos != 0 and hardStop > 0 ? ent * (1.0 - pos * hardStop) : na
+if pos != 0 and hardStop > 0 and bar_index > entBar and inRth
+    hit = pos == 1 ? low <= stopLvl : high >= stopLvl
+    if hit
+        px = pos == 1 ? math.min(stopLvl, open) : math.max(stopLvl, open)
+        pnl = pos * (px - ent)
+        label.new(bar_index, px, "NZ STOP " + str.tostring(pnl, "+#.##"), color=color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
+        ghost := pos         // no new entry until the stopped trade's normal exit, as in the backtest
+        pos := 0
+        ent := na
+
 isCheck = tfOK and inRth and cMin >= 600 and cMin <= 930 and cMin % 30 == 0 and barstate.isconfirmed
 if isCheck
     idx = int((cMin - 600) / 30)
@@ -67,14 +86,17 @@ if isCheck
         ub := math.max(dOpen, pClose) * (1.0 + sigma)
         lb := math.min(dOpen, pClose) * (1.0 - sigma)
         sig = close > ub ? 1 : close < lb ? -1 : 0
-        if pos != 0
-            out = pos == 1 ? close < math.max(ub, vw) : close > math.min(lb, vw)
-            if out or (sig != 0 and sig != pos)
-                pnl = pos * (close - ent)
-                label.new(bar_index, close, "NZ EXIT " + str.tostring(pnl, "+#.##"), color=pnl >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
+        if pos != 0 or ghost != 0
+            d = pos != 0 ? pos : ghost
+            out = d == 1 ? close < math.max(ub, vw) : close > math.min(lb, vw)
+            if out or (sig != 0 and sig != d)
+                if pos != 0
+                    pnl = pos * (close - ent)
+                    label.new(bar_index, close, "NZ EXIT " + str.tostring(pnl, "+#.##"), color=pnl >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
                 pos := 0
                 ent := na
-        if pos == 0 and sig != 0 and volOK
+                ghost := 0
+        if pos == 0 and ghost == 0 and sig != 0 and volOK
             pos := sig
             ent := close
             entBar := bar_index
@@ -85,11 +107,14 @@ if pos != 0 and tfOK and cMin >= 955 and cMin <= 960 and barstate.isconfirmed
     label.new(bar_index, close, "NZ EOD " + str.tostring(pnl, "+#.##"), color=pnl >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
     pos := 0
     ent := na
+if cMin >= 955
+    ghost := 0
 
 plot(inRth ? ub : na, "upper band", color=color.new(color.green, 30), style=plot.style_stepline)
 plot(inRth ? lb : na, "lower band", color=color.new(color.red, 30), style=plot.style_stepline)
 plot(inRth ? vw : na, "VWAP", color=color.new(color.aqua, 30))
 plot(pos != 0 ? ent : na, "entry", color=color.yellow, style=plot.style_linebr, linewidth=2)
+plot(pos != 0 and hardStop > 0 ? ent * (1.0 - pos * hardStop) : na, "hard stop", color=color.red, style=plot.style_linebr, linewidth=2)
 // Where the next :00/:30 check would close the position (it is a close-of-
 // bar exit at the check, not a resting stop order).
 exitLvl = pos == 1 ? math.max(ub, vw) : pos == -1 ? math.min(lb, vw) : na

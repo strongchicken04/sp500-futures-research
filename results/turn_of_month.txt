@@ -1,0 +1,13 @@
+--- 2018-2021
+  rth on TOM days        +3.8 bp t+0.4 n 185 WR  51%
+  rth on other days      +1.6 bp t+0.4 n 825 WR  53%
+  close-close TOM day   +14.7 bp t+1.3 n 185 WR  57%
+  close-close other      +8.5 bp t+1.6 n 824 WR  57%
+  4-day TOM hold        +49.0 bp t+1.3 n  47 WR  60%
+--- 2022-2025
+  rth on TOM days       +13.2 bp t+1.5 n 191 WR  59%
+  rth on other days      -1.6 bp t-0.4 n 842 WR  52%
+  close-close TOM day    +2.2 bp t+0.2 n 191 WR  53%
+  close-close other      +6.1 bp t+1.2 n 842 WR  53%
+  4-day TOM hold        +13.7 bp t+0.4 n  47 WR  60%
+4-day hold by year: 2018 +62  2019 +32  2020 +138  2021 -35  2022 -19  2023 +73  2024 -3  2025 +2

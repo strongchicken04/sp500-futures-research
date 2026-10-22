@@ -7,7 +7,7 @@ Status: `live-eval` / `live-funded` (in the plan), `candidate`, `rejected`,
 |---|---|---|---|
 | RS sprint: NQ-ES return since open > 0.15% & above VWAP (mirror short), first of 10:00/11:00/13:00/14:30, +0.20%/-0.40% | live-eval | sprint pass/attempt 48% / 52%, ~13 trading days to pass | lucid_8_rs_sprint.pine, score_multi_feature.py |
 | 09:31 sprint, bias 50-day trend, +0.20%/-0.40% | live-eval (fallback) | pass 39% / 39%, ~13 days | lucid_7_eval_sprint.pine, bias_sprint.py |
-| Noise-area momentum (Zarattini 2024), long+short | live-funded | +5.5 / +9.4 pt/trade, t~3 both | lucid_6_noise_momentum.pine, score_noise_tod.py |
+| Noise-area momentum (Zarattini 2024), long+short, hard stop 0.50% (2026-10-23) | live-funded | +6.1 / +9.2 pt/trade with the stop (+5.5 / +9.4 without), worst trade -128 vs -221 pt; profit targets lower the edge | lucid_6_noise_momentum.pine, score_noise_tod.py |
 | VWAP band 20 bp, SL 25 / TP 100 pt, 1/day | live-funded | +3.7 / +3.7 pt/trade (t 2.6/2.1) | lucid_2_vwap.pine |
 | ORB 15m long + VWAP, 20-EMA 5m trail, re-entry | live-funded (weak) | after fill fix +0.6 / +1.6 pt gross; ~0 net 2018-21 | lucid_1_s1_orb.pine (5-min chart only), s1_true_vwap_fill.py |
 | Dow ORB (MYM) | candidate (weak) | after fill fix +$0.5 / +$3.3 per MYM gross | s1_YM_fill.py |
@@ -17,6 +17,7 @@ Status: `live-eval` / `live-funded` (in the plan), `candidate`, `rejected`,
 | Wide VWAP band 60 bp, TP 15% ATR / SL 20-30% ATR | candidate (small) | WR 61-68%, +1.5% ATR both halves | score_vwap_atr.py |
 | Book (ORB+VWAP+noise), ladder room/700 max 3 | live-funded sizing | eval 80% (59% / 98%), lifecycle median ~$70k | book_after_fix.py |
 | Regime filters for the book (VIX level, 20d realised-vol tercile, 50-day trend, weekday) | rejected | no split holds in both 2018-21 and 2022-25; ORB net -0.4 / +0.9 pt but the book without it: lifecycle median ~$13k vs ~$67k | regime_map.py, results/regime_map.txt |
+| Turn of month NQ (last day + first 3 days; RTH or 4-day hold) | rejected | TOM days +3.8 / +13.2 bp RTH vs +1.6 / -1.6 other, close-close TOM not better in 2022-25; 4-day hold +49 / +14 bp, t 1.3 / 0.4 | turn_of_month.py |
 | ORB with 1-min EMA trail | rejected | ~20 trades/day, pass 8-17% | score_orb_trail.py |
 | Gap-down reversal, Mon/Fri hold, ON-level fade, 1-min micro-drop | rejected | backtest artefacts | |
 | Small-gap fill, ON midpoint rule, IB stats, lunch effect, last half hour, pre-FOMC drift, FOMC relief rally | rejected | at/below random baseline | |

@@ -1,3 +1,15 @@
+# 2026-10-23 — FUNDED: noise momentum s pevným stopem 0,50 %
+
+`scripts/noise_variants.py`: pevný stop 0,50 % od vstupu ponechá edge
+(+6,1 / +9,2 bodu na obchod v 2018–21 / 2022–25 proti +5,5 / +9,4 bez stopu)
+a nejhorší obchod zmenší z −221 na −128 bodů (1. percentil −157 → −107).
+Profit target edge naopak snižuje (TP 20–50 bp: +1,3 až +4,8). Lucid 6 má
+nový vstup „Hard stop“ (výchozí 0,50 %); po stopu indikátor nový vstup
+nedá, dokud by původní obchod normálně neskončil (stejně jako backtest).
+
+Mapa režimů (`scripts/regime_map.py`): VIX, 20denní volatilita, trend ani
+den v týdnu nedávají filtr platný v obou obdobích, kniha zůstává beze změny.
+
 # 2026-10-22 — EVALUACE: RS sprint (lepší než sprint v 9:31)
 
 `multi_feature_exporter.py` + `score_multi_feature.py`: z předem sepsaných
