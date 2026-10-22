@@ -15,6 +15,7 @@ Status: `live-eval` / `live-funded` (in the plan), `candidate`, `rejected`,
 | Overnight-low touch on gap-up day, long | candidate | WR 74%, +12 pp over random; 25/yr | onl_gapup_book.py |
 | Wide VWAP band 60 bp, TP 15% ATR / SL 20-30% ATR | candidate (small) | WR 61-68%, +1.5% ATR both halves | score_vwap_atr.py |
 | Book (ORB+VWAP+noise), ladder room/700 max 3 | live-funded sizing | eval 80% (59% / 98%), lifecycle median ~$70k | book_after_fix.py |
+| Regime filters for the book (VIX level, 20d realised-vol tercile, 50-day trend, weekday) | rejected | no split holds in both 2018-21 and 2022-25; ORB net -0.4 / +0.9 pt but the book without it: lifecycle median ~$13k vs ~$67k | regime_map.py, results/regime_map.txt |
 | ORB with 1-min EMA trail | rejected | ~20 trades/day, pass 8-17% | score_orb_trail.py |
 | Gap-down reversal, Mon/Fri hold, ON-level fade, 1-min micro-drop | rejected | backtest artefacts | |
 | Small-gap fill, ON midpoint rule, IB stats, lunch effect, last half hour, pre-FOMC drift, FOMC relief rally | rejected | at/below random baseline | |

@@ -77,6 +77,13 @@ def rvol():
                 reg[r["date"]] = float(r["rvol20"])
             except (ValueError, KeyError):
                 continue
+    # The panel ends mid-2025; fill missing days from MFEAT-derived realised vol
+    # (prior-day closes, corr 0.994 with the panel) so the vol gate does not
+    # silently drop them.
+    if os.path.exists("results/rv20_mfeat.csv"):
+        with open("results/rv20_mfeat.csv") as fh:
+            for r in csv.DictReader(fh):
+                reg.setdefault(r["date"], float(r["rvol20"]))
     return reg
 
 
