@@ -1,3 +1,13 @@
+# 2026-10-23 — FUNDED kandidát: RS signál jako další noha knihy
+
+Stejný signál jako RS sprint (Lucid 8), ale s širokým bracketem +1,25 % /
+−1,25 % (vybráno jen na 2018–21), jinak výstup v 15:55: +4,6 / +9,6 bodu na
+obchod (t 1,8 / 2,2), kladné 7 z 8 let. Přidaný k opravené knize po 1 MNQ na
+jednotku: 5 účtů × 24 měsíců medián 74 000 $ místo 68 000 $, p10 12 000 $
+místo 5 000 $; pass evaluace samotnou knihou klesne z 61 na 57 % (evaluace
+se ale jede sprintem). V Lucid 8 nastav Target 1,25 a Stop 1,25. Rozhodnutí
+je na tobě.
+
 # 2026-10-23 — FUNDED: Lucid 2 opraven (VWAP pásmo), kniha změřená na živých pravidlech
 
 `live_spec_exporter.py` přepočítal indikátory přesně tak, jak jsou napsané:

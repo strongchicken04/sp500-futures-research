@@ -11,6 +11,7 @@ Status: `live-eval` / `live-funded` (in the plan), `candidate`, `rejected`,
 | VWAP band 0.20% break on a 5-min chart, SL 25 / TP 100 pt, first trade a day (Lucid 2 rewritten 2026-10-23) | live-funded | live-spec +3.6 / +3.0 pt/trade gated (old Lucid 2 plain cross: +2.3 / +0.7) | lucid_2_vwap.pine, live_spec_exporter.py, score_live_spec.py |
 | ORB 15m long + VWAP, 20-EMA 5m trail, re-entry | live-funded (weak) | after fill fix +0.6 / +1.6 pt gross; ~0 net 2018-21 | lucid_1_s1_orb.pine (5-min chart only), s1_true_vwap_fill.py |
 | Dow ORB (MYM) | candidate (weak) | after fill fix +$0.5 / +$3.3 per MYM gross | s1_YM_fill.py |
+| RS signal as a funded leg: live RS rule, bracket +1.25% / -1.25% (chosen on 2018-21 by smoothed score) else 15:55 | candidate | +4.6 / +9.6 pt/trade (t 1.8 / 2.2), 7/8 years positive; added at 1 MNQ/unit to the fixed live book: 5 accounts 24m median $74k (p10 $12k) vs $68k ($5k); book-eval pass 57% vs 61% | rs_book.py, results/rs_book.txt; Lucid 8 with target 1.25 / stop 1.25 |
 | FOMC press-conference fade 14:30-14:35 candle | candidate | positive every cell, NQ/ES/YM; 8/yr | lucid_5_fomc_fade.pine |
 | Overnight-low touch on gap-up day, long | candidate | WR 74%, +12 pp over random; 25/yr | onl_gapup_book.py |
 | Overnight long after 3+ down closes (NQ, 15:55 close to 09:30 open) | candidate | +28.6 / +19.0 bp per night net (t 2.5 / 1.7), positive all 8 years, ~20/yr; no roll artefact (ex-roll +29.3 / +17.6). Needs: does Lucid allow overnight holds? | overnight_after_downs.py |

@@ -1,16 +1,16 @@
 # Brain state
 
-heartbeat: 2026-10-22T21:34Z (shift 2026-10-23 active)
+heartbeat: 2026-10-22T22:12Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
-2. RS signal for the funded book (not only sprint): bracket grid + trailing
-   exit; does it add to noise momentum + VWAP band?
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
 7. Noise momentum ES/YM versions (needs an exporter run; exits done).
 
 ## Done this shift
+- 2. RS as funded leg: candidate, +4.6 / +9.6 pt/trade with a 1.25%/1.25% bracket; book median
+  $74k vs $68k, p10 $12k vs $5k. Owner decides; Lucid 8 can trade it (target 1.25, stop 1.25).
 - 3. Regime map: no regime filter survives both halves (results/regime_map.txt).
   Fixed: vol-gate panel ended 2025-07, 132 days of 2025 were silently gated out;
   rescore_all.rvol now fills from results/rv20_mfeat.csv. Book +1 pp, unchanged otherwise.
