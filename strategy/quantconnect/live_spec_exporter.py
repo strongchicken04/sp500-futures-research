@@ -28,6 +28,7 @@ from collections import deque
 #      <reason>,<rv20 x1000 known at the open>
 
 MODE = "VWAP"
+TICKER = Futures.Indices.NASDAQ100EMini
 SL_PTS, TP_PTS = 25.0, 100.0
 BAND = 0.002
 LOOKBACK = 14
@@ -42,7 +43,7 @@ class LiveSpecExporter(QCAlgorithm):
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
         self.n_tags = 0
-        self.fut = self.AddFuture(Futures.Indices.NASDAQ100EMini, Resolution.Minute,
+        self.fut = self.AddFuture(TICKER, Resolution.Minute,
                                   dataNormalizationMode=DataNormalizationMode.Raw,
                                   dataMappingMode=DataMappingMode.OpenInterest,
                                   contractDepthOffset=0, extendedMarketHours=False)
@@ -80,7 +81,8 @@ class LiveSpecExporter(QCAlgorithm):
             if sym is not None and sym in self.Securities:
                 px = self.Securities[sym].Price
                 if px > 0:
-                    tkt = self.LimitOrder(sym, 1, round(px * 0.5 * 4) / 4, tag=tag)
+                    mpv = float(self.Securities[sym].SymbolProperties.MinimumPriceVariation)
+                    tkt = self.LimitOrder(sym, 1, round(px * 0.5 / mpv) * mpv, tag=tag)
                     tkt.Cancel()
                     self.n_tags += 1
         except Exception as ex:
