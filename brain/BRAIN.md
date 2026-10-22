@@ -75,6 +75,22 @@ English.
   finished item; commit and push after every finished item (branch
   `claude/strategy-replication-backtest-yppz7e`; restore
   `qc_result_MSXB_1792352605.json` before committing).
+- Jarvis panel (owner's live view): https://claude.ai/artifact/7aNv2n8i8JqZZg4dp25DUK
+  (source `brain/jarvis.html`). Keep its database in sync with the ArtifactData
+  tool (load it via ToolSearch; read a doc first, then write with `if_version`):
+  - `brain/status` at shift start, on every sphere change and with each
+    heartbeat: `{phase: working|report|idle|blocked, sphere: importer|backtester|
+    optimiser|manager|coder|interpreter, task (Czech, one line), heartbeat (UTC
+    ISO), qc: ok|missing, runs, shift}`; set `phase: idle` when the shift ends.
+  - `brain/log`: `{events: [{t, sphere (Czech label), text (Czech)}]}`, newest
+    first, keep at most 60; append on every finished step.
+  - `queue/qN`: `{order, title, note, status: waiting|running|done}` mirrors
+    STATE.md; `strategies/sNN`: `{order, status, name, result, files}` mirrors
+    registry.md (status values as in the registry).
+  - `brain/metrics`: `{eval|book: {caption, tiles: [{label, value, sub, tone:
+    arc|gold|ok|bad}]}}` whenever the recommended plan's numbers change.
+  - `reports/YYYY-MM-DD`: `{date, title, summary (Czech, plain text), verdicts:
+    [{name, status}]}` with the morning report.
 - Never print, log or commit QC credentials.
 - Stop starting new QC runs after 11:30 Prague; by 12:00 the report must be
   written and pushed.
