@@ -86,7 +86,17 @@ English.
     first, keep at most 60; append on every finished step.
   - `queue/qN`: `{order, title, note, status: waiting|running|done}` mirrors
     STATE.md; `strategies/sNN`: `{order, status, name, result, files}` mirrors
-    registry.md (status values as in the registry).
+    registry.md (status values as in the registry), plus for the kill funnel
+    `reached` (last gate passed) or, if rejected, `diedAt` (gate where it
+    failed), gates: idea, is, cost, plateau, random, oos, years, audit, live;
+    `audit: true` while a live strategy is under review (counts as an
+    incident); optional `isVal`, `oosVal`, `unit`, `years {yyyy: value}`,
+    `yearsUnit`, `note`; for live-funded parts `edge` + `short` (book bars).
+  - `indicators/iN`: `{order, name, file, status: live|backup|audit|off, role,
+    chart, note}` for the TradingView indicators.
+  - `brain/stats`: `{dataSets}` = number of files in data/tags;
+    `brain/account`: `{rules: [[label, value], ...]}` (account rules).
+  - `brain/metrics.eval` also has `p` (pass per attempt), `fee`, `rules`.
   - `brain/metrics`: `{eval|book: {caption, tiles: [{label, value, sub, tone:
     arc|gold|ok|bad}]}}` whenever the recommended plan's numbers change.
   - `reports/YYYY-MM-DD`: `{date, title, summary (Czech, plain text), verdicts:
