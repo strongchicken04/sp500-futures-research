@@ -1,0 +1,12 @@
+--- 2018-2021
+   VG+Zfree+RS                    $  17,245
+   + NR4 3                        $  18,328   vs base  +1,083 (+/- 171)  better / worse in 56% / 42% of paths
+   + NR4 1                        $  17,947   vs base    +702 (+/- 112)  better / worse in 51% / 37% of paths
+   + gap-and-go 3                 $  18,265   vs base  +1,020 (+/- 142)  better / worse in 56% / 39% of paths
+   + gap-and-go 1                 $  17,567   vs base    +322 (+/- 105)  better / worse in 43% / 38% of paths
+--- 2022-2025
+   VG+Zfree+RS                    $  24,845
+   + NR4 3                        $  27,654   vs base  +2,809 (+/- 247)  better / worse in 64% / 35% of paths
+   + NR4 1                        $  25,249   vs base    +404 (+/- 180)  better / worse in 50% / 45% of paths
+   + gap-and-go 3                 $  23,779   vs base  -1,066 (+/- 209)  better / worse in 41% / 57% of paths
+   + gap-and-go 1                 $  24,749   vs base     -95 (+/- 146)  better / worse in 42% / 46% of paths
