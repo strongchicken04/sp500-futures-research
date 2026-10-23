@@ -15,6 +15,7 @@ from collections import deque
 #   target managed on 1-minute bars from the next minute (bar touching both =
 #   stop; stop fills at the worse of stop and bar open, target at the target);
 #   otherwise flat at the close of the bar opening at 15:55.
+# MODE "ORB" (Lucid 1 on a 5-minute chart, see _orb): variant O5.
 # MODE "NOISE" (Lucid 6 on a 1-minute chart): noise area from the last 14
 #   sessions at 10:00..15:30 checks; long above max(open, prior close) x
 #   (1 + sigma), short below the mirror; exit at a check when the close is
@@ -28,6 +29,7 @@ from collections import deque
 #      <reason>,<rv20 x1000 known at the open>
 
 MODE = "VWAP"
+START, END = 2018, 2025
 TICKER = Futures.Indices.NASDAQ100EMini
 SL_PTS, TP_PTS = 25.0, 100.0
 BAND = 0.002
@@ -39,8 +41,8 @@ CHECKS = list(range(600, 931, 30))
 class LiveSpecExporter(QCAlgorithm):
 
     def Initialize(self):
-        self.SetStartDate(2018, 1, 1)
-        self.SetEndDate(2025, 12, 31)
+        self.SetStartDate(START, 1, 1)
+        self.SetEndDate(END, 12, 31)
         self.SetCash(1_000_000)
         self.n_tags = 0
         self.fut = self.AddFuture(TICKER, Resolution.Minute,
@@ -73,6 +75,7 @@ class LiveSpecExporter(QCAlgorithm):
         self.prev5 = None            # (close, vwap, upper, lower) of the previous 5-min bar
         self.vw = {k: {"done": False, "tr": None} for k in ("P5", "P1", "B5")}
         self.nz = {k: {"pos": 0, "e": None, "ehm": None, "ghost": 0} for k in ("N0", "NS")}
+        self.ob = {"b": None, "pv": 0.0, "v": 0.0, "ema": None, "orh": None, "orl": None, "set": False, "tr": None}
 
     def _emit(self, var, d, ehm, e, xhm, x, why):
         tag = f"L,{var},{self.day.strftime('%Y%m%d')},{d},{ehm},{e:.2f},{xhm},{x:.2f},{why},{self.rv}"
@@ -110,6 +113,8 @@ class LiveSpecExporter(QCAlgorithm):
             return
         if MODE == "VWAP":
             self._vwap(hm, o, h, l, c, v)
+        elif MODE == "ORB":
+            self._orb(hm, o, h, l, c, v)
         else:
             self._noise(hm, o, h, l, c, v)
         if hm == 16 * 60:
@@ -183,6 +188,59 @@ class LiveSpecExporter(QCAlgorithm):
                 elif bc < lo and pc >= plo:
                     self._enter("B5", -1, hm, bc, 16 * 60)
             self.prev5 = (bc, vw5, up, lo)
+
+    # ---------- Lucid 1: ORB 15 min long, 5-minute chart ----------
+    # 5-minute bars from 1-minute bars (bar start = end - 5). OR = bars starting
+    # 09:30-09:40; entry when a bar starting after 09:45 and before 15:00 closes
+    # above the OR high and the RTH VWAP (5-min hlc3), not Wednesday, no open
+    # position; stop max(OR low, close - OR range); from the next bar: stop hit
+    # (low <= stop) fills at min(stop, bar open), else flat at the close of the
+    # bar starting 15:55, else the stop rises to the RTH 20-EMA of 5-min closes
+    # (restarted each session). Re-enters after every exit.
+    def _orb(self, hm, o, h, l, c, v):
+        s = self.ob
+        b = s["b"]
+        if b is None:
+            b = s["b"] = [o, h, l, c, v]
+        else:
+            b[1] = max(b[1], h)
+            b[2] = min(b[2], l)
+            b[3] = c
+            b[4] += v
+        if hm % 5 != 0:
+            return
+        s["b"] = None
+        bo, bh, bl, bc, bv = b
+        st_ = hm - 5                                   # bar start minute
+        s["pv"] += (bh + bl + bc) / 3.0 * bv
+        s["v"] += bv
+        vw = s["pv"] / s["v"] if s["v"] > 0 else bc
+        k = 2.0 / 21.0
+        s["ema"] = bc if s["ema"] is None else bc * k + s["ema"] * (1 - k)
+        if 9 * 60 + 30 <= st_ < 9 * 60 + 45:
+            s["orh"] = bh if s["orh"] is None else max(s["orh"], bh)
+            s["orl"] = bl if s["orl"] is None else min(s["orl"], bl)
+        if st_ >= 9 * 60 + 45 and s["orh"] is not None:
+            s["set"] = True
+        trig = (s["set"] and self.day.weekday() != 2 and 9 * 60 + 45 < st_ < 15 * 60
+                and bc > s["orh"] and bc > vw and s["tr"] is None)
+        tr = s["tr"]
+        if tr is not None and hm > tr["ehm"]:
+            x = why = None
+            if bl <= tr["sl"]:
+                x, why = min(tr["sl"], bo), "SL"
+            elif st_ >= 15 * 60 + 55:
+                x, why = bc, "EOD"
+            elif s["ema"] > tr["sl"]:
+                tr["sl"] = s["ema"]
+            if x is not None:
+                self._emit("O5", 1, tr["ehm"], tr["e"], hm, x, why)
+                s["tr"] = None
+        if trig:
+            rng = s["orh"] - s["orl"]
+            sl0 = max(s["orl"], bc - rng)
+            if sl0 < bc:
+                s["tr"] = {"e": bc, "sl": sl0, "ehm": hm}
 
     # ---------- Lucid 6: noise momentum ----------
     def _noise(self, hm, o, h, l, c, v):
