@@ -1,0 +1,84 @@
+// @version=5
+indicator("Lucid 12 — VWAP Sprint (10:00)", overlay=true, max_labels_count=500, max_lines_count=500)
+
+// CANDIDATE evaluation sprint (2026-10-23 day shift) — USE A 1-MINUTE MNQ CHART
+// One trade a day at the close of the 09:59-10:00 bar: LONG if the close is
+// above the RTH session VWAP, SHORT if below. Target +0.25%, stop -0.40%,
+// otherwise flat at 15:55. Size so the stop costs at most "Max loss" (as
+// Lucid 7): three winning days reach the +$3,000 target.
+// Tested on NQ 2010-2025 in four eras (scripts/b_sprint_lab.py): trades that
+// reach target or stop win 3.7 / 1.8 / 4.3 / 4.4 points more often than a
+// random walk (61.5%) in 2010-13 / 2014-17 / 2018-21 / 2022-25; positive in
+// 35 of 36 time x bracket x era cells. As the only evaluation account it is
+// the fastest sprint tested: 9.8 / 9.3 trading days to a pass in 2018-21 /
+// 2022-25 (RS sprint 12.3 / 10.2, 09:31 sprint 12.5 / 10.4).
+// With two accounts keep the plan (RS + 09:31). If you ever run it next to
+// another sprint, skip it when the other account holds an OPPOSITE position.
+
+maxLoss  = input.float(1900.0, "Max loss per trade ($)")
+tgtPct   = input.float(0.25, "Target (% of price)") / 100.0
+stpPct   = input.float(0.40, "Stop (% of price)") / 100.0
+ptValue  = input.float(2.0, "$ per point per contract (MNQ = 2)")
+maxCts   = input.int(40, "Max contracts")
+
+oMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")
+cMin = hour(time_close, "America/New_York") * 60 + minute(time_close, "America/New_York")
+is1 = timeframe.period == "1"
+rthFlag = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+rthStart = rthFlag and not nz(rthFlag[1], false)
+vw = ta.vwap(hlc3, rthStart)
+
+var float e = na
+var float tp = na
+var float sl = na
+var int cts = 0
+var int dir = 0
+var line eL = na
+var line tL = na
+var line sL = na
+
+// entry at the close of the 09:59 bar (10:00)
+if is1 and oMin == 599 and barstate.isconfirmed and na(e) and close != vw
+    dir := close > vw ? 1 : -1
+    e := close
+    tp := close * (1.0 + dir * tgtPct)
+    sl := close * (1.0 - dir * stpPct)
+    cts := math.min(maxCts, math.max(1, int(math.floor(maxLoss / (math.abs(e - sl) * ptValue)))))
+    eL := line.new(bar_index, e, bar_index + 30, e, color=color.yellow, width=2, extend=extend.right)
+    tL := line.new(bar_index, tp, bar_index + 30, tp, color=color.lime, width=2, extend=extend.right)
+    sL := line.new(bar_index, sl, bar_index + 30, sl, color=color.red, width=2, extend=extend.right)
+    label.new(bar_index, dir == 1 ? low : high, "VWAP SPRINT " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ\nwin $" + str.tostring(cts * math.abs(tp - e) * ptValue, "#") + " / loss $" + str.tostring(cts * math.abs(e - sl) * ptValue, "#"), color=dir == 1 ? color.blue : color.purple, textcolor=color.white, style=dir == 1 ? label.style_label_up : label.style_label_down, size=size.normal)
+
+// exits from the next bar on; a bar touching both counts as the stop
+if not na(e) and not (oMin == 599)
+    rsn = ""
+    px = 0.0
+    if (dir == 1 and low <= sl) or (dir == -1 and high >= sl)
+        rsn := "LOSS"
+        px := dir == 1 ? math.min(sl, open) : math.max(sl, open)
+    else if (dir == 1 and high >= tp) or (dir == -1 and low <= tp)
+        rsn := "WIN"
+        px := dir == 1 ? math.max(tp, open) : math.min(tp, open)
+    else if cMin >= 955 or not rthFlag
+        rsn := "EOD"
+        px := close
+    if rsn != ""
+        usd = cts * dir * (px - e) * ptValue
+        line.set_x2(eL, bar_index)
+        line.set_x2(tL, bar_index)
+        line.set_x2(sL, bar_index)
+        line.set_extend(eL, extend.none)
+        line.set_extend(tL, extend.none)
+        line.set_extend(sL, extend.none)
+        label.new(bar_index, px, "VWAP SPRINT " + rsn + "\n" + (usd >= 0 ? "+$" : "-$") + str.tostring(math.abs(usd), "#"), color=usd >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
+        e := na
+
+alertcondition(is1 and oMin == 599 and barstate.isconfirmed and close > vw, "VWAP sprint LONG", "Lucid 12: VWAP sprint LONG at 10:00")
+alertcondition(is1 and oMin == 599 and barstate.isconfirmed and close < vw, "VWAP sprint SHORT", "Lucid 12: VWAP sprint SHORT at 10:00")
+
+plot(rthFlag ? vw : na, "VWAP (RTH)", color=color.new(color.yellow, 30), linewidth=2)
+
+var table tb = table.new(position.top_right, 1, 1, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    msg = not is1 ? "VWAP SPRINT: use a 1-minute chart" : not na(e) ? "IN TRADE: " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ  TP " + str.tostring(tp, format.mintick) + "  SL " + str.tostring(sl, format.mintick) : "next: at 10:00 " + (close > vw ? "LONG (above VWAP now)" : "SHORT (below VWAP now)")
+    table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not is1 ? color.red : not na(e) ? color.new(color.orange, 20) : color.new(color.gray, 50))
