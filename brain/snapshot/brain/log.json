@@ -1,44 +1,54 @@
 {
   "events": [
     {
+      "sphere": "Systémový manažer",
+      "t": "2026-10-23T05:12:00Z",
+      "text": "Simulace s časy obchodů: flat 3 = 12 100 / 29 100 $ na účet (ladder 2 300 / 20 500 $); RS noha +7 400 / +1 500 $; denní stop nic nepřidá."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T05:10:00Z",
+      "text": "Odhalen artefakt: stará simulace dávala dennímu stopu informaci o ztrátách obchodů, které ještě běžely. Těsnější stop nedoporučen."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T04:10:00Z",
+      "text": "Opraveno řazení obchodů stejného dne v simulaci (až ~25 % rozdíl)."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T04:09:00Z",
+      "text": "ORB při flat 3 stále přidává."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-22T23:09:00Z",
+      "text": "Funded velikost: flat 3 MNQ na nohu vydělá víc než ladder."
+    },
+    {
+      "sphere": "Importer",
+      "t": "2026-10-22T22:22:00Z",
+      "text": "Literatura: známé intradenní strategie na NQ už otestované."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-22T22:18:00Z",
+      "text": "RS sprint se stopem 0,30 %: ~11 dní do passu místo ~13."
+    },
+    {
       "sphere": "Optimalizátor",
       "t": "2026-10-22T22:17:00Z",
-      "text": "Dva účty (RS + 09:31): první funded za 7,8 / 8,7 dne místo 14,2 / 12,3, poplatky ~300 $ místo ~180 $."
+      "text": "Dva účty (RS + 09:31): první funded za ~7–8 dní, poplatky ~300 $."
     },
     {
       "sphere": "Backtester",
       "t": "2026-10-22T22:16:00Z",
-      "text": "VWAP trend (Zarattini & Aziz) zamítnut: OOS t ≤ 1,5, korelace s noise 0,5."
+      "text": "VWAP trend zamítnut."
     },
     {
       "sphere": "Backtester",
       "t": "2026-10-22T22:14:00Z",
-      "text": "Noise na ES/YM zamítnut: ES slabší a korelovaný s NQ (0,69), YM bez edge."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-22T22:10:00Z",
-      "text": "Intradenní momentum (Gao 2018) zamítnuto."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-22T22:09:00Z",
-      "text": "RS jako funded noha: kniha medián 74 000 $ místo 68 000 $. Kandidát."
-    },
-    {
-      "sphere": "Systém",
-      "t": "2026-10-22T22:08:00Z",
-      "text": "Probuzení 00:08 Praha, směna pokračuje."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-22T21:47:00Z",
-      "text": "Offline kopie panelu s daty jádra."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-22T21:34:00Z",
-      "text": "ZN konec měsíce zamítnut."
+      "text": "Noise na ES/YM zamítnut."
     },
     {
       "sphere": "Kodér",
@@ -46,24 +56,9 @@
       "text": "Lucid 2 přepsán na průraz pásma VWAP ±0,20 % (5min graf)."
     },
     {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-22T21:30:00Z",
-      "text": "Kniha na živých pravidlech: medián 68 000 $ (starý Lucid 2: 51 000 $)."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-22T21:24:00Z",
-      "text": "RS varianty: žádná nepřekoná živé pravidlo."
-    },
-    {
       "sphere": "Kodér",
       "t": "2026-10-22T21:17:00Z",
       "text": "Lucid 6: pevný stop 0,50 %."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-22T21:14:00Z",
-      "text": "Overnight long po 3+ červených dnech: kandidát."
     },
     {
       "sphere": "Systém",

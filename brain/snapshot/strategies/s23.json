@@ -2,11 +2,11 @@
   "files": "rs_book.py",
   "isVal": 4.6,
   "name": "RS signál jako funded noha: stejný signál jako sprint, bracket +1,25 % / −1,25 %, jinak 15:55",
-  "note": "Bracket vybrán jen na 2018–21 (průměr okolí). V Lucid 8 nastav Target 1,25 a Stop 1,25. Rozhoduješ ty.",
+  "note": "Ve 2022–25 přidává jen málo. Bracket vybrán jen na 2018–21. V Lucid 8 Target 1,25 a Stop 1,25. Rozhoduješ ty.",
   "oosVal": 9.6,
   "order": 2.5,
   "reached": "years",
-  "result": "+4,6 / +9,6 pt/obchod (t 1,8 / 2,2), 7/8 let kladných; kniha + RS: medián 74 000 $ (p10 12 000 $) vs 68 000 $ (5 000 $)",
+  "result": "+4,6 / +9,6 pt/obchod (t 1,8 / 2,2), 7/8 let kladných; v knize při flat 3 (simulace s časy) +7 400 / +1 500 $ na účet za 24 m.",
   "status": "candidate",
   "unit": "pt/obchod",
   "years": {

@@ -1,0 +1,8 @@
+{
+  "diedAt": "audit",
+  "files": "funded_daystop.py, timed_book.py",
+  "name": "Funded denní stop (těsnější = lepší v původní simulaci)",
+  "order": 13.95,
+  "result": "artefakt: stará simulace brála obchody dne jako po sobě jdoucí; se časy obchodů −600 $ neutrální, −300 $ škodí",
+  "status": "rejected"
+}
