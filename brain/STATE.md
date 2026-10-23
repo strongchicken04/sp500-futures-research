@@ -1,19 +1,16 @@
 # Brain state
 
-heartbeat: 2026-10-23T12:27Z (day shift 2026-10-23 active, owner asked for a full day)
+heartbeat: 2026-10-23T12:37Z (day shift 2026-10-23 active, owner asked for a full day)
 last shift: 2026-10-23 (report final at 09:45 Prague; later wakes continue the queue)
 
 ## Queue (top = next). Move finished items to registry.md.
-Day shift 2026-10-23 (owner: work all day, new ideas, simple ones with volume profile welcome;
-QC runs allowed until 21:30 Prague, day report brain/reports/2026-10-23-den.md ~22:00):
-12. Level lab: BARS5A/B export (5-min NQ RTH bars + daily RTH volume profile + overnight
-    levels) -> scripts/level_lab.py rules VA80, OUTV, POC, IB, PDBRK, PDSWP, ONSWP (pre-registered).
-13. Survivors of 12: book add-on check with timed_book.py, then a Pine indicator.
-15. Account-B sprint with a real edge and low correlation to RS (09:31 trend has no edge in any era,
-    resolved win = random); candidates: VWAP band, noise at its first check, open drive; measure
-    resolved win vs random in all four eras (2010-25) and the two-account days to first funded.
-14. More simple ideas on the same panel (no new QC run needed): e.g. naked POC, VA width
-    regime, opening type (open-drive / open-test-drive), first-hour range vs ATR.
+Day shift 2026-10-23 items 12-16 DONE (see registry and brain/reports/2026-10-23-den.md).
+Next (for the night shift):
+17. Waiting for the owner: (a) drop ORB from the funded book? (b) automation route
+    (NinjaScript on own PC = cheapest, or TradingView webhook + bridge) -> then write the
+    code for the eval sprints (Lucid 8 + Lucid 7 with the hedge guard) first.
+18. Ideas only if new data/insight: everything simple on the 5-min panel is tested
+    (registry 2026-10-23); any new idea must pass the four-era check (BRAIN.md 6a).
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
 
