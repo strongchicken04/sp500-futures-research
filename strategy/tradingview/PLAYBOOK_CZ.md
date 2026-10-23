@@ -90,6 +90,9 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
 - **Funded 4 MNQ na nohu místo 3** (noc 23./24. 10.): +4 900 / +5 000 $ na
   funded místo za 24 měsíců, lepší i v 2010–17 přepočteném na dnešní cenu
   (+3 200 / +4 000 $); první výplata o 1–5 bodů méně často.
+- **Open drive (Lucid 10, 5min graf) jako čtvrtá funded noha, 4 MNQ**
+  (noc 23./24. 10.): k tomu dalších +3 100 / +2 000 $ (2018–21 / 2022–25),
+  +1 800 / +1 900 $ v 2010–17 přepočteném na dnešní cenu.
 
 - Overnight long (Lucid 9) vyřazen: Lucid Flex nedovoluje držet přes noc.
   Všechny strategie v plánu jsou do 15:55 ET flat.

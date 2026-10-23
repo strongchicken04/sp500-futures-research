@@ -1,0 +1,28 @@
+--- 2018-21
+   flat 4                 mean $ 24,245 vs flat 4      +0 (+/- 0) better/worse   0/  0% | first payout 38.2%
+   flat 4 + OD 4          mean $ 27,364 vs flat 4  +3,118 (+/- 211) better/worse  66/ 30% | first payout 38.2%
+   flat 4 + NR4 4         mean $ 26,865 vs flat 4  +2,620 (+/- 229) better/worse  64/ 33% | first payout 30.9%
+   flat 4 + OD + NR4      mean $ 29,999 vs flat 4  +5,754 (+/- 276) better/worse  73/ 25% | first payout 29.7%
+   flat 3                 mean $ 19,529 vs flat 4  -4,716 (+/- 181) better/worse  20/ 79% | first payout 39.6%
+   flat 3 + OD 3          mean $ 22,281 vs flat 4  -1,964 (+/- 197) better/worse  37/ 62% | first payout 39.4%
+--- 2022-25
+   flat 4                 mean $ 37,004 vs flat 4      +0 (+/- 0) better/worse   0/  0% | first payout 36.0%
+   flat 4 + OD 4          mean $ 39,015 vs flat 4  +2,011 (+/- 251) better/worse  58/ 33% | first payout 34.0%
+   flat 4 + NR4 4         mean $ 41,013 vs flat 4  +4,009 (+/- 263) better/worse  67/ 26% | first payout 37.3%
+   flat 4 + OD + NR4      mean $ 42,298 vs flat 4  +5,294 (+/- 298) better/worse  71/ 25% | first payout 34.1%
+   flat 3                 mean $ 32,076 vs flat 4  -4,928 (+/- 230) better/worse  21/ 77% | first payout 41.4%
+   flat 3 + OD 3          mean $ 34,074 vs flat 4  -2,930 (+/- 248) better/worse  32/ 61% | first payout 34.9%
+--- 2010-13 (today's price)
+   flat 4                 mean $ 27,161 vs flat 4      +0 (+/- 0) better/worse   0/  0% | first payout 24.1%
+   flat 4 + OD 4          mean $ 28,925 vs flat 4  +1,764 (+/- 259) better/worse  52/ 38% | first payout 22.7%
+   flat 4 + NR4 4         mean $ 25,899 vs flat 4  -1,262 (+/- 302) better/worse  42/ 52% | first payout 20.8%
+   flat 4 + OD + NR4      mean $ 26,812 vs flat 4    -349 (+/- 329) better/worse  45/ 51% | first payout 20.3%
+   flat 3                 mean $ 23,814 vs flat 4  -3,347 (+/- 262) better/worse  31/ 68% | first payout 25.9%
+   flat 3 + OD 3          mean $ 25,277 vs flat 4  -1,884 (+/- 269) better/worse  38/ 60% | first payout 24.0%
+--- 2014-17 (today's price)
+   flat 4                 mean $ 25,970 vs flat 4      +0 (+/- 0) better/worse   0/  0% | first payout 28.7%
+   flat 4 + OD 4          mean $ 27,874 vs flat 4  +1,904 (+/- 253) better/worse  57/ 37% | first payout 27.1%
+   flat 4 + NR4 4         mean $ 27,647 vs flat 4  +1,676 (+/- 252) better/worse  56/ 39% | first payout 25.9%
+   flat 4 + OD + NR4      mean $ 28,690 vs flat 4  +2,720 (+/- 309) better/worse  59/ 38% | first payout 23.9%
+   flat 3                 mean $ 21,591 vs flat 4  -4,379 (+/- 234) better/worse  26/ 73% | first payout 28.8%
+   flat 3 + OD 3          mean $ 23,681 vs flat 4  -2,289 (+/- 241) better/worse  36/ 61% | first payout 25.6%

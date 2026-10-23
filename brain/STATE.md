@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T23:05Z (night shift 2026-10-23/24 running)
+heartbeat: 2026-10-23T23:45Z (night shift 2026-10-23/24 running)
 last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague); night shift 23/24 running
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,6 +16,8 @@ Next (for the night shift):
 
 
 ## Done this shift
+- Night: OD (Lucid 10) at 4 MNQ adds in all four eras on funded_model (+3.1k / +2.0k / +1.8k / +1.9k),
+  robust to dearer evaluations -> proposed with flat 4 (FINAL_PLAN). NR4 no (2010-13).
 - Night: funded model v2 (funded_model.py) - mc_book dropped the profit above +$4,000 at each payout,
   skipped ~21% of days and ignored the five-profitable-day rule. Results on v2 (funded_v2.py,
   funded_scaled_old.py for 2010-17 re-priced at today's NQ): flat 4 beats flat 3 in all four eras

@@ -1,4 +1,4 @@
-# 2026-10-24 (noční směna) — opravený model funded účtu; NOVÉ: 4 MNQ na nohu
+# 2026-10-24 (noční směna) — opravený model funded účtu; NOVÉ: 4 MNQ na nohu + open drive (Lucid 10)
 
 Simulace funded účtu měla tři chyby, opraveno v `scripts/funded_model.py`
 (od teď jediný model pro funded otázky):
@@ -25,6 +25,17 @@ výplata o 1–5 bodů méně často (víc nových evaluací). 5–6 MNQ dává 
 ještě víc, ale v 2010–13 už skoro nic navíc a první výplata klesá k 19 % –
 proto 4. Dřív jsem 4 MNQ odmítl kvůli slabšímu edge v 2010–17; v opraveném
 modelu a v přepočtu na dnešní cenu to už neplatí.
+
+**Open drive (Lucid 10) jako čtvrtá noha, 4 MNQ** (`scripts/addon_v2.py`):
+ke knize se 4 MNQ přidá +3 100 / +2 000 $ (2018–21 / 2022–25) a v 2010–13 /
+2014–17 přepočtených na dnešní cenu +1 800 / +1 900 $; lepší v 52–66 % cest;
+první výplata skoro stejně často (0–2 body méně). Platí i při dvakrát
+a třikrát dražší evaluaci (`results/eval_cost_sens.txt`). Celkem tedy
+**VWAP pásmo + noise + RS + open drive, každá 4 MNQ: ~27 000 / 39 000 $ na
+funded místo za 24 měsíců** (dosud 3 MNQ bez OD: 19 500 / 31 900 $).
+NR4 (Lucid 11) ne – v 2010–13 horší.
+Pozor: simulace kontroluje drawdown po uzavřených obchodech, ne uprostřed
+otevřených pozic; při větší velikosti je skutečné riziko o něco vyšší.
 
 **ORB**: v penězích teď zhruba neutrální (−800 / +900 $; 2010–17 −800 / 0 $),
 ale první výplata 34 / 32 % místo 40 / 41 % a hrubý edge kolem nuly ve všech

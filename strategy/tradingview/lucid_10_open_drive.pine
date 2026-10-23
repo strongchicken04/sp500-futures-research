@@ -2,7 +2,7 @@
 indicator("Lucid 10 — Open Drive (10:00, flat 15:55)", overlay=true, max_labels_count=500, max_lines_count=50)
 
 // =========================================================================
-// CANDIDATE (2026-10-23 day shift) — USE A 5-MINUTE MNQ/NQ CHART
+// PROPOSED FUNDED LEG (2026-10-24 night; candidate since 2026-10-23) — USE A 5-MINUTE MNQ/NQ CHART
 // Open drive: the first 30 minutes of RTH move one way almost without a
 // pullback. At the close of the 09:55-10:00 bar:
 //   LONG  if the 09:30-10:00 low >= open x (1 - 0.05%) and the close >= open x (1 + 0.15%)
@@ -12,8 +12,12 @@ indicator("Lucid 10 — Open Drive (10:00, flat 15:55)", overlay=true, max_label
 // NQ 2018-2025, costs included, 5-min bars (scripts/level_lab.py):
 //   +7.1 / +22.6 pt per trade (2018-21 / 2022-25), positive for every
 //   tolerance 0.03-0.08% x threshold 0.10-0.20%. Weak on ES.
-// In the funded book (bootstrap, flat 3, with VWAP band + noise + RS):
-//   about +$1-2k per account over 24 months; see FINAL_PLAN before using it.
+// Funded book on the corrected account model (night 2026-10-23/24,
+// scripts/addon_v2.py): with VWAP band + noise + RS at 4 MNQ each, adding
+// this leg at 4 MNQ gives +$3.1k / +$2.0k per funded seat over 24 months
+// (2018-21 / 2022-25) and +$1.8k / +$1.9k in 2010-13 / 2014-17 re-priced at
+// today's NQ; also with dearer evaluations (eval_cost_sens.py). Proposed
+// with "Contracts" = 4 - the owner decides (FINAL_PLAN).
 // =========================================================================
 
 tolPct  = input.float(0.05, "Max move against the open in the first 30 min (%)") / 100.0
