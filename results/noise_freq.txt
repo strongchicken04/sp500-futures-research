@@ -1,0 +1,19 @@
+Z15 0-2022: trades 1248, $+8.79 per day per micro, t +2.4
+Z15 2022-9: trades 1276, $+17.67 per day per micro, t +2.6
+Z30 0-2022: trades 914, $+11.48 per day per micro, t +3.3
+Z30 2022-9: trades 954, $+18.04 per day per micro, t +2.7
+Z60 0-2022: trades 663, $+9.93 per day per micro, t +3.0
+Z60 2022-9: trades 700, $+14.08 per day per micro, t +2.6
+daily corr Z15-Z30: +0.93
+daily corr Z30-Z60: +0.73
+daily corr Z15-Z60: +0.71
+--- 2018-2021
+   VG+RS+Z30                      $  17,577
+   VG+RS+Z15                      $  14,471   vs base  -3,106 (+/- 153)  better / worse in 20% / 76% of paths
+   VG+RS+Z60                      $  17,152   vs base    -425 (+/- 144)  better / worse in 43% / 52% of paths
+   VG+RS+Z30 2+Z60 2              $  18,605   vs base  +1,028 (+/- 139)  better / worse in 56% / 40% of paths
+--- 2022-2025
+   VG+RS+Z30                      $  25,265
+   VG+RS+Z15                      $  23,439   vs base  -1,826 (+/- 215)  better / worse in 35% / 62% of paths
+   VG+RS+Z60                      $  23,932   vs base  -1,333 (+/- 231)  better / worse in 40% / 56% of paths
+   VG+RS+Z30 2+Z60 2              $  24,397   vs base    -868 (+/- 230)  better / worse in 42% / 56% of paths
