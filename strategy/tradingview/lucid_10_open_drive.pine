@@ -1,0 +1,99 @@
+// @version=5
+indicator("Lucid 10 — Open Drive (10:00, flat 15:55)", overlay=true, max_labels_count=500, max_lines_count=50)
+
+// =========================================================================
+// CANDIDATE (2026-10-23 day shift) — USE A 5-MINUTE MNQ/NQ CHART
+// Open drive: the first 30 minutes of RTH move one way almost without a
+// pullback. At the close of the 09:55-10:00 bar:
+//   LONG  if the 09:30-10:00 low >= open x (1 - 0.05%) and the close >= open x (1 + 0.15%)
+//   SHORT if the 09:30-10:00 high <= open x (1 + 0.05%) and the close <= open x (1 - 0.15%)
+// Stop : open -/+ 0.05% (filled at the worse of stop and bar open), from the next bar
+// Exit : the close of the 15:55 bar. At most one trade a day; ~40-50 a year.
+// NQ 2018-2025, costs included, 5-min bars (scripts/level_lab.py):
+//   +7.1 / +22.6 pt per trade (2018-21 / 2022-25), positive for every
+//   tolerance 0.03-0.08% x threshold 0.10-0.20%. Weak on ES.
+// In the funded book (bootstrap, flat 3, with VWAP band + noise + RS):
+//   about +$1-2k per account over 24 months; see FINAL_PLAN before using it.
+// =========================================================================
+
+tolPct  = input.float(0.05, "Max move against the open in the first 30 min (%)") / 100.0
+thrPct  = input.float(0.15, "Min move from the open at 10:00 (%)") / 100.0
+cts     = input.int(3, "Contracts (MNQ)")
+ptValue = input.float(2.0, "$ per point per contract (MNQ = 2, NQ = 20)")
+useGate = input.bool(true, "Skip days with 20d realised vol >= 30% (as tested)")
+volCeil = input.float(0.30, "Max 20d realised vol")
+showHist = input.bool(true, "Show historical trades")
+
+// Daily vol of the last COMPLETED session ([1] + lookahead_on: same in history and live)
+rvol20 = request.security(syminfo.tickerid, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
+volOK = not useGate or na(rvol20) or rvol20 < volCeil
+
+etMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")   // bar OPEN time
+rthFlag = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+rthStart = rthFlag and not nz(rthFlag[1], false)
+is5 = timeframe.period == "5"
+
+var float dOpen = na
+var float hi30 = na
+var float lo30 = na
+if rthStart
+    dOpen := open
+    hi30 := high
+    lo30 := low
+else if rthFlag and etMin < 600
+    hi30 := math.max(hi30, high)
+    lo30 := math.min(lo30, low)
+
+var float oEntry = na
+var float oStop = na
+var int oDir = na
+var int oBar = na
+var bool oDone = false
+if rthStart
+    oDone := false
+
+decide = is5 and rthFlag and etMin == 595 and barstate.isconfirmed and not na(dOpen) and not oDone and na(oEntry)
+goLong = decide and volOK and lo30 >= dOpen * (1 - tolPct) and close >= dOpen * (1 + thrPct)
+goShort = decide and volOK and hi30 <= dOpen * (1 + tolPct) and close <= dOpen * (1 - thrPct)
+if decide
+    oDone := true
+if goLong or goShort
+    oDir := goLong ? 1 : -1
+    oEntry := close
+    oStop := dOpen * (1 - oDir * tolPct)
+    oBar := bar_index
+    if showHist
+        label.new(bar_index, goLong ? low : high, "OD " + (goLong ? "LONG " : "SHORT ") + str.tostring(cts) + "\nstop " + str.tostring(oStop, format.mintick) + "\nrisk ~$" + str.tostring(math.abs(close - oStop) * cts * ptValue, "#"), color=goLong ? color.new(color.teal, 10) : color.new(color.maroon, 10), textcolor=color.white, style=goLong ? label.style_label_up : label.style_label_down, size=size.small)
+
+if not na(oEntry) and bar_index > oBar
+    exR = ""
+    exP = 0.0
+    if oDir == 1 and low <= oStop
+        exR := "SL"
+        exP := math.min(oStop, open)
+    else if oDir == -1 and high >= oStop
+        exR := "SL"
+        exP := math.max(oStop, open)
+    else if etMin >= 955 or not rthFlag
+        exR := "EOD"
+        exP := close
+    if exR != ""
+        pnl = oDir * (exP - oEntry) * cts * ptValue
+        if showHist
+            label.new(bar_index, exP, "OD " + exR + "\n" + (pnl >= 0 ? "+$" : "-$") + str.tostring(math.abs(pnl), "#"), color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)
+        oEntry := na
+        oStop := na
+        oDir := na
+
+alertcondition(goLong, "Open drive LONG", "Lucid 10: open drive LONG at 10:00")
+alertcondition(goShort, "Open drive SHORT", "Lucid 10: open drive SHORT at 10:00")
+
+plot(rthFlag and etMin < 600 ? dOpen * (1 + thrPct) : na, "threshold up", color=color.new(color.teal, 40), style=plot.style_linebr)
+plot(rthFlag and etMin < 600 ? dOpen * (1 - thrPct) : na, "threshold down", color=color.new(color.maroon, 40), style=plot.style_linebr)
+plot(not na(oStop) ? oStop : na, "stop", color=color.new(color.red, 10), style=plot.style_linebr, linewidth=2)
+
+var table tb = table.new(position.top_right, 1, 2, border_width=1, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    st = not is5 ? "OPEN DRIVE: use a 5-minute chart" : not volOK ? "VOL GATE — SKIP TODAY" : not na(oEntry) ? (oDir == 1 ? "LONG " : "SHORT ") + str.tostring(oEntry, format.mintick) : oDone ? "no drive today" : "watch 09:30-10:00"
+    table.cell(tb, 0, 0, "LUCID 10 · OPEN DRIVE (candidate)", text_color=color.white, bgcolor=color.new(color.teal, 40))
+    table.cell(tb, 0, 1, st, text_color=color.white, bgcolor=not na(oEntry) ? color.new(color.orange, 20) : color.new(color.gray, 50))
