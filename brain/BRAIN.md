@@ -91,6 +91,9 @@ English.
 7. Nothing goes live without the owner; you recommend, they decide.
 
 ## Shift mechanics
+- Times: take every timestamp (heartbeat, db status / log, report date) from
+  `date -u`, never estimate it (2026-10-23 night: estimated times ran 8 hours
+  ahead of the clock).
 - Start: `git pull`, read STATE.md. If `heartbeat` is under 50 minutes old
   and you did not write it in this context, another shift is active: reply
   briefly and stop.
