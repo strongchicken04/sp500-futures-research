@@ -1,0 +1,8 @@
+{
+  "diedAt": "audit",
+  "files": "pm_book.py, sb_book.py, book2.py, mc_sizing.py",
+  "name": "Nové slabé nohy (open drive, NR4, Silver Bullet, odpolední trend, VWAP noha) a druhá kniha",
+  "order": 57,
+  "result": "kladné na obchod, ale kniha při flat 3 je na hraně drawdownu – přidají busty; druhá kniha 9 100 / 20 500 $ vs kopie hlavní 17 400 / 25 700 $",
+  "status": "rejected"
+}

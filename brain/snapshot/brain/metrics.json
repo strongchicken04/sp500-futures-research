@@ -1,30 +1,30 @@
 {
   "book": {
-    "caption": "ORB + VWAP pásmo + noise · simulace s časy obchodů · průměr na účet za 24 měsíců (2018–21 | 2022–25)",
+    "caption": "Doporučení 23. 10.: funded kniha bez ORB (Lucid 1) · ověřeno i na 2010–17 · 2018–21 | 2022–25",
     "tiles": [
       {
-        "label": "Flat 3 MNQ na nohu",
-        "sub": "doporučená velikost",
+        "label": "První výplata bez ORB",
+        "sub": "dnes 37 / 36 % funded účtů",
         "tone": "ok",
-        "value": "$12 100 / $29 100"
+        "value": "44 / 42 %"
       },
       {
-        "label": "Ladder 400/500 (dosud)",
-        "sub": "dosavadní plán",
-        "tone": "bad",
-        "value": "$2 300 / $20 500"
+        "label": "Další výplaty bez ORB",
+        "sub": "dnes 63 / 61 %",
+        "tone": "ok",
+        "value": "64 / 69 %"
       },
       {
-        "label": "+ RS noha, flat 3",
-        "sub": "kandidát, ve 2022–25 přidá málo",
+        "label": "Průměr na účet (bootstrap)",
+        "sub": "za 24 měsíců oproti dnešku",
         "tone": "gold",
-        "value": "$19 500 / $30 500"
+        "value": "+$1 400 / +$2 100"
       },
       {
-        "label": "Denní stop",
-        "sub": "−600 $ neutrální, −300 $ škodí",
+        "label": "2010–17 (nezávislé)",
+        "sub": "noise +2,4 / +2,8 bp vs +6,6 / +5,3 bp",
         "tone": "arc",
-        "value": "nic nepřidá"
+        "value": "edge ~poloviční"
       }
     ]
   },

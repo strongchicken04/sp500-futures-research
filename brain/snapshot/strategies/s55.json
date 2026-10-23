@@ -1,0 +1,8 @@
+{
+  "files": "old_check.py, bp_eras.py",
+  "name": "Nezávislé období 2010–2017 (nikdy neladilo)",
+  "order": 55,
+  "reached": "audit",
+  "result": "hrubý edge noise a VWAP pásma kladný, ale ~poloviční; RS sprint edge ve všech obdobích; 09:31 bez edge",
+  "status": "candidate"
+}

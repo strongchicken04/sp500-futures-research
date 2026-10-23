@@ -1,0 +1,8 @@
+{
+  "diedAt": "oos",
+  "files": "mix_size.py, profit_lock.py, fomc_skip.py",
+  "name": "Funded: menší velikost nových noh, zámek denního zisku, vynechání FOMC dní",
+  "order": 48,
+  "result": "nic stabilně nepomáhá; rozdíly v šumu simulace (~3 000 $)",
+  "status": "rejected"
+}

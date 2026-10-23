@@ -1,0 +1,8 @@
+{
+  "files": "z_gate.py, gate_check.py, mc_runs.py",
+  "name": "Lucid 6 (noise) bez filtru volatility",
+  "order": 50,
+  "reached": "oos",
+  "result": "vyřazené dny +12 / +33 $ na mikro obchod; kniha (bootstrap) +800 / +1 800 $ na účet",
+  "status": "candidate"
+}

@@ -1,0 +1,8 @@
+{
+  "files": "hedge_check.py, PLAYBOOK_CZ.md",
+  "name": "Pojistka proti hedgingu: účet A přeskočí RS signál proti otevřenému obchodu 09:31 na účtu B",
+  "order": 40,
+  "reached": "audit",
+  "result": "střet ~7 % dní; první funded 7,0 / 6,9 dne místo 6,8 / 6,5",
+  "status": "candidate"
+}

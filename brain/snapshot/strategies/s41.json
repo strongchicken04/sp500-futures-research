@@ -1,0 +1,8 @@
+{
+  "diedAt": "oos",
+  "files": "level_lab.py",
+  "name": "Objem jako filtr: relativní objem na otevření, ORB 5 min podle objemu 1. svíčky, objemový spike, trend ve 14:00",
+  "order": 41,
+  "result": "výhoda se mezi obdobími otáčí nebo je slabá (t ≤ 1,6)",
+  "status": "rejected"
+}

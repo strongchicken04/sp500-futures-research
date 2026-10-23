@@ -1,0 +1,9 @@
+{
+  "files": "mc_combo.py, mc_combo_check.py",
+  "name": "Funded kniha: VWAP pásmo + noise bez filtru + RS + open drive, bez ORB (flat 3)",
+  "note": "Bloky 5, 20 i 60 dní: vždy lepší v obou obdobích. Původní simulace jedné historie: 2022–25 o 2 600–4 600 $ horší. Rozhoduješ ty.",
+  "order": 51,
+  "reached": "audit",
+  "result": "bootstrap +3 800 / +3 100 $ na účet za 24 měsíců; na skutečném pořadí 2022–25 horší",
+  "status": "candidate"
+}

@@ -1,0 +1,23 @@
+{
+  "files": "level_lab.py, level_book.py",
+  "isVal": 7.1,
+  "name": "Open drive: prvních 30 min max. 0,05 % proti open a close ≥ 0,15 % od open → se směrem v 10:00, stop open ∓ 0,05 %, flat 15:55",
+  "note": "Korelace s noise 0,32, RS 0,37, ORB 0,12. V knize při flat 3: 17 500 / 27 200 $ místo 18 600 / 28 300 $ – víc variance, víc bustů.",
+  "oosVal": 22.6,
+  "order": 36,
+  "reached": "oos",
+  "result": "+7,1 / +22,6 b. na obchod; celé okolí parametrů kladné; do funded knihy nepřidává",
+  "status": "candidate",
+  "unit": "b./obchod",
+  "years": {
+    "2018": 481,
+    "2019": 52,
+    "2020": -441,
+    "2021": 1234,
+    "2022": 846,
+    "2023": 493,
+    "2024": 1080,
+    "2025": 2131
+  },
+  "yearsUnit": "b. za rok (1 MNQ)"
+}

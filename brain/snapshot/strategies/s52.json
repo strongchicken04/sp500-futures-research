@@ -1,0 +1,11 @@
+{
+  "files": "simple_lab.py, mc_simple.py, lucid_11_nr4_break.pine",
+  "isVal": 7,
+  "name": "NR4 den → průraz rozpětí 09:30–10:00, stop druhá strana, flat 15:55",
+  "oosVal": 11,
+  "order": 52,
+  "reached": "oos",
+  "result": "+7,0 / +11,0 b. na obchod; kniha +1 100 / +2 800 $",
+  "status": "candidate",
+  "unit": "b./obchod"
+}

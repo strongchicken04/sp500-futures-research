@@ -1,6 +1,126 @@
 {
   "events": [
     {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T12:23:41Z",
+      "text": "Kniha je na hraně drawdownu: nové slabé nohy ani druhá kniha nepomáhají; víc peněz = víc funded účtů se stejnou knihou (kopie). Flat 3 zůstává."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T12:23:41Z",
+      "text": "Průřez 4 obdobími: kladné všude jen open drive, trend ve 14:00 a Silver Bullet – všechny slabé. Odpolední pravidla a VWAP noha zamítnuty."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-23T10:44:04Z",
+      "text": "Lucid 12 – VWAP Sprint (10:00) napsán: nejrychlejší sprint pro jediný evaluační účet, kód v Mozku."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T10:44:04Z",
+      "text": "Strana od VWAP dopoledne má edge ve 35 z 36 kombinací přes 16 let. Pro dva účty ale RS + 09:31 zůstává (ostatní dvojice nejsou stabilně lepší)."
+    },
+    {
+      "sphere": "Interpret",
+      "t": "2026-10-23T10:39:28Z",
+      "text": "Doporučení zúženo: funded kniha bez ORB (Lucid 1), zbytek beze změny. Noise bez filtru, open drive a NR4 v 2010–17 nepotvrzeny."
+    },
+    {
+      "sphere": "Systémový manažer",
+      "t": "2026-10-23T10:39:28Z",
+      "text": "Sprinty přes 4 období: RS vyhrává 62,5–65,8 % proti náhodným 60 % (edge všude); 09:31 jen náhoda (druhý nezávislý los na účtu B)."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T10:39:28Z",
+      "text": "Nezávislé období 2010–17: hrubý edge noise a VWAP pásma kladný, ale zhruba poloviční; ORB bez edge ve všech obdobích."
+    },
+    {
+      "sphere": "Interpret",
+      "t": "2026-10-23T10:12:11Z",
+      "text": "Návrh pro funded: vypnout Lucid 1 (ORB), v Lucid 6 odškrtnout filtr volatility. První výplata u 46 / 42 % účtů místo 37 / 36 %. FINAL_PLAN + playbook."
+    },
+    {
+      "sphere": "Systémový manažer",
+      "t": "2026-10-23T10:12:11Z",
+      "text": "Evaluace na dvou účtech: medián 6 dní / 270 $, v 19 z 20 případů do 15–17 dní."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-23T10:12:11Z",
+      "text": "Lucid 11 – NR4 Break (kandidát) napsán, kód v Mozku."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T10:12:11Z",
+      "text": "NR4 průraz kandidát (+7,0 / +11,0 b.); gap and go, fade gapu, inside day, velký den zamítnuty. Noise: 30 min je nejlepší frekvence."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-23T10:00:33Z",
+      "text": "Lucid 10 – Open Drive (kandidát) napsán, kód je v Mozku."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T10:00:33Z",
+      "text": "Nová přesnější simulace (bootstrap): kniha bez ORB, noise bez filtru + open drive = +3 800 / +3 100 $ na účet; na skutečném pořadí 2022–25 ale horší. Kandidát."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T10:00:33Z",
+      "text": "Noise momentum na zlatě a ropě bez edge. Na NQ jsou dny vyřazené filtrem volatility pro noise naopak dobré."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T09:48:42Z",
+      "text": "Funded: menší velikost nových nohou, zámek denního zisku i vynechání FOMC dní – nic stabilně nepomáhá (rozdíly v šumu simulace). Plán beze změny."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T09:48:42Z",
+      "text": "ICT sweepy (Londýn, Asie, minulý týden) zamítnuty; průraz high/low minulého týdne slabý a knihu zhoršuje."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T09:44:34Z",
+      "text": "Open drive místo RS na účtu A: 2018–21 o 2 dny rychlejší, 2022–25 jen o 0,3 dne – plán beze změny."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T09:44:34Z",
+      "text": "Zamítnuto: EMA 9/21, Supertrend, MACD, Bollinger (5 min), ICT Silver Bullet, režimy Yu-Rentzler-Wolf. Čekám na úrovně Londýna a Asie."
+    },
+    {
+      "sphere": "Systémový manažer",
+      "t": "2026-10-23T09:39:49Z",
+      "text": "Hedging mezi účty A a B: opačné pozice současně ~7 % dní. Pojistka: A přeskočí signál proti otevřenému obchodu na B (stojí 0,2–0,4 dne). V playbooku."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T09:39:49Z",
+      "text": "Objem jako filtr (relativní objem na otevření, spike, ORB 5 min, trend 14:00) zamítnut; open drive na ES slabý."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T09:37:43Z",
+      "text": "Open drive ani IB do funded knihy nepřidávají (flat 3: 17 500 / 27 200 $ a 15 800 / 26 300 $ místo 18 600 / 28 300 $)."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T09:37:43Z",
+      "text": "Volume profile (80 %, POC, nahý POC, hodnota) zamítnut – nedrží 2022–25. Open drive kandidát: +7,1 / +22,6 b. na obchod, celé okolí parametrů kladné."
+    },
+    {
+      "sphere": "Importér",
+      "t": "2026-10-23T09:06:50Z",
+      "text": "Denní směna: 7 jednoduchých pravidel s volume profilem a klíčovými úrovněmi (VA 80 %, POC, IB, high/low předchozího dne, overnight sweep) zapsáno předem."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T09:06:50Z",
+      "text": "QC export 5min svíček NQ + volume profil každého dne (2018–25) běží – laboratoř úrovní."
+    },
+    {
       "sphere": "Interpret",
       "t": "2026-10-23T07:32:00Z",
       "text": "Playbook s přesným nastavením indikátorů pro evaluaci (2 účty) i funded (flat 3): PLAYBOOK_CZ.md."

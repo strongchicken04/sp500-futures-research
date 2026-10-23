@@ -1,0 +1,8 @@
+{
+  "files": "b_sprint_lab.py, b_sprint_plan.py, lucid_12_vwap_sprint.pine",
+  "name": "VWAP sprint (10:00: long nad VWAP, short pod; +0,25 % / −0,40 %)",
+  "order": 56,
+  "reached": "audit",
+  "result": "edge ve všech 4 obdobích 2010–25 (35 z 36 kombinací); jako jediný účet 9,8 / 9,3 dne místo 12,3 / 10,2 (RS)",
+  "status": "candidate"
+}
