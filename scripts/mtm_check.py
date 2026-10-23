@@ -34,6 +34,7 @@ V = {"flat 3": {"VG": 3, "Z": 3, "RS": 3}, "flat 4": {"VG": 4, "Z": 4, "RS": 4},
 RS_LEVEL = 125   # RS leg bracket in bp (rs_bracket.py varies it)
 WITH_ORB = False  # orb_v2.py adds the live-spec ORB (O5) leg
 UNGATED = set()   # legs traded without the vol gate (gate_v2.py)
+MARK = "worst"    # "close": mark open trades at the bar close (lenient bound, mtm_close.py)
 
 
 def trades(data, suffix, gate, pref):
@@ -97,7 +98,7 @@ def day_seq(tr, bars, mix, f, mtm):
                     ie = (eh - 575) // 5
                     if 0 <= ie < len(bars):
                         ent = bars[ie][3]
-                        adv = bars[k][2] if s == 1 else bars[k][1]
+                        adv = bars[k][3] if MARK == "close" else (bars[k][2] if s == 1 else bars[k][1])
                         dip += min(0.0, s * (adv - ent)) * 2.0 * mix[leg] * (f(ent) if f else 1.0)
             if dip < 0:
                 ev.append((t1, 0, dip))
