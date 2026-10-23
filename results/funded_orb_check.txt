@@ -1,9 +1,9 @@
 book                       sizing        2018-21 | 2022-25 (mean 24-month cash per account)
-VWAP + noise + ORB         flat 3        $  11,087 | $  33,449
-VWAP + noise + ORB         lad K300/250  $   9,079 | $  34,852
+VWAP + noise + ORB         flat 3        $  11,475 | $  43,027
+VWAP + noise + ORB         lad K300/250  $  13,397 | $  37,626
 VWAP + noise               flat 3        $   9,476 | $  26,907
 VWAP + noise               lad K300/250  $   7,796 | $  22,301
-VWAP + noise + ORB + RS    flat 3        $  23,975 | $  47,700
-VWAP + noise + ORB + RS    lad K300/250  $  22,248 | $  42,948
+VWAP + noise + ORB + RS    flat 3        $  27,274 | $  60,643
+VWAP + noise + ORB + RS    lad K300/250  $  24,765 | $  47,818
 VWAP + noise + RS          flat 3        $  15,981 | $  44,001
 VWAP + noise + RS          lad K300/250  $  16,377 | $  30,250

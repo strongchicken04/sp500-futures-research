@@ -206,10 +206,17 @@ def simulate(
     return res
 
 
+# Typical entry order within a day (trades carry no time): opening-range and
+# overnight-level trades first, VWAP band next, then the 10:00+ signals.
+# Without this, the day's order followed the order of merge() arguments and
+# lifecycle results moved by up to ~25% (found 2026-10-23).
+ENTRY_RANK = {"S1": 0, "ORB": 0, "YM": 0, "ONL": 0.5, "VG": 1, "VWAP": 1, "Z": 2, "RS": 3}
+
+
 def merge(*trade_sets: list[Trade]) -> list[Trade]:
     """Interleave several strategies into one chronological trade stream."""
     all_t = [t for ts in trade_sets for t in ts]
-    all_t.sort(key=lambda t: t.date)
+    all_t.sort(key=lambda t: (t.date, ENTRY_RANK.get(t.strat, 5)))
     return all_t
 
 

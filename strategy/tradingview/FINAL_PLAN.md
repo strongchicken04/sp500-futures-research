@@ -3,13 +3,12 @@
 - **Denní stop je součást výsledku:** simulace končí den při ztrátě
   75 $ + 75 $ × jednotky, u flat 3 tedy **−300 $ za den = konec obchodování
   ten den**. Bez toho čísla neplatí.
-- **ORB pořád pomáhá i při flat 3:** s ORB 11 100 / 33 400 $, bez ORB
+- **ORB pořád pomáhá i při flat 3:** s ORB 11 500 / 43 000 $, bez ORB
   9 500 / 26 900 $ na účet za 24 měsíců (`scripts/funded_orb_check.py`).
-- **Citlivost simulace:** pořadí obchodů v rámci dne mění výsledek až o
-  ~25 % (stejná kniha 33 000 vs 43 000 $ v 2022–25). Realistické pořadí
-  podle časů vstupů (ORB → VWAP → noise → RS) dává vyšší čísla. Pořadí
-  variant mezi sebou (flat 3 > ladder, + RS > bez RS, s ORB > bez ORB) drží
-  v obou pořadích.
+- **Opravená citlivost simulace:** obchody stejného dne se dřív řadily podle
+  pořadí, v jakém se nohy knihy spojily, a to měnilo výsledek až o ~25 %.
+  Teď se řadí podle typického času vstupu (ORB → VWAP → noise → RS)
+  v `prop_sim.merge`; čísla výše už platí s touto opravou.
 
 # 2026-10-23 — FUNDED: velikost pozic agresivněji (flat 3 MNQ na nohu)
 
