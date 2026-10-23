@@ -1,0 +1,44 @@
+target 15 / stop 30 bp   pass 30.3% / 35.0%   days  15.9 /  14.9   fees $ 297 / $ 257
+target 15 / stop 40 bp   pass 37.1% / 38.9%   days  16.3 /  16.2   fees $ 243 / $ 232
+target 15 / stop 50 bp   pass 30.5% / 36.5%   days  22.3 /  19.8   fees $ 295 / $ 247
+target 20 / stop 30 bp   pass 34.3% / 38.0%   days  11.8 /  11.0   fees $ 262 / $ 237
+target 20 / stop 40 bp   pass 39.3% / 39.0%   days  12.6 /  13.3   fees $ 229 / $ 231
+target 20 / stop 50 bp   pass 34.5% / 36.3%   days  17.0 /  16.0   fees $ 261 / $ 248
+target 25 / stop 30 bp   pass 32.5% / 34.4%   days  11.6 /  10.8   fees $ 277 / $ 262
+target 25 / stop 40 bp   pass 38.1% / 39.2%   days  11.3 /  10.7   fees $ 236 / $ 229
+target 25 / stop 50 bp   pass 32.2% / 36.3%   days  16.1 /  14.1   fees $ 279 / $ 248
+target 30 / stop 30 bp   pass 25.2% / 31.0%   days  15.4 /  12.9   fees $ 357 / $ 290
+target 30 / stop 40 bp   pass 34.5% / 38.5%   days  11.2 /  10.2   fees $ 261 / $ 234
+target 30 / stop 50 bp   pass 35.9% / 39.4%   days  12.2 /  10.9   fees $ 251 / $ 229
+
+chosen on 2018-21: target 30 / stop 40 bp -> 2022-25 pass 38.5%, 10.2 days, fees $234
+
+== multi-account with 09:31 at target 0.25% / stop 0.40% (RS at 0.20 / 0.30)
+daily correlation of sprint results on common days:
+   RS-T931: -0.02
+   RS-NZ: +0.40
+   T931-NZ: -0.01
+
+--- 2018-2021
+   RS    alone: pass/attempt 49.6%  trades/yr 206
+   T931  alone: pass/attempt 37.6%  trades/yr 242
+   NZ    alone: pass/attempt 37.6%  trades/yr 146
+   RS               days to first funded  11.9 (median   8)   fees $ 202
+   T931             days to first funded  11.1 (median   9)   fees $ 231
+   NZ               days to first funded  25.2 (median  22)   fees $ 210
+   RS + T931        days to first funded   6.8 (median   6)   fees $ 310
+   RS + NZ          days to first funded   9.9 (median   8)   fees $ 309
+   T931 + NZ        days to first funded   9.3 (median   8)   fees $ 329
+   RS + T931 + NZ   days to first funded   6.3 (median   5)   fees $ 404
+
+--- 2022-2025
+   RS    alone: pass/attempt 48.1%  trades/yr 210
+   T931  alone: pass/attempt 38.0%  trades/yr 258
+   NZ    alone: pass/attempt 43.4%  trades/yr 151
+   RS               days to first funded  10.2 (median   8)   fees $ 179
+   T931             days to first funded  10.5 (median   8)   fees $ 236
+   NZ               days to first funded  22.7 (median  18)   fees $ 220
+   RS + T931        days to first funded   6.5 (median   6)   fees $ 302
+   RS + NZ          days to first funded   9.4 (median   8)   fees $ 296
+   T931 + NZ        days to first funded   8.8 (median   7)   fees $ 329
+   RS + T931 + NZ   days to first funded   6.3 (median   6)   fees $ 409

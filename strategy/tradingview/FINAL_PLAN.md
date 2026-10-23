@@ -1,3 +1,11 @@
+# 2026-10-23 — EVALUACE: Lucid 7 (09:31) s targetem 0,25 % → dva účty ~6,5–7 dní
+
+`scripts/t931_shape.py`: sprint 09:31 (50denní trend) s target 0,25 % /
+stop 0,40 %: 11,3 / 10,7 dne do passu místo 12,6 / 13,3 (0,20 / 0,40),
+poplatky 236 / 229 $ (stejné). Je to střed plata (0,25–0,30 % target).
+Dva účty RS (0,20 / 0,30) + 09:31 (0,25 / 0,40): **první funded za 6,8 / 6,5
+dne, poplatky 310 / 302 $**. Návrh: v Lucid 7 nastav Target = 0,25.
+
 # 2026-10-23 — EVALUACE: nejlepší je RS (stop 0,30 %) + 09:31 na dvou účtech
 
 `scripts/multi_account_sprint.py` (2018–21 | 2022–25):
