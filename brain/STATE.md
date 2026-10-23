@@ -1,12 +1,14 @@
 # Brain state
 
-heartbeat: 2026-10-23T07:32Z (shift 2026-10-23 active)
+heartbeat: 2026-10-23T07:34Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
 
+10. ORB live-spec audit: LSORB_A / LSORB_B running on QC (live_spec_exporter MODE ORB);
+    score with score_live_spec.py, compare with S1FILL (-0.12 / +0.61 pt per trade net 0.75).
 13. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
