@@ -1,0 +1,3 @@
+09:31 sprint target 0.25 / stop 0.40: vol gate (20d rv < 0.30) on vs off
+   gate off  pass 38.1%  days  11.3  fees $236  |  pass 39.2%  days  10.7  fees $229
+   gate on   pass 45.0%  days  18.0  fees $200  |  pass 38.5%  days  21.3  fees $234
