@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T09:37Z (day shift 2026-10-23 active, owner asked for a full day)
+heartbeat: 2026-10-23T09:39Z (day shift 2026-10-23 active, owner asked for a full day)
 last shift: 2026-10-23 (report final at 09:45 Prague; later wakes continue the queue)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,6 +16,8 @@ QC runs allowed until 21:30 Prague, day report brain/reports/2026-10-23-den.md ~
 
 
 ## Done this shift
+- Day: hedge guard for the two-account eval (clash 7% of days, costs 0.2-0.4 day) -> PLAYBOOK. Volume filters
+  (opening RVOL, first-bar RVOL ORB, volume spike, 14:00 trend) rejected; open drive weak on ES.
 - Day 12. Level lab (BARS5A/B): volume-profile rules all rejected (80% rule, outside value, POC, naked POC,
   narrow/wide value); PD/ON level breaks and sweeps rejected; IB break weak and worse in the book;
   open drive = candidate signal (+7.1 / +22.6 pt, robust plateau) but does not add to the funded book.

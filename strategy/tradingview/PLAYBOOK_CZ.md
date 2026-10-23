@@ -37,6 +37,12 @@ Volba po první prohře (`results/sprint_reset.txt`, 2018–21 | 2022–25):
 - **vzdát a hned koupit novou evaluaci**: RS 10,9 / 8,5 dne, 382 / 298 $.
 Vzdání je o ~1,5–2 dny rychlejší, ale o ~125–170 $ dražší (u 09:31 o ~200 $). Stejný sprint kopírovat na víc účtů nemá smysl.
 
+**Pojistka proti hedgingu (Lucid zakazuje opačné pozice i mezi tvými účty):**
+když má účet B ještě otevřený obchod z 09:31 a Lucid 8 dá na účtu A signál
+OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stává se to
+~7 % dní (~14× za rok); první funded pak za 7,0 / 6,9 dne místo 6,8 / 6,5
+(`results/hedge_check.txt`). Signál stejným směrem nebo po zavření obchodu na B je v pořádku.
+
 ## 2. Funded – kniha, 3 MNQ na každou nohu
 
 | Noha | Indikátor | Graf | Poznámka |

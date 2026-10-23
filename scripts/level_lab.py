@@ -30,6 +30,17 @@ Second group (also fixed before results):
   NARROW prior VA width in the lowest third of the previous 20 sessions; first
          5-min close outside the prior VA from 10:00 -> go with it, stop at the
          VA middle, flat 15:55. WIDE = same rule on the top third (control).
+Third group, volume (fixed before results, after groups 1-2 were scored):
+  OD_HI / OD_LO  open drive (0.05% / 0.15%) on days whose first-30-min volume
+         is above / below the median of the prior 20 sessions' first 30 min.
+  ORB5_HI / ORB5_LO  first 5-min close beyond the first 5-min bar's range ->
+         go with it; stop at the other side of that bar; flat 15:55; split by
+         the first bar's volume vs the prior 20 sessions' median (x1.5).
+  TREND14  at 14:00 close above the session VWAP and above the IB high ->
+         long to 15:55, stop at the 14:00 VWAP (mirror short).
+  VSPIKE  first 5-min bar 10:00-15:00 with volume > 3x the median of the same
+         bar in the prior 20 sessions and a close in the outer 25% of its range
+         -> go with it; stop at the other end of the bar; flat 15:55.
 
 Fills: entry at the signal bar's close (POC: at the level, the touching bar
 is checked for the stop); tracking from the next bar; a bar touching stop and
@@ -48,13 +59,15 @@ import sys
 from collections import defaultdict
 
 EOD = 76          # bar ending 15:55
+COST, STOP_COST = 0.75, 0.25   # points per micro (NQ: $1 + 1 tick entry; 1 more tick on stops)
+NAMES = ("BARS5A", "BARS5B")
 LAST_ENTRY = 74   # bar ending 15:45
 
 
 def load(data_dir):
     days = {}
     bars = defaultdict(dict)
-    for nm in ("BARS5A", "BARS5B"):
+    for nm in NAMES:
         p = os.path.join(data_dir, f"{nm}_tags.txt")
         if not os.path.exists(p):
             continue
@@ -93,12 +106,12 @@ def run(bars, i, d, e, stop, tgt=None, check_entry_bar=False):
         first = check_entry_bar and k == i
         if (d == 1 and l <= stop) or (d == -1 and h >= stop):
             x = stop if first else (min(stop, o) if d == 1 else max(stop, o))
-            return d * (x - e) - 1.0, "SL", i, k
+            return d * (x - e) - COST - STOP_COST, "SL", i, k
         if not first and tgt is not None and ((d == 1 and h >= tgt) or (d == -1 and l <= tgt)):
-            return d * (tgt - e) - 0.75, "TP", i, k
+            return d * (tgt - e) - COST, "TP", i, k
         if k == EOD:
-            return d * (c - e) - 0.75, "EOD", i, k
-    return d * (bars[EOD][3] - e) - 0.75, "EOD", i, EOD
+            return d * (c - e) - COST, "EOD", i, k
+    return d * (bars[EOD][3] - e) - COST, "EOD", i, EOD
 
 
 def periods30(bars):
@@ -260,6 +273,69 @@ def annotate(days):
             day["vaw"] = None
 
 
+def vwaps(b):
+    pv = v = 0.0
+    out = []
+    for o, h, l, c, vol in b:
+        pv += (h + l + c) / 3.0 * vol
+        v += vol
+        out.append(pv / v if v else c)
+    return out
+
+
+def annotate_volume(days):
+    for n, day in enumerate(days):
+        day["rv30"] = day["rvb0"] = None
+        day["todmed"] = None
+        if n < 20:
+            continue
+        prev = days[n - 20:n]
+        med30 = st.median(sum(x[4] for x in p["bars"][:6]) for p in prev)
+        medb0 = st.median(p["bars"][0][4] for p in prev)
+        day["rv30"] = sum(x[4] for x in day["bars"][:6]) / med30 if med30 else None
+        day["rvb0"] = day["bars"][0][4] / medb0 if medb0 else None
+        day["todmed"] = [st.median(p["bars"][k][4] for p in prev) for k in range(EOD + 1)]
+
+
+def orb5(day, prev):
+    b = day["bars"]
+    h0, l0 = b[0][1], b[0][2]
+    for i in range(1, LAST_ENTRY + 1):
+        c = b[i][3]
+        if c > h0 or c < l0:
+            d = 1 if c > h0 else -1
+            return d, run(b, i, d, c, l0 if d == 1 else h0)
+    return None
+
+
+def trend14(day, prev):
+    b = day["bars"]
+    i = 53                                     # bar ending 14:00
+    vw = vwaps(b)[i]
+    ibh, ibl = max(x[1] for x in b[:12]), min(x[2] for x in b[:12])
+    c = b[i][3]
+    if c > vw and c > ibh:
+        return 1, run(b, i, 1, c, vw)
+    if c < vw and c < ibl:
+        return -1, run(b, i, -1, c, vw)
+    return None
+
+
+def vspike(day, prev):
+    b, med = day["bars"], day["todmed"]
+    if not med:
+        return None
+    for i in range(5, 66):                     # bars ending 10:00 .. 15:00
+        o, h, l, c, v = b[i]
+        if med[i] and v > 3 * med[i] and h > l:
+            pos = (c - l) / (h - l)
+            if pos >= 0.75:
+                return 1, run(b, i, 1, c, l)
+            if pos <= 0.25:
+                return -1, run(b, i, -1, c, h)
+    return None
+
+
 def rules():
     R = {}
     for buf in (0.15, 0.25, 0.35):
@@ -278,6 +354,12 @@ def rules():
     R["ODRIVE"] = odrive
     R["NARROW"] = lambda d, p: va_break(d, p) if d["vaw"] == "narrow" else None
     R["WIDE"] = lambda d, p: va_break(d, p) if d["vaw"] == "wide" else None
+    R["OD_HI"] = lambda d, p: odrive(d, p) if d["rv30"] and d["rv30"] >= 1.0 else None
+    R["OD_LO"] = lambda d, p: odrive(d, p) if d["rv30"] and d["rv30"] < 1.0 else None
+    R["ORB5_HI"] = lambda d, p: orb5(d, p) if d["rvb0"] and d["rvb0"] >= 1.5 else None
+    R["ORB5_LO"] = lambda d, p: orb5(d, p) if d["rvb0"] and d["rvb0"] < 1.5 else None
+    R["TREND14"] = trend14
+    R["VSPIKE"] = vspike
     return R
 
 
@@ -305,6 +387,7 @@ def main():
     data = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("BRAIN_DATA", "/tmp/brain_data")
     days = load(data)
     annotate(days)
+    annotate_volume(days)
     print(f"sessions {len(days)}: {days[0]['date']} .. {days[-1]['date']}")
     for lbl, i in (("09:35", 0), ("10:00", 5), ("10:35", 12)):
         v = [x["bars"][EOD][3] - x["bars"][i][3] for x in days]

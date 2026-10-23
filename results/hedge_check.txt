@@ -1,0 +1,6 @@
+--- 2018-2021: days with both signals 786, opposite direction 391, opposite AND both open at once 57 (7%)
+   no guard                           first funded  6.8 days, A alone 11.9 days, A evaluations 2.24
+   guard: A skips signals against B   first funded  7.0 days, A alone 13.1 days, A evaluations 2.20
+--- 2022-2025: days with both signals 837, opposite direction 412, opposite AND both open at once 56 (7%)
+   no guard                           first funded  6.5 days, A alone 10.2 days, A evaluations 1.99
+   guard: A skips signals against B   first funded  6.9 days, A alone 11.2 days, A evaluations 2.03
