@@ -1,0 +1,20 @@
+--- 2010-13
+   B = 09:31 trend (now)  first funded 44.5 days (B alone 65.4), corr A-B +0.02, A skipped (opposite) 9% of RS days
+   B = VWAP10             first funded 44.4 days (B alone 45.9), corr A-B +0.42, A skipped (opposite) 4% of RS days
+   B = MOM30              first funded 49.6 days (B alone 53.0), corr A-B +0.40, A skipped (opposite) 6% of RS days
+   B = MOM60              first funded 56.0 days (B alone 77.5), corr A-B +0.17, A skipped (opposite) 11% of RS days
+--- 2014-17
+   B = 09:31 trend (now)  first funded 17.6 days (B alone 19.2), corr A-B -0.02, A skipped (opposite) 14% of RS days
+   B = VWAP10             first funded 17.4 days (B alone 19.0), corr A-B +0.45, A skipped (opposite) 7% of RS days
+   B = MOM30              first funded 18.2 days (B alone 19.9), corr A-B +0.43, A skipped (opposite) 6% of RS days
+   B = MOM60              first funded 16.3 days (B alone 17.4), corr A-B +0.36, A skipped (opposite) 10% of RS days
+--- 2018-21
+   B = 09:31 trend (now)  first funded  7.4 days (B alone 11.3), corr A-B +0.01, A skipped (opposite) 7% of RS days
+   B = VWAP10             first funded  7.3 days (B alone  9.8), corr A-B +0.43, A skipped (opposite) 4% of RS days
+   B = MOM30              first funded  7.1 days (B alone  9.2), corr A-B +0.40, A skipped (opposite) 5% of RS days
+   B = MOM60              first funded  7.5 days (B alone 10.5), corr A-B +0.15, A skipped (opposite) 11% of RS days
+--- 2022-25
+   B = 09:31 trend (now)  first funded  6.8 days (B alone 10.4), corr A-B +0.03, A skipped (opposite) 7% of RS days
+   B = VWAP10             first funded  6.7 days (B alone  9.3), corr A-B +0.43, A skipped (opposite) 2% of RS days
+   B = MOM30              first funded  7.5 days (B alone 10.3), corr A-B +0.43, A skipped (opposite) 2% of RS days
+   B = MOM60              first funded  6.9 days (B alone 10.9), corr A-B +0.12, A skipped (opposite) 8% of RS days

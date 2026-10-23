@@ -1,0 +1,4 @@
+2010-13: RS + 09:31 (guard, 9% RS skipped)  44.5 d $ 564 | 09:31 + VWAP10 (guard, 20% VWAP10 skipped)  35.2 d $ 452
+2014-17: RS + 09:31 (guard, 14% RS skipped)  17.6 d $ 488 | 09:31 + VWAP10 (guard, 26% VWAP10 skipped)  15.8 d $ 494
+2018-21: RS + 09:31 (guard, 7% RS skipped)   7.7 d $ 319 | 09:31 + VWAP10 (guard, 15% VWAP10 skipped)   7.5 d $ 331
+2022-25: RS + 09:31 (guard, 7% RS skipped)   6.8 d $ 306 | 09:31 + VWAP10 (guard, 16% VWAP10 skipped)   6.8 d $ 308

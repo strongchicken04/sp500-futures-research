@@ -1,0 +1,28 @@
+--- 2010-13
+       RS + T931   first funded  40.3 days, fees $ 521, opposite direction on 49% of common days
+       RS + VWAP10 first funded  45.1 days, fees $ 555, opposite direction on 26% of common days
+       RS + MOM60  first funded  58.8 days, fees $ 593, opposite direction on 24% of common days
+     T931 + VWAP10 first funded  32.4 days, fees $ 483, opposite direction on 49% of common days
+     T931 + MOM60  first funded  42.1 days, fees $ 587, opposite direction on 51% of common days
+   VWAP10 + MOM60  first funded  38.6 days, fees $ 563, opposite direction on 28% of common days
+--- 2014-17
+       RS + T931   first funded  16.5 days, fees $ 463, opposite direction on 50% of common days
+       RS + VWAP10 first funded  17.8 days, fees $ 476, opposite direction on 25% of common days
+       RS + MOM60  first funded  16.1 days, fees $ 418, opposite direction on 20% of common days
+     T931 + VWAP10 first funded  12.1 days, fees $ 435, opposite direction on 47% of common days
+     T931 + MOM60  first funded  12.5 days, fees $ 448, opposite direction on 49% of common days
+   VWAP10 + MOM60  first funded  12.4 days, fees $ 411, opposite direction on 23% of common days
+--- 2018-21
+       RS + T931   first funded   7.5 days, fees $ 316, opposite direction on 49% of common days
+       RS + VWAP10 first funded   7.2 days, fees $ 323, opposite direction on 25% of common days
+       RS + MOM60  first funded   7.4 days, fees $ 314, opposite direction on 21% of common days
+     T931 + VWAP10 first funded   6.5 days, fees $ 316, opposite direction on 45% of common days
+     T931 + MOM60  first funded   6.6 days, fees $ 311, opposite direction on 48% of common days
+   VWAP10 + MOM60  first funded   6.5 days, fees $ 314, opposite direction on 24% of common days
+--- 2022-25
+       RS + T931   first funded   6.4 days, fees $ 303, opposite direction on 49% of common days
+       RS + VWAP10 first funded   6.8 days, fees $ 302, opposite direction on 22% of common days
+       RS + MOM60  first funded   6.8 days, fees $ 301, opposite direction on 17% of common days
+     T931 + VWAP10 first funded   5.9 days, fees $ 288, opposite direction on 49% of common days
+     T931 + MOM60  first funded   6.4 days, fees $ 314, opposite direction on 50% of common days
+   VWAP10 + MOM60  first funded   6.3 days, fees $ 297, opposite direction on 26% of common days
