@@ -1,22 +1,28 @@
-# 2026-10-23 (denní směna) — NÁVRH: funded kniha bez ORB, Lucid 6 bez filtru volatility
+# 2026-10-23 (denní směna) — DOPORUČENÍ: funded kniha bez ORB (Lucid 1)
 
-Nová simulace (`scripts/mc_book.py`: 24měsíční cesty z 20denních bloků
-historie, všechny varianty na stejných blocích; stará metoda se hýbala
-o 3–5 tisíc $ jen kvůli kalendáři) a podíly výplat na jedné historii
-(2018–21 | 2022–25, flat 3 MNQ na nohu):
+Ověřeno na třech obdobích. Podíl funded účtů s první / další výplatou
+(flat 3 MNQ na nohu, 2018–21 | 2022–25):
 
-| kniha | průměr na účet 24 m (bootstrap) | první výplata | další výplaty |
-|---|---|---|---|
-| dnes: ORB + VWAP pásmo + noise + RS (vše s filtrem) | 14 700 / 21 800 $ | 37 / 36 % | 63 / 61 % |
-| **VWAP pásmo + noise bez filtru + RS (bez ORB)** | **17 300 / 24 800 $** | **46 / 42 %** | **69 / 67 %** |
-| + open drive (Lucid 10) + NR4 (Lucid 11), 3 MNQ | +2 000 / +3 400 $ navíc | – | – |
+| kniha | první výplata | další výplaty |
+|---|---|---|
+| dnes: ORB + VWAP pásmo + noise + RS | 37 / 36 % | 63 / 61 % |
+| **bez ORB: VWAP pásmo + noise + RS** | **44 / 42 %** | **64 / 69 %** |
 
-Proč: ORB má podle auditu edge kolem nuly (jen přidává riziko); dny, které
-filtr volatility vyřazuje, jsou pro noise momentum dobré (+12 / +33 $ na mikro
-obchod). U VWAP pásma, RS a ORB filtr nechat. Nejvíc nese noise (bez něj
-−4 900 / −4 700 $). Změna v praxi: Lucid 1 vypnout, v Lucid 6 odškrtnout
-„Volatility gate“. Open drive a NR4 jsou volitelné (dnes testováno hodně
-variant, berte je jako skromný doplněk). Rozhoduješ ty.
+Nová simulace (`scripts/mc_book.py`, stejné náhodné bloky dnů pro všechny
+varianty): bez ORB +1 400 / +2 100 $ na účet za 24 měsíců; při horším plnění
+víc. Důvod: ORB má hrubý edge kolem nuly ve všech čtyřech obdobích
+2010–2025 a po nákladech je záporný ve třech z nich (`results/bp_eras.txt`).
+
+**Nezávislé období 2010–2017** (na něm se nic neladilo): noise i VWAP pásmo
+mají hrubý edge kladný, ale zhruba poloviční (noise +2,4 / +2,8 bp na obchod
+proti +6,6 / +5,3 bp v 2018–25). Tehdejší náklady (0,75 b. při NQ ~2 500 =
+~3 bp) ho smazaly; při dnešní ceně by i takový slabší režim dal noise ~+2 bp
+na obchod. Počítej s tím, že edge není stálý – v klidnějším trhu může být
+poloviční.
+
+Zvažováno a NEdoporučeno: noise bez filtru volatility (2018–25 lepší, ale
+2010–13 horší), open drive a NR4 jako doplňky (v 2010–17 nepotvrzeny).
+Prakticky: **Lucid 1 nepoužívat**, zbytek beze změny. Rozhoduješ ty.
 
 # 2026-10-23 — Lucid Flex nedovoluje držet přes noc
 

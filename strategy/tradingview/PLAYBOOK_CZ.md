@@ -66,11 +66,9 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
 
 ## 3. Čeká na tvoje rozhodnutí
 
-- **Funded kniha bez ORB a Lucid 6 bez filtru volatility** (denní směna 23. 10.,
-  FINAL_PLAN nahoře): první výplata u 46 / 42 % funded účtů místo 37 / 36 %,
-  průměr na účet +2 600 / +3 000 $. Prakticky: Lucid 1 nepoužívat, v Lucid 6
-  odškrtnout „Volatility gate“. Volitelně přidat Lucid 10 (open drive) a
-  Lucid 11 (NR4) po 3 MNQ.
+- **Funded kniha bez ORB (Lucid 1)** (denní směna 23. 10., FINAL_PLAN nahoře):
+  první výplata u 44 / 42 % funded účtů místo 37 / 36 %; ORB nemá edge ani
+  v nezávislém období 2010–2017. Prakticky: Lucid 1 nepoužívat, zbytek beze změny.
 
 - Overnight long (Lucid 9) vyřazen: Lucid Flex nedovoluje držet přes noc.
   Všechny strategie v plánu jsou do 15:55 ET flat.

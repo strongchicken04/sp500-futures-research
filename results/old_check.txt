@@ -1,0 +1,20 @@
+per trade, $ per MNQ (gated unless noted):
+   ORB            $ -1.71 t-9.7 n2508 | $ -1.63 t-5.3 n2396
+   VG             $ -0.80 t-0.6 n 706 | $ +0.52 t+0.3 n 710
+   Z              $ -0.26 t-0.4 n 859 | $ +0.95 t+0.8 n 953
+   Z    (no gate) $ -0.51 t-0.8 n 921 | $ +0.67 t+0.6 n 966
+   RS             $ +0.54 t+0.5 n 619 | $ +1.48 t+0.7 n 645
+   OD             $ +0.49 t+0.2 n 178 | $ +1.47 t+0.5 n 214
+   NR             $ -1.83 t-0.9 n 212 | $ +2.83 t+0.9 n 222
+--- 2010-2013 (994 days), bootstrap mean 24-month cash per account
+   now                            $    -771
+   proposal                       $     368   vs base  +1,139 (+/- 40)  better / worse in 98% / 1% of paths
+   proposal + OD + NR4            $     687   vs base  +1,458 (+/- 53)  better / worse in 91% / 1% of paths
+   now        first payout 3%, repeat payout 20%
+   proposal   first payout 22%, repeat payout 43%
+--- 2014-2017 (994 days), bootstrap mean 24-month cash per account
+   now                            $   1,140
+   proposal                       $   2,714   vs base  +1,573 (+/- 63)  better / worse in 89% / 9% of paths
+   proposal + OD + NR4            $   3,740   vs base  +2,599 (+/- 78)  better / worse in 90% / 6% of paths
+   now        first payout 0%, repeat payout 20%
+   proposal   first payout 1%, repeat payout 43%
