@@ -1,0 +1,4 @@
+2018-21 recommended (no ORB)   mean $ 17,654 ($  736/month), median $ 17,460, p10 $  8,460, p90 $ 27,000, below zero 0%
+2018-21 today (with ORB)       mean $ 15,932 ($  664/month), median $ 15,300, p10 $  7,380, p90 $ 25,020, below zero 0%
+2022-25 recommended (no ORB)   mean $ 25,505 ($1,063/month), median $ 25,200, p10 $ 14,400, p90 $ 36,540, below zero 0%
+2022-25 today (with ORB)       mean $ 23,857 ($  994/month), median $ 23,040, p10 $ 13,500, p90 $ 34,200, below zero 0%
