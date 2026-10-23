@@ -1,0 +1,8 @@
+2018-21                  plan 4 MNQ    mean $ 21,733 ($  906/month) median $ 20,880 p10 $  7,740 p90 $ 38,340 below zero 0.6%
+2018-21                  before 3 MNQ  mean $ 17,950 ($  748/month) median $ 16,740 p10 $  6,660 p90 $ 30,600 below zero 0.4%
+2022-25                  plan 4 MNQ    mean $ 33,042 ($1,377/month) median $ 33,120 p10 $ 12,780 p90 $ 52,020 below zero 0.4%
+2022-25                  before 3 MNQ  mean $ 28,912 ($1,205/month) median $ 27,900 p10 $ 12,420 p90 $ 47,700 below zero 0.2%
+2010-13 (today's price)  plan 4 MNQ    mean $ 22,698 ($  946/month) median $ 20,160 p10 $  3,960 p90 $ 45,720 below zero 3.5%
+2010-13 (today's price)  before 3 MNQ  mean $ 20,155 ($  840/month) median $ 18,180 p10 $  4,140 p90 $ 39,420 below zero 3.4%
+2014-17 (today's price)  plan 4 MNQ    mean $ 22,430 ($  935/month) median $ 20,340 p10 $  5,940 p90 $ 41,760 below zero 1.3%
+2014-17 (today's price)  before 3 MNQ  mean $ 19,638 ($  818/month) median $ 18,540 p10 $  5,760 p90 $ 34,380 below zero 1.4%
