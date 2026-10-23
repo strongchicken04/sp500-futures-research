@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T09:07Z (day shift 2026-10-23 active, owner asked for a full day)
+heartbeat: 2026-10-23T09:37Z (day shift 2026-10-23 active, owner asked for a full day)
 last shift: 2026-10-23 (report final at 09:45 Prague; later wakes continue the queue)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,6 +16,9 @@ QC runs allowed until 21:30 Prague, day report brain/reports/2026-10-23-den.md ~
 
 
 ## Done this shift
+- Day 12. Level lab (BARS5A/B): volume-profile rules all rejected (80% rule, outside value, POC, naked POC,
+  narrow/wide value); PD/ON level breaks and sweeps rejected; IB break weak and worse in the book;
+  open drive = candidate signal (+7.1 / +22.6 pt, robust plateau) but does not add to the funded book.
 - Owner: Lucid Flex does not allow overnight holds -> overnight long rejected; Lucid 9 retired.
 - Two-account plan by start year: 5.7-8.2 days every year (worst 2019). Final report written.
 - Pine audit: daily lookups (Lucid 7 bias SMA50, vol gates in Lucid 1/2/6/7) switched to ([expr])[1] +

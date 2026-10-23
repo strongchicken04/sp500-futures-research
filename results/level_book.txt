@@ -1,0 +1,21 @@
+daily P&L correlation (all days, 0 when flat)
+         ORB    VG     Z    RS    OD    IB
+   ORB  1.00  0.32  0.28  0.25  0.12  0.32
+    VG  0.32  1.00  0.25  0.25  0.17  0.21
+     Z  0.28  0.25  1.00  0.45  0.32  0.42
+    RS  0.25  0.25  0.45  1.00  0.37  0.38
+    OD  0.12  0.17  0.32  0.37  1.00  0.25
+    IB  0.32  0.21  0.42  0.38  0.25  1.00
+OD 0-2022: n 164  $+23.4 per MNQ per trade (gated)
+OD 2022-9: n 178  $+29.1 per MNQ per trade (gated)
+IB 0-2022: n 762  $+7.5 per MNQ per trade (gated)
+IB 2022-9: n 765  $+4.3 per MNQ per trade (gated)
+
+time-aware sim, flat 3 MNQ per leg, no day stop; mean 24-month cash per account, 2018-21 | 2022-25
+   ORB+VG+Z+RS (now)    $  18,589 | $  28,280
+   + OD                 $  17,517 | $  27,185
+   + IB                 $  15,807 | $  26,300
+   + OD + IB            $  14,156 | $  28,300
+   OD instead of ORB    $  17,231 | $  26,902
+   ORB+VG+Z (no RS)     $  11,519 | $  28,398
+   ORB+VG+Z + OD        $  14,088 | $  28,465

@@ -93,12 +93,12 @@ def run(bars, i, d, e, stop, tgt=None, check_entry_bar=False):
         first = check_entry_bar and k == i
         if (d == 1 and l <= stop) or (d == -1 and h >= stop):
             x = stop if first else (min(stop, o) if d == 1 else max(stop, o))
-            return d * (x - e) - 1.0, "SL"
+            return d * (x - e) - 1.0, "SL", i, k
         if not first and tgt is not None and ((d == 1 and h >= tgt) or (d == -1 and l <= tgt)):
-            return d * (tgt - e) - 0.75, "TP"
+            return d * (tgt - e) - 0.75, "TP", i, k
         if k == EOD:
-            return d * (c - e) - 0.75, "EOD"
-    return d * (bars[EOD][3] - e) - 0.75, "EOD"
+            return d * (c - e) - 0.75, "EOD", i, k
+    return d * (bars[EOD][3] - e) - 0.75, "EOD", i, EOD
 
 
 def periods30(bars):
@@ -216,14 +216,14 @@ def touch(day, lvl, sp, last=54):
     return None
 
 
-def odrive(day, prev):
+def odrive(day, prev, tol=0.0005, thr=0.0015):
     b = day["bars"]
     o = b[0][0]
     hi, lo, c = max(x[1] for x in b[:6]), min(x[2] for x in b[:6]), b[5][3]
-    if lo >= o * (1 - 0.0005) and c >= o * 1.0015:
-        return 1, run(b, 5, 1, c, o * (1 - 0.0005))
-    if hi <= o * (1 + 0.0005) and c <= o * (1 - 0.0015):
-        return -1, run(b, 5, -1, c, o * (1 + 0.0005))
+    if lo >= o * (1 - tol) and c >= o * (1 + thr):
+        return 1, run(b, 5, 1, c, o * (1 - tol))
+    if hi <= o * (1 + tol) and c <= o * (1 - thr):
+        return -1, run(b, 5, -1, c, o * (1 + tol))
     return None
 
 
@@ -295,8 +295,9 @@ def trades(days, fn):
             continue
         r = fn(day, prev)
         if r:
-            d, (pts, why) = r
-            out.append({"date": day["date"], "d": d, "pts": pts, "why": why})
+            d, (pts, why, i, k) = r
+            out.append({"date": day["date"], "d": d, "pts": pts, "why": why,
+                        "ehm": 575 + 5 * i, "xhm": 575 + 5 * k})
     return out
 
 
