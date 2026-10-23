@@ -68,7 +68,7 @@ funded místo – jen v době, kdy běží evaluace B (`results/cross_hedge.txt`
 | ORB | **Lucid 1 – S1 ORB (nový)** | MNQ **5 min** | trail 20-EMA jen z RTH, re-entry po každém exitu, ne ve středu |
 | VWAP pásmo | **Lucid 2 – VWAP Band (nový)** | MNQ **5 min** | průraz VWAP ±0,20 %, SL 25 / TP 100 b., 1× denně, ne ve středu |
 | Noise momentum | **Lucid 6 (nový, stop 0,50 %)** | 1 / 5 / 30 min | rozhodnutí jen v :00 a :30 |
-| RS noha (kandidát) | Lucid 8 s **Target 1,25 / Stop 1,25** | MNQ 1 min | přidává hlavně v letech 2018–21 |
+| RS noha | Lucid 8 s **Target 1,25 / Stop 1,25, Fixed contracts 3 (návrh 4), Volatility gate ZAPNOUT** | MNQ 1 min | přidává ve všech obdobích; nová verze 24. 10. – dřív strop výhry 1 450 $ ořízl nohu na ~2 MNQ a chyběl filtr volatility |
 
 - Velikost: **3 MNQ na každou nohu** (ne ladder); **doporučení z noci
   23./24. 10.: 4 MNQ na nohu** (rozhoduješ ty, FINAL_PLAN nahoře).

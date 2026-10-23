@@ -28,6 +28,16 @@ stpPct  = input.float(0.40, "Stop (% of price)") / 100.0
 ptValue = input.float(2.0, "$ per point per contract (MNQ = 2)")
 maxCts  = input.int(40, "Max contracts")
 esSym   = input.string("CME_MINI:ES1!", "ES symbol")
+// Funded RS leg (2026-10-24): set Target 1.25 / Stop 1.25, "Fixed contracts" =
+// the book size (3, proposed 4) and the volatility gate ON - that is how the leg
+// was tested (timed_book / mtm_check). Before this, the win cap of $1,450 cut the
+// funded leg to ~2 MNQ at NQ ~20,000 and there was no vol gate.
+fixedCts = input.int(0, "Fixed contracts (funded leg; 0 = size by Max loss)")
+useVol  = input.bool(false, "Volatility gate (skip if NQ 20d vol >= 30%) - funded leg ON, sprint OFF")
+volSym  = input.string("CME_MINI:NQ1!", "   vol gate symbol")
+// Daily values: last COMPLETED session ([1] + lookahead_on), same in history and live
+rvol20 = request.security(volSym, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
+volOK = not useVol or na(rvol20) or rvol20 < 0.30
 
 esC = request.security(esSym, timeframe.period, close, lookahead=barmerge.lookahead_off)
 esO = request.security(esSym, timeframe.period, open, lookahead=barmerge.lookahead_off)
@@ -65,7 +75,7 @@ var line eL = na
 var line tL = na
 var line sL = na
 
-if is1 and isCheck and barstate.isconfirmed and not traded and na(e) and not na(rs)
+if is1 and isCheck and barstate.isconfirmed and not traded and na(e) and not na(rs) and volOK
     sig = rs > rsThr and close > vw ? 1 : rs < -rsThr and close < vw ? -1 : 0
     if sig != 0
         traded := true
@@ -84,6 +94,8 @@ if is1 and isCheck and barstate.isconfirmed and not traded and na(e) and not na(
             fin = math.max(1, int(math.ceil((3000.0 - evalPnl + 60.0) / (winPer - 2.0))))
             safe = math.max(1, int(math.floor((evalPnl - 100.0 - 50.0) / (lossPer + 3.0))))
             cts := math.min(cts, math.min(fin, safe))
+        if fixedCts > 0
+            cts := fixedCts
         eL := line.new(bar_index, e, bar_index + 30, e, color=color.yellow, width=2, extend=extend.right)
         tL := line.new(bar_index, tp, bar_index + 30, tp, color=color.lime, width=2, extend=extend.right)
         sL := line.new(bar_index, sl, bar_index + 30, sl, color=color.red, width=2, extend=extend.right)
@@ -116,6 +128,6 @@ plot(inRth ? vw : na, "VWAP", color=color.new(color.aqua, 30))
 
 var table tb = table.new(position.top_right, 1, 2, bgcolor=color.new(color.black, 30))
 if barstate.islast
-    msg = not is1 ? "RS SPRINT: use a 1-minute chart" : not na(e) ? "IN TRADE: " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ  TP " + str.tostring(tp, format.mintick) + "  SL " + str.tostring(sl, format.mintick) : traded ? "done for today" : "waiting: checks 10:00 / 11:00 / 13:00 / 14:30"
+    msg = not is1 ? "RS SPRINT: use a 1-minute chart" : not volOK ? "VOL TOO HIGH - no RS trade today" : not na(e) ? "IN TRADE: " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ  TP " + str.tostring(tp, format.mintick) + "  SL " + str.tostring(sl, format.mintick) : traded ? "done for today" : "waiting: checks 10:00 / 11:00 / 13:00 / 14:30"
     table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not is1 ? color.red : not na(e) ? color.new(color.orange, 20) : color.new(color.gray, 50))
     table.cell(tb, 0, 1, "NQ vs ES since open: " + (na(rs) ? "-" : str.tostring(rs * 100, "#.##") + "%") + (na(vw) ? "" : (close > vw ? "  above VWAP" : "  below VWAP")), text_color=color.white)
