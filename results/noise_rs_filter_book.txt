@@ -1,0 +1,5 @@
+time-aware book, flat 3, no day stop: 2018-21 | 2022-25 mean 24m cash per account
+   noise as is            ORB+VG+Z     $  12,123 | $  29,079
+   noise as is            ORB+VG+Z+RS  $  19,464 | $  30,534
+   noise with RS filter   ORB+VG+Z     $   7,419 | $  28,176
+   noise with RS filter   ORB+VG+Z+RS  $  20,968 | $  30,902

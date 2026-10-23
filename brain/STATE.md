@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T07:28Z (shift 2026-10-23 active)
+heartbeat: 2026-10-23T07:29Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -10,6 +10,7 @@ last shift: 2026-10-23 (running)
 13. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- Noise RS-agreement filter: rejected at account level (trade-level looked good, book worse).
 - 09:31 sprint shape: target 0.25% / stop 0.40% (~2 days faster); two accounts then 6.8 / 6.5 days.
 - Lucid 9 (overnight long after 3 down closes) written, waiting for the owner.
 - Multi-account sprint: RS(0.30) + 09:31 on two accounts is the sweet spot (7.1 / 7.3 days, ~$300);
