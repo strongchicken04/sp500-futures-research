@@ -1,0 +1,16 @@
+--- 2010-13  (days to a pass / fees, single account)
+   RS     +0.20/-0.30: now 116.7 d $ 448 | two-win 104.4 d $ 425   +0.25/-0.30: now 110.2 d $ 421 | two-win 105.2 d $ 441   +0.25/-0.40: now  98.8 d $ 381 | two-win  86.5 d $ 376   +0.30/-0.40: now  87.5 d $ 369 | two-win  82.2 d $ 400
+   T931   +0.25/-0.40: now  85.0 d $ 599 | two-win  68.3 d $ 526   +0.25/-0.30: now 101.4 d $ 638 | two-win  89.5 d $ 629   +0.30/-0.40: now  61.3 d $ 489 | two-win  53.6 d $ 444
+   VWAP10 +0.25/-0.40: now  58.4 d $ 425 | two-win  58.3 d $ 438   +0.25/-0.30: now  66.1 d $ 435 | two-win  69.3 d $ 479   +0.30/-0.40: now  49.6 d $ 423 | two-win  35.3 d $ 324
+--- 2014-17  (days to a pass / fees, single account)
+   RS     +0.20/-0.30: now  41.5 d $ 365 | two-win  34.6 d $ 309   +0.25/-0.30: now  29.8 d $ 291 | two-win  26.8 d $ 277   +0.25/-0.40: now  24.8 d $ 250 | two-win  23.8 d $ 248   +0.30/-0.40: now  25.8 d $ 292 | two-win  23.7 d $ 268
+   T931   +0.25/-0.40: now  20.0 d $ 339 | two-win  18.6 d $ 319   +0.25/-0.30: now  25.2 d $ 403 | two-win  23.8 d $ 388   +0.30/-0.40: now  18.6 d $ 366 | two-win  16.7 d $ 325
+   VWAP10 +0.25/-0.40: now  20.3 d $ 310 | two-win  18.5 d $ 288   +0.25/-0.30: now  27.6 d $ 386 | two-win  21.5 d $ 333   +0.30/-0.40: now  17.3 d $ 280 | two-win  14.8 d $ 254
+--- 2018-21  (days to a pass / fees, single account)
+   RS     +0.20/-0.30: now  12.7 d $ 212 | two-win  10.9 d $ 208   +0.25/-0.30: now  13.0 d $ 242 | two-win  12.0 d $ 206   +0.25/-0.40: now  12.3 d $ 196 | two-win  12.7 d $ 225   +0.30/-0.40: now  13.8 d $ 241 | two-win  11.5 d $ 204
+   T931   +0.25/-0.40: now  12.8 d $ 237 | two-win  11.3 d $ 265   +0.25/-0.30: now  11.9 d $ 256 | two-win  10.8 d $ 218   +0.30/-0.40: now  11.7 d $ 238 | two-win  10.0 d $ 223
+   VWAP10 +0.25/-0.40: now   9.8 d $ 211 | two-win   9.0 d $ 244   +0.25/-0.30: now  10.9 d $ 258 | two-win   9.4 d $ 223   +0.30/-0.40: now   9.6 d $ 225 | two-win   8.4 d $ 208
+--- 2022-25  (days to a pass / fees, single account)
+   RS     +0.20/-0.30: now  10.1 d $ 178 | two-win   8.7 d $ 165   +0.25/-0.30: now  10.2 d $ 191 | two-win   8.9 d $ 170   +0.25/-0.40: now  10.8 d $ 175 | two-win   9.5 d $ 157   +0.30/-0.40: now  10.0 d $ 179 | two-win   8.7 d $ 161
+   T931   +0.25/-0.40: now  10.7 d $ 242 | two-win  10.1 d $ 221   +0.25/-0.30: now  11.7 d $ 286 | two-win  10.0 d $ 244   +0.30/-0.40: now  10.3 d $ 243 | two-win   8.8 d $ 205
+   VWAP10 +0.25/-0.40: now   9.3 d $ 188 | two-win   8.5 d $ 171   +0.25/-0.30: now   9.4 d $ 221 | two-win   8.2 d $ 189   +0.30/-0.40: now   8.9 d $ 199 | two-win   7.7 d $ 170

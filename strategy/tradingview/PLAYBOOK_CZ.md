@@ -40,6 +40,13 @@ Volba po první prohře (`results/sprint_reset.txt`, 2018–21 | 2022–25):
 - **vzdát a hned koupit novou evaluaci**: RS 10,9 / 8,5 dne, 382 / 298 $.
 Vzdání je o ~1,5–2 dny rychlejší, ale o ~125–170 $ dražší (u 09:31 o ~200 $). Stejný sprint kopírovat na víc účtů nemá smysl.
 
+**Dokončovací obchod (nové 23. 10.):** v Lucid 7 i Lucid 8 vyplň „Eval profit so
+far“ (zisk evaluace podle včerejšího EOD). Jakmile máš ≥ 2 100 $ (drawdown je
+zamčený na +100 $) a do 3 000 $ chybí nejvýš jedna výhra, indikátor sám zmenší
+velikost tak, aby výhra právě dotáhla na 3 000 $ (+60 $) a prohra nemohla účet
+ukončit. Dva účty pak dojdou k prvnímu funded za 6,9 / 6,3 dne místo 7,6 / 6,9
+(v 2010–17 ještě víc). Zisk po každém dni do indikátoru přepiš.
+
 **Pojistka proti hedgingu (Lucid zakazuje opačné pozice i mezi tvými účty):**
 když má účet B ještě otevřený obchod z 09:31 a Lucid 8 dá na účtu A signál
 OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stává se to
