@@ -81,7 +81,9 @@ English.
   `qc_result_MSXB_1792352605.json` before committing).
 - Mozek panel (owner's live view, formerly Jarvis): https://claude.ai/artifact/7aNv2n8i8JqZZg4dp25DUK
   (source `brain/jarvis.html`). Keep its database in sync with the ArtifactData
-  tool (load it via ToolSearch; read a doc first, then write with `if_version`):
+  tool (load it via ToolSearch; read a doc first, then write with `if_version`).
+  Owner (2026-10-23): no constant phone approvals - write the db in ONE batch at
+  most every ~2 hours and at the end of the shift (status + log + new docs together):
   - `brain/status` at shift start, on every sphere change and with each
     heartbeat: `{phase: working|report|idle|blocked, sphere: importer|backtester|
     optimiser|manager|coder|interpreter, task (Czech, one line), heartbeat (UTC
