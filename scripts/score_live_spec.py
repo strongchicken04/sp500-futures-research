@@ -16,7 +16,7 @@ from collections import defaultdict
 
 NAMES = {"P5": "Lucid 2 on a 5-min chart (VWAP cross)", "P1": "Lucid 2 on a 1-min chart (VWAP cross)",
          "B5": "research band 0.20% (first trade only)", "N0": "Lucid 6 noise, published",
-         "NS": "Lucid 6 noise, 0.50% hard stop"}
+         "NS": "Lucid 6 noise, 0.50% hard stop", "O5": "Lucid 1 ORB on a 5-min chart"}
 
 
 def parse(paths):
@@ -47,8 +47,8 @@ def line(v):
 
 def main():
     sp = sys.argv[1]
-    T = parse([f"{sp}/LSVWAP_tags.txt", f"{sp}/LSNOISE_tags.txt"])
-    for k in ("P5", "P1", "B5", "N0", "NS"):
+    T = parse([f"{sp}/LSVWAP_tags.txt", f"{sp}/LSNOISE_tags.txt", f"{sp}/LSORB_A_tags.txt", f"{sp}/LSORB_B_tags.txt"])
+    for k in ("P5", "P1", "B5", "N0", "NS", "O5"):
         if k not in T:
             continue
         ts = T[k]
