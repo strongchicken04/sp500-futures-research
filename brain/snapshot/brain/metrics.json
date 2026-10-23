@@ -1,30 +1,30 @@
 {
   "book": {
-    "caption": "Doporučení 23. 10.: funded kniha bez ORB (Lucid 1) · ověřeno i na 2010–17 · 2018–21 | 2022–25",
+    "caption": "Noc 23./24. 10.: opravený model funded účtu · kniha bez ORB · 2018–21 | 2022–25 · rozsah = přísná kontrola s otevřenými pozicemi → jen uzavřené obchody",
     "tiles": [
       {
-        "label": "První výplata bez ORB",
-        "sub": "dnes 37 / 36 % funded účtů",
+        "label": "4 MNQ na nohu (nové)",
+        "sub": "za 24 měsíců na funded místo",
         "tone": "ok",
-        "value": "44 / 42 %"
+        "value": "$21,7–24,2k / $33,4–37,1k"
       },
       {
-        "label": "Další výplaty bez ORB",
-        "sub": "dnes 63 / 61 %",
-        "tone": "ok",
-        "value": "64 / 69 %"
-      },
-      {
-        "label": "Průměr na účet (bootstrap)",
-        "sub": "za 24 měsíců oproti dnešku",
-        "tone": "gold",
-        "value": "+$1 400 / +$2 100"
-      },
-      {
-        "label": "2010–17 (nezávislé)",
-        "sub": "noise +2,4 / +2,8 bp vs +6,6 / +5,3 bp",
+        "label": "3 MNQ (dosud)",
+        "sub": "za 24 měsíců na funded místo",
         "tone": "arc",
-        "value": "edge ~poloviční"
+        "value": "$18,1–19,5k / $29,2–32,1k"
+      },
+      {
+        "label": "První výplata (4 MNQ)",
+        "sub": "3 MNQ: 37–40 / 33–41 %",
+        "tone": "gold",
+        "value": "34–38 / 28–36 %"
+      },
+      {
+        "label": "2010–17 (dnešní cena)",
+        "sub": "4 vs 3 MNQ, přísná kontrola",
+        "tone": "ok",
+        "value": "+$2 600 / +$2 500"
       }
     ]
   },

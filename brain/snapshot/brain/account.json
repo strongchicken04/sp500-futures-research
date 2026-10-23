@@ -33,12 +33,16 @@
       "nepovoleno – do konce seance flat"
     ],
     [
-      "Funded výplaty",
-      "první po +4 000 $ (1 800 $ pro tebe), pak každých +2 000 $, nejdřív po 5 dnech"
-    ],
-    [
       "Copytrading",
       "povolen"
+    ],
+    [
+      "Funded výplaty",
+      "50 % zisku, max. 2 000 $, min. 500 $ (90 % pro tebe); v cyklu 5 dní se ziskem ≥150 $; plán: 2 000 $ při +4 000 $, zbytek zůstává"
+    ],
+    [
+      "Funded scaling",
+      "20 MNQ do zisku 1 000 $, 30 do 2 000 $, pak 40"
     ]
   ]
 }

@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-24T05:30Z (night shift 2026-10-23/24 running; report written)
+heartbeat: 2026-10-24T06:00Z (night shift 2026-10-23/24 running; report written)
 last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague); night shift 23/24 running
 
 ## Queue (top = next). Move finished items to registry.md.

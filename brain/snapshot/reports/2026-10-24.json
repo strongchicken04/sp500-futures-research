@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-24T07:00",
+  "summary": "CO UDĚLAT TY\n1) Potvrď v Lucid dashboardu pravidla funded účtu (z webových přehledů): výplata jen s 5 dny zisku ≥150 $ v cyklu; max. 50 % zisku / 2 000 $, min. 500 $, 90 % pro tebe; scaling 20 MNQ do zisku 1 000 $.\n2) Rozhodni: funded 4 MNQ na nohu místo 3 (doporučuji).\n3) Rozhodni o ORB (Lucid 1) – doporučuji vyřadit, teď s jasnějším důvodem.\n4) Nové pravidlo: když běží evaluace, funded kniha nevstupuje proti otevřenému sprintu (zákaz hedgingu mezi účty; proti sprintu 09:31 ~12–13 % dní).\n5) Nahraj novou verzi Lucid 8: pro funded RS nohu Target 1,25 / Stop 1,25, „Fixed contracts“ 3 (návrh 4), filtr volatility ZAPNOUT (stará verze jela jen ~2 MNQ a bez filtru). Pro sprint nech 0 a filtr vypnutý.\n6) Automatizace: pořád čeká na tvou volbu; přesná pravidla všech strategií jsou sepsaná (strategy/AUTOMATION_SPEC.md).\n\nHLAVNÍ ZJIŠTĚNÍ\nSimulace funded účtu měla 4 chyby: chyběly dny bez obchodu, neznala pravidlo 5 ziskových dní, po výplatě zahazovala zisk nad +4 000 $ a drawdown hlídala jen po uzavřených obchodech. Nový model (i s otevřenými pozicemi) přepočítal všechno.\n\nKOLIK NA JEDNO FUNDED MÍSTO ZA 24 MĚSÍCŮ (2018–21 / 2022–25)\n• Bez ORB, 4 MNQ: 21 700 / 33 000 $ (~910 / 1 380 $ měsíčně), 9 z 10 míst nad 7 700 / 12 800 $.\n• Bez ORB, 3 MNQ (dosud): 18 000 / 28 900 $.\n• Trh jako 2010–17 (přepočteno na dnešní cenu): ~22 500 $ se 4 MNQ.\n• K první výplatě dojde ~28–34 % účtů; počítej s ~8–10 evaluacemi za 2 roky na jedno místo.\n\n4 MNQ MÍSTO 3\nLepší ve všech čtyřech obdobích (+3 500 / +4 300 $, 2010–17 +2 600 / +2 500 $), i při horším plnění a dražší evaluaci. 5 MNQ už v 2010–13 nepřidává.\n\nORB: VYŘADIT\nS přísnou kontrolou horší ve všech obdobích (při 4 MNQ −3 900 / −1 500 / −1 500 / −800 $), méně prvních výplat.\n\nOVĚŘENO (NEMĚNIT)\nVšechny 3 nohy přidávají; RS bracket ±1,25 %; filtr volatility nechat; výplata 2 000 $ při +4 000 $.\n\nZAMÍTNUTO\nDenní stop (zhoršuje), sprint na funded účtu, 2 MNQ před výplatou, bracket podle volatility, kalendářní efekty, NR4 jako noha. Open drive (Lucid 10) jen volitelně (~+600 $).\n\nPodrobně: brain/reports/2026-10-24.md, FINAL_PLAN.md, PLAYBOOK_CZ.md.",
+  "title": "Noční směna 23./24. 10. – opravený model funded účtu",
+  "verdicts": [
+    {
+      "name": "Funded 4 MNQ na nohu",
+      "status": "candidate"
+    },
+    {
+      "name": "ORB vyřadit",
+      "status": "candidate"
+    },
+    {
+      "name": "Open drive (Lucid 10) – volitelně",
+      "status": "candidate"
+    },
+    {
+      "name": "Denní stop",
+      "status": "rejected"
+    },
+    {
+      "name": "Sprint na funded účtu",
+      "status": "rejected"
+    },
+    {
+      "name": "Kalendářní efekty",
+      "status": "rejected"
+    }
+  ]
+}
