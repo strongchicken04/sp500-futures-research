@@ -1,0 +1,53 @@
+// @version=5
+indicator("Lucid 9 — Overnight Long after 3 Down Closes", overlay=true, max_labels_count=500, max_lines_count=500)
+
+// CANDIDATE — use only if your prop account allows holding positions overnight.
+// Rule: after the 3rd (or more) consecutive down close (15:55 ET close below
+// the previous day's 15:55 close), buy at the 15:55 close and sell at the
+// next session's 09:30 open. No stop in the backtest (the position is held
+// through the Globex session); size so a 2% gap against you is affordable.
+// NQ 2018-2025, 1 pt cost: +28.6 bp per night (2018-21) / +19.0 bp (2022-25),
+// positive in all 8 years, about 20 nights a year (overnight_after_downs.py).
+// Use a 1- or 5-minute NQ/MNQ chart with extended hours on.
+
+minDown = input.int(3, "Consecutive down closes")
+cts     = input.int(2, "Contracts")
+ptValue = input.float(2.0, "$ per point per contract (MNQ = 2)")
+gapRisk = input.float(2.0, "Gap risk shown in the table (% against you)")
+
+cMin = hour(time_close, "America/New_York") * 60 + minute(time_close, "America/New_York")
+oMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")
+isClose = cMin == 955 and barstate.isconfirmed
+isOpen  = oMin == 570
+
+var float lastClose = na
+var int downs = 0
+var float ent = na
+var int entBar = na
+var line eL = na
+
+// exit at the next 09:30 open
+if isOpen and not na(ent)
+    pnl = (open - ent) * cts * ptValue
+    line.set_x2(eL, bar_index)
+    line.set_extend(eL, extend.none)
+    label.new(bar_index, open, "ON EXIT\n" + (pnl >= 0 ? "+$" : "-$") + str.tostring(math.abs(pnl), "#"), color=pnl >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
+    ent := na
+
+// count down closes at 15:55 and enter on the signal
+if isClose
+    if not na(lastClose)
+        downs := close < lastClose ? downs + 1 : 0
+    lastClose := close
+    if downs >= minDown and na(ent)
+        ent := close
+        entBar := bar_index
+        eL := line.new(bar_index, close, bar_index + 30, close, color=color.yellow, width=2, extend=extend.right)
+        label.new(bar_index, low, "ON LONG " + str.tostring(cts) + "\n" + str.tostring(downs) + " down closes", color=color.blue, textcolor=color.white, style=label.style_label_up, size=size.normal)
+
+var table tb = table.new(position.top_right, 1, 2, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    msg = not na(ent) ? "HOLDING overnight from " + str.tostring(ent, format.mintick) : downs >= minDown - 1 ? "Watch 15:55: " + str.tostring(downs) + " down closes so far" : "Down closes in a row: " + str.tostring(downs)
+    table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not na(ent) ? color.new(color.orange, 20) : color.new(color.gray, 50))
+    risk = na(lastClose) ? na : lastClose * gapRisk / 100.0 * cts * ptValue
+    table.cell(tb, 0, 1, "A " + str.tostring(gapRisk) + "% gap costs ~$" + str.tostring(risk, "#"), text_color=color.white)
