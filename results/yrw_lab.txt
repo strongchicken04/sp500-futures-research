@@ -1,0 +1,7 @@
+2018-21 mean 10:00->15:55 return x first-30-min sign (gross pt):
+   yesterday +1 overnight +1:  +9.01 (n 329) -> follow;  2022-25 same stat  -1.92 (n 280)
+   yesterday +1 overnight -1:  +2.48 (n 212) -> follow;  2022-25 same stat  +2.37 (n 248)
+   yesterday -1 overnight +1:  +0.82 (n 248) -> follow;  2022-25 same stat  +3.88 (n 239)
+   yesterday -1 overnight -1:  +5.69 (n 193) -> follow;  2022-25 same stat +23.09 (n 216)
+rule, stop 0.004: 2018-21  +2.88 pt t+1.4 n 982 WR  39% | 2022-25  +4.52 pt t+1.3 n 983 WR  36%
+rule, stop None: 2018-21  +4.13 pt t+1.3 n 982 WR  53% | 2022-25  +5.32 pt t+0.9 n 983 WR  53%
