@@ -1,0 +1,7 @@
+   all gated (now)              $  17,295 | $  25,460
+   no gate: Z                   $  17,115 | $  33,522
+   no gate: VG                  $  18,395 | $  24,246
+   no gate: ORB                 $  17,412 | $  21,848
+   no gate: RS                  $  13,627 | $  25,775
+   no gate: Z+VG                $  19,788 | $  25,333
+   no gate: Z+VG+ORB+RS         $   8,191 | $  21,913
