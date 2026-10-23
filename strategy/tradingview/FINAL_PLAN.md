@@ -36,9 +36,10 @@ otevřených pozic +3 100 / +2 000 / +1 800 / +1 900 $ (všechna čtyři období
 s přísnou kontrolou jen +2 900 / +600 / +600 / +600 $ a první výplata o 2–4
 body méně často. NR4 (Lucid 11) ne – v 2010–13 horší.
 
-**ORB**: v penězích teď zhruba neutrální (−800 / +900 $; 2010–17 −800 / 0 $),
-ale první výplata 34 / 32 % místo 40 / 41 % a hrubý edge kolem nuly ve všech
-obdobích → dál doporučuji Lucid 1 vyřadit.
+**ORB (Lucid 1) vyřadit** – s přísnou kontrolou drawdownu horší ve všech
+čtyřech obdobích: kniha 4 MNQ + ORB −3 900 / −1 500 / −1 500 / −800 $
+(2018–21 / 2022–25 / 2010–13 / 2014–17) a první výplata 21 / 23 % místo
+34 / 28 % (`results/orb_v2.txt`); hrubý edge ORB kolem nuly ve všech obdobích.
 
 Zamítnuto (opravený model): sprint na funded účtu do první výplaty
 (−0,5 až −9 tisíc $), 2 MNQ před výplatou (−0,4 až −1,9 tisíc $), jiné

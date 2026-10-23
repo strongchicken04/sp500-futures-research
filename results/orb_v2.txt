@@ -1,0 +1,4 @@
+2018-21: VG+Z+RS: $ 21,652 (     +0, first payout 33.5%) | + ORB 4: $ 17,732 ( -3,920, first payout 20.9%) | + ORB 3, rest 3: $ 15,394 ( -6,258, first payout 25.6%) | flat 3 no ORB: $ 18,105 ( -3,546, first payout 37.3%)
+2022-25: VG+Z+RS: $ 33,446 (     +0, first payout 28.0%) | + ORB 4: $ 31,915 ( -1,531, first payout 22.6%) | + ORB 3, rest 3: $ 28,555 ( -4,891, first payout 28.9%) | flat 3 no ORB: $ 29,160 ( -4,286, first payout 32.6%)
+2010-13: VG+Z+RS: $ 22,154 (     +0, first payout 18.0%) | + ORB 4: $ 20,605 ( -1,549, first payout 16.2%) | + ORB 3, rest 3: $ 20,154 ( -2,000, first payout 19.3%) | flat 3 no ORB: $ 19,595 ( -2,560, first payout 20.9%)
+2014-17: VG+Z+RS: $ 22,294 (     +0, first payout 19.3%) | + ORB 4: $ 21,516 (   -778, first payout 18.6%) | + ORB 3, rest 3: $ 19,510 ( -2,784, first payout 21.4%) | flat 3 no ORB: $ 19,755 ( -2,539, first payout 22.5%)

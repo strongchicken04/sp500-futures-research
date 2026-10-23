@@ -92,9 +92,10 @@ funded místo – jen v době, kdy běží evaluace B (`results/cross_hedge.txt`
 ## 3. Čeká na tvoje rozhodnutí
 
 - **Funded kniha bez ORB (Lucid 1)** (denní směna 23. 10., FINAL_PLAN nahoře):
-  první výplata u 40 / 41 % funded účtů místo 34 / 32 % (opravený model),
-  v penězích zhruba neutrální; ORB nemá edge ani v nezávislém období
-  2010–2017. Prakticky: Lucid 1 nepoužívat, zbytek beze změny.
+  s přísnou kontrolou drawdownu (i otevřené pozice) je kniha s ORB horší ve
+  všech čtyřech obdobích (při 4 MNQ −3 900 / −1 500 / −1 500 / −800 $ na
+  funded místo) a k první výplatě dojde méně účtů; ORB nemá edge ani
+  v nezávislém období 2010–2017. Prakticky: Lucid 1 nepoužívat.
 
 - **Funded 4 MNQ na nohu místo 3** (noc 23./24. 10.): +4 900 / +5 000 $ na
   funded místo za 24 měsíců, lepší i v 2010–17 přepočteném na dnešní cenu

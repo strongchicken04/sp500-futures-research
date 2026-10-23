@@ -32,12 +32,15 @@ V = {"flat 3": {"VG": 3, "Z": 3, "RS": 3}, "flat 4": {"VG": 4, "Z": 4, "RS": 4},
 
 
 RS_LEVEL = 125   # RS leg bracket in bp (rs_bracket.py varies it)
+WITH_ORB = False  # orb_v2.py adds the live-spec ORB (O5) leg
 
 
 def trades(data, suffix, gate, pref):
     """(date, ehm, xhm, usd per MNQ, leg, dir); usd re-priced at pref if given (gross % x pref - cost)."""
     out = []
     files = (("LSVWAP" + suffix, "B5", "VG"), ("LSNOISE" + suffix, "NS", "Z"))
+    if WITH_ORB:
+        files += tuple((f, "O5", "ORB") for f in (("LSORB_OLD",) if suffix else ("LSORB_A", "LSORB_B")))
     for f, var, leg in files:
         for raw in open(f"{data}/{f}_tags.txt"):
             p = raw.strip().split(",")
@@ -76,7 +79,7 @@ def trades(data, suffix, gate, pref):
             c = 1.0 if t["why"] == "SL" else 0.75
             usd = ((t["pts"] + c) / e * pref - c) * 2.0
         out.append((t["date"], t["ehm"], t["xhm"], usd, "OD", t["d"]))
-    out = [t for t in out if not (dt.date.fromisoformat(t[0]).weekday() == 2 and t[4] == "VG")]
+    out = [t for t in out if not (dt.date.fromisoformat(t[0]).weekday() == 2 and t[4] in ("VG", "ORB"))]
     return out, by
 
 

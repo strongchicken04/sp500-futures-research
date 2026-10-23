@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-24T03:35Z (night shift 2026-10-23/24 running)
+heartbeat: 2026-10-24T04:00Z (night shift 2026-10-23/24 running)
 last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague); night shift 23/24 running
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,6 +16,7 @@ Next (for the night shift):
 
 
 ## Done this shift
+- Night: ORB on the open-P&L model at 4 MNQ: worse in all four eras -> drop recommendation stronger.
 - Night: leg contribution at 4 MNQ (open-P&L): VG, Z and RS each add in all four eras.
 - Night: calendar effects (pre-holiday, month-end rebalancing) rejected in the four-era check.
 - Night: flat 4 survives worse fills (+$1 / +$2 per MNQ per trade) in all four eras.
