@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-23T19:09Z (day shift 2026-10-23 FINISHED; night shift free to start)
-last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague)
+heartbeat: 2026-10-23T21:45Z (night shift 2026-10-23/24 running)
+last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague); night shift 23/24 running
 
 ## Queue (top = next). Move finished items to registry.md.
 Day shift 2026-10-23 items 12-16 DONE (see registry and brain/reports/2026-10-23-den.md).
@@ -16,6 +16,10 @@ Next (for the night shift):
 
 
 ## Done this shift
+- Night: vol-scaled sprint bracket rejected; funded sprint to the first payout rejected (LucidFlex
+  five-profitable-day payout rule); income model corrected (all days + five-day rule): no-ORB book
+  $13.3k / $17.5k per seat in 24 m, first payout 40 / 41% (income2.py). Use the all-days calendar
+  and F.PD_RULE (funded_sprint.run_path) for funded questions from now on.
 - Day: 2010-2017 third period (never tuned): gross edges of noise / VWAP band positive but ~half;
   ORB ~0 gross, negative net -> recommendation narrowed to dropping ORB (first payout 44/42% vs 37/36%).
   Z without gate and OD/NR4 add-ons not confirmed. RS sprint edge in all four eras; 09:31 none.

@@ -1,0 +1,16 @@
+2018-21 no ORB   trade days 5-day rule off: mean $ 17,618 ($  734/month) p10 $  8,280 p90 $ 27,180 | first payout 45.2% in 25.9 d
+2018-21 no ORB   trade days 5-day rule on : mean $ 16,232 ($  676/month) p10 $  7,920 p90 $ 25,200 | first payout 44.7% in 26.7 d
+2018-21 no ORB   all days   5-day rule off: mean $ 14,416 ($  601/month) p10 $  6,480 p90 $ 23,400 | first payout 39.9% in 31.6 d
+2018-21 no ORB   all days   5-day rule on : mean $ 13,256 ($  552/month) p10 $  5,400 p90 $ 21,600 | first payout 39.6% in 32.8 d
+2018-21 with ORB trade days 5-day rule off: mean $ 15,825 ($  659/month) p10 $  7,380 p90 $ 24,840 | first payout 39.6% in 22.4 d
+2018-21 with ORB trade days 5-day rule on : mean $ 14,240 ($  593/month) p10 $  6,120 p90 $ 22,680 | first payout 38.9% in 24.3 d
+2018-21 with ORB all days   5-day rule off: mean $ 13,143 ($  548/month) p10 $  4,860 p90 $ 21,600 | first payout 34.6% in 24.7 d
+2018-21 with ORB all days   5-day rule on : mean $ 11,641 ($  485/month) p10 $  4,500 p90 $ 19,440 | first payout 34.1% in 27.4 d
+2022-25 no ORB   trade days 5-day rule off: mean $ 26,023 ($1,084/month) p10 $ 15,660 p90 $ 37,800 | first payout 44.0% in 12.3 d
+2022-25 no ORB   trade days 5-day rule on : mean $ 21,032 ($  876/month) p10 $ 12,420 p90 $ 29,700 | first payout 42.6% in 14.4 d
+2022-25 no ORB   all days   5-day rule off: mean $ 22,037 ($  918/month) p10 $ 12,240 p90 $ 33,120 | first payout 42.4% in 16.6 d
+2022-25 no ORB   all days   5-day rule on : mean $ 17,461 ($  728/month) p10 $  9,360 p90 $ 26,100 | first payout 41.4% in 18.9 d
+2022-25 with ORB trade days 5-day rule off: mean $ 23,786 ($  991/month) p10 $ 13,500 p90 $ 34,200 | first payout 38.1% in  8.4 d
+2022-25 with ORB trade days 5-day rule on : mean $ 18,374 ($  766/month) p10 $ 10,080 p90 $ 27,180 | first payout 35.8% in 12.3 d
+2022-25 with ORB all days   5-day rule off: mean $ 19,856 ($  827/month) p10 $ 10,440 p90 $ 29,700 | first payout 34.0% in 11.3 d
+2022-25 with ORB all days   5-day rule on : mean $ 14,837 ($  618/month) p10 $  7,200 p90 $ 22,500 | first payout 32.3% in 17.5 d

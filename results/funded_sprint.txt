@@ -1,0 +1,28 @@
+--- 2018-21: first payout from a funded start (walk from every start day)
+   BOOK             reached 39.6%  days to it  32.3  days to a bust  23.8
+   RS S3->BOOK      reached 26.4%  days to it   8.6  days to a bust  20.4
+   RS S5->BOOK      reached 29.6%  days to it   9.3  days to a bust  21.0
+   VWAP10 S3->BOOK  reached 29.7%  days to it   8.9  days to a bust  14.4
+   VWAP10 S5->BOOK  reached 31.3%  days to it  10.1  days to a bust  15.5
+   RS S5 always     reached 29.6%  days to it   9.3  days to a bust  21.0
+   24-month cash per funded seat (bootstrap, paired):
+   BOOK             mean $ 13,200  p10 $  5,400  vs BOOK      +0 (+/- 0) better   0%
+   RS S3->BOOK      mean $ 12,265  p10 $  3,420  vs BOOK    -935 (+/- 218) better  46%
+   RS S5->BOOK      mean $ 12,546  p10 $  4,320  vs BOOK    -654 (+/- 219) better  47%
+   VWAP10 S3->BOOK  mean $ 13,617  p10 $  5,040  vs BOOK    +417 (+/- 213) better  55%
+   VWAP10 S5->BOOK  mean $ 13,633  p10 $  5,400  vs BOOK    +432 (+/- 212) better  53%
+   RS S5 always     mean $ 12,411  p10 $  3,240  vs BOOK    -789 (+/- 279) better  45%
+--- 2022-25: first payout from a funded start (walk from every start day)
+   BOOK             reached 41.5%  days to it  18.3  days to a bust  13.5
+   RS S3->BOOK      reached 29.7%  days to it   9.4  days to a bust  20.8
+   RS S5->BOOK      reached 29.5%  days to it  10.2  days to a bust  22.9
+   VWAP10 S3->BOOK  reached 30.1%  days to it   8.8  days to a bust  11.4
+   VWAP10 S5->BOOK  reached 29.4%  days to it   9.4  days to a bust  13.5
+   RS S5 always     reached 29.5%  days to it  10.2  days to a bust  22.9
+   24-month cash per funded seat (bootstrap, paired):
+   BOOK             mean $ 17,519  p10 $  9,360  vs BOOK      +0 (+/- 0) better   0%
+   RS S3->BOOK      mean $ 13,270  p10 $  4,140  vs BOOK  -4,249 (+/- 240) better  29%
+   RS S5->BOOK      mean $ 12,667  p10 $  3,600  vs BOOK  -4,852 (+/- 242) better  28%
+   VWAP10 S3->BOOK  mean $ 15,005  p10 $  5,400  vs BOOK  -2,514 (+/- 252) better  37%
+   VWAP10 S5->BOOK  mean $ 14,122  p10 $  5,220  vs BOOK  -3,397 (+/- 247) better  33%
+   RS S5 always     mean $ 14,311  p10 $  4,320  vs BOOK  -3,208 (+/- 295) better  36%

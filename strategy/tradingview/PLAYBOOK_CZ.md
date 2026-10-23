@@ -69,16 +69,23 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
   o drawdown dřív. Vyplácí se to jen proto, že nová evaluace sprintem je
   levná (~180 $, ~11 dní). Počítej s tím.
 - Denní stop výsledek nezlepšuje; jako pojistka −600 $ nevadí.
-- Očekávání (kniha bez ORB, flat 3, simulace 24 měsíců, evaluace odečtené):
-  ~740 $ / měsíc na funded účet v 2018–21, ~1 060 $ v 2022–25; 9 z 10 účtů
-  nad 8 500 / 14 400 $ za 24 měsíců (`results/income.txt`). V klidném trhu
-  může být polovina. Víc peněz = víc účtů se stejnou knihou (kopie).
+- Očekávání (kniha bez ORB, flat 3, simulace 24 měsíců, evaluace odečtené;
+  opraveno v noci 23./24. 10.: počítají se i dny bez obchodu a pravidlo
+  výplaty LucidFlex = +4 000 $ A 5 dní se ziskem aspoň 150 $):
+  ~550 $ / měsíc na funded účet v 2018–21, ~730 $ v 2022–25; 9 z 10 účtů
+  nad 5 400 / 9 400 $ za 24 měsíců; k první výplatě dojde ~40 / 41 % účtů
+  (`results/income2.txt`). V klidném trhu může být polovina. Víc peněz =
+  víc účtů se stejnou knihou (kopie).
+- **Pravidlo výplaty:** v každém výplatním cyklu potřebuješ 5 dní se ziskem
+  aspoň 150 $ (dny nemusí jít po sobě, po výplatě se počítají znovu).
+  Sprint na funded účtu proto nefunguje (3 velké výhry nestačí) – zamítnuto.
 - Filtr volatility v indikátorech nech zapnutý (20denní volatilita NQ < 30 %).
 
 ## 3. Čeká na tvoje rozhodnutí
 
 - **Funded kniha bez ORB (Lucid 1)** (denní směna 23. 10., FINAL_PLAN nahoře):
-  první výplata u 44 / 42 % funded účtů místo 37 / 36 %; ORB nemá edge ani
+  první výplata u 40 / 41 % funded účtů místo 34 / 32 % (opravený model);
+  ORB nemá edge ani
   v nezávislém období 2010–2017. Prakticky: Lucid 1 nepoužívat, zbytek beze změny.
 
 - Overnight long (Lucid 9) vyřazen: Lucid Flex nedovoluje držet přes noc.

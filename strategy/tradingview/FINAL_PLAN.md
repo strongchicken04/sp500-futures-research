@@ -1,3 +1,21 @@
+# 2026-10-24 (noční směna) — oprava odhadu příjmu; doporučení beze změny
+
+Dvě opravy simulace funded účtu (`scripts/income2.py`):
+1. Simulace brala jen dny, kdy kniha obchodovala; ~21 % dní (hlavně filtr
+   volatility nad 30 %) chybělo, takže „24 měsíců“ bylo ve skutečnosti ~29.
+2. Pravidlo výplaty LucidFlex 50K: +4 000 $ **a** 5 dní se ziskem ≥ 150 $
+   v cyklu (zdroje třetích stran, potvrď prosím v dashboardu).
+
+| kniha (flat 3) | 24 měsíců na účet | měsíčně | první výplata |
+|---|---|---|---|
+| **bez ORB** | **13 300 / 17 500 $** | **550 / 730 $** | **40 / 41 %** |
+| s ORB | 11 600 / 14 800 $ | 490 / 620 $ | 34 / 32 % |
+
+(2018–21 / 2022–25.) Dřívější odhad 17 700 / 25 500 $ byl příliš vysoký.
+Bez ORB je dál lepší (+1 600 / +2 600 $ na účet). Sprint na funded účtu do
+první výplaty (`scripts/funded_sprint.py`) je kvůli pravidlu 5 ziskových dní
+horší než kniha (−0,9 až −4,9 tisíc $) – zamítnuto.
+
 # 2026-10-23 (denní směna) — DOPORUČENÍ: funded kniha bez ORB (Lucid 1)
 
 Ověřeno na třech obdobích. Podíl funded účtů s první / další výplatou
