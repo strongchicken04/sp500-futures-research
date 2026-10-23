@@ -27,7 +27,8 @@ denně**, tři výhry ≈ pass (nejlepší den drží consistency 50 %).
 19:30, vstup 09:31 ET = 14:31). Lucid 7 s filtrem volatility je pro sprint
 mnohem pomalejší (18 / 21 dní místo 11), proto ho na evaluaci vypni.
 
-Očekávání (backtest): první funded účet za **~6,5–7 obchodních dní**,
+Očekávání (backtest): první funded účet za **~6,5–7 obchodních dní**
+(v každém roce 2018–2025 mezi 5,7 a 8,2 dne, nejhorší 2019),
 poplatky ~**300 $** (oba účty dohromady). Jeden účet s RS: ~11 dní, ~190 $.
 Po první prohře se v backtestu pokračuje stejně dál (zbývá ~100 $ do
 drawdownu, takže další prohra účet ukončí); po bustu kup novou evaluaci.

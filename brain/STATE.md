@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-23T07:37Z (shift 2026-10-23 active)
-last shift: 2026-10-23 (running)
+heartbeat: 2026-10-23T07:38Z (shift 2026-10-23 active)
+last shift: 2026-10-23 (report final at 09:45 Prague; later wakes continue the queue)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
@@ -10,6 +10,7 @@ last shift: 2026-10-23 (running)
 13. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- Two-account plan by start year: 5.7-8.2 days every year (worst 2019). Final report written.
 - Pine audit: daily lookups (Lucid 7 bias SMA50, vol gates in Lucid 1/2/6/7) switched to ([expr])[1] +
   lookahead_on so live trading uses the last completed day, as the backtests do.
 - ORB live-spec audit: Lucid 1 rules give -0.47 / +0.41 pt/trade (old export -0.12 / +0.61); book effect
