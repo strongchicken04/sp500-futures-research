@@ -19,7 +19,7 @@ last shift: 2026-10-23 (running)
   = rejected). An arXiv 2026 MNQ study (Mesfin; 14 signal families, 5-min data 2021-25) found
   none robust under realistic execution - consistent with our rejections. Snippets only
   (WebFetch blocked). Next importer pass: prop-specific ideas (sprint shapes, account mix).
-- 10. Book add-ons: RS leg +$3.3k mean per account (robust); ONL gap-up inconclusive (non-monotonic);
+- 10. Book add-ons: RS leg +$3.3k mean per account (robust); ONL gap-up lowers the mean after the merge fix;
   FOMC fade too rare. Lifecycle medians are lumpy: use book_compare.py means from now on.
 - Two accounts with RS 0.20/0.30 + 09:31: first funded 7.1 / 7.3 days, fees ~$300.
 - RS + 14:30 fallback: rejected (unstable fallback).
