@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T09:44Z (day shift 2026-10-23 active, owner asked for a full day)
+heartbeat: 2026-10-23T09:48Z (day shift 2026-10-23 active, owner asked for a full day)
 last shift: 2026-10-23 (report final at 09:45 Prague; later wakes continue the queue)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,6 +16,9 @@ QC runs allowed until 21:30 Prague, day report brain/reports/2026-10-23-den.md ~
 
 
 ## Done this shift
+- Day: ICT (Silver Bullet, London/Asia/prior-week sweeps), retail indicators (EMA/Supertrend/MACD/Bollinger),
+  Yu-Rentzler-Wolf regimes, OD in the sprint, prior-week break, smaller extra legs, profit lock, FOMC skip: all rejected.
+  Note: lifecycle mean moves ~$3k with the calendar alone - treat smaller differences as noise.
 - Day: hedge guard for the two-account eval (clash 7% of days, costs 0.2-0.4 day) -> PLAYBOOK. Volume filters
   (opening RVOL, first-bar RVOL ORB, volume spike, 14:00 trend) rejected; open drive weak on ES.
 - Day 12. Level lab (BARS5A/B): volume-profile rules all rejected (80% rule, outside value, POC, naked POC,

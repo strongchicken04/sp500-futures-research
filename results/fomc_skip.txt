@@ -1,0 +1,9 @@
+ORB  FOMC days n   8 mean $  +13.3 per trade (3 MNQ) | other days $   +2.9
+VG   FOMC days n   2 mean $ +219.8 per trade (3 MNQ) | other days $  +19.7
+Z    FOMC days n  59 mean $   -8.5 per trade (3 MNQ) | other days $  +40.0
+RS   FOMC days n  42 mean $ -164.4 per trade (3 MNQ) | other days $  +57.0
+
+flat 3, mean 24-month cash per account, 2018-21 | 2022-25
+   as now                               $  19,464 | $  30,534
+   skip FOMC days                       $  20,661 | $  23,584
+   no entries from 13:55 on FOMC days   $  22,363 | $  23,474

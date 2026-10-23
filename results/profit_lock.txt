@@ -1,0 +1,5 @@
+flat 3, ORB+VG+Z+RS; mean 24-month cash per account | share of funded accounts reaching the first payout
+   lock   none   $  19,464 | $  30,534    first payout 40% | 40%
+   lock  +$400   $  20,740 | $  27,751    first payout 40% | 41%
+   lock  +$800   $  19,438 | $  23,225    first payout 40% | 40%
+   lock +$1200   $  19,436 | $  26,480    first payout 40% | 41%

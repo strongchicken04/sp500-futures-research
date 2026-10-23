@@ -1,0 +1,9 @@
+mean 24-month cash per account, 2018-21 | 2022-25 (MNQ per leg)
+   ORB3 VG3 Z3 RS3                      $  19,230 | $  33,804
+   ORB3 VG3 Z3 RS3 OD1                  $  19,061 | $  33,767
+   ORB3 VG3 Z3 RS3 PW1                  $  17,407 | $  35,234
+   ORB3 VG3 Z3 RS3 OD1 PW1              $  20,414 | $  36,754
+   ORB3 VG3 Z3 RS3 OD2                  $  21,250 | $  28,092
+   ORB2 VG2 Z2 RS2 OD2 PW2              $  13,468 | $  27,156
+   ORB2 VG3 Z3 RS3 OD1                  $  19,383 | $  34,123
+   ORB4 VG4 Z4 RS4                      $  20,423 | $  23,996
