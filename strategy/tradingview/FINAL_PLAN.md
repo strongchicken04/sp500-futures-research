@@ -95,6 +95,8 @@ obchodního dne** do passu, poplatky 185 / 185 $. Současné 0,20 / 0,40 %:
 0,30 / 0,40) to potvrzují. Návrh: v Lucid 8 nastav **Stop (% of price) =
 0,30** (velikost se přepočítá sama, výhra ~1 270 $, pass = 3 výhry).
 Výchozí hodnoty indikátoru jsem neměnil – rozhodneš ty.
+Nezávisle ověřeno jiným exporterem (práh 0,15 %): 11,1 / 11,0 dne místo
+13,8 / 12,9, poplatky 193 / 187 $ místo 195 / 172 $ (`scripts/rs30_check.py`).
 
 # 2026-10-23 — EVALUACE: dva účty = rychlejší první funded, ale dražší
 

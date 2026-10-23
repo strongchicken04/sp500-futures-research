@@ -1,0 +1,10 @@
+== stop 0.40%
+   thr 10 bp   pass 42.0%  days  14.4  fees $214  |  pass 50.1%  days  12.7  fees $180
+   thr 15 bp   pass 46.2%  days  13.8  fees $195  |  pass 52.3%  days  12.9  fees $172
+   thr 20 bp   pass 45.7%  days  17.1  fees $197  |  pass 55.9%  days  13.7  fees $161
+   thr 25 bp   pass 47.5%  days  19.8  fees $189  |  pass 50.1%  days  16.3  fees $180
+== stop 0.30%
+   thr 10 bp   pass 39.2%  days  12.5  fees $229  |  pass 45.5%  days  10.7  fees $198
+   thr 15 bp   pass 46.6%  days  11.1  fees $193  |  pass 48.0%  days  11.0  fees $187
+   thr 20 bp   pass 45.5%  days  14.2  fees $198  |  pass 50.0%  days  11.9  fees $180
+   thr 25 bp   pass 42.8%  days  18.4  fees $210  |  pass 47.9%  days  13.4  fees $188
