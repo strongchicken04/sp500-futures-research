@@ -33,6 +33,7 @@ V = {"flat 3": {"VG": 3, "Z": 3, "RS": 3}, "flat 4": {"VG": 4, "Z": 4, "RS": 4},
 
 RS_LEVEL = 125   # RS leg bracket in bp (rs_bracket.py varies it)
 WITH_ORB = False  # orb_v2.py adds the live-spec ORB (O5) leg
+UNGATED = set()   # legs traded without the vol gate (gate_v2.py)
 
 
 def trades(data, suffix, gate, pref):
@@ -49,7 +50,7 @@ def trades(data, suffix, gate, pref):
             d, e, x = int(p[3]), float(p[5]), float(p[7])
             rv = int(p[9]) / 1000.0
             date = f"{p[2][:4]}-{p[2][4:6]}-{p[2][6:]}"
-            if not (0 < rv < 0.30):
+            if not (0 < rv < 0.30) and leg not in UNGATED:
                 continue
             c = 1.0 if p[8] in ("SL", "STOP") else 0.75
             pts = d * (x - e) * (pref / e if pref else 1.0) - c
@@ -58,7 +59,7 @@ def trades(data, suffix, gate, pref):
                         (-1 if (r["rs"] < -0.0015 and r["vwapd"] < 0) else 0))
     ti = si = LEVELS.index(RS_LEVEL)
     for d, (r, s) in sig.items():
-        if not gate(d):
+        if not gate(d) and "RS" not in UNGATED:
             continue
         fav, adv = (r["up"], r["dn"]) if s == 1 else (r["dn"], r["up"])
         hits = [k for k in (fav[ti], adv[si]) if k >= 0]

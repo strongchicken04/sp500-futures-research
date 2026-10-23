@@ -1,0 +1,4 @@
+2018-21: all gated: $ 21,652 (    +0) | Z ungated: $ 23,868 (+2,217) | VG ungated: $ 20,702 (  -950) | RS ungated: $ 23,133 (+1,482) | none gated: $ 23,269 (+1,617)
+2022-25: all gated: $ 33,446 (    +0) | Z ungated: $ 38,222 (+4,776) | VG ungated: $ 34,684 (+1,238) | RS ungated: $ 34,808 (+1,362) | none gated: $ 36,378 (+2,932)
+2010-13: all gated: $ 22,154 (    +0) | Z ungated: $ 22,292 (  +138) | VG ungated: $ 25,190 (+3,035) | RS ungated: $ 22,787 (  +633) | none gated: $ 24,441 (+2,287)
+2014-17: all gated: $ 22,294 (    +0) | Z ungated: $ 21,209 (-1,086) | VG ungated: $ 19,991 (-2,304) | RS ungated: $ 19,212 (-3,082) | none gated: $ 17,529 (-4,765)
