@@ -1,19 +1,17 @@
 # Brain state
 
-heartbeat: 2026-10-24T04:40Z (night shift 2026-10-23/24 running)
+heartbeat: 2026-10-24T05:00Z (night shift 2026-10-23/24 running; report written)
 last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague); night shift 23/24 running
 
 ## Queue (top = next). Move finished items to registry.md.
-Day shift 2026-10-23 items 12-16 DONE (see registry and brain/reports/2026-10-23-den.md).
-Next (for the night shift):
-17. Waiting for the owner: (a) drop ORB from the funded book? (b) automation route
-    (NinjaScript on own PC = cheapest, or TradingView webhook + bridge) -> then write the
-    code for the eval sprints (Lucid 8 + Lucid 7 with the hedge guard) first.
-18. Ideas only if new data/insight: everything simple on the 5-min panel is tested
-    (registry 2026-10-23); any new idea must pass the four-era check (BRAIN.md 6a).
-4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
-   (research it); short before 13:00 auction, long after.
-
+Night 2026-10-23/24: funded model v2 + open-P&L check done (report brain/reports/2026-10-24.md).
+17. Waiting for the owner: (a) funded 4 MNQ per leg (recommended), (b) drop ORB (recommended),
+    (c) confirm LucidFlex funded rules (five profitable days >= $150, 50% / $2,000 payout cap, scaling
+    20 MNQ below $1,000 profit, 5-payout cap), (d) automation route (NinjaScript on own PC or TradingView
+    webhook) -> then code the eval sprints (Lucid 8 + Lucid 7 with both hedge guards) first.
+18. Ideas only if new data/insight; any new idea must pass the four-era check (BRAIN.md 6a); funded
+    questions on funded_model.py + mtm_check.py (open P&L), 2010-17 re-priced at today's NQ.
+4. Treasury auction effect (ZN): BLOCKED (treasury.gov and fiscaldata refused by the network policy).
 
 ## Done this shift
 - Night: vol gate per leg on the open-P&L model: no ungated variant better in all eras -> keep the gate.
