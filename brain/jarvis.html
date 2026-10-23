@@ -6,44 +6,34 @@
 <style>
 /* Mozek: one screen. Rotatable 3D brain with the six agents, the picked agent's
    card beside it, then the final strategies (evaluation, funded) with copyable
-   Pine code. Clean light dashboard, dark mode follows the system. */
+   Pine code. Colours follow the owner's Lucid account screen: near-black
+   background, black cards with a thin grey edge, grey spaced caps for labels,
+   white bold values, Lucid green as the accent (red and blue as in its chart).
+   Dark only, on purpose. */
 :root {
-  --bg: #f4f5f7;
-  --card: #ffffff;
-  --card2: #f8f9fb;
-  --line: #e4e7ec;
-  --fg: #111827;
-  --muted: #5b6474;
-  --faint: #8a93a3;
-  --accent: #2e6be6;
-  --accent-soft: #e8effd;
-  --on-accent: #ffffff;
-  --ok: #12936b;
-  --ok-soft: #e3f5ee;
-  --warn: #b7791f;
-  --warn-soft: #fbf1df;
-  --bad: #d23f57;
-  --bad-soft: #fbe7ea;
-  --dot: 92, 104, 128;
-  --code-bg: #f6f7f9;
-  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+  --bg: #050505;
+  --card: #0b0b0b;
+  --card2: #141414;
+  --line: #262626;
+  --fg: #f5f5f5;
+  --muted: #a3a3a3;
+  --faint: #6b6b6b;
+  --accent: #34d27b;
+  --accent-soft: rgba(52, 210, 123, 0.12);
+  --on-accent: #04140b;
+  --ok: #34d27b;
+  --ok-soft: rgba(52, 210, 123, 0.12);
+  --warn: #f5b94a;
+  --warn-soft: rgba(245, 185, 74, 0.12);
+  --bad: #f26b6b;
+  --bad-soft: rgba(242, 107, 107, 0.12);
+  --blue: #5b9cf6;
+  --dot: 150, 160, 155;
+  --code-bg: #070707;
+  --shadow: none;
   --f: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0d1117; --card: #151a22; --card2: #1a2029; --line: #262d38; --fg: #e8ebf0; --muted: #a2abba; --faint: #6f7888;
-    --accent: #6f9cff; --accent-soft: rgba(111, 156, 255, 0.14); --on-accent: #0d1117; --ok: #3ccf9a; --ok-soft: rgba(60, 207, 154, 0.13);
-    --warn: #f0b552; --warn-soft: rgba(240, 181, 82, 0.13); --bad: #ff6f86; --bad-soft: rgba(255, 111, 134, 0.13);
-    --dot: 170, 182, 204; --code-bg: #10141b; --shadow: none; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0d1117; --card: #151a22; --card2: #1a2029; --line: #262d38; --fg: #e8ebf0; --muted: #a2abba; --faint: #6f7888;
-  --accent: #6f9cff; --accent-soft: rgba(111, 156, 255, 0.14); --on-accent: #0d1117; --ok: #3ccf9a; --ok-soft: rgba(60, 207, 154, 0.13);
-  --warn: #f0b552; --warn-soft: rgba(240, 181, 82, 0.13); --bad: #ff6f86; --bad-soft: rgba(255, 111, 134, 0.13);
-  --dot: 170, 182, 204; --code-bg: #10141b; --shadow: none; color-scheme: dark;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { background: var(--bg); }
@@ -71,19 +61,19 @@ button { font-family: var(--f); }
 .pill.ok i { background: var(--ok); } .pill.warn i { background: var(--warn); } .pill.bad i { background: var(--bad); }
 
 /* cards */
-.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); min-width: 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); min-width: 0; }
 .hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
 @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
 .brain { position: relative; padding: 14px 14px 12px; display: flex; flex-direction: column; }
 .brain .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12.5px; color: var(--muted); }
-.brain .hd b { color: var(--fg); font-size: 14px; }
+.brain .hd b { color: var(--muted); font-size: 13px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
 .stage { position: relative; height: clamp(300px, 46vw, 430px); }
 .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .chips button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--card); color: var(--muted); border-radius: 999px; padding: 4px 10px 4px 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
 .chips button i { width: 9px; height: 9px; border-radius: 50%; }
 .chips button:hover { color: var(--fg); }
-.chips button[aria-pressed="true"] { color: var(--fg); border-color: var(--fg); }
+.chips button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
 .chips button .live { font-size: 10.5px; color: var(--ok); font-weight: 700; }
 
 /* agent panel */
@@ -94,7 +84,7 @@ button { font-family: var(--f); }
 .agent .role { color: var(--muted); font-size: 13px; }
 .agent .state { margin-left: auto; font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--card2); color: var(--muted); white-space: nowrap; }
 .agent .state.on { background: var(--ok-soft); color: var(--ok); }
-.lbl { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin: 0 0 6px; }
+.lbl { font-size: 11.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
 .now { background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; font-size: 13.5px; }
 .now small { display: block; color: var(--muted); font-size: 11.5px; margin-top: 2px; }
 .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
@@ -108,9 +98,9 @@ button { font-family: var(--f); }
 .tag { font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 7px; background: var(--card2); color: var(--muted); white-space: nowrap; align-self: start; }
 .tag.ok { background: var(--ok-soft); color: var(--ok); } .tag.warn { background: var(--warn-soft); color: var(--warn); } .tag.bad { background: var(--bad-soft); color: var(--bad); } .tag.acc { background: var(--accent-soft); color: var(--accent); }
 .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
-.num { background: var(--card2); border-radius: 10px; padding: 10px 12px; min-width: 0; }
-.num .v { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; overflow-wrap: anywhere; line-height: 1.25; }
-.num .l { font-size: 12px; color: var(--muted); }
+.num { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; min-width: 0; }
+.num .v { font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; overflow-wrap: anywhere; line-height: 1.25; margin-top: 2px; }
+.num .l { font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .num .s { font-size: 11.5px; color: var(--faint); }
 .num.ok .v { color: var(--ok); } .num.bad .v { color: var(--bad); } .num.gold .v { color: var(--warn); }
 .todo { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13.5px; }
@@ -121,7 +111,8 @@ details.more pre { white-space: pre-wrap; font-family: var(--f); font-size: 13px
 /* strategies */
 .sec { margin-top: 30px; }
 .sec-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-bottom: 12px; }
-.sec-h h2 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
+.sec-h h2 { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.sec-h h2::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: 10px; vertical-align: 2px; }
 .sec-h p { margin: 0; color: var(--muted); font-size: 13px; }
 .sum { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 .sum span { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 6px 12px; font-size: 13px; color: var(--muted); }
@@ -153,7 +144,7 @@ details.more pre { white-space: pre-wrap; font-family: var(--f); font-size: 13px
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3V4z"/></svg></div>
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#04140b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3V4z"/></svg></div>
       <div><h1>Mozek</h1><small>NQ výzkum · Lucid Flex 50K</small></div>
     </div>
     <span class="sp"></span>
@@ -204,12 +195,12 @@ details.more pre { white-space: pre-wrap; font-family: var(--f); font-size: 13px
 
   const S = { status: null, metrics: null, stats: null, account: null, queue: [], strategies: [], reports: [], log: [], indicators: [], db: "wait", taken: null };
   const AGENTS = [
-    { id: "importer", name: "Importér", role: "hledá a sepisuje nové nápady", labels: ["Importér"], color: "#2e6be6", pos: [0.3, 0.28, 0.8] },
-    { id: "backtester", name: "Backtester", role: "testuje na QuantConnectu", labels: ["Backtester"], color: "#0e9f8e", pos: [-0.36, 0.52, 0.32] },
-    { id: "optimiser", name: "Optimalizátor", role: "velikost, sprint, simulace účtu", labels: ["Optimalizátor"], color: "#7b5ce6", pos: [0.36, 0.56, -0.12] },
-    { id: "manager", name: "Systémový manažer", role: "kdy co funguje, pravidla účtu", labels: ["Systémový manažer", "Systém"], color: "#d98a1c", pos: [-0.45, 0.24, -0.48] },
-    { id: "coder", name: "Kodér", role: "indikátory pro TradingView", labels: ["Kodér"], color: "#d6457a", pos: [0.62, -0.12, 0.12] },
-    { id: "interpreter", name: "Interpret", role: "ranní report česky", labels: ["Interpret"], color: "#2f9e44", pos: [0.0, -0.42, -0.86] },
+    { id: "importer", name: "Importér", role: "hledá a sepisuje nové nápady", labels: ["Importér"], color: "#5b9cf6", pos: [0.3, 0.28, 0.8] },
+    { id: "backtester", name: "Backtester", role: "testuje na QuantConnectu", labels: ["Backtester"], color: "#38c9d6", pos: [-0.36, 0.52, 0.32] },
+    { id: "optimiser", name: "Optimalizátor", role: "velikost, sprint, simulace účtu", labels: ["Optimalizátor"], color: "#a78bfa", pos: [0.36, 0.56, -0.12] },
+    { id: "manager", name: "Systémový manažer", role: "kdy co funguje, pravidla účtu", labels: ["Systémový manažer", "Systém"], color: "#f5b94a", pos: [-0.45, 0.24, -0.48] },
+    { id: "coder", name: "Kodér", role: "indikátory pro TradingView", labels: ["Kodér"], color: "#f26b6b", pos: [0.62, -0.12, 0.12] },
+    { id: "interpreter", name: "Interpret", role: "ranní report česky", labels: ["Interpret"], color: "#34d27b", pos: [0.0, -0.42, -0.86] },
   ];
   let sel = "interpreter";
 
@@ -262,7 +253,7 @@ details.more pre { white-space: pre-wrap; font-family: var(--f); font-size: 13px
   const list = (cls, rows) => h("ul", { class: "list " + (cls || "") }, ...rows);
   const block = (title, ...kids) => h("div", {}, h("div", { class: "lbl", text: title }), ...kids);
   const empty = (t) => h("div", { class: "empty", text: t });
-  const numTile = (t) => h("div", { class: "num " + (t.tone || "") }, h("div", { class: "v", text: t.value || "" }), h("div", { class: "l", text: t.label || "" }), t.sub ? h("div", { class: "s", text: t.sub }) : null);
+  const numTile = (t) => h("div", { class: "num " + (t.tone || "") }, h("div", { class: "l", text: t.label || "" }), h("div", { class: "v", text: t.value || "" }), t.sub ? h("div", { class: "s", text: t.sub }) : null);
   const IND = { live: ["živě", "ok"], backup: ["záloha", "acc"], audit: ["kontrola", "warn"], off: ["vypnuto", ""] };
   const Q = { running: ["běží", "ok"], waiting: ["čeká", "acc"], done: ["hotovo", ""] };
 
