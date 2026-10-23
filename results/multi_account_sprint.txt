@@ -1,0 +1,28 @@
+daily correlation of sprint results on common days:
+   RS-T931: +0.01
+   RS-NZ: +0.40
+   T931-NZ: -0.01
+
+--- 2018-2021
+   RS    alone: pass/attempt 49.6%  trades/yr 206
+   T931  alone: pass/attempt 37.8%  trades/yr 242
+   NZ    alone: pass/attempt 37.6%  trades/yr 146
+   RS               days to first funded  11.9 (median   8)   fees $ 202
+   T931             days to first funded  11.9 (median  10)   fees $ 217
+   NZ               days to first funded  25.2 (median  22)   fees $ 210
+   RS + T931        days to first funded   7.1 (median   6)   fees $ 300
+   RS + NZ          days to first funded   9.9 (median   8)   fees $ 309
+   T931 + NZ        days to first funded  10.2 (median   8)   fees $ 327
+   RS + T931 + NZ   days to first funded   6.7 (median   6)   fees $ 401
+
+--- 2022-2025
+   RS    alone: pass/attempt 48.1%  trades/yr 210
+   T931  alone: pass/attempt 36.7%  trades/yr 258
+   NZ    alone: pass/attempt 43.4%  trades/yr 151
+   RS               days to first funded  10.2 (median   8)   fees $ 179
+   T931             days to first funded  12.6 (median  10)   fees $ 227
+   NZ               days to first funded  22.7 (median  18)   fees $ 220
+   RS + T931        days to first funded   7.3 (median   6)   fees $ 305
+   RS + NZ          days to first funded   9.4 (median   8)   fees $ 296
+   T931 + NZ        days to first funded  10.5 (median   8)   fees $ 333
+   RS + T931 + NZ   days to first funded   7.1 (median   6)   fees $ 415

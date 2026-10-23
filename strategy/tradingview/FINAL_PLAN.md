@@ -1,3 +1,18 @@
+# 2026-10-23 — EVALUACE: nejlepší je RS (stop 0,30 %) + 09:31 na dvou účtech
+
+`scripts/multi_account_sprint.py` (2018–21 | 2022–25):
+
+| účty a sprinty | dní do prvního funded | poplatky |
+|---|---|---|
+| RS sám (Lucid 8, stop 0,30 %) | 11,9 / 10,2 | 202 / 179 $ |
+| **RS + 09:31 trend (Lucid 8 + Lucid 7)** | **7,1 / 7,3** | **300 / 305 $** |
+| RS + noise sprint | 9,9 / 9,4 | 309 / 296 $ |
+| RS + 09:31 + noise (3 účty) | 6,7 / 7,1 | 401 / 415 $ |
+
+RS a 09:31 spolu nekorelují (0,01), RS a noise ano (0,40), proto je dvojice
+RS + 09:31 nejlepší poměr rychlosti a ceny. Třetí účet zrychlí jen o ~0,3 dne
+za ~100 $ navíc. Noise jako sprint je pomalý (méně signálů, 22–25 dní).
+
 # 2026-10-23 — FUNDED: ověřeno simulací s časy obchodů (platí místo čísel níže)
 
 `scripts/timed_book.py`: obchody se realizují v pořadí výstupů a denní stop
