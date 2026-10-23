@@ -1,0 +1,8 @@
+--- 2018-2021: OD days 178, OD sprint win rate 67%, mean $+164
+   RS on the same days: win rate 66%, mean $+139
+   A = RS (now)               A alone  11.9 days, 2.24 evaluations; with B first funded  6.8 days
+   A = OD at 10:00, else RS   A alone   9.9 days, 2.01 evaluations; with B first funded  6.3 days
+--- 2022-2025: OD days 201, OD sprint win rate 63%, mean $+67
+   RS on the same days: win rate 64%, mean $+112
+   A = RS (now)               A alone  10.2 days, 1.99 evaluations; with B first funded  6.5 days
+   A = OD at 10:00, else RS   A alone   9.9 days, 2.04 evaluations; with B first funded  6.4 days
