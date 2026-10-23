@@ -1,0 +1,28 @@
+--- 2018-2021
+   candidate VG3 Z3 RS3 OD3       $  18,805
+   without VG                     $  15,114   vs base  -3,691 (+/- 174)  better / worse in 23% / 77% of paths
+   without Z                      $  13,884   vs base  -4,921 (+/- 174)  better / worse in 15% / 85% of paths
+   without RS                     $  18,015   vs base    -790 (+/- 204)  better / worse in 43% / 56% of paths
+   without OD                     $  17,564   vs base  -1,241 (+/- 153)  better / worse in 40% / 57% of paths
+   VG at 2                        $  17,369   vs base  -1,436 (+/- 131)  better / worse in 35% / 60% of paths
+   VG at 4                        $  18,928   vs base    +123 (+/- 146)  better / worse in 46% / 50% of paths
+   Z at 2                         $  17,378   vs base  -1,427 (+/- 137)  better / worse in 37% / 60% of paths
+   Z at 4                         $  19,442   vs base    +637 (+/- 144)  better / worse in 51% / 45% of paths
+   RS at 2                        $  17,947   vs base    -858 (+/- 149)  better / worse in 44% / 55% of paths
+   RS at 4                        $  17,750   vs base  -1,055 (+/- 168)  better / worse in 40% / 59% of paths
+   OD at 2                        $  18,252   vs base    -553 (+/- 104)  better / worse in 34% / 46% of paths
+   OD at 4                        $  19,240   vs base    +435 (+/- 100)  better / worse in 43% / 35% of paths
+--- 2022-2025
+   candidate VG3 Z3 RS3 OD3       $  24,849
+   without VG                     $  23,714   vs base  -1,136 (+/- 227)  better / worse in 44% / 55% of paths
+   without Z                      $  20,188   vs base  -4,661 (+/- 253)  better / worse in 25% / 75% of paths
+   without RS                     $  19,737   vs base  -5,112 (+/- 270)  better / worse in 23% / 76% of paths
+   without OD                     $  24,951   vs base    +101 (+/- 223)  better / worse in 52% / 46% of paths
+   VG at 2                        $  24,218   vs base    -631 (+/- 165)  better / worse in 43% / 49% of paths
+   VG at 4                        $  24,809   vs base     -40 (+/- 172)  better / worse in 44% / 49% of paths
+   Z at 2                         $  24,850   vs base      +1 (+/- 196)  better / worse in 51% / 47% of paths
+   Z at 4                         $  25,406   vs base    +556 (+/- 202)  better / worse in 49% / 49% of paths
+   RS at 2                        $  24,196   vs base    -653 (+/- 213)  better / worse in 46% / 53% of paths
+   RS at 4                        $  26,451   vs base  +1,601 (+/- 229)  better / worse in 59% / 40% of paths
+   OD at 2                        $  24,190   vs base    -659 (+/- 147)  better / worse in 39% / 48% of paths
+   OD at 4                        $  24,867   vs base     +18 (+/- 150)  better / worse in 41% / 45% of paths
