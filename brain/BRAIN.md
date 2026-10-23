@@ -35,7 +35,10 @@ English.
    (one QC node: ~15-20 min per run; max ~10,000 order tags per run; reuse the
    slot project). Data: `brain/bin/restore_data.sh` unpacks all tags to
    $BRAIN_DATA (default /tmp/brain_data); scorers take that dir.
-3. **Optimiser** — prop-specific versions: sprint bracket for the evaluation
+3. **Optimiser** — book and funded sizing questions go through
+   `scripts/timed_book.py` (time-aware: trades realised in exit order, day
+   stop only blocks later entries); older sequential sims overstate day stops.
+   Prop-specific versions: sprint bracket for the evaluation
    (`scripts/eval_speed.py`, `scripts/bias_sprint.py`), sizing for funded
    (`scripts/book_after_fix.py`, ladder/flat via `scripts/final_lifecycle.py`
    helpers, `ladder_sim.outcomes`, `mixed_accounts.sim_groups`).

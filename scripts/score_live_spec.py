@@ -33,7 +33,7 @@ def parse(paths):
             d, e, x = int(f[3]), float(f[5]), float(f[7])
             cost = 0.75 + (0.25 if f[8] in ("SL", "STOP") else 0.0)
             out[f[1]].append({"date": f"{f[2][:4]}-{f[2][4:6]}-{f[2][6:]}", "pts": d * (x - e) - cost,
-                              "why": f[8], "rv": int(f[9]) / 1000.0, "ehm": int(f[4])})
+                              "why": f[8], "rv": int(f[9]) / 1000.0, "ehm": int(f[4]), "xhm": int(f[6])})
     return out
 
 

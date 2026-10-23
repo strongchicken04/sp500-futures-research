@@ -1,3 +1,25 @@
+# 2026-10-23 — FUNDED: ověřeno simulací s časy obchodů (platí místo čísel níže)
+
+`scripts/timed_book.py`: obchody se realizují v pořadí výstupů a denní stop
+blokuje jen vstupy po realizované ztrátě. Průměr na účet za 24 měsíců
+(2018–21 | 2022–25), evaluace sprintem:
+
+| kniha a velikost | výsledek |
+|---|---|
+| ORB + VWAP + noise, ladder 400/500 (dosavadní plán) | 2 300 / 20 500 $ |
+| ORB + VWAP + noise, flat 2 | 6 300 / 22 700 $ |
+| **ORB + VWAP + noise, flat 3** | **12 100 / 29 100 $** |
+| ORB + VWAP + noise, flat 4 | 14 100 / 26 700 $ |
+| **+ RS noha, flat 3** | **19 500 / 30 500 $** |
+| VWAP + noise bez ORB, flat 3 | 10 800 / 25 100 $ |
+
+Závěry:
+- **Velikost: flat 3 MNQ na každou nohu** (plato 3–4), výrazně lepší než ladder.
+- **Denní stop nic nepřidává:** −600 $ nastejno jako bez stopu, −300 $ spíš
+  škodí. Pokud chceš pojistku, dej −600 $.
+- **RS noha přidává v obou obdobích** (+7 400 / +1 500 $), ve 2022–25 málo.
+- **ORB v knize nech** (+1 300 / +4 000 $).
+
 # 2026-10-23 — KOREKCE: denní stop a RS noha (simulace bez časů obchodů)
 
 Simulace účtů bere obchody jednoho dne jako po sobě jdoucí (každý skončí, než

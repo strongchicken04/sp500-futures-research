@@ -1,18 +1,18 @@
 # Brain state
 
-heartbeat: 2026-10-23T05:10Z (shift 2026-10-23 active)
+heartbeat: 2026-10-23T05:11Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
 
-12. TIME-AWARE SIM: export entry and exit times for every leg (ORB S1FILL, VWAP band, noise,
-    RS), simulate the account bar-by-bar (or event-by-event) so overlapping trades and a day stop
-    on realised P&L are modelled honestly; re-run sizing, RS leg and day stop on it. Highest priority.
 13. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- 12. Time-aware sim (timed_book.py): flat 3 confirmed ($12.1k / $29.1k vs ladder $2.3k / $20.5k),
+  day stop neutral at -$600 and worse at -$300, RS leg +$7.4k / +$1.5k, ORB keeps its place.
+  Use timed_book.py for all book/sizing questions from now on.
 - Day stop: tighter looked better only because sequential sims see losses of still-open trades
   (cross-leg after-loss -$31/-$54 per MNQ, t -6/-8). Without a stop: flat 3 still beats ladder;
   RS funded leg uncertain (adds in 2018-21 only). FINAL_PLAN corrected.
