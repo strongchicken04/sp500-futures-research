@@ -1,0 +1,18 @@
+--- normal costs, 2018-21
+   now (ORB+VG+Z+RS)              $  14,745
+   proposal (VG+Zfree+RS)         $  17,271   vs base  +2,526 (+/- 198)  better / worse in 70% / 30% of paths
+--- normal costs, 2022-25
+   now (ORB+VG+Z+RS)              $  22,304
+   proposal (VG+Zfree+RS)         $  25,069   vs base  +2,765 (+/- 299)  better / worse in 66% / 33% of paths
+--- +1 pt on stops, 2018-21
+   now (ORB+VG+Z+RS)              $  12,407
+   proposal (VG+Zfree+RS)         $  15,877   vs base  +3,470 (+/- 188)  better / worse in 78% / 21% of paths
+--- +1 pt on stops, 2022-25
+   now (ORB+VG+Z+RS)              $  20,574
+   proposal (VG+Zfree+RS)         $  24,171   vs base  +3,597 (+/- 295)  better / worse in 70% / 30% of paths
+--- +1 pt on stops, +0.5 pt every trade, 2018-21
+   now (ORB+VG+Z+RS)              $  10,268
+   proposal (VG+Zfree+RS)         $  14,552   vs base  +4,284 (+/- 184)  better / worse in 84% / 15% of paths
+--- +1 pt on stops, +0.5 pt every trade, 2022-25
+   now (ORB+VG+Z+RS)              $  19,285
+   proposal (VG+Zfree+RS)         $  23,216   vs base  +3,931 (+/- 293)  better / worse in 71% / 28% of paths
