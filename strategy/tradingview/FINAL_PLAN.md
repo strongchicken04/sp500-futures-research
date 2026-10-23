@@ -1,3 +1,8 @@
+# 2026-10-23 — Lucid Flex nedovoluje držet přes noc
+
+Overnight long po 3+ červených dnech je vyřazen; všechny strategie plánu
+jsou do 15:55 ET flat.
+
 # 2026-10-23 — ORB ověřen podle živých pravidel: edge kolem nuly
 
 Nezávislý export přesně podle Lucid 1 (5min graf): −0,47 / +0,41 bodu na

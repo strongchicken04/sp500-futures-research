@@ -16,7 +16,8 @@ English.
   profit; day profit cap ~$1,450; fee $90 per evaluation; no time limit.
 - Funded: first payout after +$4,000 (owner receives $1,800), then every
   +$2,000; payouts every 5 days; drawdown stays locked.
-- Max 4 NQ minis (40 MNQ). Copytrading allowed.
+- Max 4 NQ minis (40 MNQ). Copytrading allowed. NO overnight holds (owner,
+  2026-10-23): every strategy must be flat by the session close.
 - Plan: evaluation = sprint (one big bracket trade a day, three wins pass);
   funded = the book. Evaluation success is measured as EXPECTED TRADING DAYS
   AND FEES TO A PASS (failed attempts included), not pass rate per attempt.

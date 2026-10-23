@@ -1,6 +1,7 @@
 // @version=5
 indicator("Lucid 9 — Overnight Long after 3 Down Closes", overlay=true, max_labels_count=500, max_lines_count=500)
 
+// RETIRED 2026-10-23: Lucid Flex does not allow overnight holds. Kept for reference.
 // CANDIDATE — use only if your prop account allows holding positions overnight.
 // Rule: after the 3rd (or more) consecutive down close (15:55 ET close below
 // the previous day's 15:55 close), buy at the 15:55 close and sell at the

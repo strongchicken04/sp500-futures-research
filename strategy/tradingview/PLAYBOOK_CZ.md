@@ -6,7 +6,7 @@ Všechno níže je návrh z backtestů 2018–2025 (laděno na 2018–21, ověř
 ## 0. Nejdřív: nahraj nové verze indikátorů
 
 Lucid 1, 2, 6 a 7 byly 23. 10. upravené (shoda s backtestem, denní hodnoty
-z posledního dokončeného dne). Lucid 8 beze změny, Lucid 9 je nový.
+z posledního dokončeného dne). Lucid 8 beze změny. Lucid 9 nepoužívej (držení přes noc není povolené).
 
 ## 1. Evaluace – dva účty, každý jiný sprint
 
@@ -57,8 +57,8 @@ Vzdání je o ~1,5–2 dny rychlejší, ale o ~125–170 $ dražší (u 09:31 o 
 
 ## 3. Čeká na tvoje rozhodnutí
 
-- **Overnight long po 3+ červených dnech** (Lucid 9): +28,6 / +19,0 bp za
-  noc, kladné všech 8 let, ~20× ročně. Jen pokud Lucid dovoluje držet přes noc.
+- Overnight long (Lucid 9) vyřazen: Lucid Flex nedovoluje držet přes noc.
+  Všechny strategie v plánu jsou do 15:55 ET flat.
 - Aukce dluhopisů: blokované (chybí kalendář aukcí).
 
 ## 4. Kde co je

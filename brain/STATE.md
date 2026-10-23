@@ -1,15 +1,15 @@
 # Brain state
 
-heartbeat: 2026-10-23T08:10Z (shift 2026-10-23 active)
+heartbeat: 2026-10-23T08:15Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (report final at 09:45 Prague; later wakes continue the queue)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
 
-13. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- Owner: Lucid Flex does not allow overnight holds -> overnight long rejected; Lucid 9 retired.
 - Two-account plan by start year: 5.7-8.2 days every year (worst 2019). Final report written.
 - Pine audit: daily lookups (Lucid 7 bias SMA50, vol gates in Lucid 1/2/6/7) switched to ([expr])[1] +
   lookahead_on so live trading uses the last completed day, as the backtests do.
