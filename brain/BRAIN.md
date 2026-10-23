@@ -69,7 +69,19 @@ English.
    the plain 09:31-long sprint for evaluation use.
 5. Big claims get an adversarial re-check (look-ahead, same-bar, roll days,
    cost) before they are reported as findings.
-6. Nothing goes live without the owner; you recommend, they decide.
+6a. Third period (since 2026-10-23): anything that would change the plan must
+   also hold in 2010-2017 (never tuned; exports *_OLD, B2_0A/B, CBA_OLD,
+   MFEAT_OLD). Compare eras in GROSS bp of price (NQ was ~4-6x lower then, so
+   fixed point costs and dollar results are not comparable; scripts/bp_eras.py).
+   Sprints: compare the win rate of RESOLVED trades (target or stop hit) with
+   the random-walk rate stop/(target+stop), never counting unresolved as losses.
+6b. Funded book / sizing decisions: use the paired block bootstrap
+   (scripts/mc_book.py: 24-month paths of 20-day blocks, all variants on the
+   same blocks) plus the first / repeat payout rates. The one-history walk
+   (timed_book life()) moves $3-5k with the calendar alone - not for
+   differences under ~$5k. The book at flat 3 is at the drawdown edge: new
+   legs with small edges add busts; scale with more accounts (copies) instead.
+7. Nothing goes live without the owner; you recommend, they decide.
 
 ## Shift mechanics
 - Start: `git pull`, read STATE.md. If `heartbeat` is under 50 minutes old
