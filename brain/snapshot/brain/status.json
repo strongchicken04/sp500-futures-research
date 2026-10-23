@@ -1,9 +1,9 @@
 {
-  "heartbeat": "2026-10-23T05:12:00Z",
+  "heartbeat": "2026-10-23T07:55:00Z",
   "phase": "working",
   "qc": "ok",
-  "runs": 10,
+  "runs": 14,
   "shift": "2026-10-23",
-  "sphere": "manager",
-  "task": "Simulace s časy obchodů: flat 3 potvrzen, denní stop nic nepřidá, RS noha mírně plus."
+  "sphere": "coder",
+  "task": "Indikátory 1, 2, 6, 7: denní hodnoty z posledního dokončeného dne (žádné překreslování v ostrém obchodu)."
 }

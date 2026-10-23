@@ -1,0 +1,9 @@
+{
+  "chart": "1 / 5 min, extended hours",
+  "file": "lucid_9_overnight_3down.pine",
+  "name": "Lucid 9 — Overnight po 3 červených",
+  "note": "vstup close 15:55, výstup open 09:30",
+  "order": 6.5,
+  "role": "kandidát (jen pokud Lucid dovolí držet přes noc)",
+  "status": "off"
+}

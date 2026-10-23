@@ -2,7 +2,8 @@
   "chart": "MNQ 1 min",
   "file": "lucid_7_eval_sprint.pine",
   "name": "Lucid 7 — Eval Sprint 09:31",
+  "note": "nahrát novou verzi: bias a filtr z posledního dokončeného dne; návrh Target 0,25 %, filtr volatility VYPNOUT",
   "order": 2,
-  "role": "evaluace (záloha)",
-  "status": "backup"
+  "role": "evaluace – účet B",
+  "status": "live"
 }

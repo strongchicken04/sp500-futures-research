@@ -2,7 +2,7 @@
   "chart": "1 / 5 / 30 min",
   "file": "lucid_6_noise_momentum.pine",
   "name": "Lucid 6 — Noise Momentum",
-  "note": "nově pevný stop 0,50 %",
+  "note": "nahrát novou verzi: pevný stop 0,50 %, filtr volatility z dokončeného dne",
   "order": 3,
   "role": "funded kniha",
   "status": "live"

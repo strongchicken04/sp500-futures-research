@@ -1,59 +1,59 @@
 {
   "events": [
     {
-      "sphere": "Systémový manažer",
-      "t": "2026-10-23T05:12:00Z",
-      "text": "Simulace s časy obchodů: flat 3 = 12 100 / 29 100 $ na účet (ladder 2 300 / 20 500 $); RS noha +7 400 / +1 500 $; denní stop nic nepřidá."
+      "sphere": "Interpret",
+      "t": "2026-10-23T07:32:00Z",
+      "text": "Playbook s přesným nastavením indikátorů pro evaluaci (2 účty) i funded (flat 3): PLAYBOOK_CZ.md."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T07:31:00Z",
+      "text": "Po první prohře ve sprintu: vzdát a koupit novou evaluaci = o 1,5–2 dny rychlejší, o 125–200 $ dražší."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T07:30:00Z",
+      "text": "Lucid 7 na evaluaci bez filtru volatility (s ním 18–21 dní místo 11)."
     },
     {
       "sphere": "Backtester",
-      "t": "2026-10-23T05:10:00Z",
-      "text": "Odhalen artefakt: stará simulace dávala dennímu stopu informaci o ztrátách obchodů, které ještě běžely. Těsnější stop nedoporučen."
+      "t": "2026-10-23T07:29:00Z",
+      "text": "Noise jen ve shodě s relativní silou: na úrovni účtu horší, zamítnuto."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T07:28:00Z",
+      "text": "Lucid 7 s targetem 0,25 %; dva účty RS + 09:31 = první funded za 6,8 / 6,5 dne."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-23T07:27:00Z",
+      "text": "Lucid 9 (overnight po 3 červených) připraven."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T07:26:00Z",
+      "text": "Třetí účet s noise sprintem: jen −0,3 dne za ~100 $ navíc."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-23T06:20:00Z",
+      "text": "RS sprint se stopem 0,30 % nezávisle potvrzen."
+    },
+    {
+      "sphere": "Systémový manažer",
+      "t": "2026-10-23T05:12:00Z",
+      "text": "Simulace s časy obchodů: flat 3 potvrzen, denní stop nic nepřidá."
     },
     {
       "sphere": "Backtester",
       "t": "2026-10-23T04:10:00Z",
-      "text": "Opraveno řazení obchodů stejného dne v simulaci (až ~25 % rozdíl)."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T04:09:00Z",
-      "text": "ORB při flat 3 stále přidává."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-22T23:09:00Z",
-      "text": "Funded velikost: flat 3 MNQ na nohu vydělá víc než ladder."
-    },
-    {
-      "sphere": "Importer",
-      "t": "2026-10-22T22:22:00Z",
-      "text": "Literatura: známé intradenní strategie na NQ už otestované."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-22T22:18:00Z",
-      "text": "RS sprint se stopem 0,30 %: ~11 dní do passu místo ~13."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-22T22:17:00Z",
-      "text": "Dva účty (RS + 09:31): první funded za ~7–8 dní, poplatky ~300 $."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-22T22:16:00Z",
-      "text": "VWAP trend zamítnut."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-22T22:14:00Z",
-      "text": "Noise na ES/YM zamítnut."
+      "text": "Opraveno řazení obchodů v simulaci."
     },
     {
       "sphere": "Kodér",
       "t": "2026-10-22T21:31:00Z",
-      "text": "Lucid 2 přepsán na průraz pásma VWAP ±0,20 % (5min graf)."
+      "text": "Lucid 2 přepsán na průraz pásma VWAP ±0,20 %."
     },
     {
       "sphere": "Kodér",

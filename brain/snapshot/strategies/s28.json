@@ -2,10 +2,10 @@
   "files": "rs_sprint_shape.py",
   "isVal": 10.6,
   "name": "RS sprint s jiným tvarem: target 0,20 % / stop 0,30 % (stop stále ~1 900 $)",
-  "note": "V Lucid 8 stačí nastavit Stop (% of price) = 0,30. Výchozí hodnoty jsem neměnil.",
+  "note": "Nezávisle ověřeno druhým exporterem (práh 0,15 %): 11,1 / 11,0 dne místo 13,8 / 12,9, poplatky 193 / 187 $ místo 195 / 172 $. V Lucid 8 stačí nastavit Stop (% of price) = 0,30. Výchozí hodnoty jsem neměnil.",
   "oosVal": 10.8,
   "order": 1.7,
-  "reached": "years",
+  "reached": "audit",
   "result": "10,6 / 10,8 dne do passu místo 13,4 / 13,0; pass 48,8 / 48,7 %; poplatky 185 / 185 $",
   "status": "candidate",
   "unit": "dní do passu"

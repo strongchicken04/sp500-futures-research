@@ -2,6 +2,7 @@
   "files": "lucid_7_eval_sprint.pine, bias_sprint.py",
   "isVal": 39,
   "name": "Sprint 09:31, bias podle 50denního trendu, +0,20 %/−0,40 % (záloha)",
+  "note": "Tvar 0,25 % / 0,40 % (Lucid 7: Target = 0,25): 11,3 / 10,7 dne do passu místo 12,6 / 13,3, poplatky ~230 $ stejné. Nejlepší jako druhý účet vedle RS (korelace −0,02).",
   "oosVal": 39,
   "order": 2,
   "reached": "live",

@@ -2,7 +2,7 @@
   "files": "timed_book.py, funded_sizing.py",
   "isVal": 12.1,
   "name": "Funded velikost: flat 3 MNQ na každou nohu knihy (místo ladderu 400/500)",
-  "note": "Bust funded účtu stojí jen novou evaluaci sprintem (~180 $, ~11 dní). Plato 3–4 MNQ. Denní stop nic nepřidává (−600 $ neutrální, −300 $ škodí). ORB v knize pomáhá.",
+  "note": "Bust funded účtu stojí jen novou evaluaci sprintem (~180 $, ~11 dní). Plato 3–4 MNQ. Riziko: k první výplatě dojde 40 % / 51 % funded účtů (medián 35 / 15 dní), zbytek spadne dřív. Denní stop nic nepřidává. ORB v knize pomáhá.",
   "oosVal": 29.1,
   "order": 6.5,
   "reached": "years",

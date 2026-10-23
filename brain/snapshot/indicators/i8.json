@@ -2,8 +2,8 @@
   "chart": "MNQ 1 min",
   "file": "lucid_8_rs_sprint.pine",
   "name": "Lucid 8 — RS Sprint",
-  "note": "kontroly 10:00 / 11:00 / 13:00 / 14:30",
+  "note": "návrh: Stop 0,30 % (~11 dní do passu místo ~13)",
   "order": 1,
-  "role": "evaluace (hlavní)",
+  "role": "evaluace – účet A (+ funded noha s Target/Stop 1,25)",
   "status": "live"
 }

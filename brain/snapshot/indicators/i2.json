@@ -2,7 +2,7 @@
   "chart": "MNQ 5 min (povinně)",
   "file": "lucid_2_vwap.pine",
   "name": "Lucid 2 — VWAP Band",
-  "note": "přepsáno: průraz pásma 0,20 %, 1× denně",
+  "note": "nahrát novou verzi: průraz pásma 0,20 %, 1× denně, filtr volatility z dokončeného dne",
   "order": 4,
   "role": "funded kniha",
   "status": "live"

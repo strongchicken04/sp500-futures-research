@@ -29,7 +29,7 @@
     ]
   },
   "eval": {
-    "caption": "RS sprint · +0,20 % / −0,40 %",
+    "caption": "RS sprint (stop 0,30 %) + 09:31 (target 0,25 %) na dvou účtech · návrh",
     "fee": 90,
     "p": 0.5,
     "rules": [
@@ -68,26 +68,27 @@
     ],
     "tiles": [
       {
-        "label": "Pass na pokus",
+        "label": "Dva účty: dní do funded",
         "sub": "2018–21 / 2022–25",
-        "tone": "arc",
-        "value": "48 / 52 %"
+        "tone": "ok",
+        "value": "6,8 / 6,5"
       },
       {
-        "label": "Dní do passu",
-        "sub": "obchodních dní v průměru",
+        "label": "Poplatky do funded",
+        "sub": "oba účty dohromady",
         "tone": "gold",
-        "value": "~13"
+        "value": "~$305"
       },
       {
-        "label": "Poplatky do passu",
-        "sub": "≈ 2 evaluace po $90",
-        "value": "~$180"
+        "label": "Jeden účet RS 0,30 %",
+        "sub": "poplatky ~185–200 $",
+        "tone": "arc",
+        "value": "~11 dní"
       },
       {
-        "label": "Základ: 09:31 long",
-        "sub": "obyčejný sprint pro srovnání",
-        "value": "36 %"
+        "label": "Dosavadní RS 0,40 %",
+        "sub": "pass 48 / 52 %",
+        "value": "~13 dní"
       }
     ]
   }

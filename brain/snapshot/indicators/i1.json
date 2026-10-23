@@ -1,8 +1,8 @@
 {
   "chart": "MNQ 5 min",
   "file": "lucid_1_s1_orb.pine",
-  "name": "Lucid 1 — ORB",
-  "note": "exit trailu za min(stop, open)",
+  "name": "Lucid 1 — ORB (nový)",
+  "note": "sjednoceno s backtestem; ověřeno exportem: −0,5 / +0,4 b./obchod, nejslabší noha knihy",
   "order": 5,
   "role": "funded kniha (slabé)",
   "status": "live"
