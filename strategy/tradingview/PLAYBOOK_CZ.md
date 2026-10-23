@@ -35,7 +35,7 @@ Vzdání je o ~1,5–2 dny rychlejší, ale o ~125–170 $ dražší (u 09:31 o 
 
 | Noha | Indikátor | Graf | Poznámka |
 |---|---|---|---|
-| ORB | Lucid 1 – S1 ORB | MNQ **5 min** | exit trailu za min(stop, open) |
+| ORB | **Lucid 1 – S1 ORB (nový)** | MNQ **5 min** | trail 20-EMA jen z RTH, re-entry po každém exitu, ne ve středu |
 | VWAP pásmo | **Lucid 2 – VWAP Band (nový)** | MNQ **5 min** | průraz VWAP ±0,20 %, SL 25 / TP 100 b., 1× denně, ne ve středu |
 | Noise momentum | **Lucid 6 (nový, stop 0,50 %)** | 1 / 5 / 30 min | rozhodnutí jen v :00 a :30 |
 | RS noha (kandidát) | Lucid 8 s **Target 1,25 / Stop 1,25** | MNQ 1 min | přidává hlavně v letech 2018–21 |
