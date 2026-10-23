@@ -53,6 +53,14 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
 ~7 % dní (~14× za rok); první funded pak za 7,0 / 6,9 dne místo 6,8 / 6,5
 (`results/hedge_check.txt`). Signál stejným směrem nebo po zavření obchodu na B je v pořádku.
 
+**Evaluace a funded účty zároveň** (noc 23./24. 10.): zákaz platí i mezi
+funded knihou a evaluačním sprintem. Pravidlo: **funded kniha nevstupuje
+proti otevřenému sprintu na evaluaci** (vstup vynech, na všech kopiích).
+RS sprint (účet A) se s knihou skoro nepotká (~1 % dní). Proti 09:31 sprintu
+(účet B) chce kniha vstoupit ~12–13 % dní; ty vynechané obchody jsou spíš
+ziskové (+11 / +18 $ na MNQ), takže to stojí řádově stovky dolarů ročně na
+funded místo – jen v době, kdy běží evaluace B (`results/cross_hedge.txt`).
+
 ## 2. Funded – kniha, 3 MNQ na každou nohu
 
 | Noha | Indikátor | Graf | Poznámka |

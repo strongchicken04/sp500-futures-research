@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-24T01:55Z (night shift 2026-10-23/24 running)
+heartbeat: 2026-10-24T02:25Z (night shift 2026-10-23/24 running)
 last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague); night shift 23/24 running
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,6 +16,8 @@ Next (for the night shift):
 
 
 ## Done this shift
+- Night: cross-account hedge book vs eval sprints: RS ~1% of days, 09:31 ~12-13% -> rule in PLAYBOOK (book skips
+  entries against an open eval sprint). LucidFlex funded scaling 20 MNQ below $1,000 profit: book at 4 MNQ uses <= 12-16.
 - Night: day stop on the open-P&L model rejected in all eras (PLAYBOOK: no day stop).
 - Night: size by stage (3->4, 4->5, 5->4 ...) on the open-P&L model: nothing clearly beats flat 4 -> keep it simple.
 - Night: RS funded-leg bracket at 4 MNQ (open-P&L check): no width better in all eras -> keep 1.25%.
