@@ -1,0 +1,2 @@
+2018-2021: days to first funded  median 6, 80% 10, 95% 17, worst 35;  fees median $270, 80% $360, 95% $720, worst $1440
+2022-2025: days to first funded  median 6, 80% 10, 95% 15, worst 31;  fees median $270, 80% $360, 95% $630, worst $1440

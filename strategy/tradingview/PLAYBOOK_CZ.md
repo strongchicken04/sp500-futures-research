@@ -30,6 +30,9 @@ mnohem pomalejší (18 / 21 dní místo 11), proto ho na evaluaci vypni.
 Očekávání (backtest): první funded účet za **~6,5–7 obchodních dní**
 (v každém roce 2018–2025 mezi 5,7 a 8,2 dne, nejhorší 2019),
 poplatky ~**300 $** (oba účty dohromady). Jeden účet s RS: ~11 dní, ~190 $.
+Rozptyl (`results/eval_spread.txt`, s pojistkou proti hedgingu): medián 6 dní /
+270 $; v 8 z 10 případů do 10 dní / 360 $; v 19 z 20 do 15–17 dní /
+630–720 $; nejhorší start 2018–2025 trval 31–35 dní a stál 1 440 $.
 Po první prohře se v backtestu pokračuje stejně dál (zbývá ~100 $ do
 drawdownu, takže další prohra účet ukončí); po bustu kup novou evaluaci.
 Volba po první prohře (`results/sprint_reset.txt`, 2018–21 | 2022–25):
