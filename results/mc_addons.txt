@@ -1,0 +1,13 @@
+daily corr NR-OD +0.13, NR-Z +0.18, OD-Z +0.25; same-day NR & OD trades: 88
+--- 2018-2021
+   core VG+Zfree+RS               $  17,653
+   + OD 3                         $  18,934   vs base  +1,281 (+/- 155)  better / worse in 59% / 39% of paths
+   + NR4 3                        $  18,766   vs base  +1,114 (+/- 172)  better / worse in 57% / 42% of paths
+   + OD 3 + NR4 3                 $  19,623   vs base  +1,970 (+/- 198)  better / worse in 62% / 38% of paths
+   + OD 2 + NR4 2                 $  19,186   vs base  +1,533 (+/- 175)  better / worse in 60% / 39% of paths
+--- 2022-2025
+   core VG+Zfree+RS               $  25,141
+   + OD 3                         $  24,956   vs base    -185 (+/- 218)  better / worse in 46% / 52% of paths
+   + NR4 3                        $  27,658   vs base  +2,518 (+/- 240)  better / worse in 62% / 37% of paths
+   + OD 3 + NR4 3                 $  28,579   vs base  +3,438 (+/- 264)  better / worse in 68% / 32% of paths
+   + OD 2 + NR4 2                 $  27,172   vs base  +2,031 (+/- 236)  better / worse in 60% / 39% of paths
