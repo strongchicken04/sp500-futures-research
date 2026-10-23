@@ -1,0 +1,14 @@
+--- 2018-21
+   base       mean $ 13,331 vs base     +0 (+/- 0) better/worse   0/  0% | first payout 39.6%
+   flat 2     mean $ 10,607 vs base -2,724 (+/- 101) better/worse  19/ 81% | first payout 50.7%
+   flat 4     mean $ 13,428 vs base    +97 (+/- 129) better/worse  51/ 48% | first payout 38.2%
+   no RS      mean $ 11,188 vs base -2,143 (+/- 137) better/worse  30/ 69% | first payout 40.5%
+   Z no gate  mean $ 14,529 vs base +1,198 (+/- 84) better/worse  58/ 30% | first payout 41.5%
+   + ORB      mean $ 11,575 vs base -1,756 (+/- 127) better/worse  31/ 68% | first payout 34.1%
+--- 2022-25
+   base       mean $ 17,419 vs base     +0 (+/- 0) better/worse   0/  0% | first payout 41.4%
+   flat 2     mean $ 16,144 vs base -1,276 (+/- 134) better/worse  36/ 63% | first payout 53.3%
+   flat 4     mean $ 16,639 vs base   -780 (+/- 149) better/worse  41/ 59% | first payout 36.0%
+   no RS      mean $ 13,083 vs base -4,336 (+/- 167) better/worse  19/ 79% | first payout 56.4%
+   Z no gate  mean $ 18,919 vs base +1,500 (+/- 129) better/worse  59/ 36% | first payout 40.7%
+   + ORB      mean $ 14,979 vs base -2,440 (+/- 167) better/worse  29/ 69% | first payout 32.3%
