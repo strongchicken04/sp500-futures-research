@@ -1,0 +1,4 @@
+2018-21: +$0/MNQ: flat 3 $ 18,105, flat 4 $ 21,652 (+3,546, better  71%) | +$1/MNQ: flat 3 $ 16,207, flat 4 $ 19,448 (+3,240, better  70%) | +$2/MNQ: flat 3 $ 14,184, flat 4 $ 17,064 (+2,879, better  69%)
+2022-25: +$0/MNQ: flat 3 $ 29,160, flat 4 $ 33,446 (+4,286, better  69%) | +$1/MNQ: flat 3 $ 27,500, flat 4 $ 31,616 (+4,117, better  68%) | +$2/MNQ: flat 3 $ 25,878, flat 4 $ 30,033 (+4,155, better  68%)
+2010-13: +$0/MNQ: flat 3 $ 19,595, flat 4 $ 22,154 (+2,560, better  62%) | +$1/MNQ: flat 3 $ 18,352, flat 4 $ 20,846 (+2,493, better  61%) | +$2/MNQ: flat 3 $ 17,377, flat 4 $ 19,721 (+2,344, better  59%)
+2014-17: +$0/MNQ: flat 3 $ 19,755, flat 4 $ 22,294 (+2,539, better  61%) | +$1/MNQ: flat 3 $ 18,732, flat 4 $ 20,790 (+2,058, better  59%) | +$2/MNQ: flat 3 $ 17,412, flat 4 $ 19,709 (+2,298, better  60%)
