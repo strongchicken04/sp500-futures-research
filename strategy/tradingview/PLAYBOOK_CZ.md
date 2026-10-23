@@ -67,7 +67,7 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
 - **Riziko:** k první výplatě dojde ~40 % funded účtů (při 4 MNQ ~37 %),
   zbytek přijde o drawdown dřív. Vyplácí se to jen proto, že nová evaluace
   sprintem je levná (~180–270 $, ~7–11 dní). Počítej s tím.
-- Denní stop výsledek nezlepšuje; jako pojistka −600 $ nevadí.
+- Denní stop nepoužívej: s otevřenými pozicemi v simulaci výsledek zhoršuje ve všech obdobích (−600 $ i −1 500 $; `results/daystop_v2.txt`).
 - Očekávání (kniha bez ORB, opravený model `scripts/funded_model.py`
   a `mtm_check.py`, 24 měsíců, evaluace odečtené, 2018–21 / 2022–25):
   při 3 MNQ ~750–810 / 1 200–1 330 $ měsíčně na funded místo, při 4 MNQ
