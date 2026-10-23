@@ -3,6 +3,11 @@
 Všechno níže je návrh z backtestů 2018–2025 (laděno na 2018–21, ověřeno na
 2022–25). Výsledky v minulosti nezaručují budoucí. Rozhoduješ ty.
 
+## 0. Nejdřív: nahraj nové verze indikátorů
+
+Lucid 1, 2, 6 a 7 byly 23. 10. upravené (shoda s backtestem, denní hodnoty
+z posledního dokončeného dne). Lucid 8 beze změny, Lucid 9 je nový.
+
 ## 1. Evaluace – dva účty, každý jiný sprint
 
 Cíl: projít co nejrychleji a nejlevněji. Na každém účtu **jeden obchod
