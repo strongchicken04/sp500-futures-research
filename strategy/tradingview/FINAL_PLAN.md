@@ -1,3 +1,23 @@
+# 2026-10-23 (denní směna) — NÁVRH: funded kniha bez ORB, Lucid 6 bez filtru volatility
+
+Nová simulace (`scripts/mc_book.py`: 24měsíční cesty z 20denních bloků
+historie, všechny varianty na stejných blocích; stará metoda se hýbala
+o 3–5 tisíc $ jen kvůli kalendáři) a podíly výplat na jedné historii
+(2018–21 | 2022–25, flat 3 MNQ na nohu):
+
+| kniha | průměr na účet 24 m (bootstrap) | první výplata | další výplaty |
+|---|---|---|---|
+| dnes: ORB + VWAP pásmo + noise + RS (vše s filtrem) | 14 700 / 21 800 $ | 37 / 36 % | 63 / 61 % |
+| **VWAP pásmo + noise bez filtru + RS (bez ORB)** | **17 300 / 24 800 $** | **46 / 42 %** | **69 / 67 %** |
+| + open drive (Lucid 10) + NR4 (Lucid 11), 3 MNQ | +2 000 / +3 400 $ navíc | – | – |
+
+Proč: ORB má podle auditu edge kolem nuly (jen přidává riziko); dny, které
+filtr volatility vyřazuje, jsou pro noise momentum dobré (+12 / +33 $ na mikro
+obchod). U VWAP pásma, RS a ORB filtr nechat. Nejvíc nese noise (bez něj
+−4 900 / −4 700 $). Změna v praxi: Lucid 1 vypnout, v Lucid 6 odškrtnout
+„Volatility gate“. Open drive a NR4 jsou volitelné (dnes testováno hodně
+variant, berte je jako skromný doplněk). Rozhoduješ ty.
+
 # 2026-10-23 — Lucid Flex nedovoluje držet přes noc
 
 Overnight long po 3+ červených dnech je vyřazen; všechny strategie plánu
