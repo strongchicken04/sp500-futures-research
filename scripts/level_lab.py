@@ -20,6 +20,16 @@ Rules (fixed before looking at results, 2026-10-23 day shift):
          back inside -> fade it; stop 2 pt beyond the day extreme so far;
          target the prior POC (if on the right side) else flat 15:55.
   ONSWP  the same with the overnight high/low (signals 09:35-12:00).
+Second group (also fixed before results):
+  NPOC   naked POC: the most recent POC of the last 5 sessions that no later
+         session traded through; first touch today -> trade toward it as POC
+         (stop 0.25%, target 0.50%).
+  ODRIVE open drive: first 30 minutes never trade more than 0.05% against the
+         open and close >= 0.15% beyond it -> go with it at 10:00, stop at the
+         open -/+ 0.05%, flat 15:55.
+  NARROW prior VA width in the lowest third of the previous 20 sessions; first
+         5-min close outside the prior VA from 10:00 -> go with it, stop at the
+         VA middle, flat 15:55. WIDE = same rule on the top third (control).
 
 Fills: entry at the signal bar's close (POC: at the level, the touching bar
 is checked for the stop); tracking from the next bar; a bar touching stop and
@@ -50,9 +60,9 @@ def load(data_dir):
             continue
         for raw in open(p):
             f = raw.strip().split(",")
-            if f[0] == "H" and len(f) >= 13:
+            if f[0] == "H" and len(f) >= 12:
                 days[f[1]] = {"exp": f[2], "onh": float(f[3]), "onl": float(f[4]), "onpoc": float(f[5]),
-                              "poc": float(f[7]), "vah": float(f[8]), "val": float(f[9]), "base": float(f[12])}
+                              "poc": float(f[7]), "vah": float(f[8]), "val": float(f[9]), "base": float(f[11])}
             elif f[0] == "B" and len(f) >= 4:
                 bars[f[1]][int(f[2])] = f[3]
     out = []
@@ -193,6 +203,63 @@ def sweep(day, prev, hi_lvl, lo_lvl, last):
     return None
 
 
+def touch(day, lvl, sp, last=54):
+    b = day["bars"]
+    o = b[0][0]
+    if o == lvl:
+        return None
+    d = 1 if o > lvl else -1
+    for i in range(0, last):
+        if (d == 1 and b[i][2] <= lvl) or (d == -1 and b[i][1] >= lvl):
+            e = min(lvl, b[i][0]) if d == 1 else max(lvl, b[i][0])
+            return d, run(b, i, d, e, e * (1 - d * sp), e * (1 + d * 2 * sp), check_entry_bar=True)
+    return None
+
+
+def odrive(day, prev):
+    b = day["bars"]
+    o = b[0][0]
+    hi, lo, c = max(x[1] for x in b[:6]), min(x[2] for x in b[:6]), b[5][3]
+    if lo >= o * (1 - 0.0005) and c >= o * 1.0015:
+        return 1, run(b, 5, 1, c, o * (1 - 0.0005))
+    if hi <= o * (1 + 0.0005) and c <= o * (1 - 0.0015):
+        return -1, run(b, 5, -1, c, o * (1 + 0.0005))
+    return None
+
+
+def va_break(day, prev):
+    b = day["bars"]
+    vah, val = prev["vah"], prev["val"]
+    for i in range(5, LAST_ENTRY + 1):
+        c = b[i][3]
+        if c > vah or c < val:
+            d = 1 if c > vah else -1
+            return d, run(b, i, d, c, (vah + val) / 2)
+    return None
+
+
+def annotate(days):
+    """Adds npoc (naked POC of the last 5 sessions, as known before the session)
+    and the prior VA width tercile vs the previous 20 sessions."""
+    for n, day in enumerate(days):
+        day["npoc"] = None
+        for j in range(n - 1, max(-1, n - 6), -1):
+            if days[j]["exp"] != day["exp"]:
+                break
+            p = days[j]["poc"]
+            if j == n - 1:             # the prior POC itself is the POC rule
+                continue
+            if all(not (days[k]["lo"] <= p <= days[k]["hi"]) for k in range(j + 1, n)):
+                day["npoc"] = p
+                break
+        if n >= 21:
+            ws = sorted(days[k]["vah"] - days[k]["val"] for k in range(n - 21, n - 1))
+            w = days[n - 1]["vah"] - days[n - 1]["val"]
+            day["vaw"] = "narrow" if w <= ws[len(ws) // 3] else "wide" if w >= ws[2 * len(ws) // 3] else "mid"
+        else:
+            day["vaw"] = None
+
+
 def rules():
     R = {}
     for buf in (0.15, 0.25, 0.35):
@@ -207,6 +274,10 @@ def rules():
         R[f"PDBRK stop {sp * 100:.2f}%"] = lambda d, p, sp=sp: pdbrk(d, p, sp)
     R["PDSWP"] = lambda d, p: sweep(d, p, p["hi"], p["lo"], 54)
     R["ONSWP"] = lambda d, p: sweep(d, p, d["onh"], d["onl"], 29)
+    R["NPOC"] = lambda d, p: touch(d, d["npoc"], 0.0025) if d["npoc"] else None
+    R["ODRIVE"] = odrive
+    R["NARROW"] = lambda d, p: va_break(d, p) if d["vaw"] == "narrow" else None
+    R["WIDE"] = lambda d, p: va_break(d, p) if d["vaw"] == "wide" else None
     return R
 
 
@@ -232,7 +303,14 @@ def trades(days, fn):
 def main():
     data = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("BRAIN_DATA", "/tmp/brain_data")
     days = load(data)
-    print(f"sessions {len(days)}: {days[0]['date']} .. {days[-1]['date']}\n")
+    annotate(days)
+    print(f"sessions {len(days)}: {days[0]['date']} .. {days[-1]['date']}")
+    for lbl, i in (("09:35", 0), ("10:00", 5), ("10:35", 12)):
+        v = [x["bars"][EOD][3] - x["bars"][i][3] for x in days]
+        a = [y for x, y in zip(days, v) if x["date"] < "2022"]
+        b = [y for x, y in zip(days, v) if x["date"] >= "2022"]
+        print(f"baseline drift {lbl} close -> 15:55 (gross, long): {st.mean(a) if a else 0:+.2f} | {st.mean(b) if b else 0:+.2f} pt")
+    print()
     for name, fn in rules().items():
         ts = trades(days, fn)
         a = [t["pts"] for t in ts if t["date"] < "2022"]
