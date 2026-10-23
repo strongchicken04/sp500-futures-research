@@ -1,0 +1,28 @@
+--- 2018-21
+   flat3  mean $ 13,374 vs flat3     +0 (+/- 0) better/worse   0/  0% | first payout 39.6%
+   F2     mean $ 14,074 vs flat3   +700 (+/- 77) better/worse  51/ 27% | first payout 41.5%
+   P2     mean $ 13,559 vs flat3   +185 (+/- 44) better/worse  22/ 14% | first payout 39.8%
+   P1     mean $ 13,717 vs flat3   +343 (+/- 63) better/worse  35/ 23% | first payout 39.9%
+   F2+P2  mean $ 14,262 vs flat3   +888 (+/- 81) better/worse  54/ 26% | first payout 42.0%
+   L4     mean $ 14,479 vs flat3 +1,105 (+/- 108) better/worse  60/ 38% | first payout 38.2%
+--- 2022-25
+   flat3  mean $ 17,439 vs flat3     +0 (+/- 0) better/worse   0/  0% | first payout 41.4%
+   F2     mean $ 18,666 vs flat3 +1,227 (+/- 100) better/worse  59/ 26% | first payout 44.2%
+   P2     mean $ 18,180 vs flat3   +741 (+/- 75) better/worse  42/ 20% | first payout 41.6%
+   P1     mean $ 18,574 vs flat3 +1,135 (+/- 101) better/worse  58/ 28% | first payout 41.8%
+   F2+P2  mean $ 19,419 vs flat3 +1,980 (+/- 109) better/worse  67/ 22% | first payout 44.4%
+   L4     mean $ 17,897 vs flat3   +458 (+/- 133) better/worse  50/ 48% | first payout 36.0%
+--- 2010-13
+   flat3  mean $    478 vs flat3     +0 (+/- 0) better/worse   0/  0% | first payout 20.4%
+   F2     mean $    339 vs flat3   -139 (+/- 17) better/worse   5/ 13% | first payout 20.2%
+   P2     mean $    478 vs flat3     +0 (+/- 0) better/worse   0/  0% | first payout 20.4%
+   P1     mean $    478 vs flat3     +0 (+/- 0) better/worse   0/  0% | first payout 20.4%
+   F2+P2  mean $    339 vs flat3   -139 (+/- 17) better/worse   5/ 13% | first payout 20.2%
+   L4     mean $  1,029 vs flat3   +551 (+/- 31) better/worse  45/ 41% | first payout  6.3%
+--- 2014-17
+   flat3  mean $  2,766 vs flat3     +0 (+/- 0) better/worse   0/  0% | first payout  2.0%
+   F2     mean $  2,798 vs flat3    +32 (+/- 30) better/worse  26/ 20% | first payout  2.6%
+   P2     mean $  2,771 vs flat3     +5 (+/- 5) better/worse   1/  0% | first payout  2.0%
+   P1     mean $  2,769 vs flat3     +3 (+/- 7) better/worse   2/  1% | first payout  2.0%
+   F2+P2  mean $  2,800 vs flat3    +34 (+/- 31) better/worse  26/ 20% | first payout  2.6%
+   L4     mean $  3,678 vs flat3   +912 (+/- 50) better/worse  60/ 35% | first payout  6.9%

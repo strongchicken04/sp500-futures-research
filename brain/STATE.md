@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T21:45Z (night shift 2026-10-23/24 running)
+heartbeat: 2026-10-23T22:05Z (night shift 2026-10-23/24 running)
 last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague); night shift 23/24 running
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,6 +16,8 @@ Next (for the night shift):
 
 
 ## Done this shift
+- Night: payout-aware funded sizing (2 MNQ near +$4,000 / until five profitable days) = small option
+  +0.9k / +2.0k, not confirmed in 2010-17 (PLAYBOOK section 3).
 - Night: vol-scaled sprint bracket rejected; funded sprint to the first payout rejected (LucidFlex
   five-profitable-day payout rule); income model corrected (all days + five-day rule): no-ORB book
   $13.3k / $17.5k per seat in 24 m, first payout 40 / 41% (income2.py). Use the all-days calendar

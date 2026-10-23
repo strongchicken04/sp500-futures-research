@@ -65,7 +65,7 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
 - Velikost: **3 MNQ na každou nohu** (ne ladder). Simulace s časy obchodů:
   ~12 100 / 29 100 $ na účet za 24 měsíců (2018–21 | 2022–25), ladder
   400/500 jen 2 300 / 20 500 $.
-- **Riziko:** k první výplatě dojde ~40–51 % funded účtů, zbytek přijde
+- **Riziko:** k první výplatě dojde ~40 % funded účtů, zbytek přijde
   o drawdown dřív. Vyplácí se to jen proto, že nová evaluace sprintem je
   levná (~180 $, ~11 dní). Počítej s tím.
 - Denní stop výsledek nezlepšuje; jako pojistka −600 $ nevadí.
@@ -87,6 +87,12 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
   první výplata u 40 / 41 % funded účtů místo 34 / 32 % (opravený model);
   ORB nemá edge ani
   v nezávislém období 2010–2017. Prakticky: Lucid 1 nepoužívat, zbytek beze změny.
+
+- **Volitelně (malé, v 2010–17 nepotvrzené):** na funded účtu jeď 2 MNQ na
+  nohu místo 3, když (a) do +4 000 $ chybí méně než 1 000 $, nebo (b) máš
+  +4 000 $, ale ještě ne 5 ziskových dní. Simulace: +900 / +2 000 $ na účet
+  za 24 měsíců (2018–21 / 2022–25), lepší ve 54 / 67 % cest
+  (`results/payout_size.txt`).
 
 - Overnight long (Lucid 9) vyřazen: Lucid Flex nedovoluje držet přes noc.
   Všechny strategie v plánu jsou do 15:55 ET flat.
