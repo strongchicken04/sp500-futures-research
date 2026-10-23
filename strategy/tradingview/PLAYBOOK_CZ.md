@@ -63,7 +63,7 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
   levná (~180 $, ~11 dní). Počítej s tím.
 - Denní stop výsledek nezlepšuje; jako pojistka −600 $ nevadí.
 - Očekávání (kniha bez ORB, flat 3, simulace 24 měsíců, evaluace odečtené):
-  ~740 $ / měsíc na funded účet v 2018–21, ~1 060 $ v 2022–25; 8 z 10 účtů
+  ~740 $ / měsíc na funded účet v 2018–21, ~1 060 $ v 2022–25; 9 z 10 účtů
   nad 8 500 / 14 400 $ za 24 měsíců (`results/income.txt`). V klidném trhu
   může být polovina. Víc peněz = víc účtů se stejnou knihou (kopie).
 - Filtr volatility v indikátorech nech zapnutý (20denní volatilita NQ < 30 %).
