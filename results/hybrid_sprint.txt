@@ -1,0 +1,4 @@
+2010-13: single RS  82.9 d $ 315 | VWAP10  50.7 d $ 352 | hybrid  54.4 d $ 355   || two accounts: RS+09:31  44.5 d $ 564 | hybrid+09:31  37.1 d $ 464
+2014-17: single RS  40.7 d $ 349 | VWAP10  19.1 d $ 290 | hybrid  23.1 d $ 326   || two accounts: RS+09:31  17.6 d $ 488 | hybrid+09:31  15.0 d $ 463
+2018-21: single RS  12.3 d $ 205 | VWAP10   9.8 d $ 213 | hybrid  10.2 d $ 216   || two accounts: RS+09:31   7.7 d $ 319 | hybrid+09:31   7.6 d $ 335
+2022-25: single RS  10.2 d $ 179 | VWAP10   9.3 d $ 188 | hybrid   9.9 d $ 208   || two accounts: RS+09:31   6.8 d $ 306 | hybrid+09:31   6.8 d $ 315
