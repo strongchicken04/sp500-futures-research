@@ -24,8 +24,8 @@ mnohem pomalejší (18 / 21 dní místo 11), proto ho na evaluaci vypni.
 
 Očekávání (backtest): první funded účet za **~6,5–7 obchodních dní**,
 poplatky ~**300 $** (oba účty dohromady). Jeden účet s RS: ~11 dní, ~190 $.
-Prohra = konec pokusu na tom účtu (zůstane ~100 $ drawdownu) → kup novou
-evaluaci a pokračuj. Stejný sprint kopírovat na víc účtů nemá smysl.
+Po první prohře se v backtestu pokračuje stejně dál (zbývá ~100 $ do
+drawdownu, takže další prohra účet ukončí); po bustu kup novou evaluaci. Stejný sprint kopírovat na víc účtů nemá smysl.
 
 ## 2. Funded – kniha, 3 MNQ na každou nohu
 
