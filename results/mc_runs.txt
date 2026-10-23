@@ -1,0 +1,22 @@
+--- 2018-2021 (929 days), mean 24-month cash per account
+   now: ORB+VG+Z+RS flat 3        $  14,632
+   flat 2                         $  11,923   vs base  -2,709 (+/- 163)  better / worse in 24% / 75% of paths
+   flat 4                         $  17,002   vs base  +2,370 (+/- 191)  better / worse in 68% / 31% of paths
+   Z without vol gate             $  15,476   vs base    +844 (+/- 106)  better / worse in 49% / 34% of paths
+   + OD 1                         $  15,243   vs base    +610 (+/- 110)  better / worse in 48% / 34% of paths
+   + OD 1 + PW 1                  $  15,574   vs base    +942 (+/- 119)  better / worse in 54% / 35% of paths
+   + OD 3                         $  16,390   vs base  +1,757 (+/- 156)  better / worse in 62% / 34% of paths
+   skip FOMC days                 $  16,109   vs base  +1,477 (+/- 110)  better / worse in 63% / 21% of paths
+   no RS leg                      $  13,354   vs base  -1,278 (+/- 194)  better / worse in 38% / 61% of paths
+   no ORB leg                     $  16,281   vs base  +1,648 (+/- 175)  better / worse in 65% / 34% of paths
+--- 2022-2025 (937 days), mean 24-month cash per account
+   now: ORB+VG+Z+RS flat 3        $  21,752
+   flat 2                         $  21,077   vs base    -675 (+/- 239)  better / worse in 42% / 56% of paths
+   flat 4                         $  22,425   vs base    +673 (+/- 260)  better / worse in 54% / 46% of paths
+   Z without vol gate             $  23,556   vs base  +1,804 (+/- 162)  better / worse in 59% / 32% of paths
+   + OD 1                         $  22,085   vs base    +333 (+/- 147)  better / worse in 45% / 41% of paths
+   + OD 1 + PW 1                  $  21,931   vs base    +178 (+/- 175)  better / worse in 46% / 45% of paths
+   + OD 3                         $  22,596   vs base    +844 (+/- 222)  better / worse in 52% / 45% of paths
+   skip FOMC days                 $  21,954   vs base    +201 (+/- 149)  better / worse in 47% / 41% of paths
+   no RS leg                      $  18,358   vs base  -3,394 (+/- 260)  better / worse in 30% / 69% of paths
+   no ORB leg                     $  23,763   vs base  +2,011 (+/- 252)  better / worse in 62% / 38% of paths

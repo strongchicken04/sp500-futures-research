@@ -1,0 +1,16 @@
+--- 2018-2021 (924 days), mean 24-month cash per account
+   now: ORB+VG+Z+RS flat 3        $  14,705
+   VG+Z+RS (no ORB)               $  16,131   vs base  +1,426 (+/- 148)  better / worse in 63% / 36% of paths
+   VG+Zfree+RS                    $  17,293   vs base  +2,589 (+/- 156)  better / worse in 71% / 28% of paths
+   VG+Zfree+RS+OD                 $  18,516   vs base  +3,811 (+/- 162)  better / worse in 76% / 22% of paths
+   VG+Z+RS+OD                     $  17,429   vs base  +2,724 (+/- 157)  better / worse in 71% / 27% of paths
+   VG+Zfree+RS+OD flat 4          $  18,811   vs base  +4,106 (+/- 186)  better / worse in 76% / 24% of paths
+   ORB+VG+Z+RS flat 4             $  17,045   vs base  +2,340 (+/- 165)  better / worse in 68% / 32% of paths
+--- 2022-2025 (935 days), mean 24-month cash per account
+   now: ORB+VG+Z+RS flat 3        $  21,811
+   VG+Z+RS (no ORB)               $  23,885   vs base  +2,075 (+/- 220)  better / worse in 61% / 39% of paths
+   VG+Zfree+RS                    $  24,845   vs base  +3,034 (+/- 234)  better / worse in 66% / 33% of paths
+   VG+Zfree+RS+OD                 $  24,908   vs base  +3,097 (+/- 245)  better / worse in 64% / 34% of paths
+   VG+Z+RS+OD                     $  23,780   vs base  +1,970 (+/- 228)  better / worse in 60% / 38% of paths
+   VG+Zfree+RS+OD flat 4          $  26,621   vs base  +4,811 (+/- 263)  better / worse in 71% / 29% of paths
+   ORB+VG+Z+RS flat 4             $  22,635   vs base    +824 (+/- 223)  better / worse in 54% / 46% of paths

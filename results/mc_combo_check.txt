@@ -1,0 +1,20 @@
+--- block 5 days, 2018-21
+   now                            $  15,946
+   VG+Zfree+RS                    $  18,326   vs base  +2,379 (+/- 185)  better / worse in 69% / 29% of paths
+   VG+Zfree+RS+OD                 $  19,988   vs base  +4,042 (+/- 199)  better / worse in 76% / 22% of paths
+--- block 5 days, 2022-25
+   now                            $  22,694
+   VG+Zfree+RS                    $  25,349   vs base  +2,655 (+/- 265)  better / worse in 65% / 34% of paths
+   VG+Zfree+RS+OD                 $  25,721   vs base  +3,027 (+/- 271)  better / worse in 65% / 32% of paths
+--- block 60 days, 2018-21
+   now                            $  15,653
+   VG+Zfree+RS                    $  19,410   vs base  +3,757 (+/- 196)  better / worse in 76% / 23% of paths
+   VG+Zfree+RS+OD                 $  19,683   vs base  +4,029 (+/- 175)  better / worse in 80% / 18% of paths
+--- block 60 days, 2022-25
+   now                            $  23,225
+   VG+Zfree+RS                    $  25,256   vs base  +2,031 (+/- 270)  better / worse in 59% / 39% of paths
+   VG+Zfree+RS+OD                 $  26,343   vs base  +3,118 (+/- 298)  better / worse in 64% / 35% of paths
+--- original walk (one history, every start day), common calendar
+   now              $  17,031 | $  30,523
+   VG+Zfree+RS      $  18,692 | $  27,918
+   VG+Zfree+RS+OD   $  15,798 | $  25,933
