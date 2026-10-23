@@ -1,0 +1,6 @@
+== RS 0.20/0.30
+   2018-21: keep trading after a loss  12.7 days $ 213   |   new evaluation after a loss  10.9 days $ 382
+   2022-25: keep trading after a loss  10.0 days $ 174   |   new evaluation after a loss   8.5 days $ 298
+== 09:31 0.25/0.40
+   2018-21: keep trading after a loss  13.0 days $ 256   |   new evaluation after a loss  10.9 days $ 454
+   2022-25: keep trading after a loss  10.9 days $ 238   |   new evaluation after a loss   9.1 days $ 420

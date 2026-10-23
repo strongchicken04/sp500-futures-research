@@ -25,7 +25,11 @@ mnohem pomalejší (18 / 21 dní místo 11), proto ho na evaluaci vypni.
 Očekávání (backtest): první funded účet za **~6,5–7 obchodních dní**,
 poplatky ~**300 $** (oba účty dohromady). Jeden účet s RS: ~11 dní, ~190 $.
 Po první prohře se v backtestu pokračuje stejně dál (zbývá ~100 $ do
-drawdownu, takže další prohra účet ukončí); po bustu kup novou evaluaci. Stejný sprint kopírovat na víc účtů nemá smysl.
+drawdownu, takže další prohra účet ukončí); po bustu kup novou evaluaci.
+Volba po první prohře (`results/sprint_reset.txt`, 2018–21 | 2022–25):
+- **pokračovat na stejném účtu** (výchozí): RS 12,7 / 10,0 dne, 213 / 174 $;
+- **vzdát a hned koupit novou evaluaci**: RS 10,9 / 8,5 dne, 382 / 298 $.
+Vzdání je o ~1,5–2 dny rychlejší, ale o ~125–170 $ dražší (u 09:31 o ~200 $). Stejný sprint kopírovat na víc účtů nemá smysl.
 
 ## 2. Funded – kniha, 3 MNQ na každou nohu
 
