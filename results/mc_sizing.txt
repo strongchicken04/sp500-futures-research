@@ -1,0 +1,14 @@
+--- 2018-21
+   flat 3                         $  17,673
+   flat 2                         $  13,323   vs base  -4,350 (+/- 150)  better / worse in 12% / 88% of paths
+   flat 4                         $  18,617   vs base    +945 (+/- 201)  better / worse in 57% / 43% of paths
+   2 -> 3 at room $3k             $  12,231   vs base  -5,442 (+/- 149)  better / worse in 8% / 92% of paths
+   3 -> 4 at room $3k             $  16,524   vs base  -1,148 (+/- 94)  better / worse in 21% / 53% of paths
+   3, 2 below room $1k            $  15,480   vs base  -2,193 (+/- 134)  better / worse in 29% / 69% of paths
+--- 2022-25
+   flat 3                         $  25,962
+   flat 2                         $  22,102   vs base  -3,861 (+/- 217)  better / worse in 24% / 74% of paths
+   flat 4                         $  27,526   vs base  +1,564 (+/- 251)  better / worse in 60% / 40% of paths
+   2 -> 3 at room $3k             $  19,972   vs base  -5,990 (+/- 217)  better / worse in 15% / 84% of paths
+   3 -> 4 at room $3k             $  24,400   vs base  -1,563 (+/- 116)  better / worse in 19% / 59% of paths
+   3, 2 below room $1k            $  23,124   vs base  -2,838 (+/- 183)  better / worse in 29% / 68% of paths
