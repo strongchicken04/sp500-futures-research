@@ -1,15 +1,19 @@
 # Brain state
 
-heartbeat: 2026-10-23T03:08Z (shift 2026-10-23 active)
+heartbeat: 2026-10-23T04:08Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
 
-12. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
+12. Add entry times to Trade (or order legs by time) so lifecycle sims stop depending on merge order.
+13. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- ORB at flat 3: still adds (+$1.6k / +$6.5k per account). CAVEAT: lifecycle sims are sensitive to
+  the within-day order of merged trades (~25%); Trade has no time - merge legs in entry-time
+  order (ORB, VG, Z, RS). Day stop in sims = $75 + $75 x units (flat 3: -$300).
 - Funded sizing: flat 3 MNQ per leg beats the ladder in both halves (+$5k / +$11k per account, 24m).
 - 11. Importer (WebSearch): the two best-known published intraday NQ/QQQ systems are already
   tested (noise momentum, Zarattini/Aziz/Barbon 2024-25 = live; VWAP trend, Zarattini & Aziz
