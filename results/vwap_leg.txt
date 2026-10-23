@@ -1,0 +1,14 @@
+--- 2018-21: V11 $+3.54 per MNQ per trade (n 877)
+   no ORB (VG+Z+RS)               $  16,734
+   + V11 3                        $  16,774   vs base     +40 (+/- 214)  better / worse in 49% / 51% of paths
+   + V10 3                        $  19,106   vs base  +2,372 (+/- 211)  better / worse in 65% / 33% of paths
+--- 2022-25: V11 $+9.31 per MNQ per trade (n 862)
+   no ORB (VG+Z+RS)               $  25,169
+   + V11 3                        $  25,049   vs base    -120 (+/- 320)  better / worse in 49% / 50% of paths
+   + V10 3                        $  26,639   vs base  +1,469 (+/- 306)  better / worse in 56% / 44% of paths
+--- 2010-2013: V11 $-0.66 per MNQ per trade (n 863)
+   no ORB (VG+Z+RS)               $     568
+   + V11 3                        $     542   vs base     -26 (+/- 34)  better / worse in 19% / 54% of paths
+--- 2014-2017: V11 $-0.45 per MNQ per trade (n 901)
+   no ORB (VG+Z+RS)               $   3,101
+   + V11 3                        $   3,407   vs base    +306 (+/- 70)  better / worse in 44% / 50% of paths
