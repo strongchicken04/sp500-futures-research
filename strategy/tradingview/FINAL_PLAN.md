@@ -1,3 +1,22 @@
+# 2026-10-23 — KOREKCE: denní stop a RS noha (simulace bez časů obchodů)
+
+Simulace účtů bere obchody jednoho dne jako po sobě jdoucí (každý skončí, než
+začne další). Ve skutečnosti se noise, RS i VWAP otevírají, když ORB ještě
+běží. Denní stop pak v simulaci „ví“ o ztrátě, kterou v době vstupu dalšího
+obchodu nikdo neznal: obchody jiné nohy po ranní ztrátě vycházejí −31 / −54 $
+na MNQ (t −6 / −8) proti +21 / +43 $ jinak – to je souběžnost, ne edge.
+Proto:
+- **Těsnější denní stop nedoporučuji** (−150 $ vypadal nejlépe jen kvůli
+  tomuto artefaktu).
+- **Velikost bez denního stopu** (průměr na účet za 24 m., 2018–21 | 2022–25):
+  opravená kniha flat 3 **9 900 / 35 200 $** vs ladder 400/500 3 500 / 23 300 $
+  → **flat 3 platí dál**.
+- **RS noha při flat 3 bez stopu: 20 100 / 31 800 $** vs bez RS 9 900 / 35 200 $
+  → v 2022–25 nepomáhá; **doporučení RS nohy stahuji na „nejisté“**, dokud
+  nebude simulace s časy obchodů.
+- Čísla „průměr na účet“ výše (13 100 / 16 400 $ atd.) počítala s denním
+  stopem, berte je jako horní odhad.
+
 # 2026-10-23 — FUNDED: výhrady k velikosti flat 3
 
 - **Denní stop je součást výsledku:** simulace končí den při ztrátě

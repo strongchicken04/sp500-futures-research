@@ -1,0 +1,9 @@
+book                day stop  2018-21 | 2022-25 (mean 24-month cash per account, flat 3)
+live fixed             -$150  $  18,843 | $  49,131
+live fixed             -$300  $  11,475 | $  43,027
+live fixed             -$600  $   9,650 | $  36,969
+live fixed              none  $   9,940 | $  35,235
+live fixed + RS        -$150  $  31,421 | $  60,041
+live fixed + RS        -$300  $  27,274 | $  60,643
+live fixed + RS        -$600  $  20,349 | $  40,041
+live fixed + RS         none  $  20,116 | $  31,776
