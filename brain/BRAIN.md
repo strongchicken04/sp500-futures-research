@@ -121,7 +121,7 @@ English.
   - `brain/metrics.eval` also has `p` (pass per attempt), `fee`, `rules`.
   - `brain/metrics`: `{eval|book: {caption, tiles: [{label, value, sub, tone:
     arc|gold|ok|bad}]}}` whenever the recommended plan's numbers change.
-  - `reports/YYYY-MM-DD`: `{date, title, summary (Czech, plain text), verdicts:
+  - `reports/YYYY-MM-DD`: `{date (ISO, e.g. 2026-10-23 or 2026-10-23T22:00 - nothing else), title, summary (Czech, plain text), verdicts:
     [{name, status}]}` with the morning report.
 - At the end of each shift refresh the offline copy: ArtifactData `list` of
   brain, strategies, queue, indicators and reports with
