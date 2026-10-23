@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T10:12Z (day shift 2026-10-23 active, owner asked for a full day)
+heartbeat: 2026-10-23T10:39Z (day shift 2026-10-23 active, owner asked for a full day)
 last shift: 2026-10-23 (report final at 09:45 Prague; later wakes continue the queue)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -9,6 +9,9 @@ QC runs allowed until 21:30 Prague, day report brain/reports/2026-10-23-den.md ~
 12. Level lab: BARS5A/B export (5-min NQ RTH bars + daily RTH volume profile + overnight
     levels) -> scripts/level_lab.py rules VA80, OUTV, POC, IB, PDBRK, PDSWP, ONSWP (pre-registered).
 13. Survivors of 12: book add-on check with timed_book.py, then a Pine indicator.
+15. Account-B sprint with a real edge and low correlation to RS (09:31 trend has no edge in any era,
+    resolved win = random); candidates: VWAP band, noise at its first check, open drive; measure
+    resolved win vs random in all four eras (2010-25) and the two-account days to first funded.
 14. More simple ideas on the same panel (no new QC run needed): e.g. naked POC, VA width
     regime, opening type (open-drive / open-test-drive), first-hour range vs ATR.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
@@ -16,6 +19,9 @@ QC runs allowed until 21:30 Prague, day report brain/reports/2026-10-23-den.md ~
 
 
 ## Done this shift
+- Day: 2010-2017 third period (never tuned): gross edges of noise / VWAP band positive but ~half;
+  ORB ~0 gross, negative net -> recommendation narrowed to dropping ORB (first payout 44/42% vs 37/36%).
+  Z without gate and OD/NR4 add-ons not confirmed. RS sprint edge in all four eras; 09:31 none.
 - Day: ICT (Silver Bullet, London/Asia/prior-week sweeps), retail indicators (EMA/Supertrend/MACD/Bollinger),
   Yu-Rentzler-Wolf regimes, OD in the sprint, prior-week break, smaller extra legs, profit lock, FOMC skip: all rejected.
   Note: lifecycle mean moves ~$3k with the calendar alone - treat smaller differences as noise.
