@@ -20,11 +20,13 @@ maxCts   = input.int(40, "Max contracts")
 biasMode = input.string("Auto (50-day trend)", "Bias", options=["Auto (50-day trend)", "Long", "Short"])
 useVol   = input.bool(true, "Volatility gate (skip if NQ 20d vol >= 30%)")
 volSym   = input.string("CME_MINI:NQ1!", "   vol gate symbol")
+// Daily values: last COMPLETED session ([1] + lookahead_on), identical in history and
+// real time (lookahead_off would use the forming daily bar live). Fixed 2026-10-23.
 
-rvol20 = request.security(volSym, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+rvol20 = request.security(volSym, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
 volOK = not useVol or na(rvol20) or rvol20 < 0.30
-dClose = request.security(volSym, "D", close, lookahead=barmerge.lookahead_off)
-dSma50 = request.security(volSym, "D", ta.sma(close, 50), lookahead=barmerge.lookahead_off)
+dClose = request.security(volSym, "D", (close)[1], lookahead=barmerge.lookahead_on)
+dSma50 = request.security(volSym, "D", (ta.sma(close, 50))[1], lookahead=barmerge.lookahead_on)
 bias = biasMode == "Long" ? 1 : biasMode == "Short" ? -1 : (dClose > dSma50 ? 1 : -1)
 
 oMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")

@@ -27,9 +27,11 @@ volSym   = input.string("CME_MINI:NQ1!", "Vol gate symbol (empty = this chart)")
 // raised portfolio pass rate by ~5pp and roughly halved the bust rate.
 // The gate always reads NQ, so on an MYM chart the Dow trades on exactly the
 // days NQ trades, as in the backtest.
+// Daily values: last COMPLETED session ([1] + lookahead_on), identical in history and
+// real time (lookahead_off would use the forming daily bar live). Fixed 2026-10-23.
 gateSym = volSym == "" ? syminfo.tickerid : volSym
-dRet = request.security(gateSym, "D", close / close[1] - 1.0, lookahead=barmerge.lookahead_off)
-rvol20 = request.security(gateSym, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+dRet = request.security(gateSym, "D", (close / close[1] - 1.0)[1], lookahead=barmerge.lookahead_on)
+rvol20 = request.security(gateSym, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
 volOK = na(rvol20) or rvol20 < volCeil
 
 // Session + DOW

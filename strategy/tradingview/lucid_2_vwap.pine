@@ -24,7 +24,9 @@ volCeil  = input.float(0.30, "Max 20d realised vol (skip day above this)")
 // See lucid_1 for why this gate exists: point-denominated stops risk far more
 // dollars per trade in a high-volatility regime, and the trailing drawdown
 // arrives correspondingly sooner.
-rvol20 = request.security(syminfo.tickerid, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+// Daily values: last COMPLETED session ([1] + lookahead_on), identical in history and
+// real time (lookahead_off would use the forming daily bar live). Fixed 2026-10-23.
+rvol20 = request.security(syminfo.tickerid, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
 volOK = na(rvol20) or rvol20 < volCeil
 
 // Session + DOW

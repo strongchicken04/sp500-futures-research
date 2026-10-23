@@ -22,8 +22,10 @@ useVol   = input.bool(true, "Volatility gate (skip if NQ 20d vol >= ceiling)")
 volCeil  = input.float(0.30, "   vol ceiling")
 volSym   = input.string("CME_MINI:NQ1!", "   vol gate symbol")
 hardStop = input.float(0.50, "Hard stop (% from entry, 0 = off)") / 100.0
+// Daily values: last COMPLETED session ([1] + lookahead_on), identical in history and
+// real time (lookahead_off would use the forming daily bar live). Fixed 2026-10-23.
 
-rvol20 = request.security(volSym, "D", ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252), lookahead=barmerge.lookahead_off)
+rvol20 = request.security(volSym, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
 volOK = not useVol or na(rvol20) or rvol20 < volCeil
 
 oMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")

@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T07:36Z (shift 2026-10-23 active)
+heartbeat: 2026-10-23T07:37Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -10,6 +10,8 @@ last shift: 2026-10-23 (running)
 13. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- Pine audit: daily lookups (Lucid 7 bias SMA50, vol gates in Lucid 1/2/6/7) switched to ([expr])[1] +
+  lookahead_on so live trading uses the last completed day, as the backtests do.
 - ORB live-spec audit: Lucid 1 rules give -0.47 / +0.41 pt/trade (old export -0.12 / +0.61); book effect
   mixed without RS, positive with RS. Keep ORB, lowest priority leg.
 - Lucid 1 (ORB) audit: EMA trail now RTH-only and restarted daily, no stop test on the entry bar (as the exporter).
