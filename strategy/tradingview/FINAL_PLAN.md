@@ -1,3 +1,11 @@
+# 2026-10-23 — ORB ověřen podle živých pravidel: edge kolem nuly
+
+Nezávislý export přesně podle Lucid 1 (5min graf): −0,47 / +0,41 bodu na
+obchod (s filtrem volatility); původní export −0,12 / +0,61. V knize při
+flat 3 (simulace s časy): bez RS nohy smíšené (7 900 / 27 700 $ s ORB vs
+10 800 / 25 100 $ bez), s RS nohou pomáhá (17 600 / 28 100 $ vs 16 200 /
+23 700 $). ORB nechávám jako nejslabší nohu – při zjednodušení jde pryč první.
+
 # 2026-10-23 — EVALUACE: Lucid 7 (09:31) s targetem 0,25 % → dva účty ~6,5–7 dní
 
 `scripts/t931_shape.py`: sprint 09:31 (50denní trend) s target 0,25 % /

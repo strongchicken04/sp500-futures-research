@@ -1,17 +1,17 @@
 # Brain state
 
-heartbeat: 2026-10-23T07:34Z (shift 2026-10-23 active)
+heartbeat: 2026-10-23T07:36Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 4. Treasury auction effect (ZN): needs an auction calendar 2018-2025
    (research it); short before 13:00 auction, long after.
 
-10. ORB live-spec audit: LSORB_A / LSORB_B running on QC (live_spec_exporter MODE ORB);
-    score with score_live_spec.py, compare with S1FILL (-0.12 / +0.61 pt per trade net 0.75).
 13. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- ORB live-spec audit: Lucid 1 rules give -0.47 / +0.41 pt/trade (old export -0.12 / +0.61); book effect
+  mixed without RS, positive with RS. Keep ORB, lowest priority leg.
 - Lucid 1 (ORB) audit: EMA trail now RTH-only and restarted daily, no stop test on the entry bar (as the exporter).
 - Sprint after a first loss: abandoning is ~1.5-2 days faster but ~$125-200 dearer (option in the playbook).
 - PLAYBOOK_CZ.md written (exact settings for eval and funded). 09:31 sprint: vol gate off (gate = 18-21 days).

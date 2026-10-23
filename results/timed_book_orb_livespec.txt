@@ -1,0 +1,7 @@
+time-aware book, flat 3, no day stop: mean 24m cash per account 2018-21 | 2022-25
+   ORB from S1FILL (old export)   $  12,090 | $  29,079
+   ORB from Lucid 1 live rules    $   7,927 | $  27,746
+   no ORB                         $  10,807 | $  25,060
+   S1FILL ORB + RS                $  19,434 | $  30,534
+   Lucid 1 ORB + RS               $  17,582 | $  28,057
+   no ORB + RS                    $  16,187 | $  23,651
