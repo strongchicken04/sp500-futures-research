@@ -5,7 +5,9 @@ from collections import defaultdict
 #
 # BARS5 EXPORTER: a compact NQ day panel for offline idea testing (level lab).
 # For every RTH session it emits
-#   H,<yyyymmdd>,<contract expiry yymmdd>,<onh>,<onl>,<onpoc>,<onvol>,<poc>,<vah>,<val>,<rthvol>,<base>
+#   H,<yyyymmdd>,<contract expiry yymmdd>,<onh>,<onl>,<onpoc>,<onvol>,<poc>,<vah>,<val>,<rthvol>,<base>,
+#     <asia high>,<asia low>,<london high>,<london low>
+#     (Asia = bars ending 18:01..00:00 ET, London = 02:01..05:00 ET)
 #     overnight (18:00 previous evening .. 09:30) high / low / POC / volume and
 #     the RTH volume profile of THIS session from 1-minute bars (hlc3 volume
 #     into 1-point bins; value area = 70% around the POC); base = RTH open
@@ -37,7 +39,8 @@ class Bars5Exporter(QCAlgorithm):
         self.rth = None
 
     def _reset_on(self):
-        self.on = {"h": None, "l": None, "v": 0.0, "prof": defaultdict(float)}
+        self.on = {"h": None, "l": None, "v": 0.0, "prof": defaultdict(float),
+                   "ah": None, "al": None, "lh": None, "ll": None}
 
     def _emit(self, tag):
         try:
@@ -84,7 +87,8 @@ class Bars5Exporter(QCAlgorithm):
         onh = r["on"]["h"] or 0.0
         onl = r["on"]["l"] or 0.0
         self._emit(f"H,{ds},{r['exp']},{onh:.2f},{onl:.2f},{onpoc:.0f},{r['on']['v']:.0f},"
-                   f"{poc:.0f},{vah:.0f},{val:.0f},{r['vol']:.0f},{base:.2f}")
+                   f"{poc:.0f},{vah:.0f},{val:.0f},{r['vol']:.0f},{base:.2f},"
+                   f"{r['on']['ah'] or 0:.2f},{r['on']['al'] or 0:.2f},{r['on']['lh'] or 0:.2f},{r['on']['ll'] or 0:.2f}")
         tk = lambda p: int(round((p - base) * 4))
         bars = r["bars"]
         for k in range(0, len(bars), 13):
@@ -112,6 +116,10 @@ class Bars5Exporter(QCAlgorithm):
                 s["l"] = l if s["l"] is None else min(s["l"], l)
                 s["v"] += v
                 s["prof"][round((h + l + c) / 3.0)] += v
+                for lo_, hi_, kh, kl in ((18 * 60, 24 * 60, "ah", "al"), (-1, 0, "ah", "al"), (2 * 60, 5 * 60, "lh", "ll")):
+                    if lo_ < hm <= hi_:
+                        s[kh] = h if s[kh] is None else max(s[kh], h)
+                        s[kl] = l if s[kl] is None else min(s[kl], l)
             return
         if self.rth is None:
             m = self.fut.Mapped
