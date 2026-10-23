@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T06:21Z (shift 2026-10-23 active)
+heartbeat: 2026-10-23T07:09Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -10,6 +10,8 @@ last shift: 2026-10-23 (running)
 13. Overnight long after 3 down closes: waiting for the owner (overnight holds allowed?).
 
 ## Done this shift
+- Funded risk view: flat 3 reaches the first payout in 40% / 51% of funded accounts (ladder 40% / 58%,
+  slower). Said plainly in FINAL_PLAN and the report.
 - RS sprint 0.30% stop independently confirmed (11.1 / 11.0 days vs 13.8 / 12.9; fees +$0 / +$15).
 - Funded size by stage: no robust gain over flat 3 (keep it simple).
 - 12. Time-aware sim (timed_book.py): flat 3 confirmed ($12.1k / $29.1k vs ladder $2.3k / $20.5k),

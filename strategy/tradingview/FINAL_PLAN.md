@@ -19,6 +19,12 @@ Závěry:
   škodí. Pokud chceš pojistku, dej −600 $.
 - **RS noha přidává v obou obdobích** (+7 400 / +1 500 $), ve 2022–25 málo.
 - **ORB v knize nech** (+1 300 / +4 000 $).
+- **Riziko (fáze do první výplaty, `results/funded_risk.txt`):** při flat 3
+  dojde k výplatě 40 % / 51 % funded účtů (medián 35 / 15 dní), zbytek
+  spadne dřív; ladder 400: 40 % / 58 %, ale pomaleji (31 / 19 dní) a
+  s menšími dalšími výplatami. Flat 3 se vyplácí jen proto, že nová evaluace
+  sprintem je levná – počítej s tím, že zhruba každý druhý funded účet
+  přijde o drawdown před první výplatou.
 
 # 2026-10-23 — KOREKCE: denní stop a RS noha (simulace bez časů obchodů)
 

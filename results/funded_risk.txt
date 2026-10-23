@@ -1,0 +1,6 @@
+Funded risk view (time-aware, ORB+VWAP band+noise, no day stop): first-payout stage (+$4,000 from start, $2,000 trailing DD)
+sizing          2018-21: payout / bust / median days   |   2022-25: payout / bust / median days
+ladder K400     39.9% /  60.1% /  31 d   |    58.2% /  41.8% /  19 d
+flat 2          40.3% /  59.3% /  67 d   |    60.6% /  39.4% /  29 d
+flat 3          40.3% /  59.7% /  35 d   |    50.6% /  49.4% /  15 d
+flat 4          31.5% /  68.5% /  19 d   |    40.7% /  59.3% /   9 d
