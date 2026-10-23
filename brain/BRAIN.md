@@ -14,8 +14,11 @@ English.
 - Evaluation: +$3,000 target; $2,000 end-of-day trailing drawdown that locks
   at +$100 once an EOD balance clears +$2,100; best day <= 50% of total
   profit; day profit cap ~$1,450; fee $90 per evaluation; no time limit.
-- Funded: first payout after +$4,000 (owner receives $1,800), then every
-  +$2,000; payouts every 5 days; drawdown stays locked.
+- Funded: a payout is <= 50% of the profit, max $2,000, min $500, split
+  90/10; each payout cycle needs five days with >= $150 profit (count resets
+  after a payout); no consistency rule. Plan: withdraw $2,000 at +$4,000
+  ($1,800 to the owner); the profit above stays on the account; drawdown
+  stays locked at +$100. (Third-party summaries 2026-10; owner to confirm.)
 - Max 4 NQ minis (40 MNQ). Copytrading allowed. NO overnight holds (owner,
   2026-10-23): every strategy must be flat by the session close.
 - Plan: evaluation = sprint (one big bracket trade a day, three wins pass);
@@ -75,9 +78,13 @@ English.
    fixed point costs and dollar results are not comparable; scripts/bp_eras.py).
    Sprints: compare the win rate of RESOLVED trades (target or stop hit) with
    the random-walk rate stop/(target+stop), never counting unresolved as losses.
-6b. Funded book / sizing decisions: use the paired block bootstrap
-   (scripts/mc_book.py: 24-month paths of 20-day blocks, all variants on the
-   same blocks) plus the first / repeat payout rates. The one-history walk
+6b. Funded book / sizing decisions: use scripts/funded_model.py (since
+   2026-10-24: all RTH days, five-profitable-day rule, excess profit kept after
+   a payout; mc_book.py / timed_book are superseded) with its paired block
+   bootstrap (24-month paths of 20-day blocks, all variants on the same
+   blocks; template scripts/funded_v2.py) plus the first payout rate. Era
+   check for dollar questions: 2010-17 trades re-priced at today's NQ
+   (scripts/funded_scaled_old.py). The one-history walk
    (timed_book life()) moves $3-5k with the calendar alone - not for
    differences under ~$5k. The book at flat 3 is at the drawdown edge: new
    legs with small edges add busts; scale with more accounts (copies) instead.
