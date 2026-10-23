@@ -1,0 +1,32 @@
+--- 2018-21: 24-month cash per funded seat (paired bootstrap) | first payout from every start day
+   base (no ORB, flat 3)      mean $ 19,452 ($  810/m) p10 $  7,560 vs base      +0 (+/- 0) better/worse   0/  0% | first payout 39.6% in 32.8 d
+   + ORB                      mean $ 18,668 ($  778/m) p10 $  6,660 vs base    -783 (+/- 178) better/worse  42/ 56% | first payout 34.1% in 27.4 d
+   flat 2                     mean $ 13,280 ($  553/m) p10 $  4,500 vs base  -6,172 (+/- 137) better/worse   8/ 92% | first payout 50.7% in 61.4 d
+   flat 4                     mean $ 24,353 ($1,015/m) p10 $  9,900 vs base  +4,901 (+/- 182) better/worse  81/ 19% | first payout 38.2% in 24.4 d
+   flat 5                     mean $ 28,610 ($1,192/m) p10 $ 11,520 vs base  +9,158 (+/- 240) better/worse  89/ 11% | first payout 36.5% in 17.2 d
+   flat 6                     mean $ 31,241 ($1,302/m) p10 $ 12,600 vs base +11,790 (+/- 283) better/worse  91/  9% | first payout 32.9% in 15.7 d
+   no RS                      mean $ 14,094 ($  587/m) p10 $  6,120 vs base  -5,358 (+/- 191) better/worse  18/ 82% | first payout 40.5% in 70.8 d
+   Z without vol gate         mean $ 21,111 ($  880/m) p10 $  9,000 vs base  +1,659 (+/- 111) better/worse  63/ 27% | first payout 41.5% in 30.7 d
+   F2                         mean $ 18,555 ($  773/m) p10 $  8,640 vs base    -897 (+/- 116) better/worse  35/ 54% | first payout 41.5% in 34.8 d
+   P2                         mean $ 19,057 ($  794/m) p10 $  8,460 vs base    -395 (+/- 91) better/worse  31/ 41% | first payout 39.8% in 32.5 d
+   F2+P2                      mean $ 18,409 ($  767/m) p10 $  8,640 vs base  -1,043 (+/- 125) better/worse  35/ 55% | first payout 42.0% in 34.4 d
+   RS sprint S3 -> book       mean $ 17,302 ($  721/m) p10 $  4,500 vs base  -2,149 (+/- 287) better/worse  44/ 56% | first payout 27.0% in  8.7 d
+   RS sprint S5 -> book       mean $ 17,605 ($  734/m) p10 $  4,860 vs base  -1,847 (+/- 279) better/worse  44/ 55% | first payout 30.1% in  9.4 d
+   VWAP10 sprint S3 -> book   mean $ 18,987 ($  791/m) p10 $  6,480 vs base    -465 (+/- 274) better/worse  51/ 48% | first payout 29.1% in  9.0 d
+   VWAP10 sprint S5 -> book   mean $ 18,666 ($  778/m) p10 $  6,120 vs base    -785 (+/- 270) better/worse  49/ 50% | first payout 30.3% in 10.3 d
+--- 2022-25: 24-month cash per funded seat (paired bootstrap) | first payout from every start day
+   base (no ORB, flat 3)      mean $ 31,856 ($1,327/m) p10 $ 15,840 vs base      +0 (+/- 0) better/worse   0/  0% | first payout 41.4% in 18.9 d
+   + ORB                      mean $ 32,741 ($1,364/m) p10 $ 15,480 vs base    +886 (+/- 269) better/worse  55/ 43% | first payout 32.3% in 17.5 d
+   flat 2                     mean $ 22,985 ($  958/m) p10 $ 10,620 vs base  -8,871 (+/- 191) better/worse   7/ 93% | first payout 53.3% in 37.0 d
+   flat 4                     mean $ 36,852 ($1,535/m) p10 $ 18,720 vs base  +4,996 (+/- 222) better/worse  77/ 21% | first payout 36.0% in 16.6 d
+   flat 5                     mean $ 39,523 ($1,647/m) p10 $ 20,340 vs base  +7,667 (+/- 273) better/worse  81/ 18% | first payout 33.7% in 16.0 d
+   flat 6                     mean $ 41,676 ($1,737/m) p10 $ 21,960 vs base  +9,820 (+/- 305) better/worse  86/ 14% | first payout 30.7% in 15.9 d
+   no RS                      mean $ 17,277 ($  720/m) p10 $  7,560 vs base -14,579 (+/- 277) better/worse   4/ 96% | first payout 56.4% in 37.3 d
+   Z without vol gate         mean $ 36,240 ($1,510/m) p10 $ 17,640 vs base  +4,385 (+/- 244) better/worse  73/ 25% | first payout 40.7% in 17.9 d
+   F2                         mean $ 31,236 ($1,301/m) p10 $ 16,020 vs base    -620 (+/- 154) better/worse  37/ 48% | first payout 44.2% in 19.5 d
+   P2                         mean $ 30,417 ($1,267/m) p10 $ 16,920 vs base  -1,438 (+/- 164) better/worse  33/ 57% | first payout 41.6% in 19.1 d
+   F2+P2                      mean $ 29,908 ($1,246/m) p10 $ 17,280 vs base  -1,948 (+/- 188) better/worse  34/ 61% | first payout 44.4% in 19.4 d
+   RS sprint S3 -> book       mean $ 23,595 ($  983/m) p10 $  5,940 vs base  -8,260 (+/- 398) better/worse  27/ 71% | first payout 28.9% in  9.7 d
+   RS sprint S5 -> book       mean $ 22,735 ($  947/m) p10 $  4,680 vs base  -9,120 (+/- 396) better/worse  24/ 74% | first payout 28.0% in 10.5 d
+   VWAP10 sprint S3 -> book   mean $ 26,538 ($1,106/m) p10 $  9,000 vs base  -5,317 (+/- 377) better/worse  36/ 63% | first payout 26.7% in  8.0 d
+   VWAP10 sprint S5 -> book   mean $ 24,713 ($1,030/m) p10 $  7,020 vs base  -7,143 (+/- 397) better/worse  30/ 68% | first payout 25.4% in  8.7 d

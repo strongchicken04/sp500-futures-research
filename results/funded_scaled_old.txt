@@ -1,0 +1,21 @@
+reference price (mean 2022-25 noise entry) 17,090
+   ORB per MNQ trade at today's price, 2010-17 gated: $ -0.22 (n 4904)
+   VG  per MNQ trade at today's price, 2010-17 gated: $ +4.51 (n 1416)
+   Z   per MNQ trade at today's price, 2010-17 gated: $ +7.42 (n 1812)
+   RS  per MNQ trade at today's price, 2010-17 gated: $+11.46 (n 1251)
+--- 2010-13 at today's price: 24-month cash per seat | first payout
+   base (no ORB, flat 3)  mean $ 24,708 vs base      +0 (+/- 0) better/worse   0/  0% | first payout 25.9%
+   flat 4                 mean $ 27,891 vs base  +3,183 (+/- 261) better/worse  67/ 32% | first payout 24.1%
+   flat 5                 mean $ 28,146 vs base  +3,438 (+/- 351) better/worse  63/ 37% | first payout 19.9%
+   flat 6                 mean $ 28,786 vs base  +4,078 (+/- 391) better/worse  63/ 37% | first payout 18.5%
+   flat 2                 mean $ 19,440 vs base  -5,268 (+/- 227) better/worse  23/ 77% | first payout 33.5%
+   + ORB                  mean $ 23,865 vs base    -843 (+/- 267) better/worse  44/ 52% | first payout 23.4%
+   Z without vol gate     mean $ 24,797 vs base     +89 (+/- 137) better/worse  40/ 38% | first payout 26.7%
+--- 2014-17 at today's price: 24-month cash per seat | first payout
+   base (no ORB, flat 3)  mean $ 21,708 vs base      +0 (+/- 0) better/worse   0/  0% | first payout 28.8%
+   flat 4                 mean $ 25,724 vs base  +4,017 (+/- 235) better/worse  70/ 28% | first payout 26.5%
+   flat 5                 mean $ 28,240 vs base  +6,533 (+/- 302) better/worse  76/ 24% | first payout 24.6%
+   flat 6                 mean $ 30,382 vs base  +8,675 (+/- 334) better/worse  80/ 20% | first payout 23.7%
+   flat 2                 mean $ 14,877 vs base  -6,830 (+/- 207) better/worse  14/ 86% | first payout 22.7%
+   + ORB                  mean $ 21,700 vs base      -7 (+/- 213) better/worse  47/ 50% | first payout 27.4%
+   Z without vol gate     mean $ 20,924 vs base    -783 (+/- 95) better/worse  11/ 33% | first payout 28.3%

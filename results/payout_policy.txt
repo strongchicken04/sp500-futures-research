@@ -1,0 +1,12 @@
+--- 2018-21
+   4000/2000  mean $ 19,090 p10 $  7,380 vs today     +0 (+/- 0) better/worse   0/  0% | lives with >= 5 payouts 15.5%
+   3000/1500  mean $ 18,569 p10 $  7,889 vs today   -521 (+/- 117) better/worse  49/ 51% | lives with >= 5 payouts 11.2%
+   asap       mean $ 18,434 p10 $  8,381 vs today   -656 (+/- 137) better/worse  49/ 51% | lives with >= 5 payouts 10.3%
+   5000/2000  mean $ 19,117 p10 $  7,200 vs today    +26 (+/- 100) better/worse  42/ 44% | lives with >= 5 payouts 23.3%
+   6000/2000  mean $ 18,948 p10 $  6,300 vs today   -143 (+/- 123) better/worse  44/ 55% | lives with >= 5 payouts 30.8%
+--- 2022-25
+   4000/2000  mean $ 32,400 p10 $ 15,480 vs today     +0 (+/- 0) better/worse   0/  0% | lives with >= 5 payouts 22.2%
+   3000/1500  mean $ 32,356 p10 $ 16,160 vs today    -45 (+/- 129) better/worse  45/ 46% | lives with >= 5 payouts 20.0%
+   asap       mean $ 32,408 p10 $ 16,280 vs today     +8 (+/- 147) better/worse  52/ 43% | lives with >= 5 payouts 19.9%
+   5000/2000  mean $ 32,311 p10 $ 15,300 vs today    -89 (+/- 118) better/worse  33/ 40% | lives with >= 5 payouts 26.1%
+   6000/2000  mean $ 31,995 p10 $ 14,400 vs today   -405 (+/- 150) better/worse  38/ 55% | lives with >= 5 payouts 30.4%

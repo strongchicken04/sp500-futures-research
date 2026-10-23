@@ -1,0 +1,7 @@
+size detail (corrected model, no-ORB book): per seat in 24 months
+2018-21 flat 3: mean $19,393, accounts used 7.6 (evaluations bought), payouts 11.5, account lives with >=5 payouts 11.5%, worst 5% of seats $5,040
+2018-21 flat 4: mean $24,181, accounts used 9.8 (evaluations bought), payouts 14.4, account lives with >=5 payouts 10.1%, worst 5% of seats $6,480
+2018-21 flat 5: mean $28,582, accounts used 10.1 (evaluations bought), payouts 16.9, account lives with >=5 payouts 10.8%, worst 5% of seats $7,740
+2022-25 flat 3: mean $32,289, accounts used 8.7 (evaluations bought), payouts 18.8, account lives with >=5 payouts 14.1%, worst 5% of seats $11,700
+2022-25 flat 4: mean $37,322, accounts used 8.5 (evaluations bought), payouts 21.6, account lives with >=5 payouts 14.3%, worst 5% of seats $13,860
+2022-25 flat 5: mean $40,144, accounts used 8.0 (evaluations bought), payouts 23.1, account lives with >=5 payouts 14.8%, worst 5% of seats $15,120

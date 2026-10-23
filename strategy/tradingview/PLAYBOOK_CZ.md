@@ -62,37 +62,34 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
 | Noise momentum | **Lucid 6 (nový, stop 0,50 %)** | 1 / 5 / 30 min | rozhodnutí jen v :00 a :30 |
 | RS noha (kandidát) | Lucid 8 s **Target 1,25 / Stop 1,25** | MNQ 1 min | přidává hlavně v letech 2018–21 |
 
-- Velikost: **3 MNQ na každou nohu** (ne ladder). Simulace s časy obchodů:
-  ~12 100 / 29 100 $ na účet za 24 měsíců (2018–21 | 2022–25), ladder
-  400/500 jen 2 300 / 20 500 $.
-- **Riziko:** k první výplatě dojde ~40 % funded účtů, zbytek přijde
-  o drawdown dřív. Vyplácí se to jen proto, že nová evaluace sprintem je
-  levná (~180 $, ~11 dní). Počítej s tím.
+- Velikost: **3 MNQ na každou nohu** (ne ladder); **doporučení z noci
+  23./24. 10.: 4 MNQ na nohu** (rozhoduješ ty, FINAL_PLAN nahoře).
+- **Riziko:** k první výplatě dojde ~40 % funded účtů (při 4 MNQ ~37 %),
+  zbytek přijde o drawdown dřív. Vyplácí se to jen proto, že nová evaluace
+  sprintem je levná (~180–270 $, ~7–11 dní). Počítej s tím.
 - Denní stop výsledek nezlepšuje; jako pojistka −600 $ nevadí.
-- Očekávání (kniha bez ORB, flat 3, simulace 24 měsíců, evaluace odečtené;
-  opraveno v noci 23./24. 10.: počítají se i dny bez obchodu a pravidlo
-  výplaty LucidFlex = +4 000 $ A 5 dní se ziskem aspoň 150 $):
-  ~550 $ / měsíc na funded účet v 2018–21, ~730 $ v 2022–25; 9 z 10 účtů
-  nad 5 400 / 9 400 $ za 24 měsíců; k první výplatě dojde ~40 / 41 % účtů
-  (`results/income2.txt`). V klidném trhu může být polovina. Víc peněz =
-  víc účtů se stejnou knihou (kopie).
+- Očekávání (kniha bez ORB, opravený model `scripts/funded_model.py`,
+  24 měsíců, evaluace odečtené, 2018–21 / 2022–25): při 3 MNQ ~810 / 1 330 $
+  měsíčně na funded místo, při 4 MNQ ~1 010 / 1 540 $; 9 z 10 míst nad
+  9 900 / 18 700 $ za 24 měsíců při 4 MNQ (`results/funded_v2.txt`).
+  V klidném trhu může být méně. Víc peněz = víc účtů se stejnou knihou (kopie).
 - **Pravidlo výplaty:** v každém výplatním cyklu potřebuješ 5 dní se ziskem
-  aspoň 150 $ (dny nemusí jít po sobě, po výplatě se počítají znovu).
-  Sprint na funded účtu proto nefunguje (3 velké výhry nestačí) – zamítnuto.
+  aspoň 150 $ (dny nemusí jít po sobě, po výplatě se počítají znovu). Výplatu
+  si řekni při +4 000 $ (vybereš 2 000 $, dostaneš 1 800 $); zisk nad 4 000 $
+  nech na účtu. Dřívější ani pozdější výplata nevychází lépe
+  (`results/payout_policy.txt`).
 - Filtr volatility v indikátorech nech zapnutý (20denní volatilita NQ < 30 %).
 
 ## 3. Čeká na tvoje rozhodnutí
 
 - **Funded kniha bez ORB (Lucid 1)** (denní směna 23. 10., FINAL_PLAN nahoře):
-  první výplata u 40 / 41 % funded účtů místo 34 / 32 % (opravený model);
-  ORB nemá edge ani
-  v nezávislém období 2010–2017. Prakticky: Lucid 1 nepoužívat, zbytek beze změny.
+  první výplata u 40 / 41 % funded účtů místo 34 / 32 % (opravený model),
+  v penězích zhruba neutrální; ORB nemá edge ani v nezávislém období
+  2010–2017. Prakticky: Lucid 1 nepoužívat, zbytek beze změny.
 
-- **Volitelně (malé, v 2010–17 nepotvrzené):** na funded účtu jeď 2 MNQ na
-  nohu místo 3, když (a) do +4 000 $ chybí méně než 1 000 $, nebo (b) máš
-  +4 000 $, ale ještě ne 5 ziskových dní. Simulace: +900 / +2 000 $ na účet
-  za 24 měsíců (2018–21 / 2022–25), lepší ve 54 / 67 % cest
-  (`results/payout_size.txt`).
+- **Funded 4 MNQ na nohu místo 3** (noc 23./24. 10.): +4 900 / +5 000 $ na
+  funded místo za 24 měsíců, lepší i v 2010–17 přepočteném na dnešní cenu
+  (+3 200 / +4 000 $); první výplata o 1–5 bodů méně často.
 
 - Overnight long (Lucid 9) vyřazen: Lucid Flex nedovoluje držet přes noc.
   Všechny strategie v plánu jsou do 15:55 ET flat.

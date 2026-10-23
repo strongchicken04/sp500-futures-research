@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T22:20Z (night shift 2026-10-23/24 running)
+heartbeat: 2026-10-23T23:05Z (night shift 2026-10-23/24 running)
 last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague); night shift 23/24 running
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,8 +16,14 @@ Next (for the night shift):
 
 
 ## Done this shift
+- Night: funded model v2 (funded_model.py) - mc_book dropped the profit above +$4,000 at each payout,
+  skipped ~21% of days and ignored the five-profitable-day rule. Results on v2 (funded_v2.py,
+  funded_scaled_old.py for 2010-17 re-priced at today's NQ): flat 4 beats flat 3 in all four eras
+  (+4.9k / +5.0k / +3.2k / +4.0k) -> new recommendation (owner decides); ORB cash-neutral but lower first
+  payout -> still drop; F2/P2, funded sprint, payout timing, Z without gate rejected. Earlier night
+  rows (income2, payout_size, book_recheck) superseded. USE funded_model.py FOR ALL FUNDED QUESTIONS.
 - Night: book decisions re-checked on the corrected model: flat 3, RS in, ORB out all confirmed.
-- Night: payout-aware funded sizing (2 MNQ near +$4,000 / until five profitable days) = small option
+- Night (superseded): payout-aware funded sizing looked like a small option on the old model
   +0.9k / +2.0k, not confirmed in 2010-17 (PLAYBOOK section 3).
 - Night: vol-scaled sprint bracket rejected; funded sprint to the first payout rejected (LucidFlex
   five-profitable-day payout rule); income model corrected (all days + five-day rule): no-ORB book

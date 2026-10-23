@@ -1,20 +1,39 @@
-# 2026-10-24 (noční směna) — oprava odhadu příjmu; doporučení beze změny
+# 2026-10-24 (noční směna) — opravený model funded účtu; NOVÉ: 4 MNQ na nohu
 
-Dvě opravy simulace funded účtu (`scripts/income2.py`):
-1. Simulace brala jen dny, kdy kniha obchodovala; ~21 % dní (hlavně filtr
-   volatility nad 30 %) chybělo, takže „24 měsíců“ bylo ve skutečnosti ~29.
-2. Pravidlo výplaty LucidFlex 50K: +4 000 $ **a** 5 dní se ziskem ≥ 150 $
-   v cyklu (zdroje třetích stran, potvrď prosím v dashboardu).
+Simulace funded účtu měla tři chyby, opraveno v `scripts/funded_model.py`
+(od teď jediný model pro funded otázky):
+1. Brala jen dny, kdy kniha obchodovala (~21 % dní chybělo, hlavně filtr
+   volatility) → „24 měsíců“ bylo ve skutečnosti ~29.
+2. Neznala pravidlo výplaty LucidFlex 50K: 5 dní se ziskem ≥ 150 $ v cyklu
+   (zdroje třetích stran, potvrď v dashboardu).
+3. Po výplatě vracela účet na přesně +2 000 $ – zisk nad +4 000 $ ale na účtu
+   zůstává (vybírá se jen 2 000 $).
 
-| kniha (flat 3) | 24 měsíců na účet | měsíčně | první výplata |
+Kniha bez ORB (VWAP pásmo + noise + RS), 24 měsíců na jedno funded místo,
+evaluace odečtené (2018–21 / 2022–25):
+
+| velikost na nohu | 24 měsíců | měsíčně | první výplata |
 |---|---|---|---|
-| **bez ORB** | **13 300 / 17 500 $** | **550 / 730 $** | **40 / 41 %** |
-| s ORB | 11 600 / 14 800 $ | 490 / 620 $ | 34 / 32 % |
+| 3 MNQ (dosud) | 19 500 / 31 900 $ | 810 / 1 330 $ | 40 / 41 % |
+| **4 MNQ (nové doporučení)** | **24 400 / 36 900 $** | **1 010 / 1 540 $** | **38 / 36 %** |
+| s ORB, 3 MNQ | 18 700 / 32 700 $ | 780 / 1 360 $ | 34 / 32 % |
 
-(2018–21 / 2022–25.) Dřívější odhad 17 700 / 25 500 $ byl příliš vysoký.
-Bez ORB je dál lepší (+1 600 / +2 600 $ na účet). Sprint na funded účtu do
-první výplaty (`scripts/funded_sprint.py`) je kvůli pravidlu 5 ziskových dní
-horší než kniha (−0,9 až −4,9 tisíc $) – zamítnuto.
+**4 MNQ místo 3** je lepší ve všech čtyřech obdobích: +4 900 / +5 000 $
+(2018–21 / 2022–25) a v letech 2010–13 / 2014–17 přepočtených na dnešní
+cenu NQ +3 200 / +4 000 $; lepší v 67–81 % simulovaných cest. Cena: první
+výplata o 1–5 bodů méně často (víc nových evaluací). 5–6 MNQ dává v 2018–25
+ještě víc, ale v 2010–13 už skoro nic navíc a první výplata klesá k 19 % –
+proto 4. Dřív jsem 4 MNQ odmítl kvůli slabšímu edge v 2010–17; v opraveném
+modelu a v přepočtu na dnešní cenu to už neplatí.
+
+**ORB**: v penězích teď zhruba neutrální (−800 / +900 $; 2010–17 −800 / 0 $),
+ale první výplata 34 / 32 % místo 40 / 41 % a hrubý edge kolem nuly ve všech
+obdobích → dál doporučuji Lucid 1 vyřadit.
+
+Zamítnuto (opravený model): sprint na funded účtu do první výplaty
+(−0,5 až −9 tisíc $), 2 MNQ před výplatou (−0,4 až −1,9 tisíc $), jiné
+načasování výplaty (výplata 2 000 $ při +4 000 $ je nejlepší), noise bez
+filtru volatility (+1,7 / +4,4 tisíc $, ale v 2010–17 +0,1 / −0,8).
 
 # 2026-10-23 (denní směna) — DOPORUČENÍ: funded kniha bez ORB (Lucid 1)
 
