@@ -1,0 +1,17 @@
+funded finisher (book without ORB), paired bootstrap; room = pnl - drawdown line (line +100 once locked)
+--- 2018-21
+   flat 3                         $  17,578
+   3, 2 when room>=2900           $  18,761   vs base  +1,183 (+/- 113)  better / worse in 59% / 27% of paths
+   3, 1 when room>=2900           $  18,204   vs base    +626 (+/- 150)  better / worse in 57% / 40% of paths
+   3, 2 when room>=3400           $  18,300   vs base    +722 (+/- 84)  better / worse in 45% / 24% of paths
+--- 2022-25
+   flat 3                         $  26,036
+   3, 2 when room>=2900           $  27,641   vs base  +1,606 (+/- 141)  better / worse in 59% / 25% of paths
+   3, 1 when room>=2900           $  27,038   vs base  +1,003 (+/- 198)  better / worse in 56% / 41% of paths
+   3, 2 when room>=3400           $  27,064   vs base  +1,029 (+/- 112)  better / worse in 46% / 22% of paths
+--- 2010-2013
+   flat 3                         $     603
+   3, 2 when room>=2900           $     445   vs base    -158 (+/- 21)  better / worse in 8% / 15% of paths
+--- 2014-2017
+   flat 3                         $   3,243
+   3, 2 when room>=2900           $   3,320   vs base     +77 (+/- 41)  better / worse in 30% / 20% of paths
