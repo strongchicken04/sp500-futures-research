@@ -1,0 +1,12 @@
+--- 2018-21: Z size mean 3.45
+   flat 3                         $  17,573
+   Z vol-targeted                 $  18,391   vs base    +818 (+/- 148)  better / worse in 53% / 42% of paths
+--- 2022-25: Z size mean 3.23
+   flat 3                         $  26,030
+   Z vol-targeted                 $  25,276   vs base    -754 (+/- 191)  better / worse in 40% / 54% of paths
+--- 2010-2013: Z size mean 3.66
+   flat 3                         $     657
+   Z vol-targeted                 $   1,034   vs base    +377 (+/- 33)  better / worse in 33% / 26% of paths
+--- 2014-2017: Z size mean 3.96
+   flat 3                         $   3,227
+   Z vol-targeted                 $   4,095   vs base    +869 (+/- 63)  better / worse in 55% / 33% of paths
