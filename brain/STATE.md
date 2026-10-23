@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T22:12Z (night shift 2026-10-23/24 running; interim report written 21:50Z)
+heartbeat: 2026-10-23T23:08Z (night shift 2026-10-23/24 running; interim report written 21:50Z)
 last shift: 2026-10-23 day shift; night shift 23/24 running (interim report written at 23:50 Prague, final by 12:00 Prague)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -14,6 +14,7 @@ Night 2026-10-23/24: funded model v2 + open-P&L check done (report brain/reports
 4. Treasury auction effect (ZN): BLOCKED (treasury.gov and fiscaldata refused by the network policy).
 
 ## Done this shift
+- Night: importer pass (WebSearch): nothing new testable on NQ data (Aleti-Bollerslev-Siggaard needs a stock panel).
 - Night: lenient open-P&L bound (close marks) gives the same conclusions (flat 4, no ORB, OD optional).
 - Night: AUTOMATION_SPEC.md (route-neutral rules); Lucid 8 audit: funded RS leg needs fixed size + vol gate (added).
 - Night: vol gate per leg on the open-P&L model: no ungated variant better in all eras -> keep the gate.
