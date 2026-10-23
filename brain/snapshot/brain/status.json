@@ -1,9 +1,9 @@
 {
-  "heartbeat": "2026-10-23T07:55:00Z",
-  "phase": "working",
+  "heartbeat": "2026-10-23T08:20:00Z",
+  "phase": "report",
   "qc": "ok",
   "runs": 14,
   "shift": "2026-10-23",
-  "sphere": "coder",
-  "task": "Indikátory 1, 2, 6, 7: denní hodnoty z posledního dokončeného dne (žádné překreslování v ostrém obchodu)."
+  "sphere": "interpreter",
+  "task": "Overnight long vyřazen (Lucid nedovoluje držet přes noc). Pravidlo zapsáno do runbooku."
 }

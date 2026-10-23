@@ -79,7 +79,7 @@ English.
   finished item; commit and push after every finished item (branch
   `claude/strategy-replication-backtest-yppz7e`; restore
   `qc_result_MSXB_1792352605.json` before committing).
-- Jarvis panel (owner's live view): https://claude.ai/artifact/7aNv2n8i8JqZZg4dp25DUK
+- Mozek panel (owner's live view, formerly Jarvis): https://claude.ai/artifact/7aNv2n8i8JqZZg4dp25DUK
   (source `brain/jarvis.html`). Keep its database in sync with the ArtifactData
   tool (load it via ToolSearch; read a doc first, then write with `if_version`):
   - `brain/status` at shift start, on every sphere change and with each
@@ -97,7 +97,11 @@ English.
     incident); optional `isVal`, `oosVal`, `unit`, `years {yyyy: value}`,
     `yearsUnit`, `note`; for live-funded parts `edge` + `short` (book bars).
   - `indicators/iN`: `{order, name, file, status: live|backup|audit|off, role,
-    chart, note}` for the TradingView indicators.
+    chart, note}` for the TradingView indicators. The final strategies also
+    carry `group: eval|funded`, `slot` (e.g. "Účet A", "Funded"), `settings
+    [[label, value]]`, `result`, optional `extra`, and `code` = the full Pine
+    source. Whenever a Pine file in the plan changes, write its new text to
+    `code` (the Mozek page shows it with a copy button).
   - `brain/stats`: `{dataSets}` = number of files in data/tags;
     `brain/account`: `{rules: [[label, value], ...]}` (account rules).
   - `brain/metrics.eval` also has `p` (pass per attempt), `fee`, `rules`.

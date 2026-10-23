@@ -1,397 +1,196 @@
 <!doctype html>
 <html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body style="margin:0">
-<title>J.A.R.V.I.S. NQ</title>
+<title>Mozek</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: vault-style research terminal. Status strip + tab nav on top; one screen per tab
-   (brain, kill funnel, strategies, evaluation, funded, night shift, ask). Panels with a warm
-   CRT edge glow on a slate grid, mint bars, pink for what died, amber for the core.
-   Deliberately dark only. */
+/* Mozek: one screen. Rotatable 3D brain with the six agents, the picked agent's
+   card beside it, then the final strategies (evaluation, funded) with copyable
+   Pine code. Clean light dashboard, dark mode follows the system. */
 :root {
-  --bg: #121822;
-  --bg2: #1b2130;
-  --grid: rgba(94, 240, 200, 0.055);
-  --panel: rgba(22, 30, 42, 0.82);
-  --panel2: rgba(30, 38, 54, 0.9);
-  --edge: rgba(240, 176, 136, 0.34);
-  --edge-soft: rgba(240, 176, 136, 0.12);
-  --line: #2c3a4c;
-  --mint: #5ef0c8;
-  --mint-dim: rgba(94, 240, 200, 0.16);
-  --pink: #ff5c8a;
-  --pink-dim: rgba(255, 92, 138, 0.16);
-  --amber: #ffb347;
-  --amber-dim: rgba(255, 179, 71, 0.16);
-  --lilac: #b9a6ff;
-  --fg: #d5dfe8;
-  --muted: #8a99ab;
-  --faint: #56667b;
-  --f: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  color-scheme: dark;
+  --bg: #f4f5f7;
+  --card: #ffffff;
+  --card2: #f8f9fb;
+  --line: #e4e7ec;
+  --fg: #111827;
+  --muted: #5b6474;
+  --faint: #8a93a3;
+  --accent: #2e6be6;
+  --accent-soft: #e8effd;
+  --on-accent: #ffffff;
+  --ok: #12936b;
+  --ok-soft: #e3f5ee;
+  --warn: #b7791f;
+  --warn-soft: #fbf1df;
+  --bad: #d23f57;
+  --bad-soft: #fbe7ea;
+  --dot: 92, 104, 128;
+  --code-bg: #f6f7f9;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+  --f: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
 }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1117; --card: #151a22; --card2: #1a2029; --line: #262d38; --fg: #e8ebf0; --muted: #a2abba; --faint: #6f7888;
+    --accent: #6f9cff; --accent-soft: rgba(111, 156, 255, 0.14); --on-accent: #0d1117; --ok: #3ccf9a; --ok-soft: rgba(60, 207, 154, 0.13);
+    --warn: #f0b552; --warn-soft: rgba(240, 181, 82, 0.13); --bad: #ff6f86; --bad-soft: rgba(255, 111, 134, 0.13);
+    --dot: 170, 182, 204; --code-bg: #10141b; --shadow: none; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1117; --card: #151a22; --card2: #1a2029; --line: #262d38; --fg: #e8ebf0; --muted: #a2abba; --faint: #6f7888;
+  --accent: #6f9cff; --accent-soft: rgba(111, 156, 255, 0.14); --on-accent: #0d1117; --ok: #3ccf9a; --ok-soft: rgba(60, 207, 154, 0.13);
+  --warn: #f0b552; --warn-soft: rgba(240, 181, 82, 0.13); --bad: #ff6f86; --bad-soft: rgba(255, 111, 134, 0.13);
+  --dot: 170, 182, 204; --code-bg: #10141b; --shadow: none; color-scheme: dark;
+}
+* { box-sizing: border-box; }
 html { background: var(--bg); }
 body {
-  background:
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(185, 166, 255, 0.10), transparent 70%),
-    linear-gradient(var(--bg2), var(--bg) 60%);
-  background-attachment: fixed;
-  color: var(--fg);
-  font-family: var(--f);
-  font-size: 14px;
-  line-height: 1.5;
-  min-height: 100%;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 0 48px;
+  margin: 0; background: var(--bg); color: var(--fg); font-family: var(--f); font-size: 14px; line-height: 1.5;
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px));
+  -webkit-font-smoothing: antialiased;
 }
-body::before {
-  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-body::after {
-  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 60;
-  background:
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.13) 0 1px, transparent 1px 3px),
-    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45));
-}
-.wrap { position: relative; z-index: 1; max-width: 1360px; margin: 0 auto; }
-:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+.wrap { max-width: 1240px; margin: 0 auto; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 button { font-family: var(--f); }
 
-/* status strip + nav */
-.strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding-block: 12px 8px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
-.brand { font-weight: 700; letter-spacing: 0.3em; color: var(--fg); font-size: 13px; }
-.brand small { display: block; color: var(--faint); font-weight: 500; letter-spacing: 0.18em; font-size: 9px; }
-.st { color: var(--muted); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-.st::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; }
-.st b { font-weight: 600; }
-.st.ok b { color: var(--mint); } .st.ok::before { color: var(--mint); background: var(--mint); }
-.st.warn b { color: var(--amber); } .st.warn::before { background: var(--amber); }
-.st.bad b { color: var(--pink); } .st.bad::before { background: var(--pink); }
-.strip .sp { flex: 1; }
-.clock { color: var(--fg); font-size: 15px; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
-.clock span { display: block; font-size: 9px; color: var(--faint); letter-spacing: 0.2em; text-align: right; }
-nav.tabs { display: flex; gap: 2px; overflow-x: auto; border-bottom: 1px solid var(--line); scrollbar-width: none; }
-nav.tabs button { background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 9px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
-nav.tabs button:hover { color: var(--fg); }
-nav.tabs button[aria-selected="true"] { color: var(--mint); border-bottom-color: var(--mint); background: linear-gradient(transparent, var(--mint-dim)); }
+/* top bar */
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 18px 0 16px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.logo { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); display: grid; place-items: center; }
+.logo svg { width: 18px; height: 18px; }
+.brand h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
+.brand small { display: block; font-size: 12px; color: var(--muted); font-weight: 500; margin-top: -2px; }
+.top .sp { flex: 1; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { display: inline-flex; align-items: center; gap: 7px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 12.5px; color: var(--muted); white-space: nowrap; box-shadow: var(--shadow); }
+.pill b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
+.pill.ok i { background: var(--ok); } .pill.warn i { background: var(--warn); } .pill.bad i { background: var(--bad); }
 
-/* page heading */
-.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin: 22px 0 16px; }
-.head h1 { margin: 0; font-size: clamp(18px, 3.4vw, 26px); font-weight: 700; letter-spacing: 0.42em; text-transform: uppercase; color: var(--fg); }
-.head h1 em { font-style: normal; color: var(--mint); text-shadow: 0 0 14px rgba(94, 240, 200, 0.35); }
-.head p { margin: 0; color: var(--muted); font-size: 12px; }
+/* cards */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); min-width: 0; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+@media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+.brain { position: relative; padding: 14px 14px 12px; display: flex; flex-direction: column; }
+.brain .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12.5px; color: var(--muted); }
+.brain .hd b { color: var(--fg); font-size: 14px; }
+.stage { position: relative; height: clamp(300px, 46vw, 430px); }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chips button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--card); color: var(--muted); border-radius: 999px; padding: 4px 10px 4px 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.chips button i { width: 9px; height: 9px; border-radius: 50%; }
+.chips button:hover { color: var(--fg); }
+.chips button[aria-pressed="true"] { color: var(--fg); border-color: var(--fg); }
+.chips button .live { font-size: 10.5px; color: var(--ok); font-weight: 700; }
 
-/* panels */
-.panel { position: relative; background: var(--panel); border: 1px solid var(--edge); box-shadow: 0 0 22px var(--edge-soft), inset 0 0 26px rgba(240, 176, 136, 0.04); padding: 14px 14px 16px; min-width: 0; }
-.panel::before { content: ""; position: absolute; top: -1px; left: -1px; width: 12px; height: 12px; border-top: 2px solid var(--mint); border-left: 2px solid var(--mint); }
-.ptitle { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0 0 12px; font-size: 11px; }
-.ptitle h2 { margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg); }
-.ptitle h2::before { content: "■ "; color: var(--mint); }
-.ptitle span { color: var(--faint); letter-spacing: 0.04em; }
-.grid2 { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 16px; align-items: start; }
-.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
-.stack { display: grid; gap: 16px; min-width: 0; }
-@media (max-width: 960px) { .grid2, .grid3 { grid-template-columns: minmax(0, 1fr); } }
-.empty { color: var(--muted); border: 1px dashed var(--line); padding: 12px; font-size: 12px; }
-.note { color: var(--faint); font-size: 11px; margin-top: 8px; }
+/* agent panel */
+.agent { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.agent .ah { display: flex; align-items: center; gap: 12px; }
+.agent .dotbig { width: 14px; height: 14px; border-radius: 50%; flex: none; box-shadow: 0 0 0 4px var(--card2); }
+.agent h2 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
+.agent .role { color: var(--muted); font-size: 13px; }
+.agent .state { margin-left: auto; font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--card2); color: var(--muted); white-space: nowrap; }
+.agent .state.on { background: var(--ok-soft); color: var(--ok); }
+.lbl { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin: 0 0 6px; }
+.now { background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; font-size: 13.5px; }
+.now small { display: block; color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 13.5px; }
+.list li:first-child { border-top: 0; padding-top: 0; }
+.list .sub { grid-column: 1 / -1; color: var(--muted); font-size: 12.5px; margin-top: -2px; }
+.kv li { grid-template-columns: minmax(110px, 0.8fr) minmax(0, 1.6fr); }
+.kv li span:first-child { color: var(--muted); }
+.steps li { grid-template-columns: 46px minmax(0, 1fr); }
+.steps time { color: var(--faint); font-variant-numeric: tabular-nums; font-size: 12.5px; }
+.tag { font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 7px; background: var(--card2); color: var(--muted); white-space: nowrap; align-self: start; }
+.tag.ok { background: var(--ok-soft); color: var(--ok); } .tag.warn { background: var(--warn-soft); color: var(--warn); } .tag.bad { background: var(--bad-soft); color: var(--bad); } .tag.acc { background: var(--accent-soft); color: var(--accent); }
+.nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+.num { background: var(--card2); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.num .v { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; overflow-wrap: anywhere; line-height: 1.25; }
+.num .l { font-size: 12px; color: var(--muted); }
+.num .s { font-size: 11.5px; color: var(--faint); }
+.num.ok .v { color: var(--ok); } .num.bad .v { color: var(--bad); } .num.gold .v { color: var(--warn); }
+.todo { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13.5px; }
+.empty { color: var(--muted); font-size: 13px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 10px; }
+details.more summary { cursor: pointer; color: var(--accent); font-size: 13px; font-weight: 600; }
+details.more pre { white-space: pre-wrap; font-family: var(--f); font-size: 13px; color: var(--muted); margin: 8px 0 0; }
 
-/* brain */
-.brain { position: relative; height: clamp(320px, 52vw, 520px); overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(255, 179, 71, 0.07), transparent 60%); }
-.brain canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
-.counters { position: absolute; top: 10px; left: 12px; display: grid; gap: 8px; pointer-events: none; }
-.counters div { font-size: 22px; font-weight: 700; color: var(--fg); line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 0 0 10px rgba(0, 0, 0, 0.8); }
-.counters small { display: block; font-size: 9px; font-weight: 600; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-top: 3px; }
-.tip { position: absolute; pointer-events: none; background: rgba(10, 14, 20, 0.92); border: 1px solid var(--mint); padding: 7px 9px; font-size: 11px; max-width: 260px; z-index: 3; }
-.tip b { display: block; color: var(--mint); margin-bottom: 2px; }
-.legend { position: absolute; bottom: 10px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 10px; color: var(--muted); letter-spacing: 0.08em; pointer-events: none; }
-.legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
-.now { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; margin-top: 12px; font-size: 12px; }
-.now .lbl { color: var(--faint); letter-spacing: 0.16em; text-transform: uppercase; font-size: 10px; }
-.now .task { color: var(--fg); flex: 1; min-width: 200px; }
-
-/* bars */
-.bars { display: grid; gap: 7px; }
-.bar { display: grid; grid-template-columns: 34px minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; align-items: center; font-size: 12px; }
-.bar .n { text-align: right; color: var(--fg); font-variant-numeric: tabular-nums; font-weight: 600; }
-.bar .lab { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bar .trk { height: 9px; background: rgba(94, 240, 200, 0.06); }
-.bar .fill { height: 100%; background: var(--mint); box-shadow: 0 0 8px rgba(94, 240, 200, 0.4); }
-.bar .fill.pink { background: var(--pink); box-shadow: 0 0 8px rgba(255, 92, 138, 0.4); }
-.bar .fill.amber { background: var(--amber); box-shadow: 0 0 8px rgba(255, 179, 71, 0.4); }
-.bar .fill.lilac { background: var(--lilac); }
-
-/* funnel */
-.funnel { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 6px; align-items: end; height: 230px; padding-top: 20px; }
-.stage { display: grid; grid-template-rows: 1fr auto; height: 100%; cursor: pointer; border: 1px solid transparent; padding: 0 2px; background: transparent; color: inherit; text-align: center; }
-.stage:hover, .stage[aria-pressed="true"] { border-color: var(--line); background: rgba(255, 255, 255, 0.02); }
-.stage .col { display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; gap: 2px; }
-.stage .dead { background: linear-gradient(var(--pink), rgba(255, 92, 138, 0.35)); box-shadow: 0 0 12px rgba(255, 92, 138, 0.35); min-height: 2px; }
-.stage .alive { background: linear-gradient(var(--mint), rgba(94, 240, 200, 0.3)); min-height: 2px; }
-.stage .k { font-size: 12px; font-weight: 700; color: var(--pink); font-variant-numeric: tabular-nums; }
-.stage .k.ok { color: var(--mint); }
-.stage .nm { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 6px 0 2px; line-height: 1.25; min-height: 34px; }
-.funnel-wrap { overflow-x: auto; }
-.funnel-wrap .funnel { min-width: 640px; }
-.kill-sum { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 12px; margin-top: 10px; color: var(--muted); }
-.kill-sum b { color: var(--pink); font-size: 16px; } .kill-sum b.ok { color: var(--mint); }
-
-/* tables */
-.tbl { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; min-width: 620px; font-size: 12px; }
-th { text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); padding: 6px 8px; border-bottom: 1px solid var(--line); }
-td { padding: 8px; border-bottom: 1px solid rgba(44, 58, 76, 0.6); vertical-align: top; }
-tr.click { cursor: pointer; } tr.click:hover td { background: rgba(94, 240, 200, 0.04); }
-td.nm { color: var(--fg); border-left: 2px solid var(--line); }
-td.nm.live-eval, td.nm.live-funded { border-left-color: var(--mint); }
-td.nm.candidate { border-left-color: var(--amber); } td.nm.rejected { border-left-color: var(--pink); }
-td.res { color: var(--muted); }
-.chip { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; padding: 2px 6px; border: 1px solid currentColor; white-space: nowrap; text-transform: uppercase; }
-.chip.live-eval, .chip.live-funded, .chip.ok { color: var(--mint); background: var(--mint-dim); }
-.chip.candidate, .chip.warn { color: var(--amber); background: var(--amber-dim); }
-.chip.rejected, .chip.bad { color: var(--pink); background: var(--pink-dim); }
-.chip.idea, .chip.off { color: var(--muted); }
-
-/* strategy list + detail */
-.slist { display: grid; gap: 4px; max-height: 640px; overflow-y: auto; }
-.sitem { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; text-align: left; background: transparent; color: var(--fg); border: 1px solid transparent; border-left: 2px solid var(--line); padding: 7px 9px; cursor: pointer; font-size: 12px; }
-.sitem:hover { border-color: var(--line); }
-.sitem[aria-pressed="true"] { border-color: var(--mint); background: var(--mint-dim); }
-.sitem.live-eval, .sitem.live-funded { border-left-color: var(--mint); } .sitem.candidate { border-left-color: var(--amber); } .sitem.rejected { border-left-color: var(--pink); }
-.sitem span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.detail h3 { margin: 0 0 8px; font-size: 15px; font-weight: 600; color: var(--fg); text-wrap: balance; }
-.rings { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0; }
-.ring { width: 96px; text-align: center; }
-.ring svg { width: 96px; height: 96px; display: block; }
-.ring small { display: block; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
-.pipe { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 3px; margin: 10px 0 4px; }
-.pipe i { height: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line); }
-.pipe i.ok { background: var(--mint); border-color: var(--mint); }
-.pipe i.dead { background: var(--pink); border-color: var(--pink); }
-.pipe-lbl { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 3px; font-size: 8px; color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.2; }
-.kv { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 6px 12px; font-size: 12px; margin-top: 12px; }
-.kv dt { color: var(--faint); letter-spacing: 0.12em; text-transform: uppercase; font-size: 10px; padding-top: 2px; }
-.kv dd { margin: 0; color: var(--fg); overflow-wrap: anywhere; }
-.yrs svg { width: 100%; height: 150px; display: block; }
-
-/* tiles + rules */
-.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.tile { border-left: 2px solid var(--mint); padding: 2px 0 2px 10px; min-width: 0; }
-.tile .l { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-.tile .v { font-size: 20px; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.tile .s { font-size: 11px; color: var(--faint); }
-.tile.gold { border-color: var(--amber); } .tile.gold .v { color: var(--amber); }
-.tile.ok { border-color: var(--mint); } .tile.ok .v { color: var(--mint); }
-.tile.bad { border-color: var(--pink); } .tile.bad .v { color: var(--pink); }
-.tile.arc .v { color: var(--mint); }
-.rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 12px; }
-.rules li { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 10px; border-bottom: 1px solid rgba(44, 58, 76, 0.5); padding-bottom: 6px; }
-.rules li span:first-child { color: var(--faint); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding-top: 2px; }
-.chart svg { width: 100%; height: 190px; display: block; }
-
-/* fleet */
-.fleet { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
-.card { background: var(--panel2); border: 1px solid var(--line); padding: 12px; min-width: 0; }
-.card h4 { margin: 0 0 6px; font-size: 13px; color: var(--fg); }
-.card h4 small { color: var(--faint); font-weight: 500; font-size: 10px; margin-left: 6px; }
-.card dl { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 3px 8px; margin: 10px 0 0; font-size: 11px; }
-.card dt { color: var(--faint); } .card dd { margin: 0; color: var(--muted); overflow-wrap: anywhere; }
-
-/* night */
-.count { font-size: 30px; font-weight: 700; color: var(--amber); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; line-height: 1.1; }
-.sched { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 3px; margin-top: 12px; }
-.sched i { height: 18px; background: var(--mint-dim); border: 1px solid var(--line); }
-.sched i.past { background: transparent; } .sched i.now { background: var(--mint); box-shadow: 0 0 10px rgba(94, 240, 200, 0.5); }
-.sched-l { display: flex; justify-content: space-between; font-size: 10px; color: var(--faint); margin-top: 3px; }
-.queue { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; counter-reset: q; }
-.queue li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; padding: 6px 0; border-top: 1px solid rgba(44, 58, 76, 0.6); counter-increment: q; font-size: 12px; }
-.queue li::before { content: counter(q, decimal-leading-zero); color: var(--faint); }
-.queue .t { color: var(--fg); } .queue .n { display: block; color: var(--muted); font-size: 11px; }
-.queue li > .chip { align-self: start; }
-.queue li.done .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
-.log { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; max-height: 460px; overflow-y: auto; }
-.log li { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(44, 58, 76, 0.45); font-size: 12px; }
-.log time { color: var(--faint); }
-.log .sp { color: var(--mint); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; margin-right: 6px; }
-.rep-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-.rep-tabs button { background: transparent; color: var(--muted); border: 1px solid var(--line); padding: 3px 8px; font-size: 11px; cursor: pointer; }
-.rep-tabs button[aria-pressed="true"] { color: var(--mint); border-color: var(--mint); }
-.rep h3 { margin: 0 0 8px; font-size: 14px; color: var(--fg); }
-.rep .body { white-space: pre-wrap; max-width: 80ch; font-size: 12.5px; }
-.verdicts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-
-/* chat */
-.chat { display: grid; gap: 10px; max-height: 520px; overflow-y: auto; }
-.msg { max-width: 82ch; padding: 9px 12px; border: 1px solid var(--line); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12.5px; }
-.msg.you { justify-self: end; border-color: var(--amber); background: var(--amber-dim); }
-.msg.ai { justify-self: start; background: var(--mint-dim); border-color: rgba(94, 240, 200, 0.4); }
-.msg.ai::before { content: "J.A.R.V.I.S."; display: block; font-size: 9px; letter-spacing: 0.26em; color: var(--mint); margin-bottom: 4px; }
-.msg.err { color: var(--pink); border-color: var(--pink); }
-.suggest { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 10px; }
-.suggest button { background: transparent; color: var(--mint); border: 1px solid var(--line); padding: 4px 10px; font-size: 12px; cursor: pointer; }
-.suggest button:hover { border-color: var(--mint); }
-.ask { display: flex; gap: 8px; }
-.ask textarea { flex: 1; min-width: 0; resize: vertical; min-height: 44px; font-family: var(--f); font-size: 13px; color: var(--fg); background: rgba(10, 14, 20, 0.7); border: 1px solid var(--line); padding: 9px 10px; }
-.ask textarea:focus { outline: none; border-color: var(--mint); }
-.btn { border: 1px solid var(--mint); background: var(--mint); color: var(--bg); font-weight: 700; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 16px; cursor: pointer; }
-.btn.ghost { background: transparent; color: var(--mint); }
-.btn:disabled { opacity: 0.4; cursor: default; }
-
-@media (max-width: 560px) {
-  .tiles { grid-template-columns: minmax(0, 1fr); }
-  .rules li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
-  .kv { grid-template-columns: minmax(0, 1fr); }
-  .counters { right: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 10px; }
-  .counters div { font-size: 16px; }
-  .brain { height: 460px; }
-  .brain canvas { top: 104px; height: calc(100% - 104px); }
-}
-@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+/* strategies */
+.sec { margin-top: 30px; }
+.sec-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-bottom: 12px; }
+.sec-h h2 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
+.sec-h p { margin: 0; color: var(--muted); font-size: 13px; }
+.sum { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.sum span { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 6px 12px; font-size: 13px; color: var(--muted); }
+.sum b { color: var(--fg); font-variant-numeric: tabular-nums; }
+.strats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 14px; align-items: start; }
+.strat { padding: 16px; display: grid; gap: 10px; }
+.strat .sh { display: flex; align-items: flex-start; gap: 10px; }
+.strat h3 { margin: 0; font-size: 15.5px; font-weight: 700; line-height: 1.3; }
+.strat .meta { color: var(--muted); font-size: 12.5px; }
+.strat .slot { margin-left: auto; }
+.strat .res { font-size: 13.5px; font-weight: 600; }
+.sets { display: flex; flex-wrap: wrap; gap: 6px; }
+.sets span { font-size: 12.5px; background: var(--card2); border: 1px solid var(--line); border-radius: 8px; padding: 3px 8px; color: var(--muted); }
+.sets b { color: var(--fg); font-weight: 700; }
+.extra { font-size: 12.5px; color: var(--warn); }
+.code { position: relative; border: 1px solid var(--line); border-radius: 10px; background: var(--code-bg); overflow: hidden; }
+.code pre { margin: 0; padding: 10px 12px; font-family: var(--mono); font-size: 11.5px; line-height: 1.55; color: var(--fg); max-height: 150px; overflow: auto; white-space: pre; tab-size: 4; }
+.code.open pre { max-height: 560px; }
+.code:not(.open)::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 36px; background: linear-gradient(transparent, var(--code-bg)); pointer-events: none; }
+.acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); border-radius: 9px; padding: 7px 14px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); border-color: var(--line); }
+.btn.done { background: var(--ok); border-color: var(--ok); }
+.acts .file { color: var(--faint); font-size: 12px; font-family: var(--mono); margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.foot { margin-top: 26px; color: var(--faint); font-size: 12px; }
+@media (max-width: 560px) { .kv li { grid-template-columns: minmax(0, 1fr); gap: 0; } .acts .file { margin-left: 0; } }
 </style>
 
 <div class="wrap">
-  <div class="strip">
-    <div class="brand">J.A.R.V.I.S.<small>NQ · Lucid Flex 50K</small></div>
-    <span class="st" id="s-core">Jádro <b>připojuji</b></span>
-    <span class="st" id="s-shift">Směna <b>–</b></span>
-    <span class="st" id="s-qc">QC <b>–</b></span>
-    <span class="st ok" id="s-live">Živé obchodování <b>vyp</b></span>
-    <span class="st" id="s-inc">Incidenty <b>–</b></span>
-    <span class="st ok">Režim <b>výzkum</b></span>
+  <header class="top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3V4z"/></svg></div>
+      <div><h1>Mozek</h1><small>NQ výzkum · Lucid Flex 50K</small></div>
+    </div>
     <span class="sp"></span>
-    <div class="clock" id="clock">--:--:--<span>PRAHA</span></div>
+    <div class="pills">
+      <span class="pill" id="p-shift"><i></i>Směna <b>–</b></span>
+      <span class="pill" id="p-wake"><i></i>Další probuzení <b>–</b></span>
+      <span class="pill" id="p-data"><i></i>Data <b>připojuji</b></span>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="card brain">
+      <div class="hd"><b>Agenti</b><span>táhni = otáčení · klik na kouli = detail</span></div>
+      <div class="stage"><canvas id="cv" aria-label="3D mozek se šesti agenty"></canvas></div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="card agent" id="agent" aria-live="polite"></div>
   </div>
-  <nav class="tabs" id="tabs" role="tablist">
-    <button role="tab" data-t="vyzkum">Výzkum</button>
-    <button role="tab" data-t="filtr">Filtr</button>
-    <button role="tab" data-t="strategie">Strategie</button>
-    <button role="tab" data-t="evaluace">Evaluace</button>
-    <button role="tab" data-t="funded">Funded</button>
-    <button role="tab" data-t="noc">Noční směna</button>
-    <button role="tab" data-t="dotaz">Dotaz</button>
-  </nav>
 
-  <!-- VÝZKUM -->
-  <section data-page="vyzkum">
-    <div class="head"><h1>Výzkumný <em>mozek</em></h1><p>co jádro ví a na čem pracuje</p></div>
-    <div class="grid2">
-      <div class="panel">
-        <div class="ptitle"><h2>Mozek — živě</h2><span>každá velká tečka je jedna strategie z registru · táhni pro otočení</span></div>
-        <div class="brain" id="brain">
-          <canvas id="cv" aria-label="Koule strategií obarvená podle stavu"></canvas>
-          <div class="counters" id="counters"></div>
-          <div class="tip" id="tip" hidden></div>
-          <div class="legend"><span><i style="background:var(--mint)"></i>živě</span><span><i style="background:var(--amber)"></i>kandidát</span><span><i style="background:var(--pink)"></i>zamítnuto</span><span><i style="background:var(--lilac)"></i>nápad</span><span>malé tečky = jen výplň</span></div>
-        </div>
-        <div class="now"><span class="lbl">Teď</span><span class="task" id="now-task">–</span><span class="lbl" id="now-hb"></span></div>
-      </div>
-      <div class="stack">
-        <div class="panel"><div class="ptitle"><h2>Strategie · podle stavu</h2></div><div class="bars" id="b-status"></div></div>
-        <div class="panel"><div class="ptitle"><h2>Zamítnuté · kde skončily</h2><span>proklik do filtru</span></div><div class="bars" id="b-died"></div></div>
-        <div class="panel"><div class="ptitle"><h2>Fronta · dnešní noc</h2></div><div class="bars" id="b-queue"></div></div>
-      </div>
-    </div>
+  <section class="sec">
+    <div class="sec-h"><h2>Evaluace</h2><p id="ev-cap"></p></div>
+    <div class="sum" id="ev-sum"></div>
+    <div class="strats" id="ev"></div>
   </section>
 
-  <!-- FILTR -->
-  <section data-page="filtr" hidden>
-    <div class="head"><h1>Filtr <em>pravdy</em></h1><p>každá strategie musí projít všemi branami · růžová = kde umřela</p></div>
-    <div class="panel">
-      <div class="ptitle"><h2>Kill funnel</h2><span>klikni na bránu a tabulka ukáže, kdo tam skončil</span></div>
-      <div class="funnel-wrap"><div class="funnel" id="funnel"></div></div>
-      <div class="kill-sum" id="kill-sum"></div>
-    </div>
-    <div class="panel" style="margin-top:16px">
-      <div class="ptitle"><h2>Záznamy</h2><span id="ledger-meta"></span></div>
-      <div class="tbl"><table><thead><tr><th>Strategie</th><th>Stav</th><th>Došla do</th><th>Výsledek (2018–21 | 2022–25)</th></tr></thead><tbody id="ledger"></tbody></table></div>
-    </div>
+  <section class="sec">
+    <div class="sec-h"><h2>Funded</h2><p id="bk-cap"></p></div>
+    <div class="sum" id="bk-sum"></div>
+    <div class="strats" id="bk"></div>
   </section>
 
-  <!-- STRATEGIE -->
-  <section data-page="strategie" hidden>
-    <div class="head"><h1>Strategie <em>detail</em></h1><p>výsledky vždy zvlášť pro 2018–21 (ladění) a 2022–25 (nezávislý test)</p></div>
-    <div class="grid2" style="grid-template-columns:minmax(0,0.9fr) minmax(0,1.4fr)">
-      <div class="panel"><div class="ptitle"><h2>Registr</h2><span id="reg-meta"></span></div><div class="slist" id="slist"></div></div>
-      <div class="panel detail" id="detail"><div class="empty">Vyber strategii vlevo.</div></div>
-    </div>
-  </section>
-
-  <!-- EVALUACE -->
-  <section data-page="evaluace" hidden>
-    <div class="head"><h1>Evaluace <em>sprint</em></h1><p>cíl: projít evaluací co nejrychleji a nejlevněji</p></div>
-    <div class="grid2">
-      <div class="stack">
-        <div class="panel"><div class="ptitle"><h2>Doporučená cesta</h2><span id="ev-cap"></span></div><div class="tiles" id="ev-tiles"></div></div>
-        <div class="panel chart"><div class="ptitle"><h2>Šance na funded účet</h2><span>podle počtu koupených evaluací</span></div><div id="ev-chart"></div></div>
-      </div>
-      <div class="stack">
-        <div class="panel"><div class="ptitle"><h2>Pravidla sprintu</h2></div><ul class="rules" id="ev-rules"></ul></div>
-        <div class="panel"><div class="ptitle"><h2>Účet</h2><span>Lucid Flex 50K</span></div><ul class="rules" id="acct"></ul></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FUNDED -->
-  <section data-page="funded" hidden>
-    <div class="head"><h1>Funded <em>kniha</em></h1><p>po passu se obchoduje kniha strategií</p></div>
-    <div class="grid2">
-      <div class="panel"><div class="ptitle"><h2>Kniha</h2><span id="bk-cap"></span></div><div class="tiles" id="bk-tiles"></div></div>
-      <div class="panel"><div class="ptitle"><h2>Strategie v knize</h2></div><div class="bars" id="bk-parts"></div></div>
-    </div>
-    <div class="panel" style="margin-top:16px">
-      <div class="ptitle"><h2>Indikátory</h2><span>TradingView · co je zapojené a v jakém stavu</span></div>
-      <div class="fleet" id="fleet"></div>
-    </div>
-  </section>
-
-  <!-- NOC -->
-  <section data-page="noc" hidden>
-    <div class="head"><h1>Noční <em>směna</em></h1><p>23:07–11:07 Praha · každou hodinu · do vyčerpání usage</p></div>
-    <div class="grid3">
-      <div class="panel">
-        <div class="ptitle"><h2>Další probuzení</h2></div>
-        <div class="count" id="count">--:--:--</div>
-        <div class="note" id="count-sub"></div>
-        <div class="sched" id="sched"></div>
-        <div class="sched-l"><span>23:07</span><span>05:07</span><span>11:07</span></div>
-        <div class="note" id="shift-note"></div>
-      </div>
-      <div class="panel"><div class="ptitle"><h2>Fronta</h2><span id="q-meta"></span></div><ol class="queue" id="queue"></ol></div>
-      <div class="panel"><div class="ptitle"><h2>Záznam</h2><span id="log-meta"></span></div><ul class="log" id="log"></ul></div>
-    </div>
-    <div class="panel" style="margin-top:16px">
-      <div class="ptitle"><h2>Ranní report</h2><span id="rep-meta"></span></div>
-      <div class="rep-tabs" id="rep-tabs"></div>
-      <div class="rep" id="rep"><div class="empty">První report přijde po noční směně, nejpozději ve 12:00.</div></div>
-    </div>
-  </section>
-
-  <!-- DOTAZ -->
-  <section data-page="dotaz" hidden>
-    <div class="head"><h1>Zeptej se <em>jádra</em></h1><p>odpovídá česky jen z dat v aplikaci</p></div>
-    <div class="panel">
-      <div class="chat" id="chat" aria-live="polite"></div>
-      <div class="suggest" id="suggest">
-        <button type="button">Co dnes v noci testuješ?</button>
-        <button type="button">Jak mám zítra jet evaluaci?</button>
-        <button type="button">Která strategie knihy je nejslabší?</button>
-        <button type="button">Co znamená incident u VWAP?</button>
-      </div>
-      <form class="ask" id="ask-form">
-        <textarea id="ask" rows="2" placeholder="Napiš otázku… (Enter odešle)"></textarea>
-        <button class="btn" id="send" type="submit">Odeslat</button>
-        <button class="btn ghost" id="stop" type="button" hidden>Stop</button>
-      </form>
-      <div class="note" id="ask-note">Dotaz spotřebuje tvoje vlastní usage Claude. Při prvním dotazu se stránka zeptá na povolení.</div>
-    </div>
-  </section>
+  <div class="foot" id="foot"></div>
 </div>
 
-<script>window.JARVIS_SNAPSHOT = {"taken": "2026-10-23T07:59:05Z", "brain": {"account": {"rules": [["Účet", "Lucid Flex 50K"], ["Cíl evaluace", "+3 000 $"], ["Drawdown", "2 000 $ EOD trailing, zamkne se na +100 $ po EOD nad +2 100 $"], ["Consistency", "nejlepší den max. 50 % zisku"], ["Denní strop zisku", "~1 450 $"], ["Poplatek", "90 $ za evaluaci"], ["Max. velikost", "4 NQ / 40 MNQ"], ["Funded výplaty", "první po +4 000 $ (1 800 $ pro tebe), pak každých +2 000 $, nejdřív po 5 dnech"], ["Copytrading", "povolen"]]}, "log": {"events": [{"sphere": "Interpret", "t": "2026-10-23T07:32:00Z", "text": "Playbook s přesným nastavením indikátorů pro evaluaci (2 účty) i funded (flat 3): PLAYBOOK_CZ.md."}, {"sphere": "Optimalizátor", "t": "2026-10-23T07:31:00Z", "text": "Po první prohře ve sprintu: vzdát a koupit novou evaluaci = o 1,5–2 dny rychlejší, o 125–200 $ dražší."}, {"sphere": "Optimalizátor", "t": "2026-10-23T07:30:00Z", "text": "Lucid 7 na evaluaci bez filtru volatility (s ním 18–21 dní místo 11)."}, {"sphere": "Backtester", "t": "2026-10-23T07:29:00Z", "text": "Noise jen ve shodě s relativní silou: na úrovni účtu horší, zamítnuto."}, {"sphere": "Optimalizátor", "t": "2026-10-23T07:28:00Z", "text": "Lucid 7 s targetem 0,25 %; dva účty RS + 09:31 = první funded za 6,8 / 6,5 dne."}, {"sphere": "Kodér", "t": "2026-10-23T07:27:00Z", "text": "Lucid 9 (overnight po 3 červených) připraven."}, {"sphere": "Optimalizátor", "t": "2026-10-23T07:26:00Z", "text": "Třetí účet s noise sprintem: jen −0,3 dne za ~100 $ navíc."}, {"sphere": "Backtester", "t": "2026-10-23T06:20:00Z", "text": "RS sprint se stopem 0,30 % nezávisle potvrzen."}, {"sphere": "Systémový manažer", "t": "2026-10-23T05:12:00Z", "text": "Simulace s časy obchodů: flat 3 potvrzen, denní stop nic nepřidá."}, {"sphere": "Backtester", "t": "2026-10-23T04:10:00Z", "text": "Opraveno řazení obchodů v simulaci."}, {"sphere": "Kodér", "t": "2026-10-22T21:31:00Z", "text": "Lucid 2 přepsán na průraz pásma VWAP ±0,20 %."}, {"sphere": "Kodér", "t": "2026-10-22T21:17:00Z", "text": "Lucid 6: pevný stop 0,50 %."}, {"sphere": "Systém", "t": "2026-10-22T21:08:00Z", "text": "Noční směna začala."}]}, "metrics": {"book": {"caption": "ORB + VWAP pásmo + noise · simulace s časy obchodů · průměr na účet za 24 měsíců (2018–21 | 2022–25)", "tiles": [{"label": "Flat 3 MNQ na nohu", "sub": "doporučená velikost", "tone": "ok", "value": "$12 100 / $29 100"}, {"label": "Ladder 400/500 (dosud)", "sub": "dosavadní plán", "tone": "bad", "value": "$2 300 / $20 500"}, {"label": "+ RS noha, flat 3", "sub": "kandidát, ve 2022–25 přidá málo", "tone": "gold", "value": "$19 500 / $30 500"}, {"label": "Denní stop", "sub": "−600 $ neutrální, −300 $ škodí", "tone": "arc", "value": "nic nepřidá"}]}, "eval": {"caption": "RS sprint (stop 0,30 %) + 09:31 (target 0,25 %) na dvou účtech · návrh", "fee": 90, "p": 0.5, "rules": [["Trh", "MNQ, 1min graf, indikátor Lucid 8"], ["Kontroly", "10:00, 11:00, 13:00, 14:30 ET (16:00, 17:00, 19:00, 20:30 Praha)"], ["Long", "NQ od otevření o víc než 0,15 % silnější než ES a cena nad VWAP"], ["Short", "zrcadlově: o 0,15 % slabší a pod VWAP"], ["Obchod", "jen první signál dne"], ["Target / stop", "+0,20 % / −0,40 % ceny, flat 15:55"], ["Velikost", "stop = max. ztráta 1 900 $ (~1 000 $ výhra)"], ["Pass", "3 výhry (nejlepší den ~1/3 zisku); prohra ukončí pokus"]], "tiles": [{"label": "Dva účty: dní do funded", "sub": "2018–21 / 2022–25", "tone": "ok", "value": "6,8 / 6,5"}, {"label": "Poplatky do funded", "sub": "oba účty dohromady", "tone": "gold", "value": "~$305"}, {"label": "Jeden účet RS 0,30 %", "sub": "poplatky ~185–200 $", "tone": "arc", "value": "~11 dní"}, {"label": "Dosavadní RS 0,40 %", "sub": "pass 48 / 52 %", "value": "~13 dní"}]}}, "stats": {"dataSets": 75}, "status": {"heartbeat": "2026-10-23T07:55:00Z", "phase": "working", "qc": "ok", "runs": 14, "shift": "2026-10-23", "sphere": "coder", "task": "Indikátory 1, 2, 6, 7: denní hodnoty z posledního dokončeného dne (žádné překreslování v ostrém obchodu)."}}, "indicators": [{"chart": "MNQ 5 min", "file": "lucid_1_s1_orb.pine", "name": "Lucid 1 — ORB (nový)", "note": "sjednoceno s backtestem; ověřeno exportem: −0,5 / +0,4 b./obchod, nejslabší noha knihy", "order": 5, "role": "funded kniha (slabé)", "status": "live", "_id": "i1"}, {"chart": "MNQ 5 min (povinně)", "file": "lucid_2_vwap.pine", "name": "Lucid 2 — VWAP Band", "note": "nahrát novou verzi: průraz pásma 0,20 %, 1× denně, filtr volatility z dokončeného dne", "order": 4, "role": "funded kniha", "status": "live", "_id": "i2"}, {"chart": "–", "file": "lucid_3_monfri.pine", "name": "Lucid 3 — Mon/Fri", "order": 7, "role": "vyřazeno z plánu", "status": "off", "_id": "i3"}, {"chart": "–", "file": "lucid_4_coc.pine", "name": "Lucid 4 — COC", "order": 8, "role": "mimo plán", "status": "off", "_id": "i4"}, {"chart": "1 min", "file": "lucid_5_fomc_fade.pine", "name": "Lucid 5 — FOMC Fade", "order": 6, "role": "kandidát, 8× ročně", "status": "off", "_id": "i5"}, {"chart": "1 / 5 / 30 min", "file": "lucid_6_noise_momentum.pine", "name": "Lucid 6 — Noise Momentum", "note": "nahrát novou verzi: pevný stop 0,50 %, filtr volatility z dokončeného dne", "order": 3, "role": "funded kniha", "status": "live", "_id": "i6"}, {"chart": "MNQ 1 min", "file": "lucid_7_eval_sprint.pine", "name": "Lucid 7 — Eval Sprint 09:31", "note": "nahrát novou verzi: bias a filtr z posledního dokončeného dne; návrh Target 0,25 %, filtr volatility VYPNOUT", "order": 2, "role": "evaluace – účet B", "status": "live", "_id": "i7"}, {"chart": "MNQ 1 min", "file": "lucid_8_rs_sprint.pine", "name": "Lucid 8 — RS Sprint", "note": "návrh: Stop 0,30 % (~11 dní do passu místo ~13)", "order": 1, "role": "evaluace – účet A (+ funded noha s Target/Stop 1,25)", "status": "live", "_id": "i8"}, {"chart": "1 / 5 min, extended hours", "file": "lucid_9_overnight_3down.pine", "name": "Lucid 9 — Overnight po 3 červených", "note": "vstup close 15:55, výstup open 09:30", "order": 6.5, "role": "kandidát (jen pokud Lucid dovolí držet přes noc)", "status": "off", "_id": "i9"}], "queue": [{"note": "hotovo: žádná varianta nepřekoná živé pravidlo; nezávislý export ho zopakoval (46 % / 52 %)", "order": 1, "status": "done", "title": "RS sprint: robustnost a varianty", "_id": "q1"}, {"note": "hotovo: živá pravidla −0,5 / +0,4 b./obchod (edge ≈ 0); v knizě s RS pomáhá, bez ní smíšené", "order": 10, "status": "done", "title": "Nezávislé ověření ORB (Lucid 1) exportem živých pravidel", "_id": "q10"}, {"note": "evaluace 2 účty (Lucid 8 + Lucid 7), funded flat 3, volby a rizika", "order": 11, "status": "done", "title": "Playbook s přesným nastavením (PLAYBOOK_CZ.md)", "_id": "q11"}, {"note": "kandidát: bracket ±1,25 %, +4,6 / +9,6 b./obchod; kniha medián 74 000 $ místo 68 000 $", "order": 2, "status": "done", "title": "RS signál pro funded knihu", "_id": "q2"}, {"note": "hotovo: žádný filtr režimu nevychází v obou obdobích; opravena díra ve filtru volatility 2025", "order": 3, "status": "done", "title": "Mapa režimů trhu", "_id": "q3"}, {"note": "BLOKOVÁNO: síť nepustí na treasury.gov pro kalendář aukcí; ZN exporter připraven", "order": 4, "status": "waiting", "title": "Aukce státních dluhopisů (ZN)", "_id": "q4"}, {"note": "zamítnuto: NQ přelom měsíce i ZN poslední den (+2,6 / +0,5 ticku)", "order": 5, "status": "done", "title": "Konec a přelom měsíce", "_id": "q5"}, {"note": "kandidát: +28,6 / +19,0 bp za noc, kladné každý rok; ověřit, zda Lucid dovoluje držet přes noc", "order": 6, "status": "done", "title": "Overnight long po 3 červených dnech", "_id": "q6"}, {"note": "hotovo: stop 0,50 % v Lucid 6; ES slabší a s NQ korelované (0,69), YM bez edge", "order": 7, "status": "done", "title": "Varianty noise momentum", "_id": "q7"}, {"note": "hotovo: Lucid 2 opraven (+3,6 / +3,0 b. místo +2,3 / +0,7); noise sedí; kniha medián 68 000 $ místo 51 000 $", "order": 8, "status": "done", "title": "Nezávislé ověření VWAP pásma a noise momentum", "_id": "q8"}, {"note": "zamítnuto: OOS t ≤ 1,5, denní výkyvy ~150 b., korelace 0,5 s noise", "order": 9, "status": "done", "title": "VWAP trend (Zarattini & Aziz 2023)", "_id": "q9"}], "reports": [{"date": "2026-10-22", "summary": "Evaluace: nejlepší cesta je RS sprint (NQ silnější než ES od otevření + nad VWAP). Pass 48 % (2018–21) / 52 % (2022–25) na pokus, v průměru ~13 obchodních dní a ~2 evaluace (~$180) do passu. Obyčejný sprint 09:31 long má 36 %.\n\nFunded kniha: po opravě fillu trailovaného stopu ORB oslabil asi o 75 %. Kniha ORB + VWAP + noise: eval 80 % (59 % / 98 %), ~45 dní, lifecycle medián ~$70k. Nosné části jsou noise momentum a VWAP pásmo.\n\nCo se hledalo a nenašlo: signál na dlouhé série výher (190k pravidel, ML, jiné trhy) – nic nepřežilo roky 2022–25.\n\nDalší kroky: noční směna začne frontou – varianty RS sprintu, RS pro knihu, mapa režimů.", "title": "Výchozí stav před první noční směnou", "verdicts": [{"name": "RS sprint", "status": "live-eval"}, {"name": "Noise momentum", "status": "live-funded"}, {"name": "VWAP pásmo", "status": "live-funded"}, {"name": "ORB", "status": "live-funded"}, {"name": "ORB s 1min trailem", "status": "rejected"}], "_id": "2026-10-22"}, {"date": "2026-10-23", "summary": "CO UDĚLAT TY\n1) Nahraj nové verze Lucid 1, 2, 6 a 7 (shoda s backtestem; denní hodnoty z posledního dokončeného dne). Lucid 2 na 5min grafu: průraz pásma ±0,20 % (+3,6 / +3,0 b.) místo starého křížení VWAP (+2,3 / +0,7 b.). Lucid 6 se stopem 0,50 %.\n2) Odpověz: dovoluje Lucid Flex držet přes noc?\nPřesné nastavení: strategy/tradingview/PLAYBOOK_CZ.md\n\nEVALUACE (návrh)\n• Účet A: Lucid 8 (RS) se Stop 0,30 % – ~11 dní do passu místo ~13 (nezávisle ověřeno).\n• Účet B: Lucid 7 (09:31) s Target 0,25 %, filtr volatility vypnout.\n• Oba současně: první funded za 6,8 / 6,5 dne (v každém roce 5,7–8,2), poplatky ~305 $.\n• Po první prohře: pokračovat (levnější) nebo vzdát a koupit novou (o 1,5–2 dny rychlejší, o 125–200 $ dražší).\n\nFUNDED (návrh)\n• 3 MNQ na každou nohu knihy místo ladderu: 12 100 / 29 100 $ na účet za 24 měsíců místo 2 300 / 20 500 $. Riziko: k první výplatě dojde 40 / 51 % funded účtů. Denní stop nic nepřidá.\n• RS noha (Target/Stop 1,25): +7 400 / +1 500 $ na účet. ORB je nejslabší noha (edge ≈ 0, ověřeno).\n\nKANDIDÁT\n• Overnight long po 3+ červených dnech (Lucid 9 připraven): +28,6 / +19,0 bp za noc, kladné všech 8 let.\n\nOVĚŘENO / OPRAVENO\n• RS sprint, noise i ORB nezávisle zopakovány podle živých pravidel. Opravena díra ve filtru volatility 2025, řazení obchodů v simulaci a artefakt denního stopu (nová simulace s časy obchodů).\n\nZAMÍTNUTO\nVarianty RS, filtry režimu, přelom měsíce, konec měsíce ZN, intradenní momentum, noise na ES/YM, VWAP trend, záloha ve 14:30, ONL jako doplněk, těsnější denní stop, velikost podle fáze, 3. účet, noise s RS filtrem, 09:31 s filtrem volatility.\n\nBLOKOVÁNO\nAukce dluhopisů (síť nepustí na treasury.gov).\n\nSMĚNA\n14 běhů na QuantConnectu, 75 datových sad; nové nástroje live_spec_exporter, timed_book, playbook.", "title": "Noční směna 23. 10. – finální report", "verdicts": [{"name": "Lucid 2 VWAP pásmo", "status": "live-funded"}, {"name": "Lucid 6 se stopem", "status": "live-funded"}, {"name": "Funded flat 3", "status": "candidate"}, {"name": "RS stop 0,30 %", "status": "candidate"}, {"name": "Dva účty", "status": "candidate"}, {"name": "RS funded noha", "status": "candidate"}, {"name": "Overnight po 3 červených", "status": "candidate"}, {"name": "VWAP trend", "status": "rejected"}, {"name": "Noise ES/YM", "status": "rejected"}], "_id": "2026-10-23"}], "strategies": [{"extra": {"label": "pass 22–25", "max": 100, "unit": "%", "v": 52}, "files": "lucid_8_rs_sprint.pine, score_multi_feature.py", "isVal": 1.8, "name": "RS sprint: NQ−ES od otevření > 0,15 % a nad VWAP (zrcadlově short), 10:00/11:00/13:00/14:30, +0,20 %/−0,40 %", "note": "Nezávislý exporter (2026-10-23) výsledek zopakoval: pass 46 % / 52 %. Žádná varianta (5min, 30min, YM, RTY, EMA, volatilita) není lepší v obou obdobích.", "oosVal": 3.1, "order": 1, "reached": "live", "result": "pass 48 % / 52 % na pokus, ~13 dní", "status": "live-eval", "unit": "bp/obchod", "years": {"2018": 2.2, "2019": -0.2, "2020": 4, "2021": 1, "2022": 2, "2023": 2.2, "2024": 5.1, "2025": 3.4}, "yearsUnit": "bp na obchod", "_id": "s01"}, {"files": "lucid_7_eval_sprint.pine, bias_sprint.py", "isVal": 39, "name": "Sprint 09:31, bias podle 50denního trendu, +0,20 %/−0,40 % (záloha)", "note": "Tvar 0,25 % / 0,40 % (Lucid 7: Target = 0,25): 11,3 / 10,7 dne do passu místo 12,6 / 13,3, poplatky ~230 $ stejné. Nejlepší jako druhý účet vedle RS (korelace −0,02).", "oosVal": 39, "order": 2, "reached": "live", "result": "pass 39 % / 39 %, ~13 dní", "status": "live-eval", "unit": "% pass", "_id": "s02"}, {"edge": 9.2, "files": "lucid_6_noise_momentum.pine, score_noise_tod.py", "isVal": 6.1, "name": "Noise-area momentum (Zarattini 2024), long i short, pevný stop 0,50 %", "note": "Nezávislý export živých pravidel: +5,1 / +8,9 b. bez stopu, +5,7 / +8,7 se stopem 0,50 %, nejhorší obchod −128 místo −218.", "oosVal": 9.2, "order": 3, "reached": "live", "result": "+6,1 / +9,2 pt/obchod se stopem (+5,5 / +9,4 bez), nejhorší obchod −128 vs −221 pt", "short": "noise momentum · pt/obchod 22–25", "status": "live-funded", "unit": "pt/obchod", "years": {"2018": 7.1, "2019": -0.3, "2020": 6.9, "2021": 7.8, "2022": 9.6, "2023": 8.8, "2024": 9.5, "2025": 9.5}, "yearsUnit": "pt na obchod (bez stopu)", "_id": "s03"}, {"audit": false, "edge": 3, "files": "lucid_2_vwap.pine", "isVal": 3.6, "name": "VWAP pásmo: průraz VWAP ±0,20 % na 5min grafu, SL 25 / TP 100 pt, 1× denně (Lucid 2 přepsán 2026-10-23)", "note": "Incident vyřešen: indikátor teď obchoduje stejné pravidlo jako backtest. Používej 5min graf.", "oosVal": 3, "order": 4, "reached": "live", "result": "živá pravidla +3,6 / +3,0 pt/obchod (starý Lucid 2 s křížením VWAP: +2,3 / +0,7)", "short": "VWAP pásmo · pt/obchod 22–25", "status": "live-funded", "unit": "pt/obchod", "years": {"2018": -2.6, "2019": 2, "2020": 1.2, "2021": 8.1, "2022": 1.5, "2023": 0.4, "2024": 4.8, "2025": 1.2}, "yearsUnit": "pt na obchod (backtest, bez filtru)", "_id": "s04"}, {"edge": 0.9, "files": "lucid_1_s1_orb.pine, s1_true_vwap_fill.py", "isVal": -0.4, "name": "ORB 15 min long + VWAP, 20 EMA trail na 5 min, re-entry (slabé)", "note": "Ověřeno exportem přesně podle Lucid 1: −0,47 / +0,41 b./obchod. V knizě při flat 3 s RS nohou pomáhá (17 600 / 28 100 $ vs 16 200 / 23 700 $), bez ní smíšené. Při zjednodušení jde pryč první.", "oosVal": 0.9, "order": 5, "reached": "audit", "result": "po opravě fillu +0,6 / +1,6 pt hrubě; 2018–21 čistě ~0", "short": "ORB · pt/obchod 22–25", "status": "live-funded", "unit": "pt/obchod net", "years": {"2018": -0.4, "2019": -0.6, "2020": -0.9, "2021": 0.4, "2022": 0.5, "2023": 3.2, "2024": -0.3, "2025": 0.2}, "yearsUnit": "pt na obchod po nákladech", "_id": "s05"}, {"files": "book_after_fix.py", "isVal": 59, "name": "Kniha (ORB + VWAP + noise), ladder room/700, max 3", "oosVal": 98, "order": 6, "reached": "live", "result": "eval 80 % (59 % / 98 %), lifecycle medián ~$70k", "status": "live-funded", "unit": "% pass eval", "_id": "s06"}, {"files": "s1_YM_fill.py", "name": "Dow ORB (MYM) (slabé)", "order": 7, "reached": "oos", "result": "po opravě fillu +$0,5 / +$3,3 na MYM hrubě", "status": "candidate", "_id": "s07"}, {"files": "lucid_5_fomc_fade.pine", "name": "FOMC fade svíčky 14:30–14:35 (tisková konference)", "order": 8, "reached": "years", "result": "kladné v každé buňce, NQ/ES/YM; 8× ročně", "status": "candidate", "_id": "s08"}, {"files": "onl_gapup_book.py", "name": "Dotek overnight low v den gapu nahoru, long", "note": "Jako doplněk knihy průměr na účet snižuje (1 MNQ 10 700 $, 2 MNQ 11 600 $ proti 13 100 $ bez něj). Nedoporučeno.", "order": 9, "reached": "oos", "result": "WR 74 %, +12 pb nad náhodou; 25× ročně", "status": "candidate", "_id": "s09"}, {"files": "score_vwap_atr.py", "name": "Široké VWAP pásmo 60 bp, TP 15 % ATR / SL 20–30 % ATR (malé)", "order": 10, "reached": "oos", "result": "WR 61–68 %, +1,5 % ATR v obou polovinách", "status": "candidate", "_id": "s10"}, {"diedAt": "cost", "files": "score_orb_trail.py", "name": "ORB s 1min EMA trailem", "order": 11, "result": "~20 obchodů denně, pass 8–17 %", "status": "rejected", "_id": "s11"}, {"diedAt": "audit", "files": "", "name": "Gap-down reverzal, Po/Pá hold, fade ON úrovní, 1min micro-drop", "order": 12, "result": "artefakty backtestu", "status": "rejected", "_id": "s12"}, {"diedAt": "random", "files": "", "name": "Small-gap fill, ON midpoint, IB statistiky, polední efekt, poslední půlhodina, pre-FOMC drift, FOMC relief rally", "order": 13, "result": "na úrovni náhody nebo pod ní", "status": "rejected", "_id": "s13"}, {"diedAt": "is", "files": "score_news.py", "name": "Fade svíček zpráv 08:30, fade FOMC statementu 14:00, climax fade", "order": 14, "result": "bez edge", "status": "rejected", "_id": "s14"}, {"diedAt": "cost", "files": "score_vwap_feat.py, score_vwap_fine.py", "name": "Adaptivní TP ze svíčky/ATR na VWAP pásmu; malé targety 1–5 % ATR", "order": 15, "result": "po nákladech ~náhoda", "status": "rejected", "_id": "s15"}, {"diedAt": "oos", "files": "score_multi_feature.py", "name": "RSI(2) reverze, trend pullback, momentum konfluence, VIX přepínač, value-area acceptance, logistický model", "order": 16, "result": "žádný stabilní edge", "status": "rejected", "_id": "s16"}, {"diedAt": "oos", "files": "score_xmkt_streak.py, ml_streak.py", "name": "Brackety ES / zlato / ropa / Russell / 10Y / NQ overnight; ML výběr obchodů; 190k pravidel na série výher", "order": 17, "result": "edge nepřežije 2022–25", "status": "rejected", "_id": "s17"}, {"diedAt": "oos", "files": "regime_map.py", "name": "Filtry režimu pro knihu (VIX, 20denní volatilita, 50denní trend, den v týdnu)", "order": 18, "result": "žádné rozdělení neplatí v obou obdobích; bez ORB kniha medián ~$13k vs ~$67k", "status": "rejected", "_id": "s18"}, {"files": "overnight_after_downs.py", "isVal": 28.6, "name": "Overnight long po 3+ červených dnech (NQ, close 15:55 → open 09:30)", "note": "Otázka pro tradera: dovoluje Lucid Flex držet pozici přes noc?", "oosVal": 19, "order": 9.5, "reached": "audit", "result": "+28,6 / +19,0 bp za noc (t 2,5 / 1,7), kladné všech 8 let, ~20× ročně", "status": "candidate", "unit": "bp/noc", "years": {"2018": 40.2, "2019": 18.4, "2020": 35, "2021": 24.5, "2022": 11.1, "2023": 20, "2024": 39, "2025": 14.3}, "yearsUnit": "bp za noc", "_id": "s19"}, {"diedAt": "oos", "files": "turn_of_month.py", "name": "Přelom měsíce NQ (poslední den + první 3 dny)", "order": 13.5, "result": "dny TOM v 2022–25 nejsou lepší než ostatní; 4denní hold +49 / +14 bp, t 1,3 / 0,4", "status": "rejected", "_id": "s20"}, {"diedAt": "oos", "files": "score_rs_variants.py", "name": "Varianty RS sprintu: kontroly 5/30 min, 10–11 h, práh podle volatility, EMA21, vs YM, vs RTY, všechny 3 indexy, průměr 3", "order": 1.5, "result": "žádná nepřekoná živé pravidlo v obou obdobích; 5min rychlejší (14 / 12 dní), ale pass jen 42 %; RTY nejhorší", "status": "rejected", "_id": "s21"}, {"diedAt": "oos", "files": "zn_month_end.py", "name": "Konec měsíce: long ZN poslední obchodní den 09:00–15:00", "order": 13.6, "result": "+2,6 / +0,5 ticku (t 1,5 / 0,2), 2023–2025 záporné", "status": "rejected", "_id": "s22"}, {"files": "rs_book.py", "isVal": 4.6, "name": "RS signál jako funded noha: stejný signál jako sprint, bracket +1,25 % / −1,25 %, jinak 15:55", "note": "Ve 2022–25 přidává jen málo. Bracket vybrán jen na 2018–21. V Lucid 8 Target 1,25 a Stop 1,25. Rozhoduješ ty.", "oosVal": 9.6, "order": 2.5, "reached": "years", "result": "+4,6 / +9,6 pt/obchod (t 1,8 / 2,2), 7/8 let kladných; v knize při flat 3 (simulace s časy) +7 400 / +1 500 $ na účet za 24 m.", "status": "candidate", "unit": "pt/obchod", "years": {"2018": 3.4, "2019": -2.1, "2020": 8.7, "2021": 7.1, "2022": 3.7, "2023": 5.4, "2024": 20.1, "2025": 10.5}, "yearsUnit": "pt na obchod", "_id": "s23"}, {"diedAt": "oos", "files": "intraday_momentum.py", "name": "Intradenní momentum (Gao et al. 2018): směr do 10:00 → obchod 15:30–15:55", "order": 13.7, "result": "2018–21 +3,3 pt (t 2,3), 2022–25 −2,6 pt (t −1,4) – efekt se otočil", "status": "rejected", "_id": "s24"}, {"diedAt": "oos", "files": "noise_markets.py", "name": "Noise momentum na ES a YM (pravidla Lucid 6, stop 0,50 %)", "order": 13.8, "result": "na micro: NQ +11 / +14 $, ES +6 / +4 $ (korelace s NQ 0,69), YM +0,8 / −0,8 $", "status": "rejected", "_id": "s25"}, {"diedAt": "oos", "files": "vwap_trend_exporter.py, score_vwap_trend.py", "name": "VWAP trend (Zarattini & Aziz 2023): vždy v trhu, long nad VWAP, short pod", "order": 13.9, "result": "15min +8,9 / +6,5 b./den (t 2,9 / 1,1), buffer +8,0 / +8,3 (t 2,3 / 1,5); denní výkyv ~150 b., korelace s noise 0,5", "status": "rejected", "_id": "s26"}, {"files": "multi_account_sprint.py, two_account_sprint.py", "isVal": 6.8, "name": "Evaluace na dvou účtech: RS sprint se stopem 0,30 % (Lucid 8) + sprint 09:31 s targetem 0,25 % (Lucid 7)", "oosVal": 6.5, "order": 1.6, "reached": "years", "result": "první funded za 6,8 / 6,5 dne místo ~10–12 s jedním účtem; poplatky ~305 $; signály nekorelují", "status": "candidate", "unit": "dní do funded", "_id": "s27"}, {"files": "rs_sprint_shape.py", "isVal": 10.6, "name": "RS sprint s jiným tvarem: target 0,20 % / stop 0,30 % (stop stále ~1 900 $)", "note": "Nezávisle ověřeno druhým exporterem (práh 0,15 %): 11,1 / 11,0 dne místo 13,8 / 12,9, poplatky 193 / 187 $ místo 195 / 172 $. V Lucid 8 stačí nastavit Stop (% of price) = 0,30. Výchozí hodnoty jsem neměnil.", "oosVal": 10.8, "order": 1.7, "reached": "audit", "result": "10,6 / 10,8 dne do passu místo 13,4 / 13,0; pass 48,8 / 48,7 %; poplatky 185 / 185 $", "status": "candidate", "unit": "dní do passu", "_id": "s28"}, {"files": "timed_book.py, funded_sizing.py", "isVal": 12.1, "name": "Funded velikost: flat 3 MNQ na každou nohu knihy (místo ladderu 400/500)", "note": "Bust funded účtu stojí jen novou evaluaci sprintem (~180 $, ~11 dní). Plato 3–4 MNQ. Riziko: k první výplatě dojde 40 % / 51 % funded účtů (medián 35 / 15 dní), zbytek spadne dřív. Denní stop nic nepřidává. ORB v knize pomáhá.", "oosVal": 29.1, "order": 6.5, "reached": "years", "result": "simulace s časy obchodů: 12 100 / 29 100 $ na účet za 24 m. místo 2 300 / 20 500 $ s ladderem; s RS 19 500 / 30 500 $", "status": "candidate", "unit": "tis. $ na účet", "_id": "s29"}, {"diedAt": "audit", "files": "funded_daystop.py, timed_book.py", "name": "Funded denní stop (těsnější = lepší v původní simulaci)", "order": 13.95, "result": "artefakt: stará simulace brála obchody dne jako po sobě jdoucí; se časy obchodů −600 $ neutrální, −300 $ škodí", "status": "rejected", "_id": "s30"}, {"diedAt": "oos", "files": "funded_stage_size.py", "name": "Funded velikost podle fáze (jiná před první výplatou a po ní, 2–4 MNQ)", "order": 13.96, "result": "3/4 vybráno na 2018–21, ale ve 2022–25 22 300 $ místo 29 100 $ pro 3/3; žádný stabilní zisk oproti flat 3", "status": "rejected", "_id": "s31"}, {"diedAt": "years", "files": "multi_account_sprint.py", "name": "Třetí účet s noise sprintem (RS + 09:31 + noise)", "order": 13.97, "result": "6,7 / 7,1 dne do prvního funded místo 7,1 / 7,3, poplatky ~405 $ místo ~300 $; noise jako sprint sám 25 / 23 dní", "status": "rejected", "_id": "s32"}, {"files": "sprint_reset.py", "isVal": 10.9, "name": "Sprint: po první prohře vzdát a koupit novou evaluaci (místo pokračování se ~100 $ rezervou)", "oosVal": 8.5, "order": 1.8, "reached": "years", "result": "RS: 10,9 / 8,5 dne za 382 / 298 $ místo 12,7 / 10,0 dne za 213 / 174 $; rychlejší, ale dražší", "status": "candidate", "unit": "dní do passu", "_id": "s33"}, {"diedAt": "years", "files": "noise_rs_filter.py", "name": "Noise momentum jen ve shodě s relativní silou NQ/ES", "order": 13.98, "result": "nesouhlasné obchody +0,1 / −17,0 b., ale v knizě (flat 3, časy obchodů) 7 400 $ místo 12 100 $ v 2018–21, 2022–25 beze změny", "status": "rejected", "_id": "s34"}, {"diedAt": "years", "files": "t931_volgate", "name": "Sprint 09:31 s filtrem volatility", "order": 13.99, "result": "18,0 / 21,3 dne do passu místo 11,3 / 10,7 bez filtru – na evaluaci filtr v Lucid 7 vypnout", "status": "rejected", "_id": "s35"}]};</script>
+<script>window.JARVIS_SNAPSHOT = {"taken": "2026-10-23T08:41:09Z", "brain": {"account": {"rules": [["Účet", "Lucid Flex 50K"], ["Cíl evaluace", "+3 000 $"], ["Drawdown", "2 000 $ EOD trailing, zamkne se na +100 $ po EOD nad +2 100 $"], ["Consistency", "nejlepší den max. 50 % zisku"], ["Denní strop zisku", "~1 450 $"], ["Poplatek", "90 $ za evaluaci"], ["Max. velikost", "4 NQ / 40 MNQ"], ["Přes noc", "nepovoleno – do konce seance flat"], ["Funded výplaty", "první po +4 000 $ (1 800 $ pro tebe), pak každých +2 000 $, nejdřív po 5 dnech"], ["Copytrading", "povolen"]]}, "log": {"events": [{"sphere": "Interpret", "t": "2026-10-23T07:32:00Z", "text": "Playbook s přesným nastavením indikátorů pro evaluaci (2 účty) i funded (flat 3): PLAYBOOK_CZ.md."}, {"sphere": "Optimalizátor", "t": "2026-10-23T07:31:00Z", "text": "Po první prohře ve sprintu: vzdát a koupit novou evaluaci = o 1,5–2 dny rychlejší, o 125–200 $ dražší."}, {"sphere": "Optimalizátor", "t": "2026-10-23T07:30:00Z", "text": "Lucid 7 na evaluaci bez filtru volatility (s ním 18–21 dní místo 11)."}, {"sphere": "Backtester", "t": "2026-10-23T07:29:00Z", "text": "Noise jen ve shodě s relativní silou: na úrovni účtu horší, zamítnuto."}, {"sphere": "Optimalizátor", "t": "2026-10-23T07:28:00Z", "text": "Lucid 7 s targetem 0,25 %; dva účty RS + 09:31 = první funded za 6,8 / 6,5 dne."}, {"sphere": "Kodér", "t": "2026-10-23T07:27:00Z", "text": "Lucid 9 (overnight po 3 červených) připraven."}, {"sphere": "Optimalizátor", "t": "2026-10-23T07:26:00Z", "text": "Třetí účet s noise sprintem: jen −0,3 dne za ~100 $ navíc."}, {"sphere": "Backtester", "t": "2026-10-23T06:20:00Z", "text": "RS sprint se stopem 0,30 % nezávisle potvrzen."}, {"sphere": "Systémový manažer", "t": "2026-10-23T05:12:00Z", "text": "Simulace s časy obchodů: flat 3 potvrzen, denní stop nic nepřidá."}, {"sphere": "Backtester", "t": "2026-10-23T04:10:00Z", "text": "Opraveno řazení obchodů v simulaci."}, {"sphere": "Kodér", "t": "2026-10-22T21:31:00Z", "text": "Lucid 2 přepsán na průraz pásma VWAP ±0,20 %."}, {"sphere": "Kodér", "t": "2026-10-22T21:17:00Z", "text": "Lucid 6: pevný stop 0,50 %."}, {"sphere": "Systém", "t": "2026-10-22T21:08:00Z", "text": "Noční směna začala."}]}, "metrics": {"book": {"caption": "ORB + VWAP pásmo + noise · simulace s časy obchodů · průměr na účet za 24 měsíců (2018–21 | 2022–25)", "tiles": [{"label": "Flat 3 MNQ na nohu", "sub": "doporučená velikost", "tone": "ok", "value": "$12 100 / $29 100"}, {"label": "Ladder 400/500 (dosud)", "sub": "dosavadní plán", "tone": "bad", "value": "$2 300 / $20 500"}, {"label": "+ RS noha, flat 3", "sub": "kandidát, ve 2022–25 přidá málo", "tone": "gold", "value": "$19 500 / $30 500"}, {"label": "Denní stop", "sub": "−600 $ neutrální, −300 $ škodí", "tone": "arc", "value": "nic nepřidá"}]}, "eval": {"caption": "RS sprint (stop 0,30 %) + 09:31 (target 0,25 %) na dvou účtech · návrh", "fee": 90, "p": 0.5, "rules": [["Trh", "MNQ, 1min graf, indikátor Lucid 8"], ["Kontroly", "10:00, 11:00, 13:00, 14:30 ET (16:00, 17:00, 19:00, 20:30 Praha)"], ["Long", "NQ od otevření o víc než 0,15 % silnější než ES a cena nad VWAP"], ["Short", "zrcadlově: o 0,15 % slabší a pod VWAP"], ["Obchod", "jen první signál dne"], ["Target / stop", "+0,20 % / −0,40 % ceny, flat 15:55"], ["Velikost", "stop = max. ztráta 1 900 $ (~1 000 $ výhra)"], ["Pass", "3 výhry (nejlepší den ~1/3 zisku); prohra ukončí pokus"]], "tiles": [{"label": "Dva účty: dní do funded", "sub": "2018–21 / 2022–25", "tone": "ok", "value": "6,8 / 6,5"}, {"label": "Poplatky do funded", "sub": "oba účty dohromady", "tone": "gold", "value": "~$305"}, {"label": "Jeden účet RS 0,30 %", "sub": "poplatky ~185–200 $", "tone": "arc", "value": "~11 dní"}, {"label": "Dosavadní RS 0,40 %", "sub": "pass 48 / 52 %", "value": "~13 dní"}]}}, "stats": {"dataSets": 75}, "status": {"heartbeat": "2026-10-23T08:20:00Z", "phase": "report", "qc": "ok", "runs": 14, "shift": "2026-10-23", "sphere": "interpreter", "task": "Overnight long vyřazen (Lucid nedovoluje držet přes noc). Pravidlo zapsáno do runbooku."}}, "indicators": [{"chart": "MNQ · 5 min", "code": "// @version=5\nindicator(\"Lucid 1/3 — S1 ORB 15min Long\", overlay=true, max_labels_count=500, max_lines_count=50)\n\n// =========================================================================\n// S1: Opening Range Breakout 15-min, long-only, w/ 20-EMA trail\n// Entry : after 09:45 ET, close > OR_high AND close > session VWAP\n// SL    : max(OR_low, close - OR_range)\n// Trail : 20-EMA 5m (SL moves up to EMA, never down)\n// Exit  : SL hit or EOD 15:55 ET\n// Skip Wed. Re-enters after every exit; never two positions at once.\n// Same script on MNQ and MYM (Dow); the vol gate reads NQ on both.\n// Changed 2026-10-23 to match the backtest exactly: the 20-EMA trail runs on\n// RTH bars only and restarts each session; the stop is not tested on the\n// entry bar.\n// USE A 5-MINUTE CHART: the 20-EMA trail on a 1-minute chart exits and\n// re-enters ~20 times a day and loses after costs (2018-2025 test).\n// =========================================================================\n\nshowHist = input.bool(true, \"Show historical entries/exits\")\nema20Len = input.int(20, \"20-EMA trail length (chart TF)\")\nvolCeil  = input.float(0.30, \"Max 20d realised vol (skip day above this)\")\nvolSym   = input.string(\"CME_MINI:NQ1!\", \"Vol gate symbol (empty = this chart)\")\n\n// Volatility gate. Stops are set in points, so in the top volatility quintile\n// the same rule risks far more dollars per trade and the trailing drawdown\n// gets hit much sooner. Sitting out those days (about 17% of the sample)\n// raised portfolio pass rate by ~5pp and roughly halved the bust rate.\n// The gate always reads NQ, so on an MYM chart the Dow trades on exactly the\n// days NQ trades, as in the backtest.\n// Daily values: last COMPLETED session ([1] + lookahead_on), identical in history and\n// real time (lookahead_off would use the forming daily bar live). Fixed 2026-10-23.\ngateSym = volSym == \"\" ? syminfo.tickerid : volSym\ndRet = request.security(gateSym, \"D\", (close / close[1] - 1.0)[1], lookahead=barmerge.lookahead_on)\nrvol20 = request.security(gateSym, \"D\", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)\nvolOK = na(rvol20) or rvol20 < volCeil\n\n// Session + DOW\nhET = hour(time, \"America/New_York\")\nmET = minute(time, \"America/New_York\")\netMin = hET * 60 + mET\ndowET = dayofweek(time, \"America/New_York\")\nisWed = dowET == dayofweek.wednesday\nrthFlag = not na(time(timeframe.period, \"0930-1600\", \"America/New_York\"))\n\n// RTH VWAP anchored\nrthStart = rthFlag and not nz(rthFlag[1], false)\nvwapVal = ta.vwap(hlc3, rthStart)\n\n// 20-EMA trail on RTH bars only, restarted each session (as in the backtest:\n// the exporter seeds it with the first RTH close and ignores overnight bars)\nvar float ema20 = na\nif rthStart\n    ema20 := close\nelse if rthFlag\n    ema20 := close * 2.0 / (ema20Len + 1) + nz(ema20, close) * (1.0 - 2.0 / (ema20Len + 1))\n\n// Build OR 9:30-9:45\nvar float orHigh = na\nvar float orLow  = na\nvar bool  orSet  = false\nif rthStart\n    orHigh := na\n    orLow := na\n    orSet := false\nif rthFlag and etMin >= 9*60+30 and etMin < 9*60+45\n    orHigh := na(orHigh) ? high : math.max(orHigh, high)\n    orLow  := na(orLow)  ? low  : math.min(orLow, low)\nif rthFlag and etMin >= 9*60+45 and not orSet\n    orSet := true\n\n// Trade state\nvar float sEntry = na\nvar float sSL    = na\nvar int   sBar   = na\nvar int   sDayId = na\ncurDayId = year*10000 + month*100 + dayofmonth\n\n// Re-entry is deliberate and load-bearing. Capping this at one trade per day\n// drops the strategy's standalone pass rate from 46% to 9%: later entries have\n// a markedly higher hit rate (37% on the first, 61% by the seventh) because by\n// then the trend is established. The only guard is that no two positions run\n// at once.\ntrigger = not isWed and volOK and rthFlag and orSet and etMin > 9*60+45 and etMin < 15*60 and close > orHigh and close > vwapVal and na(sEntry) and barstate.isconfirmed\nif trigger\n    orRange = orHigh - orLow\n    sl0 = math.max(orLow, close - orRange)\n    if sl0 < close\n        sEntry := close\n        sSL    := sl0\n        sBar   := bar_index\n        sDayId := curDayId\n\n// Exit management: trail + SL hit + EOD\nisEOD = etMin >= 15*60+55\ndayChg = ta.change(curDayId) != 0\n\n// The stop is tested against the stop as it stood before this bar, and only\n// then raised to the EMA, the same order as the backtest.\nif not na(sEntry) and bar_index > sBar      // the stop works from the bar after entry\n    exReason = \"\"\n    exPx = 0.0\n    if low <= sSL\n        exReason := \"SL\"\n        // a trailed stop above the market fills at the open, not at the stop\n        exPx := math.min(sSL, open)\n    else if isEOD or dayChg\n        exReason := \"EOD\"\n        exPx := close\n    else if ema20 > sSL\n        sSL := ema20\n    if exReason != \"\"\n        pnl = exPx - sEntry\n        if showHist\n            label.new(bar_index, exPx, \"S1 \" + exReason + \"\\n\" + str.tostring(pnl, \"+#.#\") + \"pt\", color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)\n        sEntry := na\n        sSL := na\n\n// Entry marker (historical)\nplotshape(showHist and trigger, \"S1 entry\", shape.triangleup, location.belowbar, color=color.lime, size=size.small, text=\"S1\")\n\n// Live lines\nvar line eLn = na\nvar line slLn = na\nif barstate.islast\n    if not na(eLn)\n        line.delete(eLn)\n    if not na(slLn)\n        line.delete(slLn)\n    if not na(sEntry) and sDayId == curDayId\n        eLn := line.new(sBar, sEntry, bar_index + 20, sEntry, color=color.lime, width=2, extend=extend.right)\n        slLn := line.new(sBar, sSL, bar_index + 20, sSL, color=color.new(color.red, 20), style=line.style_dashed, extend=extend.right)\n\n// Reference plots\nplot(rthFlag ? vwapVal : na, \"VWAP (RTH)\", color=color.new(color.aqua, 30), linewidth=1)\nplot(ema20, \"20-EMA (trail)\", color=color.new(color.gray, 40))\nplot(rthFlag and orSet ? orHigh : na, \"OR High\", color=color.new(color.green, 10), linewidth=2, style=plot.style_linebr)\nplot(rthFlag and orSet ? orLow : na, \"OR Low\", color=color.new(color.red, 10), linewidth=2, style=plot.style_linebr)\n\n// Mini status badge\nvar table badge = table.new(position.top_right, 1, 3, border_width=1, bgcolor=color.new(color.black, 30))\nif barstate.islast\n    sessState = etMin < 570 ? \"PRE-OPEN\" : etMin < 585 ? \"BUILDING OR 9:30-9:45\" : etMin < 900 ? \"LIVE 9:45+ (watch entry)\" : etMin < 955 ? \"MID (still ok)\" : \"CLOSE SOON\"\n    sessCol = etMin >= 585 and etMin < 900 ? color.new(color.green, 20) : etMin >= 955 ? color.red : color.new(color.gray, 50)\n    table.cell(badge, 0, 0, \"S1 ORB 15m LONG\", bgcolor=color.new(color.lime, 50), text_color=color.white)\n    table.cell(badge, 0, 1, isWed ? \"WED — SKIP\" : not volOK ? \"VOL TOO HIGH — SKIP (\" + str.tostring(rvol20 * 100, \"#\") + \"%)\" : sessState, bgcolor=isWed or not volOK ? color.red : sessCol, text_color=color.white)\n    table.cell(badge, 0, 2, not na(sEntry) ? \"LIVE: entry \" + str.tostring(sEntry, format.mintick) : \"no position\", text_color=color.white, bgcolor=color.new(color.black, 50))\n", "file": "lucid_1_s1_orb.pine", "group": "funded", "name": "Lucid 1 — ORB (nový)", "note": "sjednoceno s backtestem; ověřeno exportem: −0,5 / +0,4 b./obchod, nejslabší noha knihy", "order": 5, "result": "−0,5 / +0,4 b. na obchod · nejslabší noha", "role": "funded kniha (slabé)", "settings": [["Velikost", "3 MNQ"]], "slot": "Funded", "status": "live", "_id": "i1"}, {"chart": "MNQ · 5 min", "code": "// @version=5\nindicator(\"Lucid 2 — VWAP Band (0.20%, SL 25 / TP 100)\", overlay=true, max_labels_count=500, max_lines_count=50)\n\n// =========================================================================\n// VWAP band break, both directions — USE A 5-MINUTE CHART\n// Entry : 5-min close breaks out of the RTH VWAP +/- 0.20% band (previous\n//         close inside, this close outside); not Wednesday; first trade only\n// SL    : 25 pt from entry (filled at the worse of stop and bar open)\n// TP    : 100 pt from entry\n// Exit  : SL/TP hit OR the 15:55 bar's close. One trade a day.\n//\n// Changed 2026-10-23: the old version traded a plain VWAP cross, which is not\n// what the book was tested on. Measured on NQ 2018-2025 with costs and the\n// vol gate: plain cross +2.3 / +0.7 pt per trade (2018-21 / 2022-25), this\n// band break +3.6 / +3.0 pt (live_spec_exporter, score_live_spec.py).\n// =========================================================================\n\nshowHist = input.bool(true, \"Show historical entries/exits\")\nbandPct  = input.float(0.20, \"Band around VWAP (%)\") / 100.0\nslPts    = input.float(25.0, \"Stop-loss (pt)\")\ntpPts    = input.float(100.0, \"Take-profit (pt)\")\nvolCeil  = input.float(0.30, \"Max 20d realised vol (skip day above this)\")\n\n// See lucid_1 for why this gate exists: point-denominated stops risk far more\n// dollars per trade in a high-volatility regime, and the trailing drawdown\n// arrives correspondingly sooner.\n// Daily values: last COMPLETED session ([1] + lookahead_on), identical in history and\n// real time (lookahead_off would use the forming daily bar live). Fixed 2026-10-23.\nrvol20 = request.security(syminfo.tickerid, \"D\", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)\nvolOK = na(rvol20) or rvol20 < volCeil\n\n// Session + DOW\nhET = hour(time, \"America/New_York\")\nmET = minute(time, \"America/New_York\")\netMin = hET * 60 + mET\ndowET = dayofweek(time, \"America/New_York\")\nisWed = dowET == dayofweek.wednesday\nrthFlag = not na(time(timeframe.period, \"0930-1600\", \"America/New_York\"))\n\n// RTH VWAP anchored\nrthStart = rthFlag and not nz(rthFlag[1], false)\nvwapVal = ta.vwap(hlc3, rthStart)\n\n// Band-break signals (previous bar inside the band, this close outside)\nupB = vwapVal * (1.0 + bandPct)\nloB = vwapVal * (1.0 - bandPct)\nprevRth = nz(rthFlag[1], false) and not rthStart\nxUp = rthFlag and prevRth and close > upB and close[1] <= upB[1]\nxDn = rthFlag and prevRth and close < loB and close[1] >= loB[1]\nis5 = timeframe.period == \"5\"\n\n// Trade state\nvar float vEntry = na\nvar float vSL    = na\nvar float vTP    = na\nvar int   vDir   = na\nvar int   vBar   = na\nvar int   vDayId = na\nvar bool  vDone  = false\ncurDayId = year*10000 + month*100 + dayofmonth\ndayChg = ta.change(curDayId) != 0\nif dayChg\n    vDone := false\n\ncanTrade = is5 and not isWed and volOK and rthFlag and etMin < 15*60+50 and na(vEntry) and not vDone and barstate.isconfirmed\n\nif canTrade and xUp\n    vEntry := close\n    vDir   := 1\n    vSL    := close - slPts\n    vTP    := close + tpPts\n    vBar   := bar_index\n    vDayId := curDayId\nif canTrade and xDn\n    vEntry := close\n    vDir   := -1\n    vSL    := close + slPts\n    vTP    := close - tpPts\n    vBar   := bar_index\n    vDayId := curDayId\n\n// Exit management\nisEOD = etMin >= 15*60+55\nif not na(vEntry) and bar_index > vBar      // stop/target work from the bar after entry\n    exReason = \"\"\n    exPx = 0.0\n    if vDir == 1\n        if low <= vSL\n            exReason := \"SL\"\n            exPx := math.min(vSL, open)\n        else if high >= vTP\n            exReason := \"TP\"\n            exPx := vTP\n        else if isEOD or dayChg\n            exReason := \"EOD\"\n            exPx := close\n    else\n        if high >= vSL\n            exReason := \"SL\"\n            exPx := math.max(vSL, open)\n        else if low <= vTP\n            exReason := \"TP\"\n            exPx := vTP\n        else if isEOD or dayChg\n            exReason := \"EOD\"\n            exPx := close\n    if exReason != \"\"\n        pnl = vDir * (exPx - vEntry)\n        if showHist\n            label.new(bar_index, exPx, \"VWAP \" + exReason + \"\\n\" + str.tostring(pnl, \"+#.#\") + \"pt\", color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)\n        vEntry := na\n        vSL := na\n        vTP := na\n        vDir := na\n        vDone := true\n\n// Entry markers (historical)\nplotshape(showHist and xUp and not isWed, \"VWAP long\", shape.triangleup, location.belowbar, color=color.aqua, size=size.small, text=\"VL\")\nplotshape(showHist and xDn and not isWed, \"VWAP short\", shape.triangledown, location.abovebar, color=color.fuchsia, size=size.small, text=\"VS\")\n\n// Live lines\nvar line veLn = na\nvar line vslLn = na\nvar line vtpLn = na\nif barstate.islast\n    if not na(veLn)\n        line.delete(veLn)\n    if not na(vslLn)\n        line.delete(vslLn)\n    if not na(vtpLn)\n        line.delete(vtpLn)\n    if not na(vEntry) and vDayId == curDayId\n        clrDir = vDir == 1 ? color.aqua : color.fuchsia\n        veLn := line.new(vBar, vEntry, bar_index + 20, vEntry, color=clrDir, width=2, extend=extend.right)\n        vslLn := line.new(vBar, vSL, bar_index + 20, vSL, color=color.new(color.red, 20), style=line.style_dashed, extend=extend.right)\n        vtpLn := line.new(vBar, vTP, bar_index + 20, vTP, color=color.new(color.green, 20), style=line.style_dashed, extend=extend.right)\n\n// Reference plots\nplot(rthFlag ? vwapVal : na, \"VWAP (RTH)\", color=color.new(color.yellow, 20), linewidth=2)\nplot(rthFlag ? upB : na, \"upper band\", color=color.new(color.aqua, 40))\nplot(rthFlag ? loB : na, \"lower band\", color=color.new(color.fuchsia, 40))\n\n// Mini status badge\nvar table badgeV = table.new(position.top_right, 1, 3, border_width=1, bgcolor=color.new(color.black, 30))\nif barstate.islast\n    sessStateV = etMin < 570 ? \"PRE-OPEN\" : etMin < 955 ? \"LIVE (watch cross)\" : \"CLOSE SOON\"\n    sessColV = etMin >= 570 and etMin < 955 ? color.new(color.aqua, 30) : color.new(color.gray, 50)\n    table.cell(badgeV, 0, 0, is5 ? \"VWAP BAND\" : \"VWAP BAND: use a 5-minute chart\", bgcolor=is5 ? color.new(color.yellow, 50) : color.red, text_color=color.white)\n    table.cell(badgeV, 0, 1, isWed ? \"WED — SKIP\" : vDone ? \"DONE TODAY\" : sessStateV, bgcolor=isWed ? color.red : vDone ? color.new(color.gray, 30) : sessColV, text_color=color.white)\n    table.cell(badgeV, 0, 2, not na(vEntry) ? \"LIVE \" + (vDir==1?\"L \":\"S \") + str.tostring(vEntry, format.mintick) : \"no position\", text_color=color.white, bgcolor=color.new(color.black, 50))\n", "file": "lucid_2_vwap.pine", "group": "funded", "name": "Lucid 2 — VWAP Band", "note": "nahrát novou verzi: průraz pásma 0,20 %, 1× denně, filtr volatility z dokončeného dne", "order": 3, "result": "+3,6 / +3,0 b. na obchod (2018–21 / 2022–25)", "role": "funded kniha", "settings": [["Velikost", "3 MNQ"], ["SL / TP", "25 / 100 b."]], "slot": "Funded", "status": "live", "_id": "i2"}, {"chart": "–", "file": "lucid_3_monfri.pine", "name": "Lucid 3 — Mon/Fri", "order": 7, "role": "vyřazeno z plánu", "status": "off", "_id": "i3"}, {"chart": "–", "file": "lucid_4_coc.pine", "name": "Lucid 4 — COC", "order": 8, "role": "mimo plán", "status": "off", "_id": "i4"}, {"chart": "1 min", "file": "lucid_5_fomc_fade.pine", "name": "Lucid 5 — FOMC Fade", "order": 6, "role": "kandidát, 8× ročně", "status": "off", "_id": "i5"}, {"chart": "1 / 5 / 30 min", "code": "// @version=5\nindicator(\"Lucid 6 — Noise Area Momentum\", overlay=true, max_labels_count=500, max_lines_count=500)\n\n// Zarattini, Aziz & Barbon (2024), \"Beat the Market\", on NQ. Long and short.\n// sigma(t) = average over the last 14 sessions of |price at time t / 09:30\n// open - 1|. Upper band = max(open, prior close) x (1 + sigma), lower band =\n// min(open, prior close) x (1 - sigma). Decisions only at :00 and :30 from\n// 10:00 to 15:30 ET: long when the close is above the upper band, short when\n// below the lower band. A long exits when the close is below max(upper band,\n// VWAP), a short when above min(lower band, VWAP); an opposite signal\n// reverses. Flat at 15:55. Use a 1-, 5- or 30-minute chart.\n// Hard stop (added 2026-10-23): exit when price moves 0.50% against the entry\n// (filled at the worse of the stop and the bar open). Same edge, worst trade\n// about -125 pt instead of -220 pt.\n//\n// NQ 2018-2025, $1 cost per MNQ: about 1 trade a day, 38% winners, +6.1 pt\n// per trade 2018-2021 and +9.2 pt 2022-2025 with the hard stop (+5.5 / +9.4\n// without it).\n\nlookback = input.int(14, \"Sessions for the noise average\")\nuseVol   = input.bool(true, \"Volatility gate (skip if NQ 20d vol >= ceiling)\")\nvolCeil  = input.float(0.30, \"   vol ceiling\")\nvolSym   = input.string(\"CME_MINI:NQ1!\", \"   vol gate symbol\")\nhardStop = input.float(0.50, \"Hard stop (% from entry, 0 = off)\") / 100.0\n// Daily values: last COMPLETED session ([1] + lookahead_on), identical in history and\n// real time (lookahead_off would use the forming daily bar live). Fixed 2026-10-23.\n\nrvol20 = request.security(volSym, \"D\", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)\nvolOK = not useVol or na(rvol20) or rvol20 < volCeil\n\noMin = hour(time, \"America/New_York\") * 60 + minute(time, \"America/New_York\")\ncMin = hour(time_close, \"America/New_York\") * 60 + minute(time_close, \"America/New_York\")\ntfOK = timeframe.isintraday and timeframe.multiplier <= 30 and 30 % timeframe.multiplier == 0\n\nvar float dOpen = na\nvar float pClose = na\nvar float lastClose = na\nvar int ghost = 0      // direction of a stopped trade until its normal exit\nvar float pv = 0.0\nvar float vv = 0.0\nif oMin == 570\n    pClose := lastClose\n    dOpen := open\n    ghost := 0\n    pv := 0.0\n    vv := 0.0\ninRth = cMin > 570 and cMin <= 960 and not na(dOpen)\nif inRth\n    pv += hlc3 * volume\n    vv += volume\nvw = vv > 0 ? pv / vv : na\nif cMin == 960\n    lastClose := close\n\nvar array<float> buf = array.new<float>(12 * lookback, na)\nvar array<int> cnt = array.new<int>(12, 0)\nvar float ub = na\nvar float lb = na\nvar int pos = 0\nvar float ent = na\nvar int entBar = na\n\n// hard stop, checked on every bar after the entry bar\nstopLvl = pos != 0 and hardStop > 0 ? ent * (1.0 - pos * hardStop) : na\nif pos != 0 and hardStop > 0 and bar_index > entBar and inRth\n    hit = pos == 1 ? low <= stopLvl : high >= stopLvl\n    if hit\n        px = pos == 1 ? math.min(stopLvl, open) : math.max(stopLvl, open)\n        pnl = pos * (px - ent)\n        label.new(bar_index, px, \"NZ STOP \" + str.tostring(pnl, \"+#.##\"), color=color.red, textcolor=color.white, style=label.style_label_down, size=size.small)\n        ghost := pos         // no new entry until the stopped trade's normal exit, as in the backtest\n        pos := 0\n        ent := na\n\nisCheck = tfOK and inRth and cMin >= 600 and cMin <= 930 and cMin % 30 == 0 and barstate.isconfirmed\nif isCheck\n    idx = int((cMin - 600) / 30)\n    n = array.get(cnt, idx)\n    sigma = 0.0\n    if n >= lookback\n        s = 0.0\n        for k = 0 to lookback - 1\n            s += array.get(buf, idx * lookback + k)\n        sigma := s / lookback\n    array.set(buf, idx * lookback + n % lookback, math.abs(close / dOpen - 1.0))\n    array.set(cnt, idx, n + 1)\n    if n >= lookback and not na(pClose)\n        ub := math.max(dOpen, pClose) * (1.0 + sigma)\n        lb := math.min(dOpen, pClose) * (1.0 - sigma)\n        sig = close > ub ? 1 : close < lb ? -1 : 0\n        if pos != 0 or ghost != 0\n            d = pos != 0 ? pos : ghost\n            out = d == 1 ? close < math.max(ub, vw) : close > math.min(lb, vw)\n            if out or (sig != 0 and sig != d)\n                if pos != 0\n                    pnl = pos * (close - ent)\n                    label.new(bar_index, close, \"NZ EXIT \" + str.tostring(pnl, \"+#.##\"), color=pnl >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)\n                pos := 0\n                ent := na\n                ghost := 0\n        if pos == 0 and ghost == 0 and sig != 0 and volOK\n            pos := sig\n            ent := close\n            entBar := bar_index\n            label.new(bar_index, close, sig == 1 ? \"NZ LONG\" : \"NZ SHORT\", color=sig == 1 ? color.green : color.red, textcolor=color.white, style=sig == 1 ? label.style_label_up : label.style_label_down, size=size.normal)\n\nif pos != 0 and tfOK and cMin >= 955 and cMin <= 960 and barstate.isconfirmed\n    pnl = pos * (close - ent)\n    label.new(bar_index, close, \"NZ EOD \" + str.tostring(pnl, \"+#.##\"), color=pnl >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)\n    pos := 0\n    ent := na\nif cMin >= 955\n    ghost := 0\n\nplot(inRth ? ub : na, \"upper band\", color=color.new(color.green, 30), style=plot.style_stepline)\nplot(inRth ? lb : na, \"lower band\", color=color.new(color.red, 30), style=plot.style_stepline)\nplot(inRth ? vw : na, \"VWAP\", color=color.new(color.aqua, 30))\nplot(pos != 0 ? ent : na, \"entry\", color=color.yellow, style=plot.style_linebr, linewidth=2)\nplot(pos != 0 and hardStop > 0 ? ent * (1.0 - pos * hardStop) : na, \"hard stop\", color=color.red, style=plot.style_linebr, linewidth=2)\n// Where the next :00/:30 check would close the position (it is a close-of-\n// bar exit at the check, not a resting stop order).\nexitLvl = pos == 1 ? math.max(ub, vw) : pos == -1 ? math.min(lb, vw) : na\nplot(inRth ? exitLvl : na, \"exit level\", color=color.new(color.orange, 0), style=plot.style_linebr, linewidth=2)\n\nvar table tb = table.new(position.top_right, 1, 1, bgcolor=color.new(color.black, 30))\nif barstate.islast\n    msg = not tfOK ? \"NOISE MOMENTUM: use a 1/5/30-minute chart\" : not volOK ? \"VOL TOO HIGH — no new trades\" : pos == 1 ? \"LONG from \" + str.tostring(ent, format.mintick) : pos == -1 ? \"SHORT from \" + str.tostring(ent, format.mintick) : \"flat — next check at :00/:30\"\n    table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not tfOK or not volOK ? color.red : pos != 0 ? color.new(color.orange, 20) : color.new(color.gray, 50))\n", "file": "lucid_6_noise_momentum.pine", "group": "funded", "name": "Lucid 6 — Noise Momentum", "note": "nahrát novou verzi: pevný stop 0,50 %, filtr volatility z dokončeného dne", "order": 4, "result": "+5,7 / +8,7 b. na obchod", "role": "funded kniha", "settings": [["Velikost", "3 MNQ"], ["Hard stop", "0,50 %"]], "slot": "Funded", "status": "live", "_id": "i6"}, {"chart": "MNQ · 1 min", "code": "// @version=5\nindicator(\"Lucid 7 — Eval Sprint\", overlay=true, max_labels_count=500, max_lines_count=500)\n\n// Evaluation sprint: one NQ trade a day at the close of the first RTH\n// minute (09:30-09:31 ET), target +0.20% of price, stop -0.40%, otherwise\n// flat at 15:55. Size so the stop costs at most \"Max loss\"; with $1,900 that\n// is a ~$950-1,000 win, so three winning days reach +$3,000 with the best day\n// about a third of the profit (50% consistency rule). One losing day ends the\n// attempt. NQ 2018-2025 with costs: ~35% of attempts pass, ~5 trading days\n// per attempt. Use a 1-minute MNQ chart.\n// Bias \"Auto\": long when NQ's prior daily close is above its 50-day average,\n// short when below. Tested 2018-2025: pass per attempt 39% vs 36% always long,\n// in both 2018-21 and 2022-25 (a small but consistent gain).\n\nmaxLoss  = input.float(1900.0, \"Max loss per trade ($)\")\ntgtPct   = input.float(0.20, \"Target (% of price)\") / 100.0\nstpPct   = input.float(0.40, \"Stop (% of price)\") / 100.0\nptValue  = input.float(2.0, \"$ per point per contract (MNQ = 2)\")\nmaxCts   = input.int(40, \"Max contracts\")\nbiasMode = input.string(\"Auto (50-day trend)\", \"Bias\", options=[\"Auto (50-day trend)\", \"Long\", \"Short\"])\nuseVol   = input.bool(true, \"Volatility gate (skip if NQ 20d vol >= 30%)\")\nvolSym   = input.string(\"CME_MINI:NQ1!\", \"   vol gate symbol\")\n// Daily values: last COMPLETED session ([1] + lookahead_on), identical in history and\n// real time (lookahead_off would use the forming daily bar live). Fixed 2026-10-23.\n\nrvol20 = request.security(volSym, \"D\", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)\nvolOK = not useVol or na(rvol20) or rvol20 < 0.30\ndClose = request.security(volSym, \"D\", (close)[1], lookahead=barmerge.lookahead_on)\ndSma50 = request.security(volSym, \"D\", (ta.sma(close, 50))[1], lookahead=barmerge.lookahead_on)\nbias = biasMode == \"Long\" ? 1 : biasMode == \"Short\" ? -1 : (dClose > dSma50 ? 1 : -1)\n\noMin = hour(time, \"America/New_York\") * 60 + minute(time, \"America/New_York\")\ncMin = hour(time_close, \"America/New_York\") * 60 + minute(time_close, \"America/New_York\")\nis1 = timeframe.period == \"1\"\n\nvar float e = na\nvar float tp = na\nvar float sl = na\nvar int cts = 0\nvar int dir = 0\nvar line eL = na\nvar line tL = na\nvar line sL = na\n\n// entry at the close of the 09:30 bar\nif is1 and oMin == 570 and barstate.isconfirmed and na(e) and volOK\n    dir := bias\n    e := close\n    tp := close * (1.0 + dir * tgtPct)\n    sl := close * (1.0 - dir * stpPct)\n    cts := math.min(maxCts, math.max(1, int(math.floor(maxLoss / (math.abs(e - sl) * ptValue)))))\n    eL := line.new(bar_index, e, bar_index + 30, e, color=color.yellow, width=2, extend=extend.right)\n    tL := line.new(bar_index, tp, bar_index + 30, tp, color=color.lime, width=2, extend=extend.right)\n    sL := line.new(bar_index, sl, bar_index + 30, sl, color=color.red, width=2, extend=extend.right)\n    label.new(bar_index, dir == 1 ? low : high, \"SPRINT \" + (dir == 1 ? \"LONG \" : \"SHORT \") + str.tostring(cts) + \" MNQ\\nwin $\" + str.tostring(cts * math.abs(tp - e) * ptValue, \"#\") + \" / loss $\" + str.tostring(cts * math.abs(e - sl) * ptValue, \"#\"), color=dir == 1 ? color.blue : color.purple, textcolor=color.white, style=dir == 1 ? label.style_label_up : label.style_label_down, size=size.normal)\n\n// exits from the next bar on; a bar touching both counts as the stop\nif not na(e) and not (oMin == 570)\n    rsn = \"\"\n    px = 0.0\n    if (dir == 1 and low <= sl) or (dir == -1 and high >= sl)\n        rsn := \"LOSS\"\n        px := dir == 1 ? math.min(sl, open) : math.max(sl, open)\n    else if (dir == 1 and high >= tp) or (dir == -1 and low <= tp)\n        rsn := \"WIN\"\n        px := dir == 1 ? math.max(tp, open) : math.min(tp, open)\n    else if cMin >= 955\n        rsn := \"EOD\"\n        px := close\n    if rsn != \"\"\n        usd = cts * dir * (px - e) * ptValue\n        line.set_x2(eL, bar_index)\n        line.set_x2(tL, bar_index)\n        line.set_x2(sL, bar_index)\n        line.set_extend(eL, extend.none)\n        line.set_extend(tL, extend.none)\n        line.set_extend(sL, extend.none)\n        label.new(bar_index, px, \"SPRINT \" + rsn + \"\\n\" + (usd >= 0 ? \"+$\" : \"-$\") + str.tostring(math.abs(usd), \"#\"), color=usd >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)\n        e := na\n\nvar table tb = table.new(position.top_right, 1, 1, bgcolor=color.new(color.black, 30))\nif barstate.islast\n    msg = not is1 ? \"EVAL SPRINT: use a 1-minute chart\" : not volOK ? \"VOL TOO HIGH — no sprint today\" : not na(e) ? \"IN TRADE: \" + (dir == 1 ? \"LONG \" : \"SHORT \") + str.tostring(cts) + \" MNQ  TP \" + str.tostring(tp, format.mintick) + \"  SL \" + str.tostring(sl, format.mintick) : \"next: \" + (bias == 1 ? \"LONG\" : \"SHORT\") + \" at the close of the 09:30 bar\"\n    table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not is1 or not volOK ? color.red : not na(e) ? color.new(color.orange, 20) : color.new(color.gray, 50))\n", "file": "lucid_7_eval_sprint.pine", "group": "eval", "name": "Lucid 7 — Eval Sprint 09:31", "note": "nahrát novou verzi: bias a filtr z posledního dokončeného dne; návrh Target 0,25 %, filtr volatility VYPNOUT", "order": 2, "result": "~11 obchodních dní do passu · s účtem A první funded za ~7 dní", "role": "evaluace – účet B", "settings": [["Target", "0,25 %"], ["Stop", "0,40 %"], ["Volatility gate", "vypnout"], ["Max loss", "1 900 $"]], "slot": "Účet B", "status": "live", "_id": "i7"}, {"chart": "MNQ · 1 min", "code": "// @version=5\nindicator(\"Lucid 8 — RS Sprint\", overlay=true, max_labels_count=500, max_lines_count=500)\n\n// Evaluation sprint on relative strength. At 10:00, 11:00, 13:00 and 14:30 ET\n// (close of the bar ending then), the first time that\n//   NQ return since the 09:30 open - ES return since the open > +0.15%\n//   and price is above the session VWAP           -> LONG\n//   the difference is below -0.15% and price is below VWAP -> SHORT\n// one trade is taken: target 0.20% of price, stop 0.40%, flat at 15:55.\n// Size so the stop costs at most \"Max loss\" (~$1,000 win at $1,900).\n// Three wins pass (best day ~1/3 of profit); one loss ends the attempt.\n// NQ 2018-2025 with costs: 48% (2018-21) / 52% (2022-25) of attempts pass,\n// ~13 trading days to a pass on average, vs 36% for the plain 09:31 long.\n// Use a 1-minute MNQ chart.\n\nmaxLoss = input.float(1900.0, \"Max loss per trade ($)\")\nrsThr   = input.float(0.15, \"Relative strength threshold (%)\") / 100.0\ntgtPct  = input.float(0.20, \"Target (% of price)\") / 100.0\nstpPct  = input.float(0.40, \"Stop (% of price)\") / 100.0\nptValue = input.float(2.0, \"$ per point per contract (MNQ = 2)\")\nmaxCts  = input.int(40, \"Max contracts\")\nesSym   = input.string(\"CME_MINI:ES1!\", \"ES symbol\")\n\nesC = request.security(esSym, timeframe.period, close, lookahead=barmerge.lookahead_off)\nesO = request.security(esSym, timeframe.period, open, lookahead=barmerge.lookahead_off)\n\noMin = hour(time, \"America/New_York\") * 60 + minute(time, \"America/New_York\")\ncMin = hour(time_close, \"America/New_York\") * 60 + minute(time_close, \"America/New_York\")\nis1 = timeframe.period == \"1\"\nisCheck = cMin == 600 or cMin == 660 or cMin == 780 or cMin == 870\n\nvar float nqOpen = na\nvar float esOpen = na\nvar float pv = 0.0\nvar float vv = 0.0\nvar bool traded = false\nif oMin == 570\n    nqOpen := open\n    esOpen := esO\n    pv := 0.0\n    vv := 0.0\n    traded := false\ninRth = cMin > 570 and cMin <= 960 and not na(nqOpen)\nif inRth\n    pv += hlc3 * volume\n    vv += volume\nvw = vv > 0 ? pv / vv : na\nrs = inRth and not na(esOpen) ? (close / nqOpen - 1.0) - (esC / esOpen - 1.0) : na\n\nvar float e = na\nvar float tp = na\nvar float sl = na\nvar int cts = 0\nvar int dir = 0\nvar int entBar = na\nvar line eL = na\nvar line tL = na\nvar line sL = na\n\nif is1 and isCheck and barstate.isconfirmed and not traded and na(e) and not na(rs)\n    sig = rs > rsThr and close > vw ? 1 : rs < -rsThr and close < vw ? -1 : 0\n    if sig != 0\n        traded := true\n        dir := sig\n        entBar := bar_index\n        e := close\n        tp := close * (1.0 + dir * tgtPct)\n        sl := close * (1.0 - dir * stpPct)\n        cts := math.min(maxCts, math.max(1, int(math.floor(maxLoss / (math.abs(e - sl) * ptValue)))))\n        eL := line.new(bar_index, e, bar_index + 30, e, color=color.yellow, width=2, extend=extend.right)\n        tL := line.new(bar_index, tp, bar_index + 30, tp, color=color.lime, width=2, extend=extend.right)\n        sL := line.new(bar_index, sl, bar_index + 30, sl, color=color.red, width=2, extend=extend.right)\n        label.new(bar_index, dir == 1 ? low : high, \"RS \" + (dir == 1 ? \"LONG \" : \"SHORT \") + str.tostring(cts) + \" MNQ\\nRS \" + str.tostring(rs * 100, \"#.##\") + \"%  win $\" + str.tostring(cts * math.abs(tp - e) * ptValue, \"#\") + \" / loss $\" + str.tostring(cts * math.abs(e - sl) * ptValue, \"#\"), color=dir == 1 ? color.blue : color.purple, textcolor=color.white, style=dir == 1 ? label.style_label_up : label.style_label_down, size=size.normal)\n\nif not na(e) and bar_index > entBar\n    rsn = \"\"\n    px = 0.0\n    if (dir == 1 and low <= sl) or (dir == -1 and high >= sl)\n        rsn := \"LOSS\"\n        px := dir == 1 ? math.min(sl, open) : math.max(sl, open)\n    else if (dir == 1 and high >= tp) or (dir == -1 and low <= tp)\n        rsn := \"WIN\"\n        px := dir == 1 ? math.max(tp, open) : math.min(tp, open)\n    else if cMin >= 955\n        rsn := \"EOD\"\n        px := close\n    if rsn != \"\"\n        usd = cts * dir * (px - e) * ptValue\n        line.set_x2(eL, bar_index)\n        line.set_x2(tL, bar_index)\n        line.set_x2(sL, bar_index)\n        line.set_extend(eL, extend.none)\n        line.set_extend(tL, extend.none)\n        line.set_extend(sL, extend.none)\n        label.new(bar_index, px, \"RS \" + rsn + \"\\n\" + (usd >= 0 ? \"+$\" : \"-$\") + str.tostring(math.abs(usd), \"#\"), color=usd >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)\n        e := na\n\nplot(inRth ? vw : na, \"VWAP\", color=color.new(color.aqua, 30))\n\nvar table tb = table.new(position.top_right, 1, 2, bgcolor=color.new(color.black, 30))\nif barstate.islast\n    msg = not is1 ? \"RS SPRINT: use a 1-minute chart\" : not na(e) ? \"IN TRADE: \" + (dir == 1 ? \"LONG \" : \"SHORT \") + str.tostring(cts) + \" MNQ  TP \" + str.tostring(tp, format.mintick) + \"  SL \" + str.tostring(sl, format.mintick) : traded ? \"done for today\" : \"waiting: checks 10:00 / 11:00 / 13:00 / 14:30\"\n    table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not is1 ? color.red : not na(e) ? color.new(color.orange, 20) : color.new(color.gray, 50))\n    table.cell(tb, 0, 1, \"NQ vs ES since open: \" + (na(rs) ? \"-\" : str.tostring(rs * 100, \"#.##\") + \"%\") + (na(vw) ? \"\" : (close > vw ? \"  above VWAP\" : \"  below VWAP\")), text_color=color.white)\n", "extra": "Funded noha (kandidát): Target 1,25 % / Stop 1,25 %", "file": "lucid_8_rs_sprint.pine", "group": "eval", "name": "Lucid 8 — RS Sprint", "note": "návrh: Stop 0,30 % (~11 dní do passu místo ~13)", "order": 1, "result": "~11 obchodních dní do passu · pass ~49 %", "role": "evaluace – účet A (+ funded noha s Target/Stop 1,25)", "settings": [["Target", "0,20 %"], ["Stop", "0,30 %"], ["Max loss", "1 900 $"]], "slot": "Účet A", "status": "live", "_id": "i8"}, {"chart": "1 / 5 min, extended hours", "file": "lucid_9_overnight_3down.pine", "name": "Lucid 9 — Overnight po 3 červených", "note": "nepoužívat", "order": 6.5, "role": "vyřazeno – držení přes noc není povolené", "status": "off", "_id": "i9"}], "queue": [{"note": "hotovo: žádná varianta nepřekoná živé pravidlo; nezávislý export ho zopakoval (46 % / 52 %)", "order": 1, "status": "done", "title": "RS sprint: robustnost a varianty", "_id": "q1"}, {"note": "hotovo: živá pravidla −0,5 / +0,4 b./obchod (edge ≈ 0); v knizě s RS pomáhá, bez ní smíšené", "order": 10, "status": "done", "title": "Nezávislé ověření ORB (Lucid 1) exportem živých pravidel", "_id": "q10"}, {"note": "evaluace 2 účty (Lucid 8 + Lucid 7), funded flat 3, volby a rizika", "order": 11, "status": "done", "title": "Playbook s přesným nastavením (PLAYBOOK_CZ.md)", "_id": "q11"}, {"note": "kandidát: bracket ±1,25 %, +4,6 / +9,6 b./obchod; kniha medián 74 000 $ místo 68 000 $", "order": 2, "status": "done", "title": "RS signál pro funded knihu", "_id": "q2"}, {"note": "hotovo: žádný filtr režimu nevychází v obou obdobích; opravena díra ve filtru volatility 2025", "order": 3, "status": "done", "title": "Mapa režimů trhu", "_id": "q3"}, {"note": "BLOKOVÁNO: síť nepustí na treasury.gov pro kalendář aukcí; ZN exporter připraven", "order": 4, "status": "waiting", "title": "Aukce státních dluhopisů (ZN)", "_id": "q4"}, {"note": "zamítnuto: NQ přelom měsíce i ZN poslední den (+2,6 / +0,5 ticku)", "order": 5, "status": "done", "title": "Konec a přelom měsíce", "_id": "q5"}, {"note": "vyřazeno: Lucid Flex nedovoluje držet přes noc", "order": 6, "status": "done", "title": "Overnight long po 3 červených dnech", "_id": "q6"}, {"note": "hotovo: stop 0,50 % v Lucid 6; ES slabší a s NQ korelované (0,69), YM bez edge", "order": 7, "status": "done", "title": "Varianty noise momentum", "_id": "q7"}, {"note": "hotovo: Lucid 2 opraven (+3,6 / +3,0 b. místo +2,3 / +0,7); noise sedí; kniha medián 68 000 $ místo 51 000 $", "order": 8, "status": "done", "title": "Nezávislé ověření VWAP pásma a noise momentum", "_id": "q8"}, {"note": "zamítnuto: OOS t ≤ 1,5, denní výkyvy ~150 b., korelace 0,5 s noise", "order": 9, "status": "done", "title": "VWAP trend (Zarattini & Aziz 2023)", "_id": "q9"}], "reports": [{"date": "2026-10-22", "summary": "Evaluace: nejlepší cesta je RS sprint (NQ silnější než ES od otevření + nad VWAP). Pass 48 % (2018–21) / 52 % (2022–25) na pokus, v průměru ~13 obchodních dní a ~2 evaluace (~$180) do passu. Obyčejný sprint 09:31 long má 36 %.\n\nFunded kniha: po opravě fillu trailovaného stopu ORB oslabil asi o 75 %. Kniha ORB + VWAP + noise: eval 80 % (59 % / 98 %), ~45 dní, lifecycle medián ~$70k. Nosné části jsou noise momentum a VWAP pásmo.\n\nCo se hledalo a nenašlo: signál na dlouhé série výher (190k pravidel, ML, jiné trhy) – nic nepřežilo roky 2022–25.\n\nDalší kroky: noční směna začne frontou – varianty RS sprintu, RS pro knihu, mapa režimů.", "title": "Výchozí stav před první noční směnou", "verdicts": [{"name": "RS sprint", "status": "live-eval"}, {"name": "Noise momentum", "status": "live-funded"}, {"name": "VWAP pásmo", "status": "live-funded"}, {"name": "ORB", "status": "live-funded"}, {"name": "ORB s 1min trailem", "status": "rejected"}], "_id": "2026-10-22"}, {"date": "2026-10-23", "summary": "CO UDĚLAT TY\n1) Nahraj nové verze Lucid 1, 2, 6 a 7 (shoda s backtestem; denní hodnoty z posledního dokončeného dne). Lucid 2 na 5min grafu: průraz pásma ±0,20 % (+3,6 / +3,0 b.) místo starého křížení VWAP (+2,3 / +0,7 b.). Lucid 6 se stopem 0,50 %.\n2) Nastav evaluaci a funded podle PLAYBOOK_CZ.md (kódy a nastavení jsou i níže v Mozku).\n\nEVALUACE (návrh)\n• Účet A: Lucid 8 (RS) se Stop 0,30 % – ~11 dní do passu místo ~13 (nezávisle ověřeno).\n• Účet B: Lucid 7 (09:31) s Target 0,25 %, filtr volatility vypnout.\n• Oba současně: první funded za 6,8 / 6,5 dne (v každém roce 5,7–8,2), poplatky ~305 $.\n• Po první prohře: pokračovat (levnější) nebo vzdát a koupit novou (o 1,5–2 dny rychlejší, o 125–200 $ dražší).\n\nFUNDED (návrh)\n• 3 MNQ na každou nohu knihy místo ladderu: 12 100 / 29 100 $ na účet za 24 měsíců místo 2 300 / 20 500 $. Riziko: k první výplatě dojde 40 / 51 % funded účtů. Denní stop nic nepřidá.\n• RS noha (Target/Stop 1,25): +7 400 / +1 500 $ na účet. ORB je nejslabší noha (edge ≈ 0, ověřeno).\n\nVYŘAZENO PRAVIDLY ÚČTU\n• Overnight long po 3+ červených dnech (+28,6 / +19,0 bp za noc): Lucid Flex nedovoluje držet přes noc.\n\nOVĚŘENO / OPRAVENO\n• RS sprint, noise i ORB nezávisle zopakovány podle živých pravidel. Opravena díra ve filtru volatility 2025, řazení obchodů v simulaci a artefakt denního stopu (nová simulace s časy obchodů).\n\nZAMÍTNUTO\nVarianty RS, filtry režimu, přelom měsíce, konec měsíce ZN, intradenní momentum, noise na ES/YM, VWAP trend, záloha ve 14:30, ONL jako doplněk, těsnější denní stop, velikost podle fáze, 3. účet, noise s RS filtrem, 09:31 s filtrem volatility.\n\nBLOKOVÁNO\nAukce dluhopisů (síť nepustí na treasury.gov).\n\nSMĚNA\n14 běhů na QuantConnectu, 75 datových sad; nové nástroje live_spec_exporter, timed_book, playbook.", "title": "Noční směna 23. 10. – finální report", "verdicts": [{"name": "Lucid 2 VWAP pásmo", "status": "live-funded"}, {"name": "Lucid 6 se stopem", "status": "live-funded"}, {"name": "Funded flat 3", "status": "candidate"}, {"name": "RS stop 0,30 %", "status": "candidate"}, {"name": "Dva účty", "status": "candidate"}, {"name": "RS funded noha", "status": "candidate"}, {"name": "Overnight po 3 červených", "status": "candidate"}, {"name": "VWAP trend", "status": "rejected"}, {"name": "Noise ES/YM", "status": "rejected"}], "_id": "2026-10-23"}], "strategies": [{"extra": {"label": "pass 22–25", "max": 100, "unit": "%", "v": 52}, "files": "lucid_8_rs_sprint.pine, score_multi_feature.py", "isVal": 1.8, "name": "RS sprint: NQ−ES od otevření > 0,15 % a nad VWAP (zrcadlově short), 10:00/11:00/13:00/14:30, +0,20 %/−0,40 %", "note": "Nezávislý exporter (2026-10-23) výsledek zopakoval: pass 46 % / 52 %. Žádná varianta (5min, 30min, YM, RTY, EMA, volatilita) není lepší v obou obdobích.", "oosVal": 3.1, "order": 1, "reached": "live", "result": "pass 48 % / 52 % na pokus, ~13 dní", "status": "live-eval", "unit": "bp/obchod", "years": {"2018": 2.2, "2019": -0.2, "2020": 4, "2021": 1, "2022": 2, "2023": 2.2, "2024": 5.1, "2025": 3.4}, "yearsUnit": "bp na obchod", "_id": "s01"}, {"files": "lucid_7_eval_sprint.pine, bias_sprint.py", "isVal": 39, "name": "Sprint 09:31, bias podle 50denního trendu, +0,20 %/−0,40 % (záloha)", "note": "Tvar 0,25 % / 0,40 % (Lucid 7: Target = 0,25): 11,3 / 10,7 dne do passu místo 12,6 / 13,3, poplatky ~230 $ stejné. Nejlepší jako druhý účet vedle RS (korelace −0,02).", "oosVal": 39, "order": 2, "reached": "live", "result": "pass 39 % / 39 %, ~13 dní", "status": "live-eval", "unit": "% pass", "_id": "s02"}, {"edge": 9.2, "files": "lucid_6_noise_momentum.pine, score_noise_tod.py", "isVal": 6.1, "name": "Noise-area momentum (Zarattini 2024), long i short, pevný stop 0,50 %", "note": "Nezávislý export živých pravidel: +5,1 / +8,9 b. bez stopu, +5,7 / +8,7 se stopem 0,50 %, nejhorší obchod −128 místo −218.", "oosVal": 9.2, "order": 3, "reached": "live", "result": "+6,1 / +9,2 pt/obchod se stopem (+5,5 / +9,4 bez), nejhorší obchod −128 vs −221 pt", "short": "noise momentum · pt/obchod 22–25", "status": "live-funded", "unit": "pt/obchod", "years": {"2018": 7.1, "2019": -0.3, "2020": 6.9, "2021": 7.8, "2022": 9.6, "2023": 8.8, "2024": 9.5, "2025": 9.5}, "yearsUnit": "pt na obchod (bez stopu)", "_id": "s03"}, {"audit": false, "edge": 3, "files": "lucid_2_vwap.pine", "isVal": 3.6, "name": "VWAP pásmo: průraz VWAP ±0,20 % na 5min grafu, SL 25 / TP 100 pt, 1× denně (Lucid 2 přepsán 2026-10-23)", "note": "Incident vyřešen: indikátor teď obchoduje stejné pravidlo jako backtest. Používej 5min graf.", "oosVal": 3, "order": 4, "reached": "live", "result": "živá pravidla +3,6 / +3,0 pt/obchod (starý Lucid 2 s křížením VWAP: +2,3 / +0,7)", "short": "VWAP pásmo · pt/obchod 22–25", "status": "live-funded", "unit": "pt/obchod", "years": {"2018": -2.6, "2019": 2, "2020": 1.2, "2021": 8.1, "2022": 1.5, "2023": 0.4, "2024": 4.8, "2025": 1.2}, "yearsUnit": "pt na obchod (backtest, bez filtru)", "_id": "s04"}, {"edge": 0.9, "files": "lucid_1_s1_orb.pine, s1_true_vwap_fill.py", "isVal": -0.4, "name": "ORB 15 min long + VWAP, 20 EMA trail na 5 min, re-entry (slabé)", "note": "Ověřeno exportem přesně podle Lucid 1: −0,47 / +0,41 b./obchod. V knizě při flat 3 s RS nohou pomáhá (17 600 / 28 100 $ vs 16 200 / 23 700 $), bez ní smíšené. Při zjednodušení jde pryč první.", "oosVal": 0.9, "order": 5, "reached": "audit", "result": "po opravě fillu +0,6 / +1,6 pt hrubě; 2018–21 čistě ~0", "short": "ORB · pt/obchod 22–25", "status": "live-funded", "unit": "pt/obchod net", "years": {"2018": -0.4, "2019": -0.6, "2020": -0.9, "2021": 0.4, "2022": 0.5, "2023": 3.2, "2024": -0.3, "2025": 0.2}, "yearsUnit": "pt na obchod po nákladech", "_id": "s05"}, {"files": "book_after_fix.py", "isVal": 59, "name": "Kniha (ORB + VWAP + noise), ladder room/700, max 3", "oosVal": 98, "order": 6, "reached": "live", "result": "eval 80 % (59 % / 98 %), lifecycle medián ~$70k", "status": "live-funded", "unit": "% pass eval", "_id": "s06"}, {"files": "s1_YM_fill.py", "name": "Dow ORB (MYM) (slabé)", "order": 7, "reached": "oos", "result": "po opravě fillu +$0,5 / +$3,3 na MYM hrubě", "status": "candidate", "_id": "s07"}, {"files": "lucid_5_fomc_fade.pine", "name": "FOMC fade svíčky 14:30–14:35 (tisková konference)", "order": 8, "reached": "years", "result": "kladné v každé buňce, NQ/ES/YM; 8× ročně", "status": "candidate", "_id": "s08"}, {"files": "onl_gapup_book.py", "name": "Dotek overnight low v den gapu nahoru, long", "note": "Jako doplněk knihy průměr na účet snižuje (1 MNQ 10 700 $, 2 MNQ 11 600 $ proti 13 100 $ bez něj). Nedoporučeno.", "order": 9, "reached": "oos", "result": "WR 74 %, +12 pb nad náhodou; 25× ročně", "status": "candidate", "_id": "s09"}, {"files": "score_vwap_atr.py", "name": "Široké VWAP pásmo 60 bp, TP 15 % ATR / SL 20–30 % ATR (malé)", "order": 10, "reached": "oos", "result": "WR 61–68 %, +1,5 % ATR v obou polovinách", "status": "candidate", "_id": "s10"}, {"diedAt": "cost", "files": "score_orb_trail.py", "name": "ORB s 1min EMA trailem", "order": 11, "result": "~20 obchodů denně, pass 8–17 %", "status": "rejected", "_id": "s11"}, {"diedAt": "audit", "files": "", "name": "Gap-down reverzal, Po/Pá hold, fade ON úrovní, 1min micro-drop", "order": 12, "result": "artefakty backtestu", "status": "rejected", "_id": "s12"}, {"diedAt": "random", "files": "", "name": "Small-gap fill, ON midpoint, IB statistiky, polední efekt, poslední půlhodina, pre-FOMC drift, FOMC relief rally", "order": 13, "result": "na úrovni náhody nebo pod ní", "status": "rejected", "_id": "s13"}, {"diedAt": "is", "files": "score_news.py", "name": "Fade svíček zpráv 08:30, fade FOMC statementu 14:00, climax fade", "order": 14, "result": "bez edge", "status": "rejected", "_id": "s14"}, {"diedAt": "cost", "files": "score_vwap_feat.py, score_vwap_fine.py", "name": "Adaptivní TP ze svíčky/ATR na VWAP pásmu; malé targety 1–5 % ATR", "order": 15, "result": "po nákladech ~náhoda", "status": "rejected", "_id": "s15"}, {"diedAt": "oos", "files": "score_multi_feature.py", "name": "RSI(2) reverze, trend pullback, momentum konfluence, VIX přepínač, value-area acceptance, logistický model", "order": 16, "result": "žádný stabilní edge", "status": "rejected", "_id": "s16"}, {"diedAt": "oos", "files": "score_xmkt_streak.py, ml_streak.py", "name": "Brackety ES / zlato / ropa / Russell / 10Y / NQ overnight; ML výběr obchodů; 190k pravidel na série výher", "order": 17, "result": "edge nepřežije 2022–25", "status": "rejected", "_id": "s17"}, {"diedAt": "oos", "files": "regime_map.py", "name": "Filtry režimu pro knihu (VIX, 20denní volatilita, 50denní trend, den v týdnu)", "order": 18, "result": "žádné rozdělení neplatí v obou obdobích; bez ORB kniha medián ~$13k vs ~$67k", "status": "rejected", "_id": "s18"}, {"diedAt": "live", "files": "overnight_after_downs.py", "isVal": 28.6, "name": "Overnight long po 3+ červených dnech (NQ, close 15:55 → open 09:30)", "note": "Vyřazeno: Lucid Flex nedovoluje držet pozici přes noc (odpověď tradera 23. 10.).", "oosVal": 19, "order": 9.5, "reached": "audit", "result": "+28,6 / +19,0 bp za noc (t 2,5 / 1,7), kladné všech 8 let, ~20× ročně", "status": "rejected", "unit": "bp/noc", "years": {"2018": 40.2, "2019": 18.4, "2020": 35, "2021": 24.5, "2022": 11.1, "2023": 20, "2024": 39, "2025": 14.3}, "yearsUnit": "bp za noc", "_id": "s19"}, {"diedAt": "oos", "files": "turn_of_month.py", "name": "Přelom měsíce NQ (poslední den + první 3 dny)", "order": 13.5, "result": "dny TOM v 2022–25 nejsou lepší než ostatní; 4denní hold +49 / +14 bp, t 1,3 / 0,4", "status": "rejected", "_id": "s20"}, {"diedAt": "oos", "files": "score_rs_variants.py", "name": "Varianty RS sprintu: kontroly 5/30 min, 10–11 h, práh podle volatility, EMA21, vs YM, vs RTY, všechny 3 indexy, průměr 3", "order": 1.5, "result": "žádná nepřekoná živé pravidlo v obou obdobích; 5min rychlejší (14 / 12 dní), ale pass jen 42 %; RTY nejhorší", "status": "rejected", "_id": "s21"}, {"diedAt": "oos", "files": "zn_month_end.py", "name": "Konec měsíce: long ZN poslední obchodní den 09:00–15:00", "order": 13.6, "result": "+2,6 / +0,5 ticku (t 1,5 / 0,2), 2023–2025 záporné", "status": "rejected", "_id": "s22"}, {"files": "rs_book.py", "isVal": 4.6, "name": "RS signál jako funded noha: stejný signál jako sprint, bracket +1,25 % / −1,25 %, jinak 15:55", "note": "Ve 2022–25 přidává jen málo. Bracket vybrán jen na 2018–21. V Lucid 8 Target 1,25 a Stop 1,25. Rozhoduješ ty.", "oosVal": 9.6, "order": 2.5, "reached": "years", "result": "+4,6 / +9,6 pt/obchod (t 1,8 / 2,2), 7/8 let kladných; v knize při flat 3 (simulace s časy) +7 400 / +1 500 $ na účet za 24 m.", "status": "candidate", "unit": "pt/obchod", "years": {"2018": 3.4, "2019": -2.1, "2020": 8.7, "2021": 7.1, "2022": 3.7, "2023": 5.4, "2024": 20.1, "2025": 10.5}, "yearsUnit": "pt na obchod", "_id": "s23"}, {"diedAt": "oos", "files": "intraday_momentum.py", "name": "Intradenní momentum (Gao et al. 2018): směr do 10:00 → obchod 15:30–15:55", "order": 13.7, "result": "2018–21 +3,3 pt (t 2,3), 2022–25 −2,6 pt (t −1,4) – efekt se otočil", "status": "rejected", "_id": "s24"}, {"diedAt": "oos", "files": "noise_markets.py", "name": "Noise momentum na ES a YM (pravidla Lucid 6, stop 0,50 %)", "order": 13.8, "result": "na micro: NQ +11 / +14 $, ES +6 / +4 $ (korelace s NQ 0,69), YM +0,8 / −0,8 $", "status": "rejected", "_id": "s25"}, {"diedAt": "oos", "files": "vwap_trend_exporter.py, score_vwap_trend.py", "name": "VWAP trend (Zarattini & Aziz 2023): vždy v trhu, long nad VWAP, short pod", "order": 13.9, "result": "15min +8,9 / +6,5 b./den (t 2,9 / 1,1), buffer +8,0 / +8,3 (t 2,3 / 1,5); denní výkyv ~150 b., korelace s noise 0,5", "status": "rejected", "_id": "s26"}, {"files": "multi_account_sprint.py, two_account_sprint.py", "isVal": 6.8, "name": "Evaluace na dvou účtech: RS sprint se stopem 0,30 % (Lucid 8) + sprint 09:31 s targetem 0,25 % (Lucid 7)", "oosVal": 6.5, "order": 1.6, "reached": "years", "result": "první funded za 6,8 / 6,5 dne místo ~10–12 s jedním účtem; poplatky ~305 $; signály nekorelují", "status": "candidate", "unit": "dní do funded", "_id": "s27"}, {"files": "rs_sprint_shape.py", "isVal": 10.6, "name": "RS sprint s jiným tvarem: target 0,20 % / stop 0,30 % (stop stále ~1 900 $)", "note": "Nezávisle ověřeno druhým exporterem (práh 0,15 %): 11,1 / 11,0 dne místo 13,8 / 12,9, poplatky 193 / 187 $ místo 195 / 172 $. V Lucid 8 stačí nastavit Stop (% of price) = 0,30. Výchozí hodnoty jsem neměnil.", "oosVal": 10.8, "order": 1.7, "reached": "audit", "result": "10,6 / 10,8 dne do passu místo 13,4 / 13,0; pass 48,8 / 48,7 %; poplatky 185 / 185 $", "status": "candidate", "unit": "dní do passu", "_id": "s28"}, {"files": "timed_book.py, funded_sizing.py", "isVal": 12.1, "name": "Funded velikost: flat 3 MNQ na každou nohu knihy (místo ladderu 400/500)", "note": "Bust funded účtu stojí jen novou evaluaci sprintem (~180 $, ~11 dní). Plato 3–4 MNQ. Riziko: k první výplatě dojde 40 % / 51 % funded účtů (medián 35 / 15 dní), zbytek spadne dřív. Denní stop nic nepřidává. ORB v knize pomáhá.", "oosVal": 29.1, "order": 6.5, "reached": "years", "result": "simulace s časy obchodů: 12 100 / 29 100 $ na účet za 24 m. místo 2 300 / 20 500 $ s ladderem; s RS 19 500 / 30 500 $", "status": "candidate", "unit": "tis. $ na účet", "_id": "s29"}, {"diedAt": "audit", "files": "funded_daystop.py, timed_book.py", "name": "Funded denní stop (těsnější = lepší v původní simulaci)", "order": 13.95, "result": "artefakt: stará simulace brála obchody dne jako po sobě jdoucí; se časy obchodů −600 $ neutrální, −300 $ škodí", "status": "rejected", "_id": "s30"}, {"diedAt": "oos", "files": "funded_stage_size.py", "name": "Funded velikost podle fáze (jiná před první výplatou a po ní, 2–4 MNQ)", "order": 13.96, "result": "3/4 vybráno na 2018–21, ale ve 2022–25 22 300 $ místo 29 100 $ pro 3/3; žádný stabilní zisk oproti flat 3", "status": "rejected", "_id": "s31"}, {"diedAt": "years", "files": "multi_account_sprint.py", "name": "Třetí účet s noise sprintem (RS + 09:31 + noise)", "order": 13.97, "result": "6,7 / 7,1 dne do prvního funded místo 7,1 / 7,3, poplatky ~405 $ místo ~300 $; noise jako sprint sám 25 / 23 dní", "status": "rejected", "_id": "s32"}, {"files": "sprint_reset.py", "isVal": 10.9, "name": "Sprint: po první prohře vzdát a koupit novou evaluaci (místo pokračování se ~100 $ rezervou)", "oosVal": 8.5, "order": 1.8, "reached": "years", "result": "RS: 10,9 / 8,5 dne za 382 / 298 $ místo 12,7 / 10,0 dne za 213 / 174 $; rychlejší, ale dražší", "status": "candidate", "unit": "dní do passu", "_id": "s33"}, {"diedAt": "years", "files": "noise_rs_filter.py", "name": "Noise momentum jen ve shodě s relativní silou NQ/ES", "order": 13.98, "result": "nesouhlasné obchody +0,1 / −17,0 b., ale v knizě (flat 3, časy obchodů) 7 400 $ místo 12 100 $ v 2018–21, 2022–25 beze změny", "status": "rejected", "_id": "s34"}, {"diedAt": "years", "files": "t931_volgate", "name": "Sprint 09:31 s filtrem volatility", "order": 13.99, "result": "18,0 / 21,3 dne do passu místo 11,3 / 10,7 bez filtru – na evaluaci filtr v Lucid 7 vypnout", "status": "rejected", "_id": "s35"}]};</script>
 <script>
 (() => {
   const $ = (s) => document.querySelector(s);
@@ -404,38 +203,23 @@ td.res { color: var(--muted); }
     for (const kid of kids) if (kid != null) el.append(kid);
     return el;
   };
-  const NS = "http://www.w3.org/2000/svg";
-  const sv = (tag, attrs) => { const el = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v); return el; };
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const css = getComputedStyle(document.documentElement);
-  const C = Object.fromEntries(["mint", "pink", "amber", "lilac", "muted", "faint", "fg", "line"].map((k) => [k, css.getPropertyValue("--" + k).trim()]));
 
-  const S = { status: null, metrics: null, stats: null, account: null, queue: [], strategies: [], reports: [], log: [], indicators: [], db: "wait" };
-  const STATUS = { "live-eval": "eval · živě", "live-funded": "funded · živě", candidate: "kandidát", rejected: "zamítnuto", idea: "nápad" };
-  const STAGES = [
-    ["idea", "Nápad"], ["is", "Backtest 2018–21"], ["cost", "Náklady a fills"], ["plateau", "Okolí parametrů"],
-    ["random", "Proti náhodě"], ["oos", "Test 2022–25"], ["years", "Roky a režimy"], ["audit", "Kontrola chyb"], ["live", "Živě"],
+  const S = { status: null, metrics: null, stats: null, account: null, queue: [], strategies: [], reports: [], log: [], indicators: [], db: "wait", taken: null };
+  const AGENTS = [
+    { id: "importer", name: "Importér", role: "hledá a sepisuje nové nápady", labels: ["Importér"], color: "#2e6be6", pos: [0.3, 0.28, 0.8] },
+    { id: "backtester", name: "Backtester", role: "testuje na QuantConnectu", labels: ["Backtester"], color: "#0e9f8e", pos: [-0.36, 0.52, 0.32] },
+    { id: "optimiser", name: "Optimalizátor", role: "velikost, sprint, simulace účtu", labels: ["Optimalizátor"], color: "#7b5ce6", pos: [0.36, 0.56, -0.12] },
+    { id: "manager", name: "Systémový manažer", role: "kdy co funguje, pravidla účtu", labels: ["Systémový manažer", "Systém"], color: "#d98a1c", pos: [-0.45, 0.24, -0.48] },
+    { id: "coder", name: "Kodér", role: "indikátory pro TradingView", labels: ["Kodér"], color: "#d6457a", pos: [0.62, -0.12, 0.12] },
+    { id: "interpreter", name: "Interpret", role: "ranní report česky", labels: ["Interpret"], color: "#2f9e44", pos: [0.0, -0.42, -0.86] },
   ];
-  const SIDX = Object.fromEntries(STAGES.map(([k], i) => [k, i]));
-  const stageOf = (d) => d.status === "rejected" ? SIDX[d.diedAt] ?? 1 : SIDX[d.reached] ?? (String(d.status).startsWith("live") ? 8 : 0);
-  const colorOf = (st) => String(st).startsWith("live") ? C.mint : st === "candidate" ? C.amber : st === "rejected" ? C.pink : C.lilac;
-
-  // ---------- tabs ----------
-  const TABS = [...document.querySelectorAll("#tabs button")].map((b) => b.dataset.t);
-  function show(t) {
-    if (!TABS.includes(t)) t = "vyzkum";
-    for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", String(b.dataset.t === t));
-    for (const p of document.querySelectorAll("[data-page]")) p.hidden = p.dataset.page !== t;
-    try { history.replaceState(null, "", "#" + t); } catch (_) {}
-    if (t === "vyzkum") sizeBrain();
-  }
-  $("#tabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) show(b.dataset.t); });
+  let sel = "interpreter";
 
   // ---------- time ----------
   const fH = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Prague", hour: "2-digit", hourCycle: "h23" });
-  const fClock = new Intl.DateTimeFormat("cs-CZ", { timeZone: "Europe/Prague", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
   const fHM = new Intl.DateTimeFormat("cs-CZ", { timeZone: "Europe/Prague", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
-  const fDay = new Intl.DateTimeFormat("cs-CZ", { timeZone: "Europe/Prague", weekday: "short", day: "numeric", month: "numeric" });
+  const fDay = new Intl.DateTimeFormat("cs-CZ", { timeZone: "Europe/Prague", day: "numeric", month: "numeric" });
   const WAKE = [23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   const pH = (ms) => +fH.format(ms);
   const inShift = (ms) => { const x = pH(ms); return x >= 23 || x < 12; };
@@ -446,8 +230,6 @@ td.res { color: var(--muted); }
     for (let i = 0; i < 26; i++) { if (WAKE.includes(pH(t))) return t; t += 3600000; }
     return t;
   }
-  let wakeAt = nextWake(Date.now());
-  const pad = (n) => String(n).padStart(2, "0");
   function ago(iso) {
     const ms = Date.now() - Date.parse(iso);
     if (!isFinite(ms)) return "";
@@ -461,76 +243,177 @@ td.res { color: var(--muted); }
     const age = s.heartbeat ? (now - Date.parse(s.heartbeat)) / 60000 : Infinity;
     if (s.phase === "blocked") return { word: "zablokováno", cls: "bad", work: false };
     if ((s.phase === "working" || s.phase === "report") && age < 50) return { word: s.phase === "report" ? "píše report" : "pracuje", cls: "ok", work: true };
-    if (s.phase === "working" && inShift(now)) return { word: "čeká na reset", cls: "warn", work: false };
     if (inShift(now)) return { word: "v pohotovosti", cls: "warn", work: false };
     return { word: "mimo směnu", cls: "", work: false };
   }
+  const activeId = () => (mode().work && S.status ? S.status.sphere : null);
 
-  // ---------- status strip ----------
-  function setSt(id, cls, val) { const el = $(id); el.className = "st " + cls; el.querySelector("b").textContent = val; }
-  function renderStrip() {
-    const m = mode(), s = S.status;
-    setSt("#s-core", S.db === "on" ? "ok" : S.db === "snap" ? "warn" : S.db === "off" ? "bad" : "",
-      S.db === "on" ? "online" : S.db === "snap" ? `snímek ${S.taken ? fDay.format(Date.parse(S.taken)) + " " + fHM.format(Date.parse(S.taken)) : ""}` : S.db === "off" ? "offline" : "připojuji");
-    setSt("#s-shift", m.cls, m.word);
-    setSt("#s-qc", !s || !s.qc ? "" : s.qc === "ok" ? "ok" : "bad", !s || !s.qc ? "–" : s.qc === "ok" ? "ok" : "chybí");
-    const inc = S.strategies.filter((d) => d.audit).length;
-    setSt("#s-inc", inc ? "warn" : "ok", String(inc));
-    $("#now-task").textContent = s && s.task ? s.task : "Čekám na první hlášení jádra.";
-    $("#now-hb").textContent = s && s.heartbeat ? `puls ${ago(s.heartbeat)}` : "";
+  // ---------- top bar ----------
+  function pill(id, cls, val) { const el = $(id); el.className = "pill " + (cls || ""); el.querySelector("b").textContent = val; }
+  function renderTop() {
+    const m = mode();
+    pill("#p-shift", m.cls, m.word);
+    const w = nextWake(Date.now());
+    pill("#p-wake", "", fHM.format(w) + (pH(w) === 23 ? " (" + fDay.format(w) + ")" : ""));
+    pill("#p-data", S.db === "on" ? "ok" : S.db === "snap" ? "warn" : S.db === "off" ? "bad" : "",
+      S.db === "on" ? "živě" : S.db === "snap" ? "snímek " + (S.taken ? fDay.format(Date.parse(S.taken)) + " " + fHM.format(Date.parse(S.taken)) : "") : S.db === "off" ? "offline" : "připojuji");
+    $("#foot").textContent = S.status && S.status.heartbeat ? `Poslední hlášení jádra ${ago(S.status.heartbeat)}. Výsledky jsou z backtestů 2018–21 (ladění) a 2022–25 (nezávislý test); nezaručují budoucí. Rozhoduješ ty.` : "";
   }
 
-  // ---------- bars ----------
-  function bars(el, rows, onClick) {
-    const max = Math.max(1, ...rows.map((r) => r.n));
-    el.replaceChildren(...rows.map((r) => {
-      const row = h("div", { class: "bar", role: onClick ? "button" : null, tabindex: onClick ? "0" : null, style: onClick ? "cursor:pointer" : null },
-        h("span", { class: "n", text: String(r.n) }), h("span", { class: "lab", text: r.label, title: r.label }),
-        h("span", { class: "trk" }, h("span", { class: "fill " + (r.tone || ""), style: `display:block;width:${(r.n / max) * 100}%` })));
-      if (onClick) { row.onclick = () => onClick(r); row.onkeydown = (e) => { if (e.key === "Enter") onClick(r); }; }
-      return row;
+  // ---------- agent card ----------
+  const fmtT = (iso) => { const t = Date.parse(iso); return isFinite(t) ? fHM.format(t) : ""; };
+  const list = (cls, rows) => h("ul", { class: "list " + (cls || "") }, ...rows);
+  const block = (title, ...kids) => h("div", {}, h("div", { class: "lbl", text: title }), ...kids);
+  const empty = (t) => h("div", { class: "empty", text: t });
+  const numTile = (t) => h("div", { class: "num " + (t.tone || "") }, h("div", { class: "v", text: t.value || "" }), h("div", { class: "l", text: t.label || "" }), t.sub ? h("div", { class: "s", text: t.sub }) : null);
+  const IND = { live: ["živě", "ok"], backup: ["záloha", "acc"], audit: ["kontrola", "warn"], off: ["vypnuto", ""] };
+  const Q = { running: ["běží", "ok"], waiting: ["čeká", "acc"], done: ["hotovo", ""] };
+
+  function agentBody(a) {
+    const st = S.strategies;
+    switch (a.id) {
+      case "importer": {
+        const q = S.queue.filter((d) => d.status !== "done");
+        return block("Fronta nápadů", q.length ? list("", q.map((d) => {
+          const [w, c] = Q[d.status || "waiting"] || Q.waiting;
+          return h("li", {}, h("span", { text: d.title || "" }), h("span", { class: "tag " + c, text: /BLOK/i.test(d.note || "") ? "blokováno" : w }), d.note ? h("span", { class: "sub", text: d.note }) : null);
+        })) : empty("Fronta je prázdná – další nápady přinese noční směna."));
+      }
+      case "backtester": {
+        const n = (f) => st.filter(f).length;
+        return block("Stav výzkumu", h("div", { class: "nums" },
+          numTile({ value: String(S.status && S.status.runs != null ? S.status.runs : "–"), label: "běhů na QC (směna)" }),
+          numTile({ value: String(S.stats && S.stats.dataSets != null ? S.stats.dataSets : "–"), label: "datových sad" }),
+          numTile({ value: String(n((d) => String(d.status).startsWith("live"))), label: "živě", tone: "ok" }),
+          numTile({ value: String(n((d) => d.status === "candidate")), label: "kandidátů", tone: "gold" }),
+          numTile({ value: String(n((d) => d.status === "rejected")), label: "zamítnuto", tone: "bad" })));
+      }
+      case "optimiser": {
+        const m = S.metrics || {};
+        const part = (k, t) => m[k] && m[k].tiles ? block(t, h("div", { class: "nums" }, ...m[k].tiles.slice(0, 4).map(numTile))) : null;
+        return h("div", { style: "display:grid;gap:14px" }, part("eval", "Evaluace"), part("book", "Funded"), !m.eval && !m.book ? empty("Zatím bez čísel.") : null);
+      }
+      case "manager": {
+        const r = S.account && S.account.rules;
+        return block("Pravidla účtu", r && r.length ? list("kv", [...r, ["Přes noc", "nepovoleno – vše flat do 15:55 ET"]].map(([k, v]) => h("li", {}, h("span", { text: k }), h("span", { text: v })))) : empty("Pravidla zatím nejsou v databázi."));
+      }
+      case "coder": {
+        const ind = S.indicators;
+        return block("Indikátory TradingView", ind.length ? list("", ind.map((d) => {
+          const [w, c] = IND[d.status] || [d.status || "", ""];
+          return h("li", {}, h("span", { text: d.name || "" }), h("span", { class: "tag " + c, text: w }), h("span", { class: "sub", text: [d.chart && d.chart !== "–" ? d.chart : null, d.role].filter(Boolean).join(" · ") }));
+        })) : empty("Žádné indikátory."));
+      }
+      case "interpreter": {
+        const r = S.reports[0];
+        if (!r) return empty("První report přijde po noční směně, nejpozději ve 12:00.");
+        const txt = String(r.summary || "");
+        const m = txt.match(/CO UDĚLAT TY\s*\n([\s\S]*?)(\n\s*\n|$)/);
+        const todo = m ? m[1].split("\n").map((l) => l.replace(/^\s*(\d+\)|•|-)\s*/, "").trim()).filter(Boolean) : [];
+        return h("div", { style: "display:grid;gap:12px" },
+          block(`Report ${r.date ? fDay.format(Date.parse(r.date)) : ""} · co udělat ty`, todo.length ? h("ol", { class: "todo" }, ...todo.map((t) => h("li", { text: t }))) : empty("Dnes nic.")),
+          h("details", { class: "more" }, h("summary", { text: "Celý report" }), h("pre", { text: txt })));
+      }
+    }
+    return null;
+  }
+
+  function renderAgent() {
+    const a = AGENTS.find((x) => x.id === sel), on = activeId() === a.id;
+    const steps = S.log.filter((e) => a.labels.includes(e.sphere)).slice(0, 3);
+    const kids = [
+      h("div", { class: "ah" }, h("span", { class: "dotbig", style: `background:${a.color}` }),
+        h("div", {}, h("h2", { text: a.name }), h("div", { class: "role", text: a.role })),
+        h("span", { class: "state" + (on ? " on" : ""), text: on ? "pracuje teď" : "čeká" })),
+    ];
+    if (on && S.status && S.status.task) kids.push(h("div", { class: "now" }, S.status.task, h("small", { text: `puls ${ago(S.status.heartbeat)}` })));
+    kids.push(agentBody(a));
+    kids.push(block("Poslední kroky", steps.length ? list("steps", steps.map((e) => h("li", {}, h("time", { text: fmtT(e.t) }), h("span", { text: e.text || "" })))) : empty("Tento agent v poslední směně nic nezapsal.")));
+    $("#agent").replaceChildren(...kids);
+    for (const b of document.querySelectorAll("#chips button")) b.setAttribute("aria-pressed", String(b.dataset.id === sel));
+  }
+  function renderChips() {
+    const act = activeId();
+    $("#chips").replaceChildren(...AGENTS.map((a) => {
+      const b = h("button", { type: "button", "data-id": a.id, "aria-pressed": String(a.id === sel) }, h("i", { style: `background:${a.color}` }), a.name, a.id === act ? h("span", { class: "live", text: "● teď" }) : null);
+      b.onclick = () => pick(a.id);
+      return b;
     }));
   }
+  function pick(id) { sel = id; renderAgent(); }
 
-  // ---------- VÝZKUM ----------
-  function renderResearch() {
-    const st = S.strategies;
-    const live = st.filter((d) => String(d.status).startsWith("live")).length;
-    const cand = st.filter((d) => d.status === "candidate").length;
-    const rej = st.filter((d) => d.status === "rejected").length;
-    const cnt = [[st.length, "strategií v registru"], [live, "živě"], [cand, "kandidátů"], [rej, "zamítnuto"]];
-    if (S.stats && S.stats.dataSets != null) cnt.push([S.stats.dataSets, "datových sad z QC"]);
-    cnt.push([S.reports.length, "reportů"]);
-    $("#counters").replaceChildren(...cnt.map(([n, l]) => h("div", {}, String(n), h("small", { text: l }))));
-    bars($("#b-status"), [
-      { n: st.filter((d) => d.status === "live-eval").length, label: "eval · živě", tone: "" },
-      { n: st.filter((d) => d.status === "live-funded").length, label: "funded · živě", tone: "" },
-      { n: cand, label: "kandidáti", tone: "amber" }, { n: rej, label: "zamítnuto", tone: "pink" },
-      { n: st.filter((d) => d.status === "idea").length, label: "nápady", tone: "lilac" },
-    ]);
-    const died = STAGES.map(([k, l]) => ({ k, n: st.filter((d) => d.status === "rejected" && stageOf(d) === SIDX[k]).length, label: l, tone: "pink" })).filter((r) => r.n);
-    if (died.length) bars($("#b-died"), died, (r) => { funnelSel = r.k; renderFunnel(); show("filtr"); });
-    else $("#b-died").replaceChildren(h("div", { class: "empty", text: "Zatím nic zamítnutého." }));
-    const q = S.queue;
-    if (q.length) bars($("#b-queue"), [
-      { n: q.filter((d) => d.status === "running").length, label: "běží", tone: "" },
-      { n: q.filter((d) => (d.status || "waiting") === "waiting").length, label: "čeká", tone: "lilac" },
-      { n: q.filter((d) => d.status === "done").length, label: "hotovo", tone: "amber" },
-    ]);
-    else $("#b-queue").replaceChildren(h("div", { class: "empty", text: "Fronta je prázdná." }));
-    buildNodes();
+  // ---------- strategies with code ----------
+  async function copy(text, btn, pre) {
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (_) {
+      try { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); ok = document.execCommand("copy"); } catch (_) {}
+    }
+    btn.textContent = ok ? "Zkopírováno ✓" : "Označeno – stiskni Ctrl+C";
+    btn.classList.toggle("done", ok);
+    if (!ok) { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    setTimeout(() => { btn.textContent = "Kopírovat kód"; btn.classList.remove("done"); }, 2200);
+  }
+  function stratCard(d) {
+    const [w, c] = IND[d.status] || ["", ""];
+    const kids = [
+      h("div", { class: "sh" }, h("div", {}, h("h3", { text: d.name || "" }), h("div", { class: "meta", text: [d.chart, d.role].filter((x) => x && x !== "–").join(" · ") })),
+        h("span", { class: "tag acc slot", text: d.slot || w })),
+    ];
+    if (d.result) kids.push(h("div", { class: "res", text: d.result }));
+    if (d.settings && d.settings.length) kids.push(h("div", { class: "sets" }, ...d.settings.map(([k, v]) => h("span", {}, k + " ", h("b", { text: v })))));
+    if (d.extra) kids.push(h("div", { class: "extra", text: d.extra }));
+    if (d.status && d.status !== "live") kids.push(h("div", {}, h("span", { class: "tag " + c, text: w })));
+    if (d.code) {
+      const pre = h("pre", { text: d.code }), box = h("div", { class: "code" }, pre);
+      const cb = h("button", { class: "btn", type: "button", text: "Kopírovat kód" });
+      const tb = h("button", { class: "btn ghost", type: "button", text: "Celý kód" });
+      cb.onclick = () => copy(d.code, cb, pre);
+      tb.onclick = () => { const o = box.classList.toggle("open"); tb.textContent = o ? "Sbalit" : "Celý kód"; };
+      kids.push(box, h("div", { class: "acts" }, cb, tb, d.file ? h("span", { class: "file", text: d.file, title: d.file }) : null));
+    } else kids.push(empty(`Kód je v repozitáři: ${d.file || "strategy/tradingview"}`));
+    return h("div", { class: "card strat" }, ...kids);
+  }
+  function renderStrats() {
+    const m = S.metrics || {};
+    for (const [g, el, cap, sum, mk] of [["eval", "#ev", "#ev-cap", "#ev-sum", "eval"], ["funded", "#bk", "#bk-cap", "#bk-sum", "book"]]) {
+      const rows = S.indicators.filter((d) => d.group === g).sort((a, b) => (a.order || 0) - (b.order || 0));
+      $(el).replaceChildren(...(rows.length ? rows.map(stratCard) : [empty("Zatím žádná finální strategie.")]));
+      $(cap).textContent = m[mk] && m[mk].caption ? m[mk].caption : "";
+      const t = m[mk] && m[mk].tiles ? m[mk].tiles.slice(0, 2) : [];
+      $(sum).replaceChildren(...t.map((x) => h("span", {}, x.label + ": ", h("b", { text: x.value }))));
+    }
   }
 
-  // brain canvas: rotating sphere, strategies as nodes, amber core
-  const cv = $("#cv"), ctx = cv.getContext("2d"), tip = $("#tip");
-  let W = 0, H = 0, rotY = 0.6, rotX = -0.25, drag = null, nodes = [], dust = [], hover = null;
-  const fib = (n, i) => { const y = 1 - (i + 0.5) / n * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963; return [Math.cos(th) * r, y, Math.sin(th) * r]; };
-  for (let i = 0; i < 900; i++) { const p = fib(900, i); const j = 0.96 + Math.random() * 0.1; dust.push([p[0] * j, p[1] * j, p[2] * j, Math.random()]); }
-  function buildNodes() {
-    const st = S.strategies;
-    nodes = st.map((d, i) => { const p = fib(Math.max(st.length, 1), i); const r = 0.78; return { d, p: [p[0] * r, p[1] * r, p[2] * r] }; });
+  // ---------- 3D brain ----------
+  const cv = $("#cv"), ctx = cv.getContext("2d");
+  let W = 0, H = 0, rotY = -0.85, rotX = 0.22, vY = 0, vX = 0, drag = null, moved = 0, hover = null;
+  const rnd = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+  const pts = [];
+  function unit() { const u = rnd() * 2 - 1, t = rnd() * Math.PI * 2, r = Math.sqrt(1 - u * u); return [r * Math.cos(t), u, r * Math.sin(t)]; }
+  for (const side of [-1, 1]) {
+    for (let i = 0; i < 3200; i++) {
+      const [dx, dy, dz] = unit();
+      // gyri: keep dots on the ridges of a folded pattern, leave the sulci empty
+      const g = Math.sin(dz * 15 + dy * 9 + side * 1.3) * Math.cos(dy * 13 - dx * 8) + 0.6 * Math.sin(dx * 21 + dz * 12 - dy * 5);
+      if (g < -0.15) continue;
+      const fold = 1 + 0.035 * g;
+      let x = side * 0.36 + dx * 0.44 * fold, y = 0.06 + dy * 0.5 * fold, z = dz * 0.8 * fold;
+      if (side * x < 0.05) continue;
+      if (y < -0.2) y = -0.2 + (y + 0.2) * 0.5;
+      if (z > 0.35 && y < -0.05) y = -0.05 + (y + 0.05) * 0.6;
+      pts.push([x, y, z, 0]);
+    }
   }
-  function sizeBrain() {
+  for (let i = 0; i < 420; i++) {
+    const [dx, dy, dz] = unit(), f = 1 + 0.06 * Math.sin(dy * 38);
+    if (dz > 0.55) continue;
+    pts.push([dx * 0.46 * f, -0.36 + dy * 0.17 * f, -0.6 + dz * 0.24 * f, 1]);
+  }
+  for (let i = 0; i < 140; i++) {
+    const a = rnd() * Math.PI * 2, t = rnd();
+    pts.push([Math.cos(a) * 0.085, -0.25 - t * 0.6, -0.3 + Math.sin(a) * 0.085 + t * 0.06, 2]);
+  }
+  function size() {
     const r = cv.getBoundingClientRect(); if (!r.width) return;
     const dpr = Math.min(2, devicePixelRatio || 1);
     W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
@@ -538,260 +421,92 @@ td.res { color: var(--muted); }
   }
   function proj(p) {
     const cy = Math.cos(rotY), sy = Math.sin(rotY), cx = Math.cos(rotX), sx = Math.sin(rotX);
-    let x = p[0] * cy + p[2] * sy, z = -p[0] * sy + p[2] * cy;
+    let x = p[0] * cy - p[2] * sy, z = p[0] * sy + p[2] * cy;
     let y = p[1] * cx - z * sx; z = p[1] * sx + z * cx;
-    const R = Math.min(W, H) * 0.4, f = 2.6 / (2.6 + z);
-    return [W / 2 + x * R * f, H / 2 + y * R * f, z, f];
+    const R = Math.min(W * 0.46, H * 0.5), f = 3.2 / (3.2 - z);
+    return [W / 2 + x * R * f, H * 0.5 - y * R * f, z, f];
   }
+  let dotRGB = "", fgCol = "", cardCol = "";
+  function readColors() { const cs = getComputedStyle(document.documentElement); dotRGB = cs.getPropertyValue("--dot").trim(); fgCol = cs.getPropertyValue("--fg").trim(); cardCol = cs.getPropertyValue("--card").trim(); }
+  readColors();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { readColors(); });
   function draw(t) {
     if (!W) return;
     ctx.clearRect(0, 0, W, H);
-    const work = mode().work, R = Math.min(W, H) * 0.4;
-    // core
-    const pulse = 0.85 + 0.15 * Math.sin((reduced ? 0 : t) / (work ? 300 : 900));
-    let g = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, R * 0.55);
-    g.addColorStop(0, "rgba(255,240,200,0.95)"); g.addColorStop(0.08, "rgba(255,179,71,0.85)");
-    g.addColorStop(0.3, "rgba(255,140,60,0.22)"); g.addColorStop(1, "rgba(255,120,60,0)");
-    ctx.globalAlpha = pulse; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(W / 2, H / 2, R * 0.55, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
-    // orbit rings
-    ctx.strokeStyle = "rgba(255,179,71,0.25)"; ctx.lineWidth = 1;
-    for (let k = 0; k < 3; k++) {
-      ctx.beginPath();
-      for (let a = 0; a <= 64; a++) {
-        const th = (a / 64) * Math.PI * 2, tilt = 0.5 + k * 0.6;
-        const p = proj([Math.cos(th) * 0.92, Math.sin(th) * Math.sin(tilt) * 0.92, Math.sin(th) * Math.cos(tilt) * 0.92]);
-        a ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]);
+    for (const p of pts) {
+      const q = proj(p), a = 0.16 + 0.5 * Math.max(0, Math.min(1, (q[2] + 0.9) / 1.8));
+      ctx.fillStyle = `rgba(${dotRGB},${a.toFixed(3)})`;
+      const s = (p[3] === 1 ? 1.5 : 1.7) * q[3];
+      ctx.fillRect(q[0] - s / 2, q[1] - s / 2, s, s);
+    }
+    const act = activeId();
+    const nodes = AGENTS.map((a) => ({ a, q: proj(a.pos) })).sort((x, y) => x.q[2] - y.q[2]);
+    ctx.font = "600 12px Manrope, system-ui, sans-serif"; ctx.textBaseline = "middle";
+    for (const { a, q } of nodes) {
+      const front = q[2] > -0.25, isSel = a.id === sel, isHov = hover === a.id;
+      const r = (isSel ? 10 : isHov ? 9 : 7.5) * q[3];
+      ctx.globalAlpha = front ? 1 : 0.45;
+      if (a.id === act) {
+        const ph = reduced ? 0.5 : (t / 1400) % 1;
+        ctx.strokeStyle = a.color; ctx.lineWidth = 2; ctx.globalAlpha = (front ? 1 : 0.45) * (1 - ph);
+        ctx.beginPath(); ctx.arc(q[0], q[1], r + 4 + ph * 16, 0, 7); ctx.stroke();
+        ctx.globalAlpha = front ? 1 : 0.45;
       }
-      ctx.stroke();
+      if (isSel) { ctx.fillStyle = a.color; ctx.globalAlpha *= 0.18; ctx.beginPath(); ctx.arc(q[0], q[1], r + 7, 0, 7); ctx.fill(); ctx.globalAlpha = front ? 1 : 0.45; }
+      ctx.fillStyle = a.color; ctx.beginPath(); ctx.arc(q[0], q[1], r, 0, 7); ctx.fill();
+      ctx.strokeStyle = cardCol; ctx.lineWidth = 2; ctx.stroke();
+      const label = a.name, tw = ctx.measureText(label).width;
+      let lx = q[0] + r + 7;
+      if (lx + tw > W - 4) lx = q[0] - r - 7 - tw;
+      ctx.fillStyle = cardCol; ctx.globalAlpha = (front ? 0.85 : 0.35);
+      ctx.fillRect(lx - 3, q[1] - 9, tw + 6, 18);
+      ctx.globalAlpha = front ? 1 : 0.45; ctx.fillStyle = fgCol; ctx.fillText(label, lx, q[1] + 0.5);
+      a.sx = q[0]; a.sy = q[1]; a.lx = lx; a.lw = tw;
+      ctx.globalAlpha = 1;
     }
-    // dust
-    for (const d of dust) {
-      const p = proj(d);
-      ctx.fillStyle = p[2] < 0 ? "rgba(255,150,170,0.75)" : "rgba(185,166,255,0.28)";
-      const s = (0.6 + d[3] * 1.2) * p[3];
-      ctx.fillRect(p[0], p[1], s, s);
+    if (!drag) {
+      rotY += vY; rotX = Math.max(-0.75, Math.min(0.75, rotX + vX)); vY *= 0.94; vX *= 0.94;
+      if (!reduced && Math.abs(vY) < 0.0015) rotY += 0.0022;
     }
-    // nodes, back to front
-    const pr = nodes.map((n) => ({ n, p: proj(n.p) })).sort((a, b) => b.p[2] - a.p[2]);
-    for (const { n, p } of pr) {
-      const c = colorOf(n.d.status), r = (n === hover ? 7 : 4.5) * p[3];
-      ctx.shadowColor = c; ctx.shadowBlur = 12; ctx.fillStyle = c;
-      ctx.globalAlpha = p[2] > 0.3 ? 0.55 : 1;
-      ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 7); ctx.fill();
-      ctx.shadowBlur = 0; ctx.globalAlpha = 1;
-      n.sx = p[0]; n.sy = p[1];
-    }
-    if (!drag && !reduced) rotY += work ? 0.004 : 0.0015;
   }
-  function loop(t) { if (!document.querySelector('[data-page="vyzkum"]').hidden) draw(t); if (!reduced) requestAnimationFrame(loop); }
-  cv.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, y: e.clientY, ry: rotY, rx: rotX }; cv.setPointerCapture(e.pointerId); cv.style.cursor = "grabbing"; });
-  cv.addEventListener("pointerup", () => { drag = null; cv.style.cursor = "grab"; });
+  function hit(x, y) {
+    let best = null, bd = 22;
+    for (const a of AGENTS) {
+      if (a.sx == null) continue;
+      const d = Math.hypot(a.sx - x, a.sy - y);
+      const onLabel = x > a.lx - 3 && x < a.lx + a.lw + 3 && Math.abs(y - a.sy) < 10;
+      if (onLabel) return a;
+      if (d < bd) { bd = d; best = a; }
+    }
+    return best;
+  }
+  const loc = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY }; moved = 0; vX = vY = 0; cv.setPointerCapture(e.pointerId); cv.style.cursor = "grabbing"; });
   cv.addEventListener("pointermove", (e) => {
-    const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-    if (drag) { rotY = drag.ry + (e.clientX - drag.x) * 0.008; rotX = Math.max(-1.2, Math.min(1.2, drag.rx + (e.clientY - drag.y) * 0.008)); if (reduced) draw(0); return; }
-    let best = null, bd = 14;
-    for (const n of nodes) { const d = Math.hypot((n.sx || -99) - x, (n.sy || -99) - y); if (d < bd) { bd = d; best = n; } }
-    hover = best;
-    if (best) {
-      tip.hidden = false;
-      tip.replaceChildren(h("b", { text: STATUS[best.d.status] || best.d.status }), h("div", { text: best.d.name || "" }), h("div", { style: "color:var(--muted);margin-top:3px", text: best.d.result || "" }));
-      tip.style.left = Math.min(x + 14, r.width - 270) + "px"; tip.style.top = Math.min(y + 10, r.height - 90) + "px";
-    } else tip.hidden = true;
+    if (drag) {
+      const dx = e.clientX - drag.lx, dy = e.clientY - drag.ly;
+      rotY += dx * 0.009; rotX = Math.max(-0.75, Math.min(0.75, rotX + dy * 0.009));
+      vY = dx * 0.009; vX = dy * 0.009; drag.lx = e.clientX; drag.ly = e.clientY;
+      moved += Math.abs(dx) + Math.abs(dy);
+      if (reduced) draw(0);
+      return;
+    }
+    const [x, y] = loc(e), a = hit(x, y);
+    hover = a ? a.id : null; cv.style.cursor = a ? "pointer" : "grab";
     if (reduced) draw(0);
   });
-  cv.addEventListener("pointerleave", () => { hover = null; tip.hidden = true; });
-  cv.addEventListener("click", () => { if (hover) { selId = hover.d._id; renderStrategies(); show("strategie"); } });
-  new ResizeObserver(() => { sizeBrain(); draw(performance.now()); }).observe(cv);
+  cv.addEventListener("pointerup", (e) => {
+    const wasClick = drag && moved < 6; drag = null; cv.style.cursor = "grab";
+    if (wasClick) { const [x, y] = loc(e), a = hit(x, y); if (a) pick(a.id); }
+    if (reduced) { vX = vY = 0; draw(0); }
+  });
+  cv.addEventListener("pointerleave", () => { hover = null; });
+  new ResizeObserver(() => { size(); draw(performance.now()); }).observe(cv);
+  function loop(t) { draw(t); requestAnimationFrame(loop); }
 
-  // ---------- FILTR ----------
-  let funnelSel = null;
-  function renderFunnel() {
-    const st = S.strategies;
-    const passed = (i) => st.filter((d) => d.status === "rejected" ? stageOf(d) > i : stageOf(d) >= i).length;
-    const diedAt = (i) => st.filter((d) => d.status === "rejected" && stageOf(d) === i).length;
-    const max = Math.max(1, st.length);
-    $("#funnel").replaceChildren(...STAGES.map(([k, l], i) => {
-      const dead = diedAt(i), pass = passed(i);
-      const b = h("button", { class: "stage", type: "button", "aria-pressed": String(funnelSel === k), title: l },
-        h("div", { class: "col" },
-          dead ? h("span", { class: "k", text: "−" + dead }) : h("span", { class: "k ok", text: String(pass) }),
-          h("div", { class: "dead", style: `height:${(dead / max) * 150}px` }),
-          h("div", { class: "alive", style: `height:${(pass / max) * 150}px` })),
-        h("div", { class: "nm", text: l }));
-      b.onclick = () => { funnelSel = funnelSel === k ? null : k; renderFunnel(); };
-      return b;
-    }));
-    const live = st.filter((d) => String(d.status).startsWith("live")).length;
-    $("#kill-sum").replaceChildren(
-      h("span", {}, h("b", { text: String(st.filter((d) => d.status === "rejected").length) }), " zamítnuto"),
-      h("span", {}, h("b", { class: "ok", text: String(live) }), " živě"),
-      h("span", {}, h("b", { style: "color:var(--amber)", text: String(st.filter((d) => d.status === "candidate").length) }), " kandidátů čeká"));
-    const rows = st.filter((d) => !funnelSel || stageOf(d) === SIDX[funnelSel]);
-    $("#ledger-meta").textContent = funnelSel ? `brána: ${STAGES[SIDX[funnelSel]][1]} · ${rows.length}` : `${rows.length} záznamů`;
-    $("#ledger").replaceChildren(...(rows.length ? rows.map((d) => {
-      const tr = h("tr", { class: "click" },
-        h("td", { class: "nm " + d.status, text: d.name || "" }),
-        h("td", {}, h("span", { class: "chip " + d.status, text: STATUS[d.status] || d.status }), d.audit ? h("span", { class: "chip warn", style: "margin-left:4px", text: "kontrola" }) : null),
-        h("td", { text: (d.status === "rejected" ? "✕ " : "") + STAGES[stageOf(d)][1] }),
-        h("td", { class: "res", text: d.result || "" }));
-      tr.onclick = () => { selId = d._id; renderStrategies(); show("strategie"); };
-      return tr;
-    }) : [h("tr", {}, h("td", { colspan: "4", class: "empty", text: "Žádné záznamy." }))]));
-  }
-
-  // ---------- STRATEGIE ----------
-  let selId = null;
-  function ring(val, max, label, unit, color) {
-    const r = 38, c = 2 * Math.PI * r, frac = Math.max(0, Math.min(1, Math.abs(val) / max));
-    const s = sv("svg", { viewBox: "0 0 96 96" });
-    s.append(sv("circle", { cx: 48, cy: 48, r, fill: "none", stroke: C.line, "stroke-width": 6 }));
-    s.append(sv("circle", { cx: 48, cy: 48, r, fill: "none", stroke: val < 0 ? C.pink : color, "stroke-width": 6, "stroke-dasharray": `${frac * c} ${c}`, transform: "rotate(-90 48 48)", "stroke-linecap": "round" }));
-    const tx = sv("text", { x: 48, y: 52, "text-anchor": "middle", fill: C.fg, "font-size": 15, "font-weight": 700, "font-family": "IBM Plex Mono, monospace" });
-    tx.textContent = (val > 0 ? "+" : "") + String(val).replace(".", ",");
-    s.append(tx);
-    return h("div", { class: "ring" }, s, h("small", { text: `${label} · ${unit}` }));
-  }
-  function yearChart(years, unit) {
-    const ks = Object.keys(years).sort(), vs = ks.map((k) => years[k]);
-    const w = 560, hh = 150, pl = 34, pb = 20, max = Math.max(1, ...vs.map(Math.abs));
-    const s = sv("svg", { viewBox: `0 0 ${w} ${hh}`, preserveAspectRatio: "none" });
-    const y0 = (hh - pb) / 2 + 4, sc = (hh - pb) / 2 - 10;
-    s.append(sv("line", { x1: pl, x2: w, y1: y0, y2: y0, stroke: C.line }));
-    const bw = (w - pl) / ks.length;
-    ks.forEach((k, i) => {
-      const v = vs[i], bh = Math.abs(v) / max * sc, x = pl + i * bw + bw * 0.2;
-      s.append(sv("rect", { x, y: v >= 0 ? y0 - bh : y0, width: bw * 0.6, height: Math.max(1, bh), fill: v >= 0 ? (k >= "2022" ? C.mint : "rgba(94,240,200,0.55)") : C.pink }));
-      const lt = sv("text", { x: x + bw * 0.3, y: hh - 4, "text-anchor": "middle", fill: C.muted, "font-size": 10, "font-family": "IBM Plex Mono, monospace" }); lt.textContent = k; s.append(lt);
-      const vt = sv("text", { x: x + bw * 0.3, y: v >= 0 ? y0 - bh - 4 : y0 + bh + 11, "text-anchor": "middle", fill: C.fg, "font-size": 10, "font-family": "IBM Plex Mono, monospace" });
-      vt.textContent = (v > 0 ? "+" : "") + String(v).replace(".", ","); s.append(vt);
-    });
-    const ut = sv("text", { x: 2, y: 12, fill: C.faint, "font-size": 9, "font-family": "IBM Plex Mono, monospace" }); ut.textContent = unit; s.append(ut);
-    return h("div", { class: "yrs" }, s);
-  }
-  function renderStrategies() {
-    const st = S.strategies;
-    $("#reg-meta").textContent = `${st.length} záznamů`;
-    if (!selId && st.length) selId = (st.find((d) => d.status === "live-eval") || st[0])._id;
-    $("#slist").replaceChildren(...st.map((d) => {
-      const b = h("button", { class: "sitem " + d.status, type: "button", "aria-pressed": String(d._id === selId) },
-        h("span", { text: d.name || "" }), h("span", { class: "chip " + d.status, text: STATUS[d.status] || d.status }));
-      b.onclick = () => { selId = d._id; renderStrategies(); };
-      return b;
-    }));
-    const d = st.find((x) => x._id === selId);
-    if (!d) { $("#detail").replaceChildren(h("div", { class: "empty", text: st.length ? "Vyber strategii vlevo." : "Registr se načte z jádra." })); return; }
-    const si = stageOf(d), dead = d.status === "rejected";
-    const kids = [
-      h("div", { class: "ptitle" }, h("h2", { text: "Detail strategie" }), h("span", { text: d.files || "" })),
-      h("h3", { text: d.name || "" }),
-      h("div", {}, h("span", { class: "chip " + d.status, text: STATUS[d.status] || d.status }), d.audit ? h("span", { class: "chip warn", style: "margin-left:6px", text: "probíhá kontrola" }) : null),
-      h("div", { class: "pipe" }, ...STAGES.map((_, i) => h("i", { class: dead ? (i < si ? "ok" : i === si ? "dead" : "") : (i <= si ? "ok" : "") }))),
-      h("div", { class: "pipe-lbl" }, ...STAGES.map(([, l]) => h("span", { text: l }))),
-    ];
-    if (d.isVal != null && d.oosVal != null) {
-      const mx = Math.max(Math.abs(d.isVal), Math.abs(d.oosVal)) * 1.3 || 1;
-      kids.push(h("div", { class: "rings" }, ring(d.isVal, mx, "2018–21", d.unit || "", C.mint), ring(d.oosVal, mx, "2022–25", d.unit || "", C.mint),
-        d.extra ? ring(d.extra.v, d.extra.max || Math.abs(d.extra.v) * 1.3, d.extra.label, d.extra.unit || "", C.amber) : null));
-    }
-    if (d.years && Object.keys(d.years).length) kids.push(h("div", { class: "ptitle", style: "margin-top:8px" }, h("h2", { text: "Podle roku" }), h("span", { text: d.yearsUnit || d.unit || "" })), yearChart(d.years, d.yearsUnit || d.unit || ""));
-    kids.push(h("dl", { class: "kv" }, h("dt", { text: "Výsledek" }), h("dd", { text: d.result || "–" }),
-      d.note ? h("dt", { text: "Poznámka" }) : null, d.note ? h("dd", { text: d.note }) : null,
-      h("dt", { text: dead ? "Skončila" : "Došla do" }), h("dd", { text: STAGES[si][1] })));
-    $("#detail").replaceChildren(...kids);
-  }
-
-  // ---------- EVALUACE / FUNDED ----------
-  function tile(t) { return h("div", { class: "tile " + (t.tone || "") }, h("div", { class: "l", text: t.label || "" }), h("div", { class: "v", text: t.value || "–" }), t.sub ? h("div", { class: "s", text: t.sub }) : null); }
-  function rulesList(el, items) { el.replaceChildren(...items.map(([k, v]) => h("li", {}, h("span", { text: k }), h("span", { text: v })))); }
-  function evChart(p, fee) {
-    const w = 560, hh = 190, pl = 36, pb = 26, N = 6;
-    const s = sv("svg", { viewBox: `0 0 ${w} ${hh}` });
-    for (const g of [0, 25, 50, 75, 100]) {
-      const y = 8 + (1 - g / 100) * (hh - pb - 8);
-      s.append(sv("line", { x1: pl, x2: w - 8, y1: y, y2: y, stroke: C.line, "stroke-dasharray": g ? "2 4" : "" }));
-      const t = sv("text", { x: pl - 6, y: y + 3, "text-anchor": "end", fill: C.faint, "font-size": 10, "font-family": "IBM Plex Mono, monospace" }); t.textContent = g + " %"; s.append(t);
-    }
-    const bw = (w - pl - 8) / N;
-    for (let k = 1; k <= N; k++) {
-      const c = 1 - Math.pow(1 - p, k), x = pl + (k - 1) * bw + bw * 0.18, y = 8 + (1 - c) * (hh - pb - 8);
-      s.append(sv("rect", { x, y, width: bw * 0.64, height: hh - pb - y, fill: k <= 2 ? C.mint : "rgba(94,240,200,0.4)" }));
-      const v = sv("text", { x: x + bw * 0.32, y: y - 5, "text-anchor": "middle", fill: C.fg, "font-size": 11, "font-weight": 700, "font-family": "IBM Plex Mono, monospace" }); v.textContent = Math.round(c * 100) + " %"; s.append(v);
-      const l = sv("text", { x: x + bw * 0.32, y: hh - 8, "text-anchor": "middle", fill: C.muted, "font-size": 10, "font-family": "IBM Plex Mono, monospace" }); l.textContent = `${k}× · $${k * fee}`; s.append(l);
-    }
-    return s;
-  }
-  function renderPlans() {
-    const m = S.metrics;
-    const ev = m && m.eval, bk = m && m.book;
-    if (ev && Array.isArray(ev.tiles)) { $("#ev-tiles").replaceChildren(...ev.tiles.map(tile)); $("#ev-cap").textContent = ev.caption || ""; }
-    else $("#ev-tiles").replaceChildren(h("div", { class: "empty", text: "Čísla evaluace se načtou z jádra." }));
-    const p = ev && ev.p ? ev.p : null, fee = (ev && ev.fee) || 90;
-    $("#ev-chart").replaceChildren(p ? evChart(p, fee) : h("div", { class: "empty", text: "Pravděpodobnost passu se načte z jádra." }),
-      h("div", { class: "note", text: p ? `Při ${Math.round(p * 100)} % na pokus: kumulativní šance projít aspoň jednou, pod sloupcem cena koupených evaluací.` : "" }));
-    rulesList($("#ev-rules"), ev && Array.isArray(ev.rules) ? ev.rules : []);
-    if (bk && Array.isArray(bk.tiles)) { $("#bk-tiles").replaceChildren(...bk.tiles.map(tile)); $("#bk-cap").textContent = bk.caption || ""; }
-    else $("#bk-tiles").replaceChildren(h("div", { class: "empty", text: "Čísla knihy se načtou z jádra." }));
-    const parts = S.strategies.filter((d) => d.status === "live-funded" && d.edge != null);
-    if (parts.length) bars($("#bk-parts"), parts.map((d) => ({ n: d.edge, label: d.short || d.name, tone: d.audit ? "amber" : "" })));
-    else $("#bk-parts").replaceChildren(h("div", { class: "empty", text: "Složení knihy se načte z jádra." }));
-    const a = S.account;
-    rulesList($("#acct"), a && Array.isArray(a.rules) ? a.rules : []);
-    const ind = S.indicators;
-    $("#fleet").replaceChildren(...(ind.length ? ind.map((d) => h("div", { class: "card" },
-      h("h4", {}, d.name || "", h("small", { text: d.file || "" })),
-      h("span", { class: "chip " + (d.status === "live" ? "ok" : d.status === "audit" ? "warn" : d.status === "backup" ? "warn" : "off"), text: d.status === "live" ? "zapojeno" : d.status === "audit" ? "kontrola" : d.status === "backup" ? "záloha" : "vypnuto" }),
-      h("dl", {}, h("dt", { text: "role" }), h("dd", { text: d.role || "" }), h("dt", { text: "graf" }), h("dd", { text: d.chart || "" }), d.note ? h("dt", { text: "pozn." }) : null, d.note ? h("dd", { text: d.note }) : null)))
-      : [h("div", { class: "empty", text: "Seznam indikátorů se načte z jádra." })]));
-  }
-
-  // ---------- NOC ----------
-  function renderNight() {
-    const q = S.queue, el = $("#queue");
-    el.replaceChildren(...(q.length ? q.map((d) => {
-      const s = d.status || "waiting";
-      return h("li", { class: s }, h("div", {}, h("span", { class: "t", text: d.title || "" }), d.note ? h("span", { class: "n", text: d.note }) : null),
-        h("span", { class: "chip " + (s === "running" ? "ok" : s === "done" ? "off" : "warn"), text: s === "running" ? "běží" : s === "done" ? "hotovo" : "čeká" }));
-    }) : [h("li", { class: "empty", style: "display:block", text: "Fronta je prázdná." })]));
-    $("#q-meta").textContent = q.length ? `${q.filter((d) => d.status === "done").length}/${q.length} hotovo` : "";
-    const ev = S.log;
-    $("#log").replaceChildren(...(ev.length ? ev.slice(0, 60).map((e) => {
-      const t = Date.parse(e.t);
-      return h("li", {}, h("time", { text: isFinite(t) ? fHM.format(t) : "" }), h("div", {}, e.sphere ? h("span", { class: "sp", text: e.sphere }) : null, e.text || ""));
-    }) : [h("li", { class: "empty", style: "display:block", text: "Zatím žádné záznamy." })]));
-    const last = ev[0] && Date.parse(ev[0].t);
-    $("#log-meta").textContent = isFinite(last) ? fDay.format(last) : "";
-    renderReports();
-  }
-  let repSel = null;
-  function renderReports() {
-    const r = S.reports;
-    if (!r.length) return;
-    if (!repSel || !r.find((d) => d._id === repSel)) repSel = r[0]._id;
-    $("#rep-tabs").replaceChildren(...r.map((d) => { const b = h("button", { type: "button", "aria-pressed": String(d._id === repSel), text: d.date || d._id }); b.onclick = () => { repSel = d._id; renderReports(); }; return b; }));
-    const d = r.find((x) => x._id === repSel), v = Array.isArray(d.verdicts) ? d.verdicts : [];
-    $("#rep").replaceChildren(h("h3", { text: d.title || "" }), h("div", { class: "body", text: d.summary || "" }),
-      v.length ? h("div", { class: "verdicts" }, ...v.map((x) => h("span", { class: "chip " + (x.status || "idea"), text: `${x.name}: ${STATUS[x.status] || x.status || ""}` }))) : null);
-    $("#rep-meta").textContent = `${r.length} ${r.length === 1 ? "report" : r.length < 5 ? "reporty" : "reportů"}`;
-  }
-  function renderSched() {
-    const now = Date.now(), idx = WAKE.indexOf(pH(now)), on = inShift(now);
-    $("#sched").replaceChildren(...WAKE.map((x, i) => h("i", { class: on && idx >= 0 ? (i < idx ? "past" : i === idx ? "now" : "") : "", title: `${pad(x)}:07` })));
-  }
-  function tick() {
-    const now = Date.now();
-    $("#clock").firstChild.textContent = fClock.format(now);
-    if (now >= wakeAt) { wakeAt = nextWake(now); renderSched(); }
-    const s = Math.max(0, Math.round((wakeAt - now) / 1000));
-    $("#count").textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
-    $("#count-sub").textContent = `další probuzení v ${fHM.format(wakeAt)} (${fDay.format(wakeAt)})`;
-    $("#shift-note").textContent = inShift(now) ? "Směna běží. Když dojde usage, jádro počká na reset a další probuzení pokračuje." : "Mimo směnu. Report z poslední noci je níže.";
-    renderStrip();
-  }
-
-  function refresh() { renderStrip(); renderResearch(); renderFunnel(); renderStrategies(); renderPlans(); renderNight(); }
-  show((location.hash || "").slice(1));
-  refresh(); renderSched(); tick();
-  setInterval(tick, 1000);
+  function refresh() { renderTop(); renderChips(); renderAgent(); renderStrats(); }
+  refresh();
+  setInterval(renderTop, 30000);
   requestAnimationFrame(loop);
 
   // ---------- offline snapshot (jarvis_offline.html carries window.JARVIS_SNAPSHOT) ----------
@@ -814,53 +529,17 @@ td.res { color: var(--muted); }
     if (!db) { if (!loadSnapshot()) { S.db = "off"; refresh(); } return; }
     S.db = "on"; refresh();
     const fail = () => { S.db = "off"; refresh(); };
-    const one = (path, key, fn) => db.doc(path).onSnapshot((s) => { S[key] = s.exists ? s.data() : null; fn(); }, fail);
-    one("brain/status", "status", () => { renderStrip(); });
-    one("brain/metrics", "metrics", renderPlans);
-    one("brain/stats", "stats", renderResearch);
-    one("brain/account", "account", renderPlans);
-    db.doc("brain/log").onSnapshot((s) => { const d = s.exists ? s.data() : null; S.log = d && Array.isArray(d.events) ? d.events : []; renderNight(); }, fail);
-    db.collection("queue").orderBy("order").onSnapshot((s) => { S.queue = docs(s); renderNight(); renderResearch(); }, fail);
-    db.collection("strategies").orderBy("order").onSnapshot((s) => { S.strategies = docs(s); refresh(); }, fail);
-    db.collection("reports").orderBy("date", "desc").limit(10).onSnapshot((s) => { S.reports = docs(s); renderNight(); renderResearch(); }, fail);
-    db.collection("indicators").orderBy("order").onSnapshot((s) => { S.indicators = docs(s); renderPlans(); }, fail);
+    const one = (path, key) => db.doc(path).onSnapshot((s) => { S[key] = s.exists ? s.data() : null; refresh(); }, fail);
+    one("brain/status", "status");
+    one("brain/metrics", "metrics");
+    one("brain/stats", "stats");
+    one("brain/account", "account");
+    db.doc("brain/log").onSnapshot((s) => { const d = s.exists ? s.data() : null; S.log = d && Array.isArray(d.events) ? d.events : []; renderAgent(); }, fail);
+    db.collection("queue").orderBy("order").onSnapshot((s) => { S.queue = docs(s); renderAgent(); }, fail);
+    db.collection("strategies").orderBy("order").onSnapshot((s) => { S.strategies = docs(s); renderAgent(); }, fail);
+    db.collection("reports").orderBy("date", "desc").limit(5).onSnapshot((s) => { S.reports = docs(s); renderAgent(); }, fail);
+    db.collection("indicators").orderBy("order").onSnapshot((s) => { S.indicators = docs(s); renderAgent(); renderStrats(); }, fail);
   })();
-
-  // ---------- ask ----------
-  const turns = []; let ctl = null, sample = null;
-  function bubble(cls, text) { const el = h("div", { class: "msg " + cls, text }); $("#chat").append(el); el.scrollIntoView({ block: "nearest" }); return el; }
-  function rules() {
-    const strip = (a) => a.map(({ _id, ...r }) => r);
-    const snap = { status: S.status, metrics: S.metrics, account: S.account, queue: strip(S.queue), strategies: strip(S.strategies),
-      indicators: strip(S.indicators), reports: strip(S.reports.slice(0, 2)), log: S.log.slice(0, 20), prague_time: fClock.format(Date.now()) };
-    return "Jsi J.A.R.V.I.S., výzkumný asistent českého NQ prop tradera (Lucid Flex 50K). Odpovídej správnou češtinou, stručně, čísla nejdřív. " +
-      "Vycházej jen z dat níže; co v nich není, otevřeně řekni. Doporučuješ, rozhoduje trader.\n\nDATA (JSON):\n" + JSON.stringify(snap).slice(0, 80000);
-  }
-  const ERR = { not_granted: "Dotazy na Claude nejsou pro tuto stránku povolené.", sampling_disabled: "Claude není pro tento účet dostupný.",
-    rate_limited: "Moc dotazů najednou nebo došla usage. Zkus to za chvíli.", session_expired: "Přihlas se prosím znovu.",
-    refused: "Na tohle neodpovím, zkus otázku přeformulovat.", empty_completion: "Odpověď vyšla prázdná, zkus otázku zjednodušit.", prompt_too_large: "Otázka i s daty je moc dlouhá." };
-  const HIDE = ["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"];
-  (async () => { sample = window.claude ? await window.claude.use("sample") : null; if (!sample) { $("#ask-form").hidden = true; $("#suggest").hidden = true; $("#ask-note").textContent = "Dotazy nejsou v tomto zobrazení dostupné."; } })();
-  async function ask(q) {
-    q = q.trim(); if (!q || !sample || ctl) return;
-    bubble("you", q); turns.push({ role: "user", content: q });
-    const out = bubble("ai", "Přemýšlím…");
-    ctl = new AbortController(); $("#send").disabled = true; $("#stop").hidden = false;
-    try {
-      const { text, truncated } = await sample([{ role: "user", content: rules() }, ...turns.slice(-10)], { cache: false, signal: ctl.signal, onText: ({ text }) => { out.textContent = text; } });
-      turns.push({ role: "assistant", content: text }); if (truncated) out.textContent = text + "\n…(zkráceno)";
-    } catch (e) {
-      out.textContent = (e && e.text) || "";
-      if (e && e.code !== "cancelled") { out.classList.add("err"); out.textContent = (out.textContent ? out.textContent + "\n" : "") + (ERR[e.code] || "Spojení se přerušilo. Zkus to znovu."); }
-      if (!out.textContent) out.remove();
-      turns.pop();
-      if (e && HIDE.includes(e.code)) { $("#ask-form").hidden = true; $("#suggest").hidden = true; }
-    } finally { ctl = null; $("#send").disabled = false; $("#stop").hidden = true; }
-  }
-  $("#ask-form").addEventListener("submit", (e) => { e.preventDefault(); const v = $("#ask").value; $("#ask").value = ""; ask(v); });
-  $("#ask").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#ask-form").requestSubmit(); } });
-  $("#stop").addEventListener("click", () => ctl && ctl.abort());
-  $("#suggest").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { show("dotaz"); ask(b.textContent); } });
 })();
 </script>
 

@@ -1,13 +1,14 @@
 {
+  "diedAt": "live",
   "files": "overnight_after_downs.py",
   "isVal": 28.6,
   "name": "Overnight long po 3+ červených dnech (NQ, close 15:55 → open 09:30)",
-  "note": "Otázka pro tradera: dovoluje Lucid Flex držet pozici přes noc?",
+  "note": "Vyřazeno: Lucid Flex nedovoluje držet pozici přes noc (odpověď tradera 23. 10.).",
   "oosVal": 19,
   "order": 9.5,
   "reached": "audit",
   "result": "+28,6 / +19,0 bp za noc (t 2,5 / 1,7), kladné všech 8 let, ~20× ročně",
-  "status": "candidate",
+  "status": "rejected",
   "unit": "bp/noc",
   "years": {
     "2018": 40.2,
