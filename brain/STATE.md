@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-24T00:30Z (night shift 2026-10-23/24 running)
+heartbeat: 2026-10-24T01:05Z (night shift 2026-10-23/24 running)
 last shift: 2026-10-23 day shift (final report brain/reports/2026-10-23-den.md at 21:15 Prague); night shift 23/24 running
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,6 +16,7 @@ Next (for the night shift):
 
 
 ## Done this shift
+- Night: RS funded-leg bracket at 4 MNQ (open-P&L check): no width better in all eras -> keep 1.25%.
 - Night: open-P&L drawdown check (mtm_check.py): flat 4 still beats flat 3 in all eras (+3.5k / +4.3k /
   +2.6k / +2.5k); OD on top only +0.6k in 3 eras -> optional. Use the open-P&L check for size questions.
 - Night: OD (Lucid 10) at 4 MNQ adds in all four eras on funded_model (+3.1k / +2.0k / +1.8k / +1.9k),

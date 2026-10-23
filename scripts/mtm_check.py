@@ -31,6 +31,9 @@ V = {"flat 3": {"VG": 3, "Z": 3, "RS": 3}, "flat 4": {"VG": 4, "Z": 4, "RS": 4},
      "flat 4 + OD 4": {"VG": 4, "Z": 4, "RS": 4, "OD": 4}, "flat 5": {"VG": 5, "Z": 5, "RS": 5}}
 
 
+RS_LEVEL = 125   # RS leg bracket in bp (rs_bracket.py varies it)
+
+
 def trades(data, suffix, gate, pref):
     """(date, ehm, xhm, usd per MNQ, leg, dir); usd re-priced at pref if given (gross % x pref - cost)."""
     out = []
@@ -50,7 +53,7 @@ def trades(data, suffix, gate, pref):
             out.append((date, int(p[4]), int(p[6]), pts * 2.0, leg, d))
     sig = first_signals(parse_mf(f"{data}/MFEAT{suffix}_tags.txt"), lambda r: 1 if (r["rs"] > 0.0015 and r["vwapd"] > 0) else
                         (-1 if (r["rs"] < -0.0015 and r["vwapd"] < 0) else 0))
-    ti = si = LEVELS.index(125)
+    ti = si = LEVELS.index(RS_LEVEL)
     for d, (r, s) in sig.items():
         if not gate(d):
             continue
@@ -59,7 +62,7 @@ def trades(data, suffix, gate, pref):
         x = min(EODM, r["hm"] + min(hits)) if hits else EODM
         pts = rs_pts(r, s, ti, si)
         if pref:
-            c = 1.0 if pts < -0.0124 * r["e"] else 0.75
+            c = 1.0 if pts < -(RS_LEVEL / 1e4 - 0.0001) * r["e"] else 0.75
             pts = (pts + c) / r["e"] * pref - c
         out.append((d, r["hm"], x, pts * 2.0, "RS", s))
     days = L.load(data)
