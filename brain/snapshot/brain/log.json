@@ -1,6 +1,36 @@
 {
   "events": [
     {
+      "sphere": "Interpret",
+      "t": "2026-10-23T19:08:37Z",
+      "text": "Denní směna uzavřena: finální report v Mozku (Interpret) a v brain/reports/2026-10-23-den.md. Na tobě: nahrát Lucid 7/8, rozhodnout o ORB a o automatizaci."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T19:08:37Z",
+      "text": "Funded: 2 MNQ místo 3 těsně před výplatou +1 200 / +1 600 $ (2018–25), v 2010–17 beze změny – jen volitelné."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-23T13:21:53Z",
+      "text": "Lucid 7 a 8: dokončovací obchod – vyplň „Eval profit so far“; od +2 100 $ se poslední obchod zmenší, aby právě dotáhl na 3 000 $."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T13:21:53Z",
+      "text": "Dokončovací obchod zrychlí evaluaci ve 38 ze 40 kombinací; dva účty 6,9 / 6,3 dne místo 7,6 / 6,9."
+    },
+    {
+      "sphere": "Systémový manažer",
+      "t": "2026-10-23T12:38:15Z",
+      "text": "Všechny živé nohy ověřeny ve 4 obdobích 2010–25: VWAP pásmo (12/12 kombinací kladných), RS noha (16/16), noise (edge roste s volatilitou, filtr 30 % nechat)."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-23T12:38:15Z",
+      "text": "Velikost podle volatility u noise ani podle polštáře nepomáhá – flat 3 zůstává. Příjem ~740–1 060 $/měsíc na funded účet (kniha bez ORB)."
+    },
+    {
       "sphere": "Optimalizátor",
       "t": "2026-10-23T12:23:41Z",
       "text": "Kniha je na hraně drawdownu: nové slabé nohy ani druhá kniha nepomáhají; víc peněz = víc funded účtů se stejnou knihou (kopie). Flat 3 zůstává."

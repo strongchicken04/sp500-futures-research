@@ -1,9 +1,9 @@
 {
-  "heartbeat": "2026-10-23T12:23:41Z",
-  "phase": "working",
+  "heartbeat": "2026-10-23T19:08:37Z",
+  "phase": "idle",
   "qc": "ok",
   "runs": 14,
   "shift": "2026-10-23 den",
-  "sphere": "optimiser",
-  "task": "Velikost a počet účtů: flat 3, škálovat kopiemi knihy na další funded účty."
+  "sphere": "interpreter",
+  "task": "Denní směna 23. 10. hotová; noční směna začne ve 23:07."
 }

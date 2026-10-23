@@ -1,0 +1,8 @@
+{
+  "files": "two_win_sprint.py, two_win_pair.py, lucid_7, lucid_8",
+  "name": "Evaluace: dokončovací obchod (od +2 100 $ zmenšit poslední obchod, aby výhra právě dotáhla na 3 000 $)",
+  "order": 58,
+  "reached": "audit",
+  "result": "rychlejší ve 38 ze 40 kombinací; dva účty 6,9 / 6,3 dne místo 7,6 / 6,9",
+  "status": "candidate"
+}
