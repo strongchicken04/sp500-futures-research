@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-23T07:38Z (shift 2026-10-23 active)
+heartbeat: 2026-10-23T08:10Z (shift 2026-10-23 active)
 last shift: 2026-10-23 (report final at 09:45 Prague; later wakes continue the queue)
 
 ## Queue (top = next). Move finished items to registry.md.
