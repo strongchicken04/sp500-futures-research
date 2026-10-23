@@ -1,0 +1,5 @@
+Z trades on gated-out days: 277 of 1868
+   ORB+VG+Z+RS    Z gated (now)    $  17,119 | $  30,633
+   ORB+VG+Z+RS    Z without gate   $  17,308 | $  33,841
+   ORB+VG+Z       Z gated (now)    $  10,636 | $  24,588
+   ORB+VG+Z       Z without gate   $  13,546 | $  26,976
