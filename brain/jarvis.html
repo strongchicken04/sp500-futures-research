@@ -250,6 +250,7 @@ details.more pre { white-space: pre-wrap; font-family: var(--f); font-size: 13px
 
   // ---------- agent card ----------
   const fmtT = (iso) => { const t = Date.parse(iso); return isFinite(t) ? fHM.format(t) : ""; };
+  const fmtD = (s) => { const t = Date.parse(String(s || "").slice(0, 10)); return isFinite(t) ? fDay.format(t) : ""; };
   const list = (cls, rows) => h("ul", { class: "list " + (cls || "") }, ...rows);
   const block = (title, ...kids) => h("div", {}, h("div", { class: "lbl", text: title }), ...kids);
   const empty = (t) => h("div", { class: "empty", text: t });
@@ -299,7 +300,7 @@ details.more pre { white-space: pre-wrap; font-family: var(--f); font-size: 13px
         const m = txt.match(/CO UDĚLAT TY\s*\n([\s\S]*?)(\n\s*\n|$)/);
         const todo = m ? m[1].split("\n").map((l) => l.replace(/^\s*(\d+\)|•|-)\s*/, "").trim()).filter(Boolean) : [];
         return h("div", { style: "display:grid;gap:12px" },
-          block(`Report ${r.date ? fDay.format(Date.parse(r.date)) : ""} · co udělat ty`, todo.length ? h("ol", { class: "todo" }, ...todo.map((t) => h("li", { text: t }))) : empty("Dnes nic.")),
+          block(`Report ${fmtD(r.date)} · co udělat ty`, todo.length ? h("ol", { class: "todo" }, ...todo.map((t) => h("li", { text: t }))) : empty("Dnes nic.")),
           h("details", { class: "more" }, h("summary", { text: "Celý report" }), h("pre", { text: txt })));
       }
     }
@@ -492,7 +493,9 @@ details.more pre { white-space: pre-wrap; font-family: var(--f); font-size: 13px
   new ResizeObserver(() => { size(); draw(performance.now()); }).observe(cv);
   function loop(t) { draw(t); requestAnimationFrame(loop); }
 
-  function refresh() { renderTop(); renderChips(); renderAgent(); renderStrats(); }
+  // one failing card must never blank the rest of the page
+  const safe = (fn) => { try { fn(); } catch (e) { console.error(e); } };
+  function refresh() { safe(renderTop); safe(renderChips); safe(renderAgent); safe(renderStrats); }
   refresh();
   setInterval(renderTop, 30000);
   requestAnimationFrame(loop);
