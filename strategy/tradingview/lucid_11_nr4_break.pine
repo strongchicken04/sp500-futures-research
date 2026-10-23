@@ -1,0 +1,105 @@
+// @version=5
+indicator("Lucid 11 — NR4 30-min Break (flat 15:55)", overlay=true, max_labels_count=500, max_lines_count=50)
+
+// =========================================================================
+// CANDIDATE (2026-10-23 day shift) — USE A 5-MINUTE MNQ/NQ CHART
+// NR4 day: the PREVIOUS RTH session's range (09:30-16:00 high - low) is the
+// smallest of the last 4 RTH sessions (compression -> expansion, Crabel).
+// On an NR4 day, from the 10:00 bar on, the first 5-min close beyond the
+// 09:30-10:00 range -> go with it at that close (entries until the bar
+// ending 15:45). Stop: the other side of the 09:30-10:00 range (filled at the
+// worse of stop and bar open), from the next bar. Exit: the 15:55 bar's close.
+// NQ 2018-2025, costs included (scripts/simple_lab.py): +7.0 / +11.0 pt per
+// trade (2018-21 / 2022-25); NR5 / NR7 similar; ~60 trades a year.
+// Book (bootstrap, flat 3, with VWAP band + noise + RS): about +$1-3k per
+// account over 24 months. See the day report before using it.
+// =========================================================================
+
+cts     = input.int(3, "Contracts (MNQ)")
+ptValue = input.float(2.0, "$ per point per contract (MNQ = 2, NQ = 20)")
+nrLen   = input.int(4, "NR length (sessions)")
+useGate = input.bool(true, "Skip days with 20d realised vol >= 30% (as tested)")
+volCeil = input.float(0.30, "Max 20d realised vol")
+showHist = input.bool(true, "Show historical trades")
+
+rvol20 = request.security(syminfo.tickerid, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
+volOK = not useGate or na(rvol20) or rvol20 < volCeil
+
+etMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")   // bar OPEN time
+rthFlag = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+rthStart = rthFlag and not nz(rthFlag[1], false)
+is5 = timeframe.period == "5"
+
+// RTH ranges of completed sessions (most recent last)
+var ranges = array.new_float()
+var float sH = na
+var float sL = na
+var float orH = na
+var float orL = na
+var bool nrDay = false
+var bool done = false
+if rthStart
+    if not na(sH)
+        array.push(ranges, sH - sL)
+        if array.size(ranges) > nrLen
+            array.shift(ranges)
+    nrDay := array.size(ranges) == nrLen and array.get(ranges, nrLen - 1) <= array.min(ranges)
+    sH := high
+    sL := low
+    orH := high
+    orL := low
+    done := false
+else if rthFlag
+    sH := math.max(sH, high)
+    sL := math.min(sL, low)
+    if etMin < 600
+        orH := math.max(orH, high)
+        orL := math.min(orL, low)
+
+var float nEntry = na
+var float nStop = na
+var int nDir = na
+var int nBar = na
+canEnter = is5 and rthFlag and nrDay and volOK and not done and na(nEntry) and etMin >= 600 and etMin <= 940 and barstate.isconfirmed
+goLong = canEnter and close > orH
+goShort = canEnter and close < orL
+if goLong or goShort
+    nDir := goLong ? 1 : -1
+    nEntry := close
+    nStop := goLong ? orL : orH
+    nBar := bar_index
+    done := true
+    if showHist
+        label.new(bar_index, goLong ? low : high, "NR4 " + (goLong ? "LONG " : "SHORT ") + str.tostring(cts) + "\nstop " + str.tostring(nStop, format.mintick) + "\nrisk ~$" + str.tostring(math.abs(close - nStop) * cts * ptValue, "#"), color=goLong ? color.new(color.teal, 10) : color.new(color.maroon, 10), textcolor=color.white, style=goLong ? label.style_label_up : label.style_label_down, size=size.small)
+
+if not na(nEntry) and bar_index > nBar
+    exR = ""
+    exP = 0.0
+    if nDir == 1 and low <= nStop
+        exR := "SL"
+        exP := math.min(nStop, open)
+    else if nDir == -1 and high >= nStop
+        exR := "SL"
+        exP := math.max(nStop, open)
+    else if etMin >= 955 or not rthFlag
+        exR := "EOD"
+        exP := close
+    if exR != ""
+        pnl = nDir * (exP - nEntry) * cts * ptValue
+        if showHist
+            label.new(bar_index, exP, "NR4 " + exR + "\n" + (pnl >= 0 ? "+$" : "-$") + str.tostring(math.abs(pnl), "#"), color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)
+        nEntry := na
+        nStop := na
+        nDir := na
+
+alertcondition(goLong, "NR4 break LONG", "Lucid 11: NR4 30-min break LONG")
+alertcondition(goShort, "NR4 break SHORT", "Lucid 11: NR4 30-min break SHORT")
+
+plot(rthFlag and nrDay and etMin >= 600 ? orH : na, "30-min high", color=color.new(color.teal, 30), style=plot.style_linebr)
+plot(rthFlag and nrDay and etMin >= 600 ? orL : na, "30-min low", color=color.new(color.maroon, 30), style=plot.style_linebr)
+
+var table tb = table.new(position.top_right, 1, 2, border_width=1, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    st = not is5 ? "NR4: use a 5-minute chart" : not nrDay ? "not an NR4 day" : not volOK ? "VOL GATE — SKIP TODAY" : not na(nEntry) ? (nDir == 1 ? "LONG " : "SHORT ") + str.tostring(nEntry, format.mintick) : done ? "done today" : "NR4 day: watch the 30-min range"
+    table.cell(tb, 0, 0, "LUCID 11 · NR4 BREAK (candidate)", text_color=color.white, bgcolor=color.new(color.teal, 40))
+    table.cell(tb, 0, 1, st, text_color=color.white, bgcolor=not na(nEntry) ? color.new(color.orange, 20) : nrDay ? color.new(color.teal, 60) : color.new(color.gray, 50))
