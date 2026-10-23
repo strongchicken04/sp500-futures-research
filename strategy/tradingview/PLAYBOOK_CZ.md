@@ -68,10 +68,11 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
   zbytek přijde o drawdown dřív. Vyplácí se to jen proto, že nová evaluace
   sprintem je levná (~180–270 $, ~7–11 dní). Počítej s tím.
 - Denní stop výsledek nezlepšuje; jako pojistka −600 $ nevadí.
-- Očekávání (kniha bez ORB, opravený model `scripts/funded_model.py`,
-  24 měsíců, evaluace odečtené, 2018–21 / 2022–25): při 3 MNQ ~810 / 1 330 $
-  měsíčně na funded místo, při 4 MNQ ~1 010 / 1 540 $; 9 z 10 míst nad
-  9 900 / 18 700 $ za 24 měsíců při 4 MNQ (`results/funded_v2.txt`).
+- Očekávání (kniha bez ORB, opravený model `scripts/funded_model.py`
+  a `mtm_check.py`, 24 měsíců, evaluace odečtené, 2018–21 / 2022–25):
+  při 3 MNQ ~750–810 / 1 200–1 330 $ měsíčně na funded místo, při 4 MNQ
+  ~900–1 000 / 1 400–1 550 $ (nižší číslo = přísná kontrola drawdownu
+  i s otevřenými pozicemi).
   V klidném trhu může být méně. Víc peněz = víc účtů se stejnou knihou (kopie).
 - **Pravidlo výplaty:** v každém výplatním cyklu potřebuješ 5 dní se ziskem
   aspoň 150 $ (dny nemusí jít po sobě, po výplatě se počítají znovu). Výplatu
@@ -89,10 +90,11 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
 
 - **Funded 4 MNQ na nohu místo 3** (noc 23./24. 10.): +4 900 / +5 000 $ na
   funded místo za 24 měsíců, lepší i v 2010–17 přepočteném na dnešní cenu
-  (+3 200 / +4 000 $); první výplata o 1–5 bodů méně často.
-- **Open drive (Lucid 10, 5min graf) jako čtvrtá funded noha, 4 MNQ**
-  (noc 23./24. 10.): k tomu dalších +3 100 / +2 000 $ (2018–21 / 2022–25),
-  +1 800 / +1 900 $ v 2010–17 přepočteném na dnešní cenu.
+  (+3 200 / +4 000 $; s přísnou kontrolou drawdownu i s otevřenými
+  pozicemi +3 500 / +4 300 $ a +2 600 / +2 500 $); první výplata o 2–5 bodů
+  méně často.
+- Volitelně: open drive (Lucid 10, 5min graf) jako čtvrtá noha, 4 MNQ –
+  s přísnou kontrolou drawdownu přidá jen ~+600 $ ve třech obdobích ze čtyř.
 
 - Overnight long (Lucid 9) vyřazen: Lucid Flex nedovoluje držet přes noc.
   Všechny strategie v plánu jsou do 15:55 ET flat.

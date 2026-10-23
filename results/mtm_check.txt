@@ -1,0 +1,22 @@
+panel coverage 2018-25: 1997 of 2064 days
+--- 2018-21: 24-month cash per seat | first payout  (closed-trade check -> with open P&L)
+   flat 3         $ 19,465 39.6%  ->  $ 18,105 37.3%
+   flat 4         $ 24,234 38.2%  ->  $ 21,652 33.5%
+   flat 4 + OD 4  $ 27,078 38.2%  ->  $ 24,580 31.6%
+   flat 5         $ 28,691 36.5%  ->  $ 25,247 32.8%
+--- 2022-25: 24-month cash per seat | first payout  (closed-trade check -> with open P&L)
+   flat 3         $ 32,122 41.4%  ->  $ 29,160 32.6%
+   flat 4         $ 37,102 36.0%  ->  $ 33,446 28.0%
+   flat 4 + OD 4  $ 39,249 34.0%  ->  $ 34,004 23.6%
+   flat 5         $ 39,838 33.7%  ->  $ 35,011 23.2%
+reference price 17,090; panel coverage 2010-17: 1996 of 2060 days
+--- 2010-13 (today's price): 24-month cash per seat | first payout  (closed-trade check -> with open P&L)
+   flat 3         $ 23,660 25.9%  ->  $ 19,595 20.9%
+   flat 4         $ 26,852 24.1%  ->  $ 22,154 18.0%
+   flat 4 + OD 4  $ 28,363 22.7%  ->  $ 22,713 15.7%
+   flat 5         $ 26,586 19.9%  ->  $ 22,193 15.3%
+--- 2014-17 (today's price): 24-month cash per seat | first payout  (closed-trade check -> with open P&L)
+   flat 3         $ 21,935 28.8%  ->  $ 19,755 22.5%
+   flat 4         $ 26,232 28.6%  ->  $ 22,294 19.3%
+   flat 4 + OD 4  $ 27,799 27.0%  ->  $ 22,883 18.2%
+   flat 5         $ 28,577 25.0%  ->  $ 24,496 17.7%
