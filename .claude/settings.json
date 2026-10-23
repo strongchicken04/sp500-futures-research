@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "ArtifactData",
+      "Artifact",
+      "Bash",
+      "WebSearch",
+      "mcp__Claude_Code_Remote__send_later",
+      "mcp__Claude_Code_Remote__read_documentation",
+      "mcp__Claude_Code_Remote__list_triggers",
+      "mcp__Claude_Code_Remote__get_trigger"
+    ]
+  }
+}
