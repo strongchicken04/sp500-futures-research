@@ -1,0 +1,12 @@
+--- 2018-21: PM $+8.76 per MNQ per trade (n 378)
+   no ORB (VG+Z+RS)               $  17,462
+   + PM 3                         $  15,793   vs base  -1,669 (+/- 203)  better / worse in 35% / 64% of paths
+--- 2022-25: PM $+17.68 per MNQ per trade (n 410)
+   no ORB (VG+Z+RS)               $  25,696
+   + PM 3                         $  25,013   vs base    -683 (+/- 275)  better / worse in 44% / 55% of paths
+--- 2010-2013: PM $-0.50 per MNQ per trade (n 378)
+   no ORB (VG+Z+RS)               $     610
+   + PM 3                         $     811   vs base    +201 (+/- 35)  better / worse in 26% / 39% of paths
+--- 2014-2017: PM $+2.02 per MNQ per trade (n 306)
+   no ORB (VG+Z+RS)               $   3,253
+   + PM 3                         $   4,010   vs base    +757 (+/- 64)  better / worse in 53% / 33% of paths
