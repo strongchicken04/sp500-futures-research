@@ -1,0 +1,16 @@
+--- 2018-21: SB $+0.27 per MNQ per trade (n 526)
+   no ORB (VG+Z+RS)               $  17,510
+   + SB 3                         $  15,772   vs base  -1,738 (+/- 188)  better / worse in 33% / 64% of paths
+   + SB 1                         $  16,792   vs base    -718 (+/- 133)  better / worse in 35% / 55% of paths
+--- 2022-25: SB $+0.95 per MNQ per trade (n 438)
+   no ORB (VG+Z+RS)               $  25,754
+   + SB 3                         $  24,524   vs base  -1,229 (+/- 249)  better / worse in 41% / 57% of paths
+   + SB 1                         $  25,863   vs base    +109 (+/- 182)  better / worse in 46% / 47% of paths
+--- 2010-2013: SB $+0.52 per MNQ per trade (n 476)
+   no ORB (VG+Z+RS)               $     612
+   + SB 3                         $     798   vs base    +186 (+/- 32)  better / worse in 32% / 23% of paths
+   + SB 1                         $     657   vs base     +45 (+/- 20)  better / worse in 15% / 12% of paths
+--- 2014-2017: SB $+2.00 per MNQ per trade (n 527)
+   no ORB (VG+Z+RS)               $   3,176
+   + SB 3                         $   4,020   vs base    +845 (+/- 67)  better / worse in 59% / 29% of paths
+   + SB 1                         $   3,393   vs base    +218 (+/- 47)  better / worse in 35% / 27% of paths
