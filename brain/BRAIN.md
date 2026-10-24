@@ -91,6 +91,9 @@ English.
    (timed_book life()) moves $3-5k with the calendar alone - not for
    differences under ~$5k. The book at flat 3 is at the drawdown edge: new
    legs with small edges add busts; scale with more accounts (copies) instead.
+6c. Timing robustness (2026-10-25): a leg entered at a fixed time must also
+   hold with the entry shifted by +/-5 minutes (one 5-min bar) in all eras;
+   VWAP-side legs at 10:00 / 11:00 failed this.
 7. Nothing goes live without the owner; you recommend, they decide.
 
 ## Shift mechanics
