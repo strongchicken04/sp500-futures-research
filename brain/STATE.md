@@ -1,9 +1,12 @@
 # Brain state
 
-heartbeat: 2026-10-24T19:09Z (day shift 2026-10-24 FINISHED; report brain/reports/2026-10-24-den.md)
-last shift: 2026-10-24 day shift (final report brain/reports/2026-10-24-den.md, 21:10 Prague)
+heartbeat: 2026-10-24T21:08Z (night shift 2026-10-24/25 running)
+last shift: 2026-10-24 day shift (report brain/reports/2026-10-24-den.md); night shift 24/25 running
 
 ## Queue (top = next). Move finished items to registry.md.
+Night 2026-10-24/25:
+N1. Plan B check: V11 (VWAP side 11:00) plateau at today's NQ - entry 10:55 / 11:00 / 11:05 x bracket 0.25/0.40,
+    0.30/0.50, 0.40/0.60, on top of VG + RS at 3 (Z cut) and on top of VG + Z + RS; four eras + 2026.
 Day shift 2026-10-24 (owner: "jeď to zase dnes celý den"; until 22:00 Prague, report brain/reports/2026-10-24-den.md):
 D1. DONE: small-edge legs re-tested on the open-P&L model -> VWAP side 10:00 (V10) candidate leg (Lucid 12 funded mode).
 D2. DONE: integrated seat model - eval plan choice moves 24-month cash per seat by only -0.5k..+2.5k
