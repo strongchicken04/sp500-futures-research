@@ -24,15 +24,13 @@ měsíčně), v 2010–13 / 2014–17 24 100 / 26 200 $; k první výplatě dojd
 26–27 % účtů (2018–25). 5 MNQ by přidalo ještě +1 000 až +4 000 $, ale
 s nižší šancí na první výplatu – zůstávám u 4 (`results/book_v10.txt`).
 
-**Pozor na velikost:** ve spojeném modelu (evaluace i funded na stejných
-dnech) přidává větší velikost peníze až do 8 MNQ na nohu (2018–21: 3 MNQ
-20 700 $, 4 MNQ 27 000 $, 5 MNQ 31 900 $, 8 MNQ 38 100 $; 2022–25 se od
-5 MNQ zastaví na ~44 000 $). Důvod: pád funded účtu stojí jen novou evaluaci,
-takže se riziko v simulaci vyplácí. Strop dává scaling Lucidu (20 MNQ, dokud
-zisk nepřekročí 1 000 $ = 5 MNQ na nohu při 4 nohách). Doporučuji 4 MNQ, 5 MNQ
-je tvoje volba (víc peněz, víc pádů a evaluací). Počítej s ~25 evaluacemi
-ročně na jedno funded místo při dvou evaluačních účtech (~2 300 $ poplatků
-ročně, už odečteno).
+**Velikost:** 5 MNQ na nohu je v simulaci o 1 000–4 000 $ lepší než 4 MNQ ve
+všech čtyřech obdobích; víc už ne – „naplno podle scalingu“ (5 / 7 / 10 MNQ
+podle zisku) je ve třech obdobích ze čtyř horší a v 1 z 10 případů skončí
+i v minusu (`results/scaling_size.txt`). Doporučení: **začni na 4 MNQ, a když
+po pár týdnech živého obchodování sedí plnění s backtestem, přejdi na 5**
+(4 nohy × 5 = 20 MNQ = strop scalingu do zisku 1 000 $). Počítej s ~12–20
+novými funded účty (evaluacemi s passem) na jedno funded místo za 24 měsíců.
 
 Ostatní re-testované nohy: open drive (+600 až +2 900 $), NR4 (+100 až
 +2 900 $) – kladné, ale malé; PMTREND, Silver Bullet a 14:00 trend v některém

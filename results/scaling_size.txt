@@ -1,0 +1,16 @@
+--- 2018-21
+   flat 4       $ 25,132 (     +0) first payout 26.4%  evaluations per seat 12.3  p10 $  9,000
+   flat 5       $ 29,169 ( +4,037) first payout 27.5%  evaluations per seat 12.7  p10 $ 10,260
+   scaling max  $ 30,366 ( +5,234) first payout 15.7%  evaluations per seat 14.0  p10 $  4,680
+--- 2022-25
+   flat 4       $ 38,379 (     +0) first payout 27.1%  evaluations per seat 12.7  p10 $ 14,040
+   flat 5       $ 42,086 ( +3,707) first payout 25.0%  evaluations per seat 11.9  p10 $ 15,660
+   scaling max  $ 37,976 (   -403) first payout 15.2%  evaluations per seat 14.8  p10 $  2,340
+--- 2010-13
+   flat 4       $ 24,057 (     +0) first payout 14.4%  evaluations per seat 19.1  p10 $  2,880
+   flat 5       $ 26,874 ( +2,817) first payout 13.9%  evaluations per seat 18.6  p10 $  3,780
+   scaling max  $ 21,539 ( -2,518) first payout  6.8%  evaluations per seat 22.0  p10 $ -2,700
+--- 2014-17
+   flat 4       $ 26,214 (     +0) first payout 23.0%  evaluations per seat 17.5  p10 $  7,920
+   flat 5       $ 27,183 (   +969) first payout 19.6%  evaluations per seat 18.0  p10 $  5,940
+   scaling max  $ 25,120 ( -1,094) first payout 14.7%  evaluations per seat 20.2  p10 $   -180

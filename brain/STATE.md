@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-24T11:32Z (day shift 2026-10-24 running, until 22:00 Prague)
+heartbeat: 2026-10-24T11:36Z (day shift 2026-10-24 running, until 22:00 Prague)
 last shift: 2026-10-23/24 night shift (report brain/reports/2026-10-24.md); day shift 2026-10-24 running (report brain/reports/2026-10-24-den.md)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -19,6 +19,9 @@ D4. New ideas with the four-era check (open-P&L model for funded legs).
 4. Treasury auction effect (ZN): BLOCKED (treasury.gov and fiscaldata refused by the network policy).
 
 ## Done this shift
+- Day 24.10: integrated seat model (eval plan unchanged); size: flat 5 > flat 4 in all eras, scaling-max worse ->
+  start 4, go 5 after live check; V10 by year 11/16 positive, minute-data cross-check positive in all eras;
+  second-round add-ons: V11 optional only. PLAYBOOK: funded schedule in Prague time (DST gap 26-30 Oct).
 - Day 24.10: D1 small-edge legs on the open-P&L model: V10 (VWAP side 10:00, +0.30/-0.50) adds in all four eras
   and on the plateau (10:00 / 11:00 x 3 brackets), survives worse fills -> candidate; Lucid 12 funded mode added.
 - Night: importer pass (WebSearch): nothing new testable on NQ data (Aleti-Bollerslev-Siggaard needs a stock panel).
