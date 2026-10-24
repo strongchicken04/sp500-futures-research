@@ -1,0 +1,12 @@
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 26,993 (    +0) | 50.7 | 17.5%
+   E2 RS alone                $ 27,382 (  +390) | 26.0 | 24.3%
+   E3 VWAP10 alone            $ 26,946 (   -47) | 30.8 | 22.2%
+   E4 09:31 alone             $ 23,905 (-3,087) | 34.3 | 26.0%
+   E5 VWAP10 + 09:31 (guard)  $ 26,496 (  -497) | 52.5 | 17.4%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 39,892 (    +0) | 52.2 | 20.2%
+   E2 RS alone                $ 40,769 (  +877) | 23.9 | 24.9%
+   E3 VWAP10 alone            $ 42,436 (+2,544) | 24.9 | 22.3%
+   E4 09:31 alone             $ 34,732 (-5,160) | 35.8 | 29.6%
+   E5 VWAP10 + 09:31 (guard)  $ 42,184 (+2,292) | 47.7 | 18.6%
