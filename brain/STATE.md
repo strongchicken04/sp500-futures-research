@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-24T12:04Z (day shift 2026-10-24 running, until 22:00 Prague)
+heartbeat: 2026-10-24T12:05Z (day shift 2026-10-24 running, until 22:00 Prague)
 last shift: 2026-10-23/24 night shift (report brain/reports/2026-10-24.md); day shift 2026-10-24 running (report brain/reports/2026-10-24-den.md)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -19,7 +19,9 @@ D5. DONE: true 2026 holdout (Jan - Jul 24): book VG+Z+RS +$11.6k at 4 MNQ, first
     (c) confirm LucidFlex funded rules (five profitable days >= $150, 50% / $2,000 payout cap, scaling
     20 MNQ below $1,000 profit, 5-payout cap), (d) automation route (NinjaScript on own PC or TradingView
     webhook) -> then code the eval sprints (Lucid 8 + Lucid 7 with both hedge guards) first.
-18. Ideas only if new data/insight; any new idea must pass the four-era check (BRAIN.md 6a); funded
+18. WATCH: noise momentum (Z) flat since 2025-01 (t -2.0 vs history); rule: Z mean 2025-26 <= 0 at end of 2026 ->
+    cut Z to 2 MNQ; still <= 0 mid-2027 -> drop. Re-run the *26 exports when QC data extends.
+19. Ideas only if new data/insight; any new idea must pass the four-era check (BRAIN.md 6a); funded
     questions on funded_model.py + mtm_check.py (open P&L), 2010-17 re-priced at today's NQ.
 4. Treasury auction effect (ZN): BLOCKED (treasury.gov and fiscaldata refused by the network policy).
 

@@ -1,5 +1,12 @@
 # 2026-10-24 (denní směna) — VELIKOST: zůstat na 3 MNQ na nohu (oprava nočního „4“)
 
+**Hlídat: noise momentum (Lucid 6) od ledna 2025 bez edge.** Na obchod (při
+dnešní ceně) 2010–2024 +24,0 $, od 2025 −2,8 $ (rozdíl t −2,0; jediné podobně
+dlouhé ploché období bylo 2010–11). Studie vyšla 2024 – může jít o úpadek po
+zveřejnění. RS noha drží (+27,9 → +33,7 $). Pravidlo stanovené předem: když
+noise do konce 2026 nevydělá (průměr 2025–26 ≤ 0), snížit na 2 MNQ; když ani
+do poloviny 2027, vyřadit (`results/z_quarters.txt`).
+
 NQ stojí ~28 500 (poslední data 24. 7. 2026), simulace ale počítaly s cenami
 2018–25 (NQ ~6 000–22 000) a s rokem 2010–17 přeceněným na 17 090. Riziko
 v dolarech roste s cenou: RS stop 1,25 % při 3 MNQ je dnes ~2 140 $.
