@@ -20,7 +20,9 @@ D5. DONE: true 2026 holdout (Jan - Jul 24): book VG+Z+RS +$11.6k at 4 MNQ, first
     20 MNQ below $1,000 profit, 5-payout cap), (d) automation route (NinjaScript on own PC or TradingView
     webhook) -> then code the eval sprints (Lucid 8 + Lucid 7 with both hedge guards) first.
 18. WATCH: noise momentum (Z) flat since 2025-01 (t -2.0 vs history); rule: Z mean 2025-26 <= 0 at end of 2026 ->
-    cut Z to 2 MNQ; still <= 0 mid-2027 -> drop. Re-run the *26 exports when QC data extends.
+    cut Z to 2 MNQ; still <= 0 mid-2027 -> drop. Plan B replacement: V11 (VWAP side 11:00, +0.30/-0.50) - adds in
+    all four eras at today's price and +$17k in 2025-26 (z_replace.py); Lucid 12 needs an entry-time input for it.
+    Re-run the *26 exports when QC data extends.
 19. Ideas only if new data/insight; any new idea must pass the four-era check (BRAIN.md 6a); funded
     questions on funded_model.py + mtm_check.py (open P&L), 2010-17 re-priced at today's NQ.
 4. Treasury auction effect (ZN): BLOCKED (treasury.gov and fiscaldata refused by the network policy).
