@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-24T11:39Z (day shift 2026-10-24 running, until 22:00 Prague)
+heartbeat: 2026-10-24T11:44Z (day shift 2026-10-24 running, until 22:00 Prague)
 last shift: 2026-10-23/24 night shift (report brain/reports/2026-10-24.md); day shift 2026-10-24 running (report brain/reports/2026-10-24-den.md)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -9,7 +9,10 @@ D1. DONE: small-edge legs re-tested on the open-P&L model -> VWAP side 10:00 (V1
 D2. DONE: integrated seat model - eval plan choice moves 24-month cash per seat by only -0.5k..+2.5k
     (09:31 alone clearly worse); ~50 evaluations per seat in 24 m with a pair (~25 single) -> plan unchanged.
 D3. DONE: book with V10: 4 > 3 everywhere, 5 > 4 everywhere but smaller and lower first payout -> keep 4; all legs stay.
-D4. New ideas with the four-era check (open-P&L model for funded legs).
+D4. New ideas: done so far - V11 optional, MOM30/MOM60/OD/NR4 on the V10 book no, V10 gap filter no, payout
+    timing unchanged, edge-decay risk view, size to the scaling cap (start 4, then 5).
+D5. RUNNING: true 2026 holdout (exports LSNOISE26 / LSVWAP26 / MFEAT26 / CBA26 / B2_26 from 2025-01-01;
+    QC data ends 2026-07-24) -> scripts/holdout_2026.py.
 17. Waiting for the owner: (a) funded 4 MNQ per leg (recommended), (b) drop ORB (recommended),
     (c) confirm LucidFlex funded rules (five profitable days >= $150, 50% / $2,000 payout cap, scaling
     20 MNQ below $1,000 profit, 5-payout cap), (d) automation route (NinjaScript on own PC or TradingView
