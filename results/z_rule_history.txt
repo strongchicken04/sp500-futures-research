@@ -1,0 +1,9 @@
+Rolling 24-month noise (Z) mean $ per MNQ trade at today's NQ; months where it is <= 0 (would trigger the pre-set rule):
+    never
+   24m mean ending 2011-12: $+5.1
+   24m mean ending 2012-12: $+21.3
+   24m mean ending 2016-12: $+12.6
+   24m mean ending 2019-12: $+28.6
+   24m mean ending 2024-12: $+34.8
+   24m mean ending 2025-12: $+12.2
+   24m mean ending 2026-07: $+3.7
