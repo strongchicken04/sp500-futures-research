@@ -29,7 +29,7 @@ ptValue = input.float(2.0, "$ per point per contract (MNQ = 2)")
 maxCts  = input.int(40, "Max contracts")
 esSym   = input.string("CME_MINI:ES1!", "ES symbol")
 // Funded RS leg (2026-10-24): set Target 1.25 / Stop 1.25, "Fixed contracts" =
-// the book size (3, proposed 4) and the volatility gate ON - that is how the leg
+// the book size (3 at NQ ~28,500; ~90,000 / NQ price) and the volatility gate ON - that is how the leg
 // was tested (timed_book / mtm_check). Before this, the win cap of $1,450 cut the
 // funded leg to ~2 MNQ at NQ ~20,000 and there was no vol gate.
 fixedCts = input.int(0, "Fixed contracts (funded leg; 0 = size by Max loss)")

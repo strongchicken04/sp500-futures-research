@@ -84,7 +84,10 @@ English.
    bootstrap (24-month paths of 20-day blocks, all variants on the same
    blocks; template scripts/funded_v2.py) plus the first payout rate. Era
    check for dollar questions: 2010-17 trades re-priced at today's NQ
-   (scripts/funded_scaled_old.py). The one-history walk
+   (scripts/funded_scaled_old.py).
+   SIZE / dollar decisions: re-price EVERY era at the current NQ level
+   (scripts/size_today.py) - risk per MNQ scales with price (2026-10-24:
+   '4 MNQ' at 2018-25 prices was too big at NQ 28,500). The one-history walk
    (timed_book life()) moves $3-5k with the calendar alone - not for
    differences under ~$5k. The book at flat 3 is at the drawdown edge: new
    legs with small edges add busts; scale with more accounts (copies) instead.
