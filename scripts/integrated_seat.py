@@ -35,6 +35,7 @@ from vside_plateau import vside  # noqa: E402
 FEE = 90.0
 SIZE = 4          # MNQ per funded leg (seat_size.py varies it)
 PLANS = None      # restrict the evaluation plans (seat_size.py)
+CUT = 0.0         # edge_decay_seat.py: remove this share of every leg's / sprint's mean edge
 
 
 class Eval:
@@ -118,6 +119,17 @@ def main():
     T = {}
     for t in tr:
         T.setdefault(t[0], []).append(t)
+    leg_mean = {}
+    if CUT:
+        for k in {t[4] for t in tr}:
+            for lo_, hi_ in (("2018", "2022"), ("2022", "2026")):
+                v = [t[3] for t in tr if t[4] == k and lo_ <= t[0] < hi_]
+                if v:
+                    leg_mean[(k, lo_)] = st.mean(v)
+        T = {}
+        for t in tr:
+            half = "2018" if t[0] < "2022" else "2022"
+            T.setdefault(t[0], []).append(t[:3] + (t[3] - CUT * leg_mean.get((t[4], half), 0.0),) + t[4:])
     mix = {"VG": SIZE, "Z": SIZE, "RS": SIZE, "V10": SIZE}
     rs = first_signals(parse_mf(f"{data}/MFEAT_tags.txt"), lambda r: 1 if (r["rs"] > 0.0015 and r["vwapd"] > 0) else
                        (-1 if (r["rs"] < -0.0015 and r["vwapd"] < 0) else 0))
@@ -147,6 +159,13 @@ def main():
             b931 = trade_pts(t9[d][0], t9[d][1], CL, 25, 40) if d in t9 else None
             book = C.day_seq(T.get(d, []), by[d]["bars"] if d in by else None, mix, None, True)
             days.append({"RSg": a_rs_g, "RS": a_rs, "VW": a_vw, "VWg": a_vw_g, "B": b931, "book": book})
+        if CUT:
+            for k in ("RSg", "RS", "VW", "VWg", "B"):
+                v = [x[k][0] for x in days if x[k]]
+                m = st.mean(v)
+                for x in days:
+                    if x[k]:
+                        x[k] = (x[k][0] - CUT * m,) + x[k][1:]
         paths = M.bootstrap(len(days), 2000, seed=77)
         plans = {"E1 RS + 09:31 (guard)": ("RSg", "B"), "E2 RS alone": ("RS",), "E3 VWAP10 alone": ("VW",),
                  "E4 09:31 alone": ("B",), "E5 VWAP10 + 09:31 (guard)": ("VWg", "B")}

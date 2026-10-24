@@ -1,0 +1,6 @@
+--- 2018-21: mean $ per MNQ trade VG +7.3, Z +11.3, RS +8.9, V10 +2.8
+   4 MNQ  edge -0%: $ 25,132 (below 0:   1%) | edge -50%: $ 14,993 (below 0:   3%) | edge -100%: $  8,133 (below 0:  12%) | edge -150%: $  4,087 (below 0:  27%)
+   3 MNQ  edge -0%: $ 19,956 (below 0:   0%) | edge -50%: $ 11,713 (below 0:   3%) | edge -100%: $  6,077 (below 0:  14%) | edge -150%: $  2,357 (below 0:  33%)
+--- 2022-25: mean $ per MNQ trade VG +6.1, Z +14.1, RS +24.6, V10 +7.6
+   4 MNQ  edge -0%: $ 38,379 (below 0:   0%) | edge -50%: $ 22,835 (below 0:   2%) | edge -100%: $ 11,335 (below 0:  11%) | edge -150%: $  5,365 (below 0:  23%)
+   3 MNQ  edge -0%: $ 33,174 (below 0:   0%) | edge -50%: $ 19,555 (below 0:   2%) | edge -100%: $ 10,034 (below 0:   9%) | edge -150%: $  4,504 (below 0:  24%)

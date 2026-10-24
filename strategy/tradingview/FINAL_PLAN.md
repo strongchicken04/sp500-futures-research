@@ -32,6 +32,13 @@ po pár týdnech živého obchodování sedí plnění s backtestem, přejdi na 
 (4 nohy × 5 = 20 MNQ = strop scalingu do zisku 1 000 $). Počítej s ~12–20
 novými funded účty (evaluacemi s passem) na jedno funded místo za 24 měsíců.
 
+**Riziko – co když edge zmizí** (`results/edge_decay_seat.txt`, spojený model
+s evaluacemi): při polovičním edge ~15 000 / 22 000 $ na funded místo za 24
+měsíců, při nulovém edge ještě ~5 000 / 8 000 $ (ale ~100–120 evaluací),
+při záporném edge zhruba nula. Asi pětina až čtvrtina simulovaného příjmu
+tedy pochází ze struktury Lucidu (levný restart, výplata 2 000 $ při
++4 000 $), ne ze strategií – platí jen, dokud Lucid pravidla nezmění.
+
 Ostatní re-testované nohy: open drive (+600 až +2 900 $), NR4 (+100 až
 +2 900 $) – kladné, ale malé; PMTREND, Silver Bullet a 14:00 trend v některém
 období záporné → ne.

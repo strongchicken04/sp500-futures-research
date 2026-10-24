@@ -1,0 +1,20 @@
+=== edge cut 0%
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 26,993 (    +0) | 50.7 | 17.5%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 39,892 (    +0) | 52.2 | 20.2%
+=== edge cut 50%
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 15,140 (    +0) | 73.1 | 24.7%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 22,099 (    +0) | 90.1 | 30.8%
+=== edge cut 100%
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $  5,106 (    +0) | 95.7 | 32.1%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $  7,759 (    +0) | 121.6 | 40.9%
+=== edge cut 150%
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $     -9 (    +0) | 113.6 | 37.3%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ -1,137 (    +0) | 148.1 | 47.3%
