@@ -1,0 +1,5 @@
+2018-21: RS2 n 76 $+137.4 per MNQ trade | book base $33,199, + RS2 +1,305
+2022-25: RS2 n 94 $+80.8 per MNQ trade | book base $36,288, + RS2 +1,460
+2010-13: RS2 n 37 $+18.9 per MNQ trade | book base $22,942, + RS2 +492
+2014-17: RS2 n 36 $+132.1 per MNQ trade | book base $25,479, + RS2 +1,412
+2026 H1: RS2 n 14 $-3.4 per MNQ trade | book base $+10,709 vs + RS2 $+10,565
