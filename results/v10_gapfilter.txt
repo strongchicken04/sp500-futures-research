@@ -1,0 +1,5 @@
+V10 split by agreement with the overnight gap (sign(o930 - prior close) == VWAP side), $ per MNQ trade at today's NQ, net (fixed before results)
+   2010-13: agree $ +8.19 (n 430, t +1.4) | disagree $ +2.21 (n 424, t +0.4)
+   2014-17: agree $ +4.98 (n 454, t +0.9) | disagree $ +0.60 (n 433, t +0.1)
+   2018-21: agree $ +4.82 (n 457, t +0.8) | disagree $+10.27 (n 420, t +1.7)
+   2022-25: agree $ +5.59 (n 442, t +0.9) | disagree $+12.82 (n 420, t +2.2)
