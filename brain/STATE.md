@@ -1,10 +1,15 @@
 # Brain state
 
-heartbeat: 2026-10-24T07:08Z (night shift 2026-10-23/24 FINISHED; report brain/reports/2026-10-24.md)
-last shift: 2026-10-23/24 night shift (final report brain/reports/2026-10-24.md, 09:10 Prague)
+heartbeat: 2026-10-24T11:23Z (day shift 2026-10-24 running, until 22:00 Prague)
+last shift: 2026-10-23/24 night shift (report brain/reports/2026-10-24.md); day shift 2026-10-24 running (report brain/reports/2026-10-24-den.md)
 
 ## Queue (top = next). Move finished items to registry.md.
-Night 2026-10-23/24: funded model v2 + open-P&L check done (report brain/reports/2026-10-24.md).
+Day shift 2026-10-24 (owner: "jeď to zase dnes celý den"; until 22:00 Prague, report brain/reports/2026-10-24-den.md):
+D1. DONE: small-edge legs re-tested on the open-P&L model -> VWAP side 10:00 (V10) candidate leg (Lucid 12 funded mode).
+D2. Integrated seat model: evaluation (two-account sprint, real days and fees) + funded book in one simulation;
+    does the eval plan (two accounts, RS vs VWAP10, finisher) change when the funded seat is worth ~$900-1,400 a month?
+D3. Book with V10 at 4: re-check size (3 / 4 / 5) and leg drop with V10 included.
+D4. New ideas with the four-era check (open-P&L model for funded legs).
 17. Waiting for the owner: (a) funded 4 MNQ per leg (recommended), (b) drop ORB (recommended),
     (c) confirm LucidFlex funded rules (five profitable days >= $150, 50% / $2,000 payout cap, scaling
     20 MNQ below $1,000 profit, 5-payout cap), (d) automation route (NinjaScript on own PC or TradingView
@@ -14,6 +19,8 @@ Night 2026-10-23/24: funded model v2 + open-P&L check done (report brain/reports
 4. Treasury auction effect (ZN): BLOCKED (treasury.gov and fiscaldata refused by the network policy).
 
 ## Done this shift
+- Day 24.10: D1 small-edge legs on the open-P&L model: V10 (VWAP side 10:00, +0.30/-0.50) adds in all four eras
+  and on the plateau (10:00 / 11:00 x 3 brackets), survives worse fills -> candidate; Lucid 12 funded mode added.
 - Night: importer pass (WebSearch): nothing new testable on NQ data (Aleti-Bollerslev-Siggaard needs a stock panel).
 - Night: lenient open-P&L bound (close marks) gives the same conclusions (flat 4, no ORB, OD optional).
 - Night: AUTOMATION_SPEC.md (route-neutral rules); Lucid 8 audit: funded RS leg needs fixed size + vol gate (added).

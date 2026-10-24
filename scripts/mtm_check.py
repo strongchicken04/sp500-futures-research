@@ -34,6 +34,7 @@ V = {"flat 3": {"VG": 3, "Z": 3, "RS": 3}, "flat 4": {"VG": 4, "Z": 4, "RS": 4},
 RS_LEVEL = 125   # RS leg bracket in bp (rs_bracket.py varies it)
 WITH_ORB = False  # orb_v2.py adds the live-spec ORB (O5) leg
 UNGATED = set()   # legs traded without the vol gate (gate_v2.py)
+PANEL_LEGS = {"OD": lambda days: (lambda d, p: L.odrive(d, p, 0.0005, 0.0015))}   # 5-min panel legs
 MARK = "worst"    # "close": mark open trades at the bar close (lenient bound, mtm_close.py)
 
 
@@ -72,15 +73,17 @@ def trades(data, suffix, gate, pref):
         out.append((d, r["hm"], x, pts * 2.0, "RS", s))
     days = L.load(data)
     by = {d["date"]: d for d in days}
-    for t in L.trades(days, lambda d, p: L.odrive(d, p, 0.0005, 0.0015)):
-        if not gate(t["date"]):
-            continue
-        usd = t["pts"] * 2.0
-        if pref:
-            e = by[t["date"]]["bars"][(t["ehm"] - 575) // 5][3]
-            c = 1.0 if t["why"] == "SL" else 0.75
-            usd = ((t["pts"] + c) / e * pref - c) * 2.0
-        out.append((t["date"], t["ehm"], t["xhm"], usd, "OD", t["d"]))
+    for leg, make in PANEL_LEGS.items():
+        rebate = 0.25 if leg == "SB" else 0.0      # limit entry: 0.5 pt instead of 0.75
+        for t in L.trades(days, make(days)):
+            if not gate(t["date"]):
+                continue
+            usd = (t["pts"] + rebate) * 2.0
+            if pref:
+                e = by[t["date"]]["bars"][(t["ehm"] - 575) // 5][3]
+                c = (1.0 if t["why"] == "SL" else 0.75) - rebate
+                usd = ((t["pts"] + rebate + c) / e * pref - c) * 2.0
+            out.append((t["date"], t["ehm"], t["xhm"], usd, leg, t["d"]))
     out = [t for t in out if not (dt.date.fromisoformat(t[0]).weekday() == 2 and t[4] in ("VG", "ORB"))]
     return out, by
 

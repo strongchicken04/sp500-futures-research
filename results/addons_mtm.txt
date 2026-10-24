@@ -1,0 +1,16 @@
+   OD   BARS5: n 342, $+26.40 per MNQ trade
+   NR   BARS5: n 416, $+25.12 per MNQ trade
+   PM   BARS5: n 776, $+12.92 per MNQ trade
+   SB   BARS5: n 964, $+0.58 per MNQ trade
+   T14  BARS5: n 890, $+2.19 per MNQ trade
+   V10  BARS5: n 1655, $+5.18 per MNQ trade
+2018-21: base $ 21,652 | + OD +2,928 (31.6%) | + NR +2,092 (27.0%) | + PM +1,250 (25.9%) | + SB -1,341 (26.1%) | + T14   +191 (30.0%) | + V10 +3,480 (26.4%) | base first payout 33.5%)
+2022-25: base $ 33,446 | + OD   +558 (23.6%) | + NR +2,939 (26.3%) | + PM +1,168 (25.8%) | + SB   -535 (25.7%) | + T14 -1,426 (24.9%) | + V10 +4,933 (27.1%) | base first payout 28.0%)
+   OD   B2_0: n 392, $+10.53 per MNQ trade
+   NR   B2_0: n 434, $+6.24 per MNQ trade
+   PM   B2_0: n 677, $+8.21 per MNQ trade
+   SB   B2_0: n 1006, $+11.44 per MNQ trade
+   T14  B2_0: n 919, $+5.95 per MNQ trade
+   V10  B2_0: n 1710, $+3.95 per MNQ trade
+2010-13: base $ 22,154 | + OD   +559 (15.7%) | + NR    +70 (16.9%) | + PM   -303 (15.5%) | + SB +2,727 (16.4%) | + T14    +45 (15.9%) | + V10 +1,903 (14.4%) | base first payout 18.0%)
+2014-17: base $ 22,294 | + OD   +588 (18.2%) | + NR +2,000 (19.7%) | + PM +1,212 (18.2%) | + SB +5,152 (23.2%) | + T14 +2,127 (21.5%) | + V10 +3,920 (23.0%) | base first payout 19.3%)

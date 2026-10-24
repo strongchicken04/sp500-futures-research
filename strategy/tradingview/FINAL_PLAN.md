@@ -1,3 +1,27 @@
+# 2026-10-24 (denní směna) — NOVÁ FUNDED NOHA: strana VWAP v 10:00 (Lucid 12)
+
+Na opraveném modelu (drawdown i s otevřenými pozicemi) jsem znovu prověřil
+nohy, které dřív knihu zhoršovaly (`scripts/addons_mtm.py`). Jediná, která
+přidává ve všech čtyřech obdobích a v celém okolí parametrů:
+
+**VWAP 10:00:** v 10:00 long nad VWAP / short pod, target +0,30 %, stop
+−0,50 %, jinak flat 15:55, filtr volatility, 4 MNQ (Lucid 12 s „Fixed
+contracts“ 4). K knize VWAP pásmo + noise + RS při 4 MNQ přidá na funded
+místo za 24 měsíců:
+
+| 2018–21 | 2022–25 | 2010–13* | 2014–17* |
+|---|---|---|---|
+| +3 500 $ | +4 900 $ | +1 900 $ | +3 900 $ |
+
+(*přepočteno na dnešní cenu NQ.) Bracket 0,25/0,40 i 0,40/0,60 a vstup
+v 11:00 jsou také kladné ve všech obdobích; vstup v 10:30 ne. Při horším
+plnění (+2 $ na MNQ a obchod) pořád +900 až +3 100 $. Kniha by pak držela
+nejvýš 4 × 4 = 16 MNQ (scaling 20 MNQ to nebrzdí).
+
+Ostatní re-testované nohy: open drive (+600 až +2 900 $), NR4 (+100 až
++2 900 $) – kladné, ale malé; PMTREND, Silver Bullet a 14:00 trend v některém
+období záporné → ne.
+
 # 2026-10-24 (noční směna) — opravený model funded účtu; NOVÉ: 4 MNQ na nohu
 
 Simulace funded účtu měla chyby, opraveno v `scripts/funded_model.py`

@@ -17,6 +17,8 @@ import sys
 
 sys.path.insert(0, "scripts")
 import mtm_check as C  # noqa: E402
+from vside_plateau import vside  # noqa: E402
+C.PANEL_LEGS = dict(C.PANEL_LEGS, V10=vside(5, 0.0030, 0.0050))
 from rescore_all import rvol  # noqa: E402
 from score_multi_feature import parse as parse_mf, first_signals, LEVELS as ML  # noqa: E402
 from score_cond_bracket import parse, LEVELS as CL  # noqa: E402
@@ -48,7 +50,7 @@ def main():
     S["09:31 sprint (B)"] = {r["date"]: (tm[r["date"]],) + sprint_times(r, tm[r["date"]], CL, 25, 40) for r in R["T931"] if tm.get(r["date"])}
     S["VWAP10 sprint"] = {r["date"]: ((1 if r["e"] > r["vwap"] else -1),) + sprint_times(r, (1 if r["e"] > r["vwap"] else -1), CL, 25, 40)
                           for r in R["T1000"] if r["e"] != r["vwap"]}
-    for legs in (("VG", "Z", "RS"), ("VG", "Z", "RS", "OD")):
+    for legs in (("VG", "Z", "RS"), ("VG", "Z", "RS", "OD"), ("VG", "Z", "RS", "V10")):
         print(f"--- book {'+'.join(legs)}")
         for name, sp in S.items():
             for lo, hi in (("2018", "2022"), ("2022", "2026")):

@@ -53,13 +53,14 @@ OPAČNÝM směrem, signál na A **přeskoč** (ten den už A neobchoduje). Stáv
 ~7 % dní (~14× za rok); první funded pak za 7,0 / 6,9 dne místo 6,8 / 6,5
 (`results/hedge_check.txt`). Signál stejným směrem nebo po zavření obchodu na B je v pořádku.
 
-**Evaluace a funded účty zároveň** (noc 23./24. 10.): zákaz platí i mezi
-funded knihou a evaluačním sprintem. Pravidlo: **funded kniha nevstupuje
-proti otevřenému sprintu na evaluaci** (vstup vynech, na všech kopiích).
-RS sprint (účet A) se s knihou skoro nepotká (~1 % dní). Proti 09:31 sprintu
-(účet B) chce kniha vstoupit ~12–13 % dní; ty vynechané obchody jsou spíš
-ziskové (+11 / +18 $ na MNQ), takže to stojí řádově stovky dolarů ročně na
-funded místo – jen v době, kdy běží evaluace B (`results/cross_hedge.txt`).
+**Evaluace a funded účty zároveň** (aktualizováno 24. 10.): zákaz platí i mezi
+funded knihou a evaluačním sprintem. Jednoduché pravidlo: **kdo přijde druhý,
+vynechá** – vstup, který by šel proti už otevřené pozici na kterémkoli tvém
+účtu, nedělej (na funded vynech na všech kopiích). RS sprint (účet A) se
+s knihou VWAP pásmo + noise + RS skoro nepotká (~1 % dní); s novou nohou VWAP
+10:00 musí A vynechat ~4–7 % dní. Proti 09:31 sprintu (účet B) chce kniha
+vstoupit ~12–19 % dní; vynechané obchody stojí řádově stovky dolarů ročně na
+funded místo, jen dokud běží evaluace B (`results/cross_hedge.txt`).
 
 ## 2. Funded – kniha, 3 MNQ na každou nohu
 
@@ -69,6 +70,7 @@ funded místo – jen v době, kdy běží evaluace B (`results/cross_hedge.txt`
 | VWAP pásmo | **Lucid 2 – VWAP Band (nový)** | MNQ **5 min** | průraz VWAP ±0,20 %, SL 25 / TP 100 b., 1× denně, ne ve středu |
 | Noise momentum | **Lucid 6 (nový, stop 0,50 %)** | 1 / 5 / 30 min | rozhodnutí jen v :00 a :30 |
 | RS noha | Lucid 8 s **Target 1,25 / Stop 1,25, Fixed contracts 3 (návrh 4), Volatility gate ZAPNOUT** | MNQ 1 min | přidává ve všech obdobích; nová verze 24. 10. – dřív strop výhry 1 450 $ ořízl nohu na ~2 MNQ a chyběl filtr volatility |
+| VWAP 10:00 (návrh 24. 10.) | **Lucid 12** s **Target 0,30 / Stop 0,50, Fixed contracts 4, Volatility gate ZAPNOUT** | MNQ 1 min | každý den v 10:00 podle strany VWAP; přidává ve všech 4 obdobích |
 
 - Velikost: **3 MNQ na každou nohu** (ne ladder); **doporučení z noci
   23./24. 10.: 4 MNQ na nohu** (rozhoduješ ty, FINAL_PLAN nahoře).

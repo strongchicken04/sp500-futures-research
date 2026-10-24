@@ -12,3 +12,10 @@
    09:31 sprint (B) 2022-2025: sprint days 1033, clash 13.3% (book already opposite at sprint entry  0.0%, book enters against the sprint 13.3%; those book trades 197, mean $+29.0 per MNQ)
    VWAP10 sprint    2018-2021: sprint days 1031, clash 13.4% (book already opposite at sprint entry  3.9%, book enters against the sprint 10.0%; those book trades 117, mean $+2.3 per MNQ)
    VWAP10 sprint    2022-2025: sprint days 1031, clash  9.2% (book already opposite at sprint entry  2.5%, book enters against the sprint  7.3%; those book trades 86, mean $-1.2 per MNQ)
+--- book VG+Z+RS+V10
+   RS sprint (A)    2018-2021: sprint days 822, clash  7.4% (book already opposite at sprint entry  6.8%, book enters against the sprint  0.6%; those book trades 5, mean $-44.1 per MNQ)
+   RS sprint (A)    2022-2025: sprint days 838, clash  3.7% (book already opposite at sprint entry  3.5%, book enters against the sprint  0.2%; those book trades 2, mean $-52.0 per MNQ)
+   09:31 sprint (B) 2018-2021: sprint days 981, clash 19.3% (book already opposite at sprint entry  0.0%, book enters against the sprint 19.3%; those book trades 285, mean $+4.3 per MNQ)
+   09:31 sprint (B) 2022-2025: sprint days 1033, clash 17.5% (book already opposite at sprint entry  0.0%, book enters against the sprint 17.5%; those book trades 299, mean $+19.8 per MNQ)
+   VWAP10 sprint    2018-2021: sprint days 1031, clash 12.6% (book already opposite at sprint entry  2.9%, book enters against the sprint 10.0%; those book trades 117, mean $+2.3 per MNQ)
+   VWAP10 sprint    2022-2025: sprint days 1031, clash  9.0% (book already opposite at sprint entry  2.1%, book enters against the sprint  7.3%; those book trades 86, mean $-1.2 per MNQ)

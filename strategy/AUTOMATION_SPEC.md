@@ -27,8 +27,9 @@ Daily inputs always come from the last COMPLETED session (no look-ahead):
 ### Cross-account hedge guards (Lucid bans opposite positions across own accounts)
 1. A skips its RS signal when B holds an open 09:31 position in the opposite
    direction (A does not trade later that day).
-2. While any evaluation sprint is open, the funded book does not ENTER against
-   it (skip that entry on all funded copies; exits are never blocked).
+2. General rule (2026-10-24): an entry that would be OPPOSITE to a position
+   already open on any other own account is skipped - "whoever comes second
+   skips" (funded copies skip together; exits are never blocked).
 
 ## Evaluation sprints (one trade a day per account)
 
@@ -78,6 +79,11 @@ gate on.
 **RS leg (Lucid 8 with Target 1.25 / Stop 1.25).** Same signal as the RS
 sprint (first signal of 10:00 / 11:00 / 13:00 / 14:30), fixed size, symmetric
 bracket +/-1.25%, else flat 15:55. Vol gate on.
+
+**V10 - VWAP side at 10:00 (Lucid 12 as funded leg; proposed 2026-10-24).**
+At the close of the 09:59-10:00 bar: long if the close is above the RTH VWAP,
+short if below. Target +0.30%, stop -0.50% of the entry; else flat 15:55.
+Fixed size, vol gate on.
 
 **Not in the plan:** ORB (Lucid 1, recommended to drop), open drive (Lucid
 10, optional 4th leg at the same size: at 10:00, if the 09:30-10:00 low >=
