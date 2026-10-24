@@ -1,12 +1,11 @@
 # Brain state
 
-heartbeat: 2026-10-24T21:08Z (night shift 2026-10-24/25 running)
+heartbeat: 2026-10-24T21:13Z (night shift 2026-10-24/25 running)
 last shift: 2026-10-24 day shift (report brain/reports/2026-10-24-den.md); night shift 24/25 running
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-24/25:
-N1. Plan B check: V11 (VWAP side 11:00) plateau at today's NQ - entry 10:55 / 11:00 / 11:05 x bracket 0.25/0.40,
-    0.30/0.50, 0.40/0.60, on top of VG + RS at 3 (Z cut) and on top of VG + Z + RS; four eras + 2026.
+N1. DONE: V11 plateau at today's NQ -> fragile (only exact 11:00 works) -> rejected as plan B.
 Day shift 2026-10-24 (owner: "jeď to zase dnes celý den"; until 22:00 Prague, report brain/reports/2026-10-24-den.md):
 D1. DONE: small-edge legs re-tested on the open-P&L model -> VWAP side 10:00 (V10) candidate leg (Lucid 12 funded mode).
 D2. DONE: integrated seat model - eval plan choice moves 24-month cash per seat by only -0.5k..+2.5k
@@ -23,8 +22,8 @@ D5. DONE: true 2026 holdout (Jan - Jul 24): book VG+Z+RS +$11.6k at 4 MNQ, first
     20 MNQ below $1,000 profit, 5-payout cap), (d) automation route (NinjaScript on own PC or TradingView
     webhook) -> then code the eval sprints (Lucid 8 + Lucid 7 with both hedge guards) first.
 18. WATCH: noise momentum (Z) flat since 2025-01 (t -2.0 vs history); rule: Z mean 2025-26 <= 0 at end of 2026 ->
-    cut Z to 2 MNQ; still <= 0 mid-2027 -> drop. Plan B replacement: V11 (VWAP side 11:00, +0.30/-0.50) - adds in
-    all four eras at today's price and +$17k in 2025-26 (z_replace.py); Lucid 12 needs an entry-time input for it.
+    cut Z to 2 MNQ; still <= 0 mid-2027 -> drop. V11 as a replacement REJECTED (night 24/25: only the exact
+    11:00 bar works, 10:55 / 11:05 flip - fragile). No replacement leg for now.
     Re-run the *26 exports when QC data extends.
 19. Ideas only if new data/insight; any new idea must pass the four-era check (BRAIN.md 6a); funded
     questions on funded_model.py + mtm_check.py (open P&L), 2010-17 re-priced at today's NQ.

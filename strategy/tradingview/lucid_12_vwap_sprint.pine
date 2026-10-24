@@ -36,8 +36,8 @@ evalPnl  = input.float(0.0, "Eval profit so far ($) - for the finishing trade")
 fixedCts = input.int(0, "Fixed contracts (funded leg; 0 = size by Max loss)")
 useVol   = input.bool(false, "Volatility gate (skip if NQ 20d vol >= 30%) - funded leg ON, sprint OFF")
 volSym   = input.string("CME_MINI:NQ1!", "   vol gate symbol")
-// Entry time (2026-10-24): 600 = 10:00 ET (default); 660 = 11:00 ET is the plan-B funded
-// leg if noise momentum is cut (adds in all four eras and in 2025-26, z_replace.py).
+// Entry time (2026-10-24): 600 = 10:00 ET (default). 11:00 was checked as a plan-B funded
+// leg but rejected (night 24/25): only the exact 11:00 bar works, 10:55 / 11:05 flip.
 entryMin = input.int(600, "Entry at the close of the bar ending (ET minutes: 600 = 10:00, 660 = 11:00)")
 // Daily values: last COMPLETED session ([1] + lookahead_on), same in history and live
 rvol20 = request.security(volSym, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
