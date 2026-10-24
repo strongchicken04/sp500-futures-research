@@ -1,0 +1,4 @@
+2018-21: base $ 33,199 | Z zero edge $ 21,297 | without Z $ 26,311 | without Z, VG+RS at 4 $ 27,988
+2022-25: base $ 36,288 | Z zero edge $ 25,217 | without Z $ 29,218 | without Z, VG+RS at 4 $ 34,226
+2010-13: base $ 22,942 | Z zero edge $ 19,521 | without Z $ 20,544 | without Z, VG+RS at 4 $ 21,861
+2014-17: base $ 25,479 | Z zero edge $ 19,682 | without Z $ 22,483 | without Z, VG+RS at 4 $ 25,418
