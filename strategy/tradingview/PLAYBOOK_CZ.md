@@ -62,7 +62,7 @@ s knihou VWAP pásmo + noise + RS skoro nepotká (~1 % dní); s novou nohou VWAP
 vstoupit ~12–19 % dní; vynechané obchody stojí řádově stovky dolarů ročně na
 funded místo, jen dokud běží evaluace B (`results/cross_hedge.txt`).
 
-## 2. Funded – kniha, 3 MNQ na každou nohu
+## 2. Funded – kniha (dnes 3 MNQ na nohu; návrh: bez ORB, 4 MNQ, + VWAP 10:00)
 
 | Noha | Indikátor | Graf | Poznámka |
 |---|---|---|---|
@@ -71,6 +71,17 @@ funded místo, jen dokud běží evaluace B (`results/cross_hedge.txt`).
 | Noise momentum | **Lucid 6 (nový, stop 0,50 %)** | 1 / 5 / 30 min | rozhodnutí jen v :00 a :30 |
 | RS noha | Lucid 8 s **Target 1,25 / Stop 1,25, Fixed contracts 3 (návrh 4), Volatility gate ZAPNOUT** | MNQ 1 min | přidává ve všech obdobích; nová verze 24. 10. – dřív strop výhry 1 450 $ ořízl nohu na ~2 MNQ a chyběl filtr volatility |
 | VWAP 10:00 (návrh 24. 10.) | **Lucid 12** s **Target 0,30 / Stop 0,50, Fixed contracts 4, Volatility gate ZAPNOUT** | MNQ 1 min | každý den v 10:00 podle strany VWAP; přidává ve všech 4 obdobích |
+
+**Denní rozvrh funded knihy** (Praha; v závorce 26.–30. 10., kdy je rozdíl
+jen 5 h, protože USA přechází na zimní čas až 1. 11.):
+
+| ET | Praha | co |
+|---|---|---|
+| 09:30 | 15:30 (14:30) | otevření; Lucid 2 hlídá průraz VWAP pásma od první 5min svíčky |
+| 10:00 | 16:00 (15:00) | **VWAP 10:00** vstup (Lucid 12), první rozhodnutí noise (Lucid 6), první kontrola RS (Lucid 8) |
+| 10:30–15:30 | každou :00 a :30 | rozhodnutí noise (Lucid 6) |
+| 11:00 / 13:00 / 14:30 | 17:00 / 19:00 / 20:30 (16:00 / 18:00 / 19:30) | další kontroly RS (jen první signál dne) |
+| 15:55 | 21:55 (20:55) | **vše flat** (nic přes noc) |
 
 - Velikost: **3 MNQ na každou nohu** (ne ladder); **doporučení z noci
   23./24. 10.: 4 MNQ na nohu** (rozhoduješ ty, FINAL_PLAN nahoře).
