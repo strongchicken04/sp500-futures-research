@@ -18,6 +18,12 @@ v 11:00 jsou také kladné ve všech obdobích; vstup v 10:30 ne. Při horším
 plnění (+2 $ na MNQ a obchod) pořád +900 až +3 100 $. Kniha by pak držela
 nejvýš 4 × 4 = 16 MNQ (scaling 20 MNQ to nebrzdí).
 
+Celá kniha VWAP pásmo + noise + RS + VWAP 10:00, každá 4 MNQ: **25 100 /
+38 400 $ na funded místo za 24 měsíců** (2018–21 / 2022–25; ~1 050 / 1 600 $
+měsíčně), v 2010–13 / 2014–17 24 100 / 26 200 $; k první výplatě dojde
+26–27 % účtů (2018–25). 5 MNQ by přidalo ještě +1 000 až +4 000 $, ale
+s nižší šancí na první výplatu – zůstávám u 4 (`results/book_v10.txt`).
+
 Ostatní re-testované nohy: open drive (+600 až +2 900 $), NR4 (+100 až
 +2 900 $) – kladné, ale malé; PMTREND, Silver Bullet a 14:00 trend v některém
 období záporné → ne.
