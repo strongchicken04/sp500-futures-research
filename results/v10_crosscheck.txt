@@ -1,0 +1,5 @@
+V10 from the minute-resolution cond-bracket export (T1000 rows), $ per MNQ trade at today's NQ, net (0.75 pt, 1.0 on stops), vol gate
+   2010-13: $ +5.22 per MNQ trade, n 854
+   2014-17: $ +2.84 per MNQ trade, n 887
+   2018-21: $ +7.43 per MNQ trade, n 877
+   2022-25: $ +9.11 per MNQ trade, n 862
