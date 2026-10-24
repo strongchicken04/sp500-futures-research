@@ -1,4 +1,20 @@
-# 2026-10-24 (denní směna) — NOVÁ FUNDED NOHA: strana VWAP v 10:00 (Lucid 12)
+# 2026-10-24 (denní směna) — rok 2026 (nezávislý test) a VWAP noha 10:00
+
+**Nezávislý test na roce 2026** (leden – 24. 7., 145 dní; data, která nikdy
+nikdo neviděl, `results/holdout_2026.txt`), $ na MNQ a obchod:
+VWAP pásmo −18,9 (t −2,3), noise +0,3, RS noha **+48,7**, VWAP 10:00 −14,5.
+Kniha VWAP pásmo + noise + RS při 4 MNQ: **+11 600 $** za 7 měsíců (s VWAP
+10:00 jen +4 600 $); funded účet založený v kterýkoli den došel k první
+výplatě ve 23 z 85 startů (27 %) – stejně jako v simulacích. Sprinty: RS
+65,5 % výher vs náhodných 60 % (edge drží), 09:31 bez edge (jako vždy),
+VWAP 10:00 sprint 56 % vs 61,5 % (slabý).
+
+Rok po roku (`results/legs_by_year.txt`): VWAP pásmo mělo podobně špatné roky
+i dřív (2010 −20,5, 2013 −11,6); pro VWAP 10:00 je 2026 nejhorší rok ze 17
+(dosud nejhorší −6,9). **VWAP 10:00 proto zatím NEPŘIDÁVAT** – nechávám ji jako
+kandidáta a budu ji sledovat; zbytek plánu beze změny.
+
+## Původní nález (před testem 2026): strana VWAP v 10:00 (Lucid 12)
 
 Na opraveném modelu (drawdown i s otevřenými pozicemi) jsem znovu prověřil
 nohy, které dřív knihu zhoršovaly (`scripts/addons_mtm.py`). Jediná, která

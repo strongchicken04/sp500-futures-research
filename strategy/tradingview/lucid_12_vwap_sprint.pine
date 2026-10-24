@@ -30,7 +30,9 @@ evalPnl  = input.float(0.0, "Eval profit so far ($) - for the finishing trade")
 // at 4 MNQ it gave +$3.5k / +$4.9k per funded seat over 24 months (2018-21 /
 // 2022-25) and +$1.9k / +$3.9k in 2010-13 / 2014-17 re-priced at today's NQ,
 // drawdown checked on open P&L (scripts/addons_mtm.py, vside_plateau.py,
-// v10_stress.py). For the evaluation sprint keep 0 and the gate OFF.
+// v10_stress.py). 2026 holdout (Jan - Jul 24): -$14.5 per MNQ trade, the worst
+// year of 17 -> candidate only, not in the plan yet. For the evaluation sprint
+// keep 0 and the gate OFF.
 fixedCts = input.int(0, "Fixed contracts (funded leg; 0 = size by Max loss)")
 useVol   = input.bool(false, "Volatility gate (skip if NQ 20d vol >= 30%) - funded leg ON, sprint OFF")
 volSym   = input.string("CME_MINI:NQ1!", "   vol gate symbol")
