@@ -36,6 +36,9 @@ evalPnl  = input.float(0.0, "Eval profit so far ($) - for the finishing trade")
 fixedCts = input.int(0, "Fixed contracts (funded leg; 0 = size by Max loss)")
 useVol   = input.bool(false, "Volatility gate (skip if NQ 20d vol >= 30%) - funded leg ON, sprint OFF")
 volSym   = input.string("CME_MINI:NQ1!", "   vol gate symbol")
+// Entry time (2026-10-24): 600 = 10:00 ET (default); 660 = 11:00 ET is the plan-B funded
+// leg if noise momentum is cut (adds in all four eras and in 2025-26, z_replace.py).
+entryMin = input.int(600, "Entry at the close of the bar ending (ET minutes: 600 = 10:00, 660 = 11:00)")
 // Daily values: last COMPLETED session ([1] + lookahead_on), same in history and live
 rvol20 = request.security(volSym, "D", (ta.stdev(close / close[1] - 1.0, 20) * math.sqrt(252))[1], lookahead=barmerge.lookahead_on)
 volOK = not useVol or na(rvol20) or rvol20 < 0.30
@@ -57,7 +60,7 @@ var line tL = na
 var line sL = na
 
 // entry at the close of the 09:59 bar (10:00)
-if is1 and oMin == 599 and barstate.isconfirmed and na(e) and close != vw and volOK
+if is1 and oMin == entryMin - 1 and barstate.isconfirmed and na(e) and close != vw and volOK
     dir := close > vw ? 1 : -1
     e := close
     tp := close * (1.0 + dir * tgtPct)
@@ -78,7 +81,7 @@ if is1 and oMin == 599 and barstate.isconfirmed and na(e) and close != vw and vo
     label.new(bar_index, dir == 1 ? low : high, "VWAP SPRINT " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ\nwin $" + str.tostring(cts * math.abs(tp - e) * ptValue, "#") + " / loss $" + str.tostring(cts * math.abs(e - sl) * ptValue, "#"), color=dir == 1 ? color.blue : color.purple, textcolor=color.white, style=dir == 1 ? label.style_label_up : label.style_label_down, size=size.normal)
 
 // exits from the next bar on; a bar touching both counts as the stop
-if not na(e) and not (oMin == 599)
+if not na(e) and not (oMin == entryMin - 1)
     rsn = ""
     px = 0.0
     if (dir == 1 and low <= sl) or (dir == -1 and high >= sl)
@@ -101,12 +104,12 @@ if not na(e) and not (oMin == 599)
         label.new(bar_index, px, "VWAP SPRINT " + rsn + "\n" + (usd >= 0 ? "+$" : "-$") + str.tostring(math.abs(usd), "#"), color=usd >= 0 ? color.green : color.red, textcolor=color.white, style=label.style_label_down, size=size.small)
         e := na
 
-alertcondition(is1 and oMin == 599 and barstate.isconfirmed and volOK and close > vw, "VWAP sprint LONG", "Lucid 12: VWAP sprint LONG at 10:00")
-alertcondition(is1 and oMin == 599 and barstate.isconfirmed and volOK and close < vw, "VWAP sprint SHORT", "Lucid 12: VWAP sprint SHORT at 10:00")
+alertcondition(is1 and oMin == entryMin - 1 and barstate.isconfirmed and volOK and close > vw, "VWAP sprint LONG", "Lucid 12: VWAP sprint LONG")
+alertcondition(is1 and oMin == entryMin - 1 and barstate.isconfirmed and volOK and close < vw, "VWAP sprint SHORT", "Lucid 12: VWAP sprint SHORT")
 
 plot(rthFlag ? vw : na, "VWAP (RTH)", color=color.new(color.yellow, 30), linewidth=2)
 
 var table tb = table.new(position.top_right, 1, 1, bgcolor=color.new(color.black, 30))
 if barstate.islast
-    msg = not is1 ? "VWAP SPRINT: use a 1-minute chart" : not volOK ? "VOL TOO HIGH - no VWAP trade today" : not na(e) ? "IN TRADE: " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ  TP " + str.tostring(tp, format.mintick) + "  SL " + str.tostring(sl, format.mintick) : "next: at 10:00 " + (close > vw ? "LONG (above VWAP now)" : "SHORT (below VWAP now)")
+    msg = not is1 ? "VWAP SPRINT: use a 1-minute chart" : not volOK ? "VOL TOO HIGH - no VWAP trade today" : not na(e) ? "IN TRADE: " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ  TP " + str.tostring(tp, format.mintick) + "  SL " + str.tostring(sl, format.mintick) : "next: at " + str.tostring(math.floor(entryMin / 60)) + ":" + (entryMin % 60 < 10 ? "0" : "") + str.tostring(entryMin % 60) + " " + (close > vw ? "LONG (above VWAP now)" : "SHORT (below VWAP now)")
     table.cell(tb, 0, 0, msg, text_color=color.white, bgcolor=not is1 ? color.red : not na(e) ? color.new(color.orange, 20) : color.new(color.gray, 50))
