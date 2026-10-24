@@ -43,7 +43,7 @@ def trades(data, suffix, gate, pref):
     out = []
     files = (("LSVWAP" + suffix, "B5", "VG"), ("LSNOISE" + suffix, "NS", "Z"))
     if WITH_ORB:
-        files += tuple((f, "O5", "ORB") for f in (("LSORB_OLD",) if suffix else ("LSORB_A", "LSORB_B")))
+        files += tuple((f, "O5", "ORB") for f in ((f"LSORB{suffix}",) if suffix else ("LSORB_A", "LSORB_B")))
     for f, var, leg in files:
         for raw in open(f"{data}/{f}_tags.txt"):
             p = raw.strip().split(",")

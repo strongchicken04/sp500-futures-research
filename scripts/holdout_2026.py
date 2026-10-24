@@ -53,11 +53,13 @@ def main():
             p = raw.strip().split(",")
             if p[0] == "L" and len(p) >= 10 and int(p[9]) > 0:
                 rvo[f"{p[2][:4]}-{p[2][4:6]}-{p[2][6:]}"] = int(p[9]) / 1000.0
+    import os
+    C.WITH_ORB = os.path.exists(f"{data}/LSORB26_tags.txt")
     tr, by = C.trades(data, "26", lambda d: 0 < rvo.get(d, 9.0) < 0.30, None)
     tr = [t for t in tr if t[0] >= LO]
     cal = sorted(d for d in {r["date"] for r in parse([f"{data}/CBA26_tags.txt"])} if d >= LO)
     print(f"2026 holdout: {cal[0]} .. {cal[-1]}, {len(cal)} RTH days; vol-gated days {sum(1 for d in cal if not 0 < rvo.get(d, 9.0) < 0.30)}")
-    for k in ("VG", "Z", "RS", "V10"):
+    for k in ("VG", "Z", "RS", "V10", "ORB"):
         v = [t[3] for t in tr if t[4] == k]
         if v:
             print(f"   {k:<4} n {len(v):3d}  ${st.mean(v):+7.2f} per MNQ trade  t {tstat(v):+4.1f}  total at 4 MNQ ${sum(v) * 4:+8,.0f}")
@@ -65,7 +67,8 @@ def main():
     for t in tr:
         T.setdefault(t[0], []).append(t)
     for name, mix in (("VG+Z+RS+V10 at 4", {"VG": 4, "Z": 4, "RS": 4, "V10": 4}), ("VG+Z+RS at 4", {"VG": 4, "Z": 4, "RS": 4}),
-                      ("VG+Z+RS at 3", {"VG": 3, "Z": 3, "RS": 3})):
+                      ("VG+Z+RS at 3", {"VG": 3, "Z": 3, "RS": 3}), ("old book ORB+VG+Z+RS at 3", {"ORB": 3, "VG": 3, "Z": 3, "RS": 3}),
+                      ("VG+Z+RS+ORB at 4", {"ORB": 4, "VG": 4, "Z": 4, "RS": 4})):
         dl = [C.day_seq(T.get(d, []), by[d]["bars"] if d in by else None, mix, None, True) for d in cal]
         daily = [sum(x) for x in dl]
         eq, peak, mdd = 0.0, 0.0, 0.0
