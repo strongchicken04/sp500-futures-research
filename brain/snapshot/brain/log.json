@@ -2,57 +2,72 @@
   "events": [
     {
       "sphere": "Interpret",
-      "t": "2026-10-24T05:40:00Z",
+      "t": "2026-10-24T07:08:43Z",
+      "text": "Noční směna uzavřena (09:10 Praha). Finální report v Mozku a v brain/reports/2026-10-24.md: 4 MNQ na nohu, vyřadit ORB, nová Lucid 8, potvrdit pravidla Lucidu."
+    },
+    {
+      "sphere": "Manažer",
+      "t": "2026-10-24T07:08:43Z",
+      "text": "Mírnější kontrola drawdownu (ocenění na závěru svíčky) dává stejné závěry: 4 MNQ +2 300 až +5 100 $, ORB −800 až −3 600 $."
+    },
+    {
+      "sphere": "Interpret",
+      "t": "2026-10-23T21:53:00Z",
+      "text": "Noční směna uzavřena. Na tobě: potvrdit pravidla výplaty v Lucidu, rozhodnout 4 MNQ a ORB, nahrát novou Lucid 8, zvolit automatizaci."
+    },
+    {
+      "sphere": "Interpret",
+      "t": "2026-10-23T21:52:00Z",
       "text": "Ranní report v Mozku: opravený model funded účtu – 4 MNQ na nohu (21 700 / 33 000 $ za 24 měsíců na funded místo), ORB vyřadit, potvrď pravidla výplaty v Lucidu."
     },
     {
       "sphere": "Kodér",
-      "t": "2026-10-24T05:40:00Z",
+      "t": "2026-10-23T21:52:00Z",
       "text": "Lucid 8: nové vstupy „Fixed contracts“ a filtr volatility pro funded RS nohu (dřív strop výhry 1 450 $ ořízl nohu na ~2 MNQ). Nahraj novou verzi."
     },
     {
       "sphere": "Kodér",
-      "t": "2026-10-24T05:40:00Z",
+      "t": "2026-10-23T21:52:00Z",
       "text": "Sepsána přesná pravidla všech strategií pro automatizaci (strategy/AUTOMATION_SPEC.md) – podklad pro NinjaScript i webhook."
     },
     {
       "sphere": "Manažer",
-      "t": "2026-10-24T05:40:00Z",
+      "t": "2026-10-23T21:52:00Z",
       "text": "ORB v přísném modelu horší ve všech 4 obdobích; všechny 3 nohy knihy přidávají; filtr volatility nechat; denní stop zhoršuje."
     },
     {
       "sphere": "Manažer",
-      "t": "2026-10-24T01:30:00Z",
+      "t": "2026-10-23T21:36:00Z",
       "text": "Přísná kontrola drawdownu i s otevřenými pozicemi (každá 5min svíčka): 4 MNQ pořád lepší než 3 ve všech čtyřech obdobích (+3 500 / +4 300 $, 2010–17 +2 600 / +2 500 $)."
     },
     {
       "sphere": "Manažer",
-      "t": "2026-10-24T01:30:00Z",
+      "t": "2026-10-23T21:36:00Z",
       "text": "Open drive (Lucid 10) jako čtvrtá noha jen volitelně: s přísnou kontrolou přidá ~+600 $ ve třech obdobích ze čtyř."
     },
     {
       "sphere": "Optimalizátor",
-      "t": "2026-10-24T01:30:00Z",
+      "t": "2026-10-23T21:36:00Z",
       "text": "RS noha: bracket ±1,25 % nechat (0,75–1,50 % nic lepšího ve všech obdobích). Velikost podle fáze účtu (3→4, 5→4…) nepřináší jasné zlepšení – 4 MNQ pořád."
     },
     {
       "sphere": "Optimalizátor",
-      "t": "2026-10-23T23:10:00Z",
+      "t": "2026-10-23T21:27:00Z",
       "text": "NOVÉ DOPORUČENÍ: funded 4 MNQ na nohu místo 3 – +4 900 / +5 000 $ na funded místo za 24 měsíců (2018–21 / 2022–25), i v 2010–17 přepočteném na dnešní cenu +3 200 / +4 000 $. První výplata o 1–5 bodů méně často."
     },
     {
       "sphere": "Optimalizátor",
-      "t": "2026-10-23T23:10:00Z",
+      "t": "2026-10-23T21:27:00Z",
       "text": "Opravený model funded účtu: všechny dny, pravidlo 5 ziskových dní (≥150 $), zisk nad +4 000 $ po výplatě zůstává. Kniha bez ORB, 3 MNQ: 19 500 / 31 900 $ za 24 měsíců (810 / 1 330 $ měsíčně)."
     },
     {
       "sphere": "Manažer",
-      "t": "2026-10-23T23:10:00Z",
+      "t": "2026-10-23T21:27:00Z",
       "text": "ORB v opraveném modelu: peníze zhruba stejné (−800 / +900 $), první výplata 34 / 32 % místo 40 / 41 % → dál doporučuji vyřadit."
     },
     {
       "sphere": "Backtester",
-      "t": "2026-10-23T23:10:00Z",
+      "t": "2026-10-23T21:27:00Z",
       "text": "Zamítnuto: sprint na funded účtu do první výplaty (kvůli pravidlu 5 ziskových dní), 2 MNQ před výplatou, jiné načasování výplaty, bracket sprintu podle volatility."
     },
     {

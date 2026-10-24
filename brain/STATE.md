@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-24T06:08Z (night shift 2026-10-23/24 running; interim report written 21:50Z)
-last shift: 2026-10-23 day shift; night shift 23/24 running (interim report written at 23:50 Prague, final by 12:00 Prague)
+heartbeat: 2026-10-24T07:08Z (night shift 2026-10-23/24 FINISHED; report brain/reports/2026-10-24.md)
+last shift: 2026-10-23/24 night shift (final report brain/reports/2026-10-24.md, 09:10 Prague)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-23/24: funded model v2 + open-P&L check done (report brain/reports/2026-10-24.md).
