@@ -1,0 +1,30 @@
+=== 2 MNQ per leg
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 14,501 (    +0) | 28.3 | 10.1%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 26,448 (    +0) | 38.9 | 15.2%
+=== 3 MNQ per leg
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 20,688 (    +0) | 44.4 | 15.7%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 34,260 (    +0) | 53.6 | 20.5%
+=== 4 MNQ per leg
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 26,993 (    +0) | 50.7 | 17.5%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 39,892 (    +0) | 52.2 | 20.2%
+=== 5 MNQ per leg
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 31,888 (    +0) | 52.1 | 18.2%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 44,097 (    +0) | 48.5 | 18.6%
+=== 6 MNQ per leg
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 34,979 (    +0) | 52.3 | 18.4%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 43,454 (    +0) | 53.0 | 20.8%
+=== 8 MNQ per leg
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 38,051 (    +0) | 53.2 | 18.5%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 45,526 (    +0) | 53.0 | 20.7%

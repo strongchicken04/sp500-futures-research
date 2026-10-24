@@ -33,6 +33,8 @@ from two_win_sprint import trade_pts  # noqa: E402
 from vside_plateau import vside  # noqa: E402
 
 FEE = 90.0
+SIZE = 4          # MNQ per funded leg (seat_size.py varies it)
+PLANS = None      # restrict the evaluation plans (seat_size.py)
 
 
 class Eval:
@@ -116,7 +118,7 @@ def main():
     T = {}
     for t in tr:
         T.setdefault(t[0], []).append(t)
-    mix = {"VG": 4, "Z": 4, "RS": 4, "V10": 4}
+    mix = {"VG": SIZE, "Z": SIZE, "RS": SIZE, "V10": SIZE}
     rs = first_signals(parse_mf(f"{data}/MFEAT_tags.txt"), lambda r: 1 if (r["rs"] > 0.0015 and r["vwapd"] > 0) else
                        (-1 if (r["rs"] < -0.0015 and r["vwapd"] < 0) else 0))
     R = {}
@@ -148,6 +150,8 @@ def main():
         paths = M.bootstrap(len(days), 2000, seed=77)
         plans = {"E1 RS + 09:31 (guard)": ("RSg", "B"), "E2 RS alone": ("RS",), "E3 VWAP10 alone": ("VW",),
                  "E4 09:31 alone": ("B",), "E5 VWAP10 + 09:31 (guard)": ("VWg", "B")}
+        if PLANS:
+            plans = {k: v for k, v in plans.items() if k in PLANS}
         print(f"--- {lab}: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation")
         base = None
         for name, accts in plans.items():
