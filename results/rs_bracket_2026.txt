@@ -1,0 +1,5 @@
+2026 holdout (Jan - Jul 24), book VG + Z + RS at 3 MNQ, RS bracket:
+   RS 0.75%: RS $ +33.5 per MNQ trade, book total $ +4,189, first payout 27/85
+   RS 1.00%: RS $ +22.0 per MNQ trade, book total $   +765, first payout 28/85
+   RS 1.25%: RS $ +48.7 per MNQ trade, book total $ +8,696, first payout 28/85
+   RS 1.50%: RS $ +44.9 per MNQ trade, book total $ +7,583, first payout 20/85
