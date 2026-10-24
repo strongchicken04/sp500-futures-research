@@ -62,14 +62,14 @@ s knihou VWAP pásmo + noise + RS skoro nepotká (~1 % dní); s novou nohou VWAP
 vstoupit ~12–19 % dní; vynechané obchody stojí řádově stovky dolarů ročně na
 funded místo, jen dokud běží evaluace B (`results/cross_hedge.txt`).
 
-## 2. Funded – kniha (dnes 3 MNQ na nohu; návrh: bez ORB, 4 MNQ, + VWAP 10:00)
+## 2. Funded – kniha (3 MNQ na nohu; návrh: bez ORB)
 
 | Noha | Indikátor | Graf | Poznámka |
 |---|---|---|---|
 | ORB | **Lucid 1 – S1 ORB (nový)** | MNQ **5 min** | trail 20-EMA jen z RTH, re-entry po každém exitu, ne ve středu |
 | VWAP pásmo | **Lucid 2 – VWAP Band (nový)** | MNQ **5 min** | průraz VWAP ±0,20 %, SL 25 / TP 100 b., 1× denně, ne ve středu |
 | Noise momentum | **Lucid 6 (nový, stop 0,50 %)** | 1 / 5 / 30 min | rozhodnutí jen v :00 a :30 |
-| RS noha | Lucid 8 s **Target 1,25 / Stop 1,25, Fixed contracts 3 (návrh 4), Volatility gate ZAPNOUT** | MNQ 1 min | přidává ve všech obdobích; nová verze 24. 10. – dřív strop výhry 1 450 $ ořízl nohu na ~2 MNQ a chyběl filtr volatility |
+| RS noha | Lucid 8 s **Target 1,25 / Stop 1,25, Fixed contracts 3, Volatility gate ZAPNOUT** | MNQ 1 min | přidává ve všech obdobích; nová verze 24. 10. – dřív strop výhry 1 450 $ ořízl nohu na ~2 MNQ a chyběl filtr volatility |
 | VWAP 10:00 (jen kandidát) | Lucid 12 s Target 0,30 / Stop 0,50, Fixed contracts 4, Volatility gate ZAPNOUT | MNQ 1 min | 2010–2025 přidávala ve všech 4 obdobích, ale v roce 2026 (leden–červenec) ztrátová → **zatím nepřidávat** |
 
 **Denní rozvrh funded knihy** (Praha; v závorce 26.–30. 10., kdy je rozdíl
@@ -83,17 +83,21 @@ jen 5 h, protože USA přechází na zimní čas až 1. 11.):
 | 11:00 / 13:00 / 14:30 | 17:00 / 19:00 / 20:30 (16:00 / 18:00 / 19:30) | další kontroly RS (jen první signál dne) |
 | 15:55 | 21:55 (20:55) | **vše flat** (nic přes noc) |
 
-- Velikost: **3 MNQ na každou nohu** (ne ladder); **doporučení z noci
-  23./24. 10.: 4 MNQ na nohu** (rozhoduješ ty, FINAL_PLAN nahoře).
-- **Riziko:** k první výplatě dojde ~40 % funded účtů (při 4 MNQ ~37 %),
+- Velikost: **3 MNQ na každou nohu** (ne ladder). Při dnešní ceně NQ
+  (~28 500) je to správně; noční „4 MNQ“ platilo pro nižší ceny a je zrušeno.
+  Pravidlo: MNQ na nohu ≈ 90 000 / cena NQ, zaokrouhleno dolů.
+- **Riziko:** při dnešní ceně NQ dojde k první výplatě jen ~16–22 % funded
+  účtů (jeden RS stop 1,25 % při 3 MNQ je ~2 140 $ = víc než drawdown);
   zbytek přijde o drawdown dřív. Vyplácí se to jen proto, že nová evaluace
-  sprintem je levná (~180–270 $, ~7–11 dní). Počítej s tím.
+  sprintem je levná (~150–270 $, ~6–8 dní). Počítej s ~8–10 funded účty na
+  jedno funded místo za 2 roky.
 - Denní stop nepoužívej: s otevřenými pozicemi v simulaci výsledek zhoršuje ve všech obdobích (−600 $ i −1 500 $; `results/daystop_v2.txt`).
-- Očekávání (kniha bez ORB, opravený model `scripts/funded_model.py`
-  a `mtm_check.py`, 24 měsíců, evaluace odečtené, 2018–21 / 2022–25):
-  při 3 MNQ ~750–810 / 1 200–1 330 $ měsíčně na funded místo, při 4 MNQ
-  ~900–1 000 / 1 400–1 550 $ (nižší číslo = přísná kontrola drawdownu
-  i s otevřenými pozicemi).
+- Očekávání (kniha bez ORB, 3 MNQ, opravený model s otevřenými pozicemi,
+  vše přepočteno na dnešní cenu NQ, evaluace odečtené; `results/size_today.txt`):
+  ~33 000 / 36 000 $ na funded místo za 24 měsíců (2018–21 / 2022–25),
+  ~23 000 / 25 500 $ v klidnějších letech 2010–13 / 2014–17; 1 z 10 míst
+  pod ~6 000–13 000 $. Rok 2026 (leden–červenec, nezávislý test):
+  kniha +8 700 $ při 3 MNQ.
   V klidném trhu může být méně. Víc peněz = víc účtů se stejnou knihou (kopie).
 - **Pravidlo výplaty:** v každém výplatním cyklu potřebuješ 5 dní se ziskem
   aspoň 150 $ (dny nemusí jít po sobě, po výplatě se počítají znovu). Výplatu
@@ -106,17 +110,13 @@ jen 5 h, protože USA přechází na zimní čas až 1. 11.):
 
 - **Funded kniha bez ORB (Lucid 1)** (denní směna 23. 10., FINAL_PLAN nahoře):
   s přísnou kontrolou drawdownu (i otevřené pozice) je kniha s ORB horší ve
-  všech čtyřech obdobích (při 4 MNQ −3 900 / −1 500 / −1 500 / −800 $ na
-  funded místo) a k první výplatě dojde méně účtů; ORB nemá edge ani
-  v nezávislém období 2010–2017. Prakticky: Lucid 1 nepoužívat.
+  všech čtyřech obdobích i v roce 2026 (−3,90 $ na MNQ a obchod; první
+  výplata 17 z 85 startů místo 28) a k první výplatě dojde méně účtů; ORB
+  nemá edge ani v nezávislém období 2010–2017. Prakticky: Lucid 1 nepoužívat.
 
-- **Funded 4 MNQ na nohu místo 3** (noc 23./24. 10.): +4 900 / +5 000 $ na
-  funded místo za 24 měsíců, lepší i v 2010–17 přepočteném na dnešní cenu
-  (+3 200 / +4 000 $; s přísnou kontrolou drawdownu i s otevřenými
-  pozicemi +3 500 / +4 300 $ a +2 600 / +2 500 $); první výplata o 2–5 bodů
-  méně často.
-- Volitelně: open drive (Lucid 10, 5min graf) jako čtvrtá noha, 4 MNQ –
-  s přísnou kontrolou drawdownu přidá jen ~+600 $ ve třech obdobích ze čtyř.
+- ~~Funded 4 MNQ na nohu~~ – zrušeno 24. 10.: při dnešní ceně NQ (~28 500)
+  je správně 3 MNQ (FINAL_PLAN nahoře).
+- Volitelně (malé): open drive (Lucid 10, 5min graf) jako čtvrtá noha.
 
 - Overnight long (Lucid 9) vyřazen: Lucid Flex nedovoluje držet přes noc.
   Všechny strategie v plánu jsou do 15:55 ET flat.

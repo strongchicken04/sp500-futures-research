@@ -1,3 +1,23 @@
+# 2026-10-24 (denní směna) — VELIKOST: zůstat na 3 MNQ na nohu (oprava nočního „4“)
+
+NQ stojí ~28 500 (poslední data 24. 7. 2026), simulace ale počítaly s cenami
+2018–25 (NQ ~6 000–22 000) a s rokem 2010–17 přeceněným na 17 090. Riziko
+v dolarech roste s cenou: RS stop 1,25 % při 3 MNQ je dnes ~2 140 $.
+Přepočet všech čtyř období na dnešní cenu (`results/size_today.txt`), kniha
+VWAP pásmo + noise + RS, na funded místo za 24 měsíců:
+
+| velikost | 2018–21 | 2022–25 | 2010–13 | 2014–17 | první výplata |
+|---|---|---|---|---|---|
+| 2 MNQ | 30 500 $ | 32 300 $ | 20 800 $ | 22 000 $ | 18–31 % |
+| **3 MNQ** | **33 200 $** | **36 300 $** | **22 900 $** | **25 500 $** | **16–22 %** |
+| 4 MNQ | 32 600 $ | 38 100 $ | 24 500 $ | 27 800 $ | 13–20 % |
+
+3 MNQ je lepší než 2 ve všech obdobích; 4 už ne (2018–21 horší a nejhorší
+případy horší všude). **Doporučení: zůstaň na 3 MNQ na nohu.** Pravidlo do
+budoucna: MNQ na nohu ≈ 90 000 / cena NQ, zaokrouhleno dolů (28 500 → 3,
+22 000 → 4, 17 000 → 5). Noční doporučení „4 MNQ“ platilo pro nižší ceny NQ
+a tímto ho ruším.
+
 # 2026-10-24 (denní směna) — rok 2026 (nezávislý test) a VWAP noha 10:00
 
 **Nezávislý test na roce 2026** (leden – 24. 7., 145 dní; data, která nikdy

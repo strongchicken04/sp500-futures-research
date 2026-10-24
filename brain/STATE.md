@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-24T11:50Z (day shift 2026-10-24 running, until 22:00 Prague)
+heartbeat: 2026-10-24T11:57Z (day shift 2026-10-24 running, until 22:00 Prague)
 last shift: 2026-10-23/24 night shift (report brain/reports/2026-10-24.md); day shift 2026-10-24 running (report brain/reports/2026-10-24-den.md)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -14,7 +14,8 @@ D4. New ideas: done so far - V11 optional, MOM30/MOM60/OD/NR4 on the V10 book no
 D5. DONE: true 2026 holdout (Jan - Jul 24): book VG+Z+RS +$11.6k at 4 MNQ, first payout 27% as simulated;
     RS leg strong, VG weak (seen before), V10 worst year of 17 -> V10 stays a candidate, not added.
     Data *26 cover 2025-01..2026-07; re-run the 2026 exports when QC data extends.
-17. Waiting for the owner: (a) funded 4 MNQ per leg (recommended), (b) drop ORB (recommended),
+17. Waiting for the owner: (a) funded size: STAY at 3 MNQ per leg at NQ ~28,500 (night's 4 withdrawn 24.10;
+    rule MNQ per leg ~ 90,000 / NQ price), (b) drop ORB (recommended),
     (c) confirm LucidFlex funded rules (five profitable days >= $150, 50% / $2,000 payout cap, scaling
     20 MNQ below $1,000 profit, 5-payout cap), (d) automation route (NinjaScript on own PC or TradingView
     webhook) -> then code the eval sprints (Lucid 8 + Lucid 7 with both hedge guards) first.
@@ -23,6 +24,9 @@ D5. DONE: true 2026 holdout (Jan - Jul 24): book VG+Z+RS +$11.6k at 4 MNQ, first
 4. Treasury auction effect (ZN): BLOCKED (treasury.gov and fiscaldata refused by the network policy).
 
 ## Done this shift
+- Day 24.10: 2026 holdout (Jan-Jul): plan holds, ORB drop confirmed, V10 not added; eval pair 5.9 days.
+  SIZE AT TODAY'S PRICE (NQ 28,530): 3 MNQ per leg is right, 4 is not -> night's '4 MNQ' withdrawn.
+  IMPORTANT for all future funded dollar questions: re-price every era at the current NQ level (size_today.py).
 - Day 24.10: integrated seat model (eval plan unchanged); size: flat 5 > flat 4 in all eras, scaling-max worse ->
   start 4, go 5 after live check; V10 by year 11/16 positive, minute-data cross-check positive in all eras;
   second-round add-ons: V11 optional only. PLAYBOOK: funded schedule in Prague time (DST gap 26-30 Oct).
