@@ -1,0 +1,6 @@
+NQ noise 2018-2024:  +7.74 pt per trade (net), t +4.4, n 1340
+NQ noise 2025-2025:  -2.07 pt per trade (net), t -0.3, n 219
+ES noise 2018-2024:  +1.08 pt per trade (net), t +2.6, n 1565
+ES noise 2025-2025:  -2.10 pt per trade (net), t -1.5, n 219
+YM noise 2018-2024:  +2.43 pt per trade (net), t +0.8, n 1672
+YM noise 2025-2025:  -0.12 pt per trade (net), t -0.0, n 250
