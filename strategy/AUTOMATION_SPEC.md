@@ -57,7 +57,7 @@ and close < VWAP. Only the first signal of the day. Target +0.20%, stop
 bar: direction = `trend50` (long above the 50-day SMA, short below). Target
 +0.25%, stop -0.40%; else flat 15:55. Vol gate OFF.
 
-## Funded book (each leg sized 3 MNQ today; recommendation 4 MNQ)
+## Funded book (each leg: MNQ = floor(90,000 / NQ price) - 3 at NQ ~28,500)
 
 Payout plan: request $2,000 when the profit is >= $4,000 and the cycle has
 five days with >= $150 profit; leave the rest on the account. No day stop.
@@ -80,7 +80,7 @@ gate on.
 sprint (first signal of 10:00 / 11:00 / 13:00 / 14:30), fixed size, symmetric
 bracket +/-1.25%, else flat 15:55. Vol gate on.
 
-**V10 - VWAP side at 10:00 (Lucid 12 as funded leg; proposed 2026-10-24).**
+**V10 - VWAP side at 10:00 (Lucid 12 as funded leg; CANDIDATE only - lost in the 2026 holdout).**
 At the close of the 09:59-10:00 bar: long if the close is above the RTH VWAP,
 short if below. Target +0.30%, stop -0.50% of the entry; else flat 15:55.
 Fixed size, vol gate on.
