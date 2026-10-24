@@ -1,30 +1,30 @@
 {
   "book": {
-    "caption": "Noc 23./24. 10.: opravený model funded účtu · kniha bez ORB · 2018–21 | 2022–25 · rozsah = přísná kontrola s otevřenými pozicemi → jen uzavřené obchody",
+    "caption": "24. 10.: kniha bez ORB (VWAP pásmo + noise + RS) · přepočteno na dnešní cenu NQ ~28 500 · 2018–21 | 2022–25",
     "tiles": [
       {
-        "label": "4 MNQ na nohu (nové)",
+        "label": "3 MNQ na nohu (doporučeno)",
         "sub": "za 24 měsíců na funded místo",
         "tone": "ok",
-        "value": "$21,7–24,2k / $33,4–37,1k"
+        "value": "$33,2k / $36,3k"
       },
       {
-        "label": "3 MNQ (dosud)",
-        "sub": "za 24 měsíců na funded místo",
+        "label": "2010–17 při dnešní ceně",
+        "sub": "3 MNQ, klidnější trh",
         "tone": "arc",
-        "value": "$18,1–19,5k / $29,2–32,1k"
+        "value": "$22,9k / $25,5k"
       },
       {
-        "label": "První výplata (4 MNQ)",
-        "sub": "3 MNQ: 37–40 / 33–41 %",
+        "label": "Test 2026 (leden–červenec)",
+        "sub": "3 MNQ, data nikdy neviděná",
         "tone": "gold",
-        "value": "34–38 / 28–36 %"
+        "value": "+$8 700"
       },
       {
-        "label": "2010–17 (dnešní cena)",
-        "sub": "4 vs 3 MNQ, přísná kontrola",
-        "tone": "ok",
-        "value": "+$2 600 / +$2 500"
+        "label": "První výplata",
+        "sub": "pravidlo: MNQ ≈ 90 000 / cena NQ",
+        "tone": "arc",
+        "value": "~16–22 %"
       }
     ]
   },

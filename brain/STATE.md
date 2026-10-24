@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-24T18:08Z (day shift 2026-10-24 running, until 22:00 Prague; draft report written)
-last shift: 2026-10-23/24 night shift (report brain/reports/2026-10-24.md); day shift 2026-10-24 running (report brain/reports/2026-10-24-den.md)
+heartbeat: 2026-10-24T19:09Z (day shift 2026-10-24 FINISHED; report brain/reports/2026-10-24-den.md)
+last shift: 2026-10-24 day shift (final report brain/reports/2026-10-24-den.md, 21:10 Prague)
 
 ## Queue (top = next). Move finished items to registry.md.
 Day shift 2026-10-24 (owner: "jeď to zase dnes celý den"; until 22:00 Prague, report brain/reports/2026-10-24-den.md):

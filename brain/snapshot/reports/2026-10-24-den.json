@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-24T21:10",
+  "summary": "CO UDĚLAT TY\n1) Velikost: zůstaň na 3 MNQ na nohu. Noční „4 MNQ“ ruším – vycházelo z cen NQ 2018–25, dnes je NQ ~28 500. Pravidlo: MNQ na nohu ≈ 90 000 / cena NQ (dolů).\n2) ORB (Lucid 1) vyřadit – potvrzeno i na roce 2026.\n3) Nahraj novou Lucid 8: funded RS noha Target 1,25 / Stop 1,25, Fixed contracts 3, filtr volatility ZAP.\n4) Potvrď v Lucidu pravidla výplaty (5 ziskových dní ≥150 $) a scaling (20 MNQ do zisku 1 000 $).\n5) Automatizace: vyber cestu.\n\nNEZÁVISLÝ TEST 2026 (leden–24. 7.)\n• Kniha VWAP pásmo + noise + RS při 3 MNQ: +8 700 $ za 7 měsíců; první výplata ve 28 z 85 funded startů (s ORB jen 17).\n• RS noha +48,7 $ na MNQ a obchod (nejsilnější); VWAP pásmo −18,9 $; noise +0,3 $; ORB −3,9 $.\n• Evaluace RS + 09:31: první funded za 5,9 dne a ~260 $ (lépe než backtest).\n\nHLÍDAT: NOISE MOMENTUM (Lucid 6)\n• Od ledna 2025 bez edge (−2,8 $ proti +24 $ dřív; slabé i na ES a YM).\n• Pravidlo: když do konce 2026 nevydělá → 2 MNQ; když ani do poloviny 2027 → vyřadit.\n• Plán B: strana VWAP v 11:00 (Lucid 12, Entry 660) – přidává ve všech 4 obdobích, v 2025–26 +17 000 $.\n\nKOLIK (dnešní cena, 3 MNQ, bez ORB)\n~33 000 / 36 000 $ na funded místo za 24 měsíců (2018–21 / 2022–25), 23 000 / 25 500 $ v klidnějších letech 2010–17. Část zisku je ze struktury Lucidu (i s nulovým edge ~5–8 tisíc $).\n\nZAMÍTNUTO\nVWAP 10:00 jako noha (2026 nejhorší rok ze 17), druhý RS obchod za den, VWAP pásmo se stopem v %, velikost až po strop scalingu, další nohy (open drive, NR4, PMTREND, Silver Bullet…).\n\nPOZOR 26.–30. 10.: trh v Praze otevírá ve 14:30, flat ve 20:55.\n\nPodrobně: brain/reports/2026-10-24-den.md, FINAL_PLAN.md, PLAYBOOK_CZ.md.",
+  "title": "Denní směna 24. 10. – test 2026, velikost 3 MNQ, hlídat noise",
+  "verdicts": [
+    {
+      "name": "Zůstat na 3 MNQ (ne 4)",
+      "status": "candidate"
+    },
+    {
+      "name": "ORB vyřadit (potvrzeno 2026)",
+      "status": "candidate"
+    },
+    {
+      "name": "Noise momentum – hlídat",
+      "status": "candidate"
+    },
+    {
+      "name": "VWAP 10:00 noha",
+      "status": "rejected"
+    },
+    {
+      "name": "Druhý RS obchod",
+      "status": "rejected"
+    }
+  ]
+}

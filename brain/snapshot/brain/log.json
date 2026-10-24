@@ -2,6 +2,76 @@
   "events": [
     {
       "sphere": "Interpret",
+      "t": "2026-10-24T19:08:56Z",
+      "text": "Denní směna 24. 10. uzavřena. Report v Mozku a v brain/reports/2026-10-24-den.md: zůstat na 3 MNQ, vyřadit ORB, nová Lucid 8, hlídat noise (plán B: VWAP 11:00)."
+    },
+    {
+      "sphere": "Manažer",
+      "t": "2026-10-24T14:08:36Z",
+      "text": "HLÍDAT: noise momentum (Lucid 6) od ledna 2025 bez edge (−2,8 $ na MNQ a obchod proti +24 $ dřív; stejně slabé i na ES a YM). Pravidlo: když do konce 2026 nevydělá, snížit na 2 MNQ; když ani do poloviny 2027, vyřadit."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-24T14:08:36Z",
+      "text": "Plán B za noise: strana VWAP v 11:00 (+0,30 % / −0,50 %) – přidává ve všech 4 obdobích a v 2025–26 +17 000 $. Lucid 12 má novou volbu času vstupu (11:00)."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-24T14:08:36Z",
+      "text": "Druhý RS obchod za den: malý přínos (+0,5 až +1,5 tisíce $), v 2026 nula → nepřidávat. VWAP pásmo s procentním stopem: lepší jen ve 3 obdobích ze 4 → nechat body."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-24T11:57:49Z",
+      "text": "OPRAVA velikosti: NQ je ~28 500, simulace počítaly s cenami 2018–25. Přepočet na dnešní cenu: správně je 3 MNQ na nohu (3 > 2 ve všech obdobích, 4 už ne). Noční „4 MNQ“ ruším. Pravidlo: MNQ na nohu ≈ 90 000 / cena NQ."
+    },
+    {
+      "sphere": "Manažer",
+      "t": "2026-10-24T11:57:49Z",
+      "text": "ORB v roce 2026: −3,90 $/MNQ, s ORB první výplata 17 z 85 startů místo 28 → vyřazení ORB potvrzeno i na nových datech."
+    },
+    {
+      "sphere": "Manažer",
+      "t": "2026-10-24T11:57:49Z",
+      "text": "Evaluace v roce 2026: RS + 09:31 první funded za 5,9 dne / ~260 $ (backtest 6,3–6,9)."
+    },
+    {
+      "sphere": "Manažer",
+      "t": "2026-10-24T11:50:23Z",
+      "text": "NEZÁVISLÝ TEST 2026 (leden–24. 7.): kniha VWAP pásmo + noise + RS při 4 MNQ +11 600 $, první výplata u 27 % funded startů (jako v simulaci). RS noha silná (+48,7 $/MNQ), VWAP pásmo slabé (−18,9 $, podobné roky už byly)."
+    },
+    {
+      "sphere": "Manažer",
+      "t": "2026-10-24T11:50:23Z",
+      "text": "VWAP noha 10:00 v roce 2026 −14,5 $/MNQ – nejhorší rok ze 17 → zatím NEPŘIDÁVAT, jen kandidát."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-24T11:50:23Z",
+      "text": "Spojený model evaluace + funded: plán evaluace beze změny; velikost začni 4 MNQ, po ověření plnění 5 MNQ; víc už ne."
+    },
+    {
+      "sphere": "Manažer",
+      "t": "2026-10-24T11:50:23Z",
+      "text": "Riziko: s nulovým edge by funded místo dalo ještě ~5 000 / 8 000 $ za 24 měsíců – část zisku je ze struktury Lucidu, platí jen při stejných pravidlech."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-24T11:23:57Z",
+      "text": "Denní směna 24. 10.: znovu prověřeny slabší nohy na opraveném modelu. Nová kandidátní funded noha: strana VWAP v 10:00 (+0,30 % / −0,50 %, 4 MNQ) – +3 500 / +4 900 $ na funded místo za 24 měsíců, v 2010–17 +1 900 / +3 900 $."
+    },
+    {
+      "sphere": "Manažer",
+      "t": "2026-10-24T11:23:57Z",
+      "text": "VWAP noha drží v okolí (vstup 10:00 i 11:00, tři brackety) i s horším plněním; vstup v 10:30 ne. Open drive a NR4 malé, PMTREND / Silver Bullet / 14:00 trend ne."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-24T11:23:57Z",
+      "text": "Lucid 12: nové vstupy „Fixed contracts“ a filtr volatility – jako funded noha Target 0,30 / Stop 0,50, Fixed 4, filtr ZAP."
+    },
+    {
+      "sphere": "Interpret",
       "t": "2026-10-24T07:08:43Z",
       "text": "Noční směna uzavřena (09:10 Praha). Finální report v Mozku a v brain/reports/2026-10-24.md: 4 MNQ na nohu, vyřadit ORB, nová Lucid 8, potvrdit pravidla Lucidu."
     },
@@ -229,61 +299,6 @@
       "sphere": "Optimalizátor",
       "t": "2026-10-23T07:31:00Z",
       "text": "Po první prohře ve sprintu: vzdát a koupit novou evaluaci = o 1,5–2 dny rychlejší, o 125–200 $ dražší."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T07:30:00Z",
-      "text": "Lucid 7 na evaluaci bez filtru volatility (s ním 18–21 dní místo 11)."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T07:29:00Z",
-      "text": "Noise jen ve shodě s relativní silou: na úrovni účtu horší, zamítnuto."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T07:28:00Z",
-      "text": "Lucid 7 s targetem 0,25 %; dva účty RS + 09:31 = první funded za 6,8 / 6,5 dne."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-23T07:27:00Z",
-      "text": "Lucid 9 (overnight po 3 červených) připraven."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T07:26:00Z",
-      "text": "Třetí účet s noise sprintem: jen −0,3 dne za ~100 $ navíc."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T06:20:00Z",
-      "text": "RS sprint se stopem 0,30 % nezávisle potvrzen."
-    },
-    {
-      "sphere": "Systémový manažer",
-      "t": "2026-10-23T05:12:00Z",
-      "text": "Simulace s časy obchodů: flat 3 potvrzen, denní stop nic nepřidá."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T04:10:00Z",
-      "text": "Opraveno řazení obchodů v simulaci."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-22T21:31:00Z",
-      "text": "Lucid 2 přepsán na průraz pásma VWAP ±0,20 %."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-22T21:17:00Z",
-      "text": "Lucid 6: pevný stop 0,50 %."
-    },
-    {
-      "sphere": "Systém",
-      "t": "2026-10-22T21:08:00Z",
-      "text": "Noční směna začala."
     }
   ]
 }
