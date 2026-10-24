@@ -3,9 +3,12 @@
    Z    n 126  $  +0.34 per MNQ trade  t +0.0  total at 4 MNQ $    +170
    RS   n  99  $ +48.67 per MNQ trade  t +1.3  total at 4 MNQ $ +19,273
    V10  n 120  $ -14.48 per MNQ trade  t -0.8  total at 4 MNQ $  -6,948
+   ORB  n 395  $  -3.90 per MNQ trade  t -0.7  total at 4 MNQ $  -6,159
    book VG+Z+RS+V10 at 4   total $  +4,647, worst closed drawdown $-35,085, funded start on each day (>= 60 days left): first payout 23/85, bust 62
    book VG+Z+RS at 4       total $ +11,595, worst closed drawdown $-22,734, funded start on each day (>= 60 days left): first payout 23/85, bust 62
    book VG+Z+RS at 3       total $  +8,696, worst closed drawdown $-17,051, funded start on each day (>= 60 days left): first payout 28/85, bust 57
+   book old book ORB+VG+Z+RS at 3 total $  +4,077, worst closed drawdown $-12,008, funded start on each day (>= 60 days left): first payout 17/85, bust 68
+   book VG+Z+RS+ORB at 4   total $  +5,436, worst closed drawdown $-16,011, funded start on each day (>= 60 days left): first payout 16/85, bust 69
    sprint RS 0.20/0.30      signals 116, resolved 113, win  65.5% vs random 60.0%
    sprint 09:31 0.25/0.40   signals 145, resolved 143, win  60.8% vs random 61.5%
    sprint VWAP10 0.25/0.40  signals 145, resolved 139, win  56.1% vs random 61.5%

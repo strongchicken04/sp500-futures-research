@@ -7,7 +7,10 @@ Kniha VWAP pásmo + noise + RS při 4 MNQ: **+11 600 $** za 7 měsíců (s VWAP
 10:00 jen +4 600 $); funded účet založený v kterýkoli den došel k první
 výplatě ve 23 z 85 startů (27 %) – stejně jako v simulacích. Sprinty: RS
 65,5 % výher vs náhodných 60 % (edge drží), 09:31 bez edge (jako vždy),
-VWAP 10:00 sprint 56 % vs 61,5 % (slabý).
+VWAP 10:00 sprint 56 % vs 61,5 % (slabý). **ORB v roce 2026: −3,90 $ na MNQ a obchod;
+kniha s ORB dojde k první výplatě jen v 16–17 z 85 startů místo 23–28 → vyřazení
+ORB potvrzeno i na nových datech.** Evaluace: dvojice RS + 09:31 první funded za
+5,9 dne a ~260 $ (`results/eval_2026.txt`).
 
 Rok po roku (`results/legs_by_year.txt`): VWAP pásmo mělo podobně špatné roky
 i dřív (2010 −20,5, 2013 −11,6); pro VWAP 10:00 je 2026 nejhorší rok ze 17
