@@ -1,0 +1,32 @@
+--- 2018-21
+   4 legs at 4              $ 25,132 (     +0) first payout 26.4%
+   4 legs at 3              $ 19,956 ( -5,176) first payout 31.8%
+   4 legs at 5              $ 29,169 ( +4,037) first payout 27.5%
+   old book (3 legs at 4)   $ 21,652 ( -3,480) first payout 33.5%
+   at 4 without VG          $ 20,095 ( -5,037) first payout 34.4%
+   at 4 without Z           $ 17,498 ( -7,634) first payout 29.6%
+   at 4 without RS          $ 22,424 ( -2,708) first payout 33.5%
+--- 2022-25
+   4 legs at 4              $ 38,379 (     +0) first payout 27.1%
+   4 legs at 3              $ 33,174 ( -5,205) first payout 31.0%
+   4 legs at 5              $ 42,086 ( +3,707) first payout 25.0%
+   old book (3 legs at 4)   $ 33,446 ( -4,933) first payout 28.0%
+   at 4 without VG          $ 35,969 ( -2,409) first payout 26.9%
+   at 4 without Z           $ 30,451 ( -7,928) first payout 27.3%
+   at 4 without RS          $ 28,572 ( -9,807) first payout 42.7%
+--- 2010-13
+   4 legs at 4              $ 24,057 (     +0) first payout 14.4%
+   4 legs at 3              $ 22,970 ( -1,087) first payout 20.9%
+   4 legs at 5              $ 26,874 ( +2,817) first payout 13.9%
+   old book (3 legs at 4)   $ 22,154 ( -1,903) first payout 18.0%
+   at 4 without VG          $ 25,822 ( +1,765) first payout 23.1%
+   at 4 without Z           $ 21,372 ( -2,685) first payout 17.8%
+   at 4 without RS          $ 20,476 ( -3,581) first payout 17.8%
+--- 2014-17
+   4 legs at 4              $ 26,214 (     +0) first payout 23.0%
+   4 legs at 3              $ 23,429 ( -2,785) first payout 25.9%
+   4 legs at 5              $ 27,183 (   +969) first payout 19.6%
+   old book (3 legs at 4)   $ 22,294 ( -3,920) first payout 19.3%
+   at 4 without VG          $ 24,276 ( -1,938) first payout 22.9%
+   at 4 without Z           $ 22,478 ( -3,736) first payout 24.7%
+   at 4 without RS          $ 24,861 ( -1,353) first payout 26.1%

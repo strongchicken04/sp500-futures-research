@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-24T11:23Z (day shift 2026-10-24 running, until 22:00 Prague)
+heartbeat: 2026-10-24T11:26Z (day shift 2026-10-24 running, until 22:00 Prague)
 last shift: 2026-10-23/24 night shift (report brain/reports/2026-10-24.md); day shift 2026-10-24 running (report brain/reports/2026-10-24-den.md)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -8,7 +8,7 @@ Day shift 2026-10-24 (owner: "jeď to zase dnes celý den"; until 22:00 Prague, 
 D1. DONE: small-edge legs re-tested on the open-P&L model -> VWAP side 10:00 (V10) candidate leg (Lucid 12 funded mode).
 D2. Integrated seat model: evaluation (two-account sprint, real days and fees) + funded book in one simulation;
     does the eval plan (two accounts, RS vs VWAP10, finisher) change when the funded seat is worth ~$900-1,400 a month?
-D3. Book with V10 at 4: re-check size (3 / 4 / 5) and leg drop with V10 included.
+D3. DONE: book with V10: 4 > 3 everywhere, 5 > 4 everywhere but smaller and lower first payout -> keep 4; all legs stay.
 D4. New ideas with the four-era check (open-P&L model for funded legs).
 17. Waiting for the owner: (a) funded 4 MNQ per leg (recommended), (b) drop ORB (recommended),
     (c) confirm LucidFlex funded rules (five profitable days >= $150, 50% / $2,000 payout cap, scaling
