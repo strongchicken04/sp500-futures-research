@@ -1,0 +1,5 @@
+2026 holdout 2026-01-02..2026-07-24 (145 days): days to a pass / fees, starts with >= 40 days left
+   RS      passed 105/105 starts, mean  8.3 days, fees $ 150
+   09:31   passed 102/105 starts, mean  7.9 days, fees $ 161
+   VWAP10  passed 105/105 starts, mean  8.8 days, fees $ 213
+   pair RS + 09:31 (guard): first funded in  5.9 days, fees ~$ 260 (105 starts)
