@@ -94,6 +94,13 @@ English.
 6c. Timing robustness (2026-10-25): a leg entered at a fixed time must also
    hold with the entry shifted by +/-5 minutes (one 5-min bar) in all eras;
    VWAP-side legs at 10:00 / 11:00 failed this.
+6d. Intraday drawdown (2026-10-25, SSRN 7445798 barrier check): the Lucid
+   drawdown TRAILS at end of day but is BREACHED as soon as the intraday
+   balance touches it (Lucid support "LucidFlex drawdown"). Evaluation sims
+   must bust a trade whose adverse move before the target reaches the room
+   left (scripts/paper_barrier.py attempt_intra). Sanity check for every
+   evaluation sim: a RANDOM direction must pass <= L / (T + L) = 40% of
+   evaluations (the old two_win_sprint.attempt_days gave 41-43% in 2022-25).
 7. Nothing goes live without the owner; you recommend, they decide.
 
 ## Shift mechanics

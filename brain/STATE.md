@@ -16,6 +16,16 @@ D4. New ideas: done so far - V11 optional, MOM30/MOM60/OD/NR4 on the V10 book no
 D5. DONE: true 2026 holdout (Jan - Jul 24): book VG+Z+RS +$11.6k at 4 MNQ, first payout 27% as simulated;
     RS leg strong, VG weak (seen before), V10 worst year of 17 -> V10 stays a candidate, not added.
     Data *26 cover 2025-01..2026-07; re-run the 2026 exports when QC data extends.
+P1. 2026-10-25 (owner sent SSRN 7445798, barrier model of prop challenges): DONE check
+    (results/paper_barrier.txt) -> our evaluation sim tested the drawdown only on closed trades; Lucid
+    breaches intraday. With the intraday check (2022-25): RS sprint passes 34% of evaluations, not 54%;
+    fees to a pass $265, not $165; days to a pass about the same (7.9 vs 8.7); random direction 26%
+    (ceiling 40% holds). After a first full loss the evaluation is practically dead (~$50 room).
+P2. NEXT SHIFT: re-run every evaluation result on attempt_intra (guardrail 6d): two-win / finishing trade,
+    pair of accounts + hedge guard, sprint_reset (continue vs new evaluation), eval_spread, 2026 eval
+    holdout, integrated seat (eval cost per funded seat), PLAYBOOK eval numbers. Then test eval sizing
+    under the intraday rule (full size won vs half size in every era; try "after a loss buy a new one").
+    Also from the paper: Mozek view of EV per evaluation; funded withdrawal order check.
 17. Waiting for the owner: (a) funded size: STAY at 3 MNQ per leg at NQ ~28,500 (night's 4 withdrawn 24.10;
     rule MNQ per leg ~ 90,000 / NQ price), (b) drop ORB (recommended),
     (c) confirm LucidFlex funded rules (five profitable days >= $150, 50% / $2,000 payout cap, scaling

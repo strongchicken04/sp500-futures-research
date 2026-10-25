@@ -33,6 +33,13 @@ poplatky ~**300 $** (oba účty dohromady). Jeden účet s RS: ~11 dní, ~190 $.
 Rozptyl (`results/eval_spread.txt`, s pojistkou proti hedgingu): medián 6 dní /
 270 $; v 8 z 10 případů do 10 dní / 360 $; v 19 z 20 do 15–17 dní /
 630–720 $; nejhorší start 2018–2025 trval 31–35 dní a stál 1 440 $.
+> **Pozor (25. 10.):** čísla evaluace v této sekci jsou spíš optimistická.
+> Lucid ukončí účet, jakmile se zůstatek **během dne** dotkne drawdownu, ne
+> až na konci dne. S touto kontrolou projde RS sprint ~34 % evaluací místo
+> ~54 % (2022–25), poplatky ~265 $ místo ~165 $, dny skoro stejné
+> (`results/paper_barrier.txt`). Po první plné prohře zbývá ~50 $, takže
+> účet je prakticky ztracený. Přepočet všech čísel evaluace běží.
+
 Po první prohře se v backtestu pokračuje stejně dál (zbývá ~100 $ do
 drawdownu, takže další prohra účet ukončí); po bustu kup novou evaluaci.
 Volba po první prohře (`results/sprint_reset.txt`, 2018–21 | 2022–25):
