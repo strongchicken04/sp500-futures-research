@@ -1,3 +1,21 @@
+# Noc 25./26. 10. 2026 — EVALUACE: drawdown se hlídá i během dne
+
+Rozbor článku SSRN 7445798 (bariérový model prop challenge) odhalil chybu
+v simulaci evaluace: drawdown se kontroloval jen po uzavřeném obchodu, Lucid
+ale účet ukončí, jakmile se ho zůstatek dotkne během dne. Přepočet
+(2018–21 / 2022–25):
+
+- **Jen RS na jednom účtu:** projde 32 / 37 % evaluací místo 43 / 54 %;
+  první funded za 12,4 / 8,1 dne a 285 / 241 $ poplatků.
+- **Dvojice RS + 09:31:** 7,1 / 5,9 dne a 452 / 432 $.
+- **Na funded místo za 24 měsíců:** −600 až −1 000 $. RS samotný je teď
+  o 1,0–1,3 tisíce $ lepší než dvojice → **doporučení: jen RS na jednom
+  účtu.**
+- **Nové Lucid 7 / 8:** pole „Drawdown line now“; stop se vždy vejde do
+  zbývajícího drawdownu, jinak NO TRADE (kup novou evaluaci).
+- **Funded model se nemění,** otevřené pozice kontroluje během dne už
+  od 24. 10.
+
 # 2026-10-24 (denní směna) — VELIKOST: zůstat na 3 MNQ na nohu (oprava nočního „4“)
 
 **Hlídat: noise momentum (Lucid 6) od ledna 2025 bez edge.** Na obchod (při

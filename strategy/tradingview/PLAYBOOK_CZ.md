@@ -6,7 +6,7 @@ Všechno níže je návrh z backtestů 2018–2025 (laděno na 2018–21, ověř
 ## 0. Nejdřív: nahraj nové verze indikátorů
 
 Lucid 1, 2, 6 a 7 byly 23. 10. upravené (shoda s backtestem, denní hodnoty
-z posledního dokončeného dne). Lucid 8 beze změny. Lucid 9 nepoužívej (držení přes noc není povolené).
+z posledního dokončeného dne). **Noc 25./26. 10.: nové Lucid 7 a Lucid 8** (pole „Drawdown line now“, viz oprava v sekci 1). Lucid 9 nepoužívej (držení přes noc není povolené).
 
 ## 1. Evaluace – dva účty, každý jiný sprint
 
@@ -33,12 +33,34 @@ poplatky ~**300 $** (oba účty dohromady). Jeden účet s RS: ~11 dní, ~190 $.
 Rozptyl (`results/eval_spread.txt`, s pojistkou proti hedgingu): medián 6 dní /
 270 $; v 8 z 10 případů do 10 dní / 360 $; v 19 z 20 do 15–17 dní /
 630–720 $; nejhorší start 2018–2025 trval 31–35 dní a stál 1 440 $.
-> **Pozor (25. 10.):** čísla evaluace v této sekci jsou spíš optimistická.
-> Lucid ukončí účet, jakmile se zůstatek **během dne** dotkne drawdownu, ne
-> až na konci dne. S touto kontrolou projde RS sprint ~34 % evaluací místo
-> ~54 % (2022–25), poplatky ~265 $ místo ~165 $, dny skoro stejné
-> (`results/paper_barrier.txt`). Po první plné prohře zbývá ~50 $, takže
-> účet je prakticky ztracený. Přepočet všech čísel evaluace běží.
+> **Oprava (noc 25./26. 10.) – drawdown se hlídá i během dne.** Lucid ukončí účet,
+> jakmile se zůstatek **během dne** dotkne drawdownu. Starší čísla výše
+> s tím nepočítala.
+>
+> **Nové verze Lucid 7 a Lucid 8:** každé ráno vyplň
+> - „Eval profit so far“ (zisk evaluace),
+> - nové pole **„Drawdown line now“**: čára drawdownu v $ oproti startu.
+>   Na začátku −2 000, pak nejlepší zisk na konci dne − 2 000, po zamčení +100.
+>
+> Indikátor zmenší velikost tak, aby stop skončil aspoň 50 $ nad čárou. Když
+> se nevejde ani 1 MNQ (typicky po první plné prohře), napíše **NO TRADE –
+> kup novou evaluaci**.
+>
+> **Přepočtená očekávání** (`results/two_win_sprint_intra.txt`,
+> `two_win_pair_intra.txt`, `eval_2026_intra.txt`):
+>
+> | plán | dny do prvního funded | poplatky |
+> |---|---|---|
+> | jen RS na jednom účtu, 2018–21 / 2022–25 | 12,4 / 8,1 | 285 $ / 241 $ (dřív 208 $ / 165 $) |
+> | dvojice RS + 09:31, 2018–21 / 2022–25 | 7,1 / 5,9 | 452 $ / 432 $ (dřív 352 $ / 295 $) |
+> | rok 2026: jen RS / dvojice | 7,5 / 6,2 | 237 $ / 418 $ |
+>
+> - **Doporučení:** stačí **jen RS na jednom účtu**. Na funded místo za
+>   24 měsíců vydělá o ~1 000–1 300 $ víc než dvojice
+>   (`results/integrated_seat_intra.txt`). Dvojice je o ~1–2 dny rychlejší
+>   a dražší.
+> - **Po první plné prohře** je evaluace prakticky ztracená, kup novou.
+>   Text níže o „pokračování“ už neplatí.
 
 Po první prohře se v backtestu pokračuje stejně dál (zbývá ~100 $ do
 drawdownu, takže další prohra účet ukončí); po bustu kup novou evaluaci.

@@ -19,9 +19,16 @@ indicator("Lucid 8 — RS Sprint", overlay=true, max_labels_count=500, max_lines
 // 2018-21 / 2022-25: first funded after 6.9 / 6.3 days instead of 7.6 / 6.9
 // (scripts/two_win_sprint.py, two_win_pair.py; faster in all four eras 2010-25).
 
+// Intraday drawdown (2026-10-25): Lucid ends the account as soon as the
+// balance TOUCHES the drawdown line during the day. Enter "Eval profit so far"
+// and "Drawdown line now" (both from the Lucid dashboard, $ vs the start) every
+// morning: the size is cut so a stop-out stays $50 above the line; when not even
+// 1 MNQ fits (e.g. after a first full loss) the indicator says NO TRADE - buy a
+// new evaluation. Backtest with this rule: scripts/two_win_sprint.py (INTRA).
 maxLoss = input.float(1900.0, "Max loss per trade ($)")
 winCap   = input.float(1450.0, "Max win per trade ($, day profit cap)")
 evalPnl  = input.float(0.0, "Eval profit so far ($) - for the finishing trade")
+ddLine   = input.float(-2000.0, "Drawdown line now ($ vs start; -2000 at start, best EOD profit - 2000, +100 once locked)")
 rsThr   = input.float(0.15, "Relative strength threshold (%)") / 100.0
 tgtPct  = input.float(0.20, "Target (% of price)") / 100.0
 stpPct  = input.float(0.40, "Stop (% of price)") / 100.0
@@ -92,14 +99,21 @@ if is1 and isCheck and barstate.isconfirmed and not traded and na(e) and not na(
         // risking the account: two big wins + this small one pass, faster than three big ones
         if evalPnl >= 2100.0 and 3000.0 - evalPnl <= winCap
             fin = math.max(1, int(math.ceil((3000.0 - evalPnl + 60.0) / (winPer - 2.0))))
-            safe = math.max(1, int(math.floor((evalPnl - 100.0 - 50.0) / (lossPer + 3.0))))
-            cts := math.min(cts, math.min(fin, safe))
-        if fixedCts > 0
-            cts := fixedCts
-        eL := line.new(bar_index, e, bar_index + 30, e, color=color.yellow, width=2, extend=extend.right)
-        tL := line.new(bar_index, tp, bar_index + 30, tp, color=color.lime, width=2, extend=extend.right)
-        sL := line.new(bar_index, sl, bar_index + 30, sl, color=color.red, width=2, extend=extend.right)
-        label.new(bar_index, dir == 1 ? low : high, "RS " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ\nRS " + str.tostring(rs * 100, "#.##") + "%  win $" + str.tostring(cts * math.abs(tp - e) * ptValue, "#") + " / loss $" + str.tostring(cts * math.abs(e - sl) * ptValue, "#"), color=dir == 1 ? color.blue : color.purple, textcolor=color.white, style=dir == 1 ? label.style_label_up : label.style_label_down, size=size.normal)
+            cts := math.min(cts, fin)
+        // intraday drawdown: the stop-out must stay $50 above the line
+        fit = int(math.floor((evalPnl - ddLine - 50.0) / (lossPer + 3.0)))
+        if fixedCts <= 0 and fit < 1
+            label.new(bar_index, high, "NO TRADE: only $" + str.tostring(evalPnl - ddLine, "#") + " left to the drawdown line\nbuy a new evaluation", color=color.red, textcolor=color.white, style=label.style_label_down, size=size.normal)
+            e := na
+        else
+            if fixedCts <= 0
+                cts := math.min(cts, fit)
+            if fixedCts > 0
+                cts := fixedCts
+            eL := line.new(bar_index, e, bar_index + 30, e, color=color.yellow, width=2, extend=extend.right)
+            tL := line.new(bar_index, tp, bar_index + 30, tp, color=color.lime, width=2, extend=extend.right)
+            sL := line.new(bar_index, sl, bar_index + 30, sl, color=color.red, width=2, extend=extend.right)
+            label.new(bar_index, dir == 1 ? low : high, "RS " + (dir == 1 ? "LONG " : "SHORT ") + str.tostring(cts) + " MNQ\nRS " + str.tostring(rs * 100, "#.##") + "%  win $" + str.tostring(cts * math.abs(tp - e) * ptValue, "#") + " / loss $" + str.tostring(cts * math.abs(e - sl) * ptValue, "#"), color=dir == 1 ? color.blue : color.purple, textcolor=color.white, style=dir == 1 ? label.style_label_up : label.style_label_down, size=size.normal)
 
 if not na(e) and bar_index > entBar
     rsn = ""

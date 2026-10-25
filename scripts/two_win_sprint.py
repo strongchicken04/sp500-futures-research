@@ -15,7 +15,14 @@ per contract):
            <= $1,450 away: the size whose win just finishes the target
            (+$60 margin), capped so a loss cannot reach the drawdown
 A bust (balance at or below the drawdown line) restarts with a new $90
-evaluation the next day. Days and fees to a pass from every start day, single
+evaluation the next day.
+
+INTRA (default since 2026-10-25, guardrail 6d): Lucid breaches the drawdown
+as soon as the INTRADAY balance touches it. Every trade is then sized so its
+stop-out (with costs) stays $50 above the line; when even 1 MNQ does not fit
+(e.g. after a first full loss: ~$50 left) the account is dead and a new
+evaluation trades that day. breach() covers sims that size otherwise.
+INTRA = False reproduces the old closed-trade check. Days and fees to a pass from every start day, single
 account, for the RS sprint, the 09:31 trend sprint and the 10:00 VWAP sprint,
 over a bracket grid, in four eras.
 
@@ -35,6 +42,12 @@ from b_sprint_lab import trend_map, sgn  # noqa: E402
 ERAS = (("2010-13", "2010", "2014", "_OLD"), ("2014-17", "2014", "2018", "_OLD"),
         ("2018-21", "2018", "2022", ""), ("2022-25", "2022", "2026", ""))
 FEE = 90.0
+INTRA = True
+
+
+class TP(tuple):
+    """(points, T, S) plus .adv = largest bracket level (bp) touched against
+    the trade before it closed (0 if none), .lv the levels, .e the entry."""
 
 
 def trade_pts(r, s, lv, tp, sp):
@@ -44,10 +57,31 @@ def trade_pts(r, s, lv, tp, sp):
     t, sl = fav[ti], adv[si]
     T, S = r["e"] * tp / 1e4, r["e"] * sp / 1e4
     if sl >= 0 and (t < 0 or sl <= t):
-        return -S - 0.25, T, S
-    if t >= 0:
-        return T, T, S
-    return max(-S - 0.25, s * r["eod"]), T, S
+        out, end = (-S - 0.25, T, S), sl
+    elif t >= 0:
+        out, end = (T, T, S), t
+    else:
+        out, end = (max(-S - 0.25, s * r["eod"]), T, S), None
+    x = TP(out)
+    hit = [lev for k, lev in enumerate(lv[:si + 1]) if adv[k] >= 0 and (end is None or adv[k] <= end)]
+    x.adv, x.lv, x.e = (max(hit) if hit else 0), lv, r["e"]
+    return x
+
+
+def stop_usd(sig, n):
+    """Dollar loss of n MNQ stopped out (1 tick slippage, $1 + 1 tick costs)."""
+    return (sig[2] + 0.75) * 2.0 * n + n
+
+
+def breach(sig, n, room):
+    """INTRA: did the intraday balance touch the line (room $ below the
+    start-of-trade balance)? Conservative: the largest bracket level within
+    the room counts as the touch; a stop-out that fits the room never does."""
+    if not INTRA or stop_usd(sig, n) < room:
+        return False
+    room_bp = (room / (2.0 * n) - 0.25) / sig.e * 1e4
+    lev = [x for x in sig.lv if x <= room_bp]
+    return sig.adv >= (max(lev) if lev else sig.lv[0])
 
 
 def attempt_days(days, start, policy):
@@ -62,6 +96,9 @@ def attempt_days(days, start, policy):
         pts, T, S = sig
         line = 100.0 if peak >= 2100.0 else peak - 2000.0
         win1, loss1 = T * 2.0, S * 2.0
+        if INTRA and stop_usd(sig, 1) > pnl - line - 50.0:   # dead account -> new evaluation today
+            evals += 1
+            pnl, peak, best, line = 0.0, 0.0, 0.0, -2000.0
         if policy == "now":
             n = max(1, min(40, int(1900 / loss1)))
         else:
@@ -71,10 +108,12 @@ def attempt_days(days, start, policy):
                 n = max(1, min(n, int((pnl - line - 50.0) / (loss1 + 3.0))))   # never risk the account
             else:
                 n = max(1, min(40, int(1450 / win1), int(1950 / loss1)))
+        if INTRA:
+            n = max(1, min(n, int((pnl - line - 50.0 - stop_usd(sig, 0)) / (stop_usd(sig, 1)))))
         usd = (pts - 0.5) * 2.0 * n - n
         usd = min(usd, 1450.0)                       # day profit cap
         eq = pnl + usd
-        if eq <= line:                               # bust -> new evaluation tomorrow
+        if eq <= line or breach(sig, n, pnl - line):  # bust -> new evaluation tomorrow
             evals += 1
             pnl, peak, best = 0.0, 0.0, 0.0
             continue

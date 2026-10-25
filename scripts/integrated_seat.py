@@ -29,6 +29,7 @@ from score_multi_feature import parse as parse_mf, first_signals, LEVELS as ML  
 from score_cond_bracket import parse, LEVELS as CL  # noqa: E402
 from b_sprint_lab import trend_map, sgn  # noqa: E402
 from hedge_check import exit_min  # noqa: E402
+import two_win_sprint as W  # noqa: E402
 from two_win_sprint import trade_pts  # noqa: E402
 from vside_plateau import vside  # noqa: E402
 
@@ -53,14 +54,20 @@ class Eval:
         pts, T, S = sig
         line = 100.0 if self.peak >= 2100.0 else self.peak - 2000.0
         win1, loss1 = T * 2.0, S * 2.0
+        if W.INTRA and W.stop_usd(sig, 1) > self.pnl - line - 50.0:   # dead account (guardrail 6d)
+            self.bought += 1
+            self.reset()
+            line = -2000.0
         if self.peak >= 2100.0 and 3000.0 - self.pnl <= 1450.0:
             n = max(1, math.ceil((3000.0 - self.pnl + 60.0) / (win1 - 2.0)))
             n = max(1, min(n, int((self.pnl - line - 50.0) / (loss1 + 3.0))))
         else:
             n = max(1, min(40, int(1450 / win1), int(1950 / loss1)))
+        if W.INTRA:
+            n = max(1, min(n, int((self.pnl - line - 50.0 - W.stop_usd(sig, 0)) / W.stop_usd(sig, 1))))
         usd = min((pts - 0.5) * 2.0 * n - n, 1450.0)
         eq = self.pnl + usd
-        if eq <= line:
+        if eq <= line or W.breach(sig, n, self.pnl - line):
             self.bought += 1
             self.reset()
             return False

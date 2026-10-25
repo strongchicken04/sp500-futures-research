@@ -1,0 +1,27 @@
+integrated_seat.py at SIZE=3 (trades at their own era prices, not re-priced), paired blocks
+=== OLD evaluation sim (drawdown checked on closed trades only, INTRA=False)
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 20,688 (    +0) | 44.4 | 15.7%
+   E2 RS alone                $ 21,326 (  +638) | 23.2 | 22.1%
+   E3 VWAP10 alone            $ 21,591 (  +902) | 26.3 | 19.2%
+   E4 09:31 alone             $ 18,859 (-1,830) | 29.5 | 22.6%
+   E5 VWAP10 + 09:31 (guard)  $ 20,326 (  -363) | 44.7 | 15.1%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 34,260 (    +0) | 53.6 | 20.5%
+   E2 RS alone                $ 35,264 (+1,004) | 24.6 | 26.1%
+   E3 VWAP10 alone            $ 36,561 (+2,301) | 26.5 | 24.0%
+   E4 09:31 alone             $ 30,783 (-3,477) | 34.7 | 28.5%
+   E5 VWAP10 + 09:31 (guard)  $ 35,963 (+1,703) | 50.8 | 19.4%
+=== INTRA (guardrail 6d: intraday breach, every trade fits the room, dead account -> new evaluation)
+--- 2018-21: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 19,644 (    +0) | 58.6 | 15.5%
+   E2 RS alone                $ 20,669 (+1,025) | 32.8 | 22.7%
+   E3 VWAP10 alone            $ 20,884 (+1,240) | 37.5 | 19.0%
+   E4 09:31 alone             $ 17,445 (-2,198) | 43.9 | 22.5%
+   E5 VWAP10 + 09:31 (guard)  $ 19,010 (  -634) | 60.3 | 14.6%
+--- 2022-25: 24-month cash per seat (evaluation fees included) | evaluations bought | share of days in evaluation
+   E1 RS + 09:31 (guard)      $ 33,343 (    +0) | 74.6 | 19.1%
+   E2 RS alone                $ 34,643 (+1,300) | 37.4 | 24.9%
+   E3 VWAP10 alone            $ 35,446 (+2,102) | 41.8 | 23.0%
+   E4 09:31 alone             $ 30,982 (-2,361) | 55.0 | 26.1%
+   E5 VWAP10 + 09:31 (guard)  $ 34,072 (  +729) | 75.1 | 18.8%

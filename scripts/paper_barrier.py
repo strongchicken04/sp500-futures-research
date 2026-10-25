@@ -24,6 +24,7 @@ sys.path.insert(0, "scripts")
 from score_multi_feature import parse as parse_mf, first_signals, LEVELS as ML  # noqa: E402
 from score_cond_bracket import parse, LEVELS as CL  # noqa: E402
 from b_sprint_lab import trend_map, sgn  # noqa: E402
+import two_win_sprint as W  # noqa: E402
 from two_win_sprint import trade_pts, attempt_days, ERAS  # noqa: E402
 
 # Second check: the evaluation sim tests the drawdown only on the CLOSED
@@ -32,6 +33,8 @@ from two_win_sprint import trade_pts, attempt_days, ERAS  # noqa: E402
 # loss: ~$50 left) dies on the first small adverse move. INTRA: bust when the
 # adverse excursion before the target reaches the room left (largest bracket
 # level <= the room in bp; below the smallest level: the 5 bp level, lenient).
+# Modes: "eod" = old sim (W.INTRA False); "room" = two_win_sprint with INTRA
+# (every trade sized to fit the room, dead account -> new evaluation);
 # SIZE: "full" = the plan (loss <= $1,950, room only checked on the finishing
 # trade); "half" = loss <= min($950, room - $50), never more than the room.
 
@@ -101,8 +104,10 @@ def pass_rate(sig, cal, lv, tp, sp, flip=None, mode="eod"):
             days.append(trade_pts(r, s, lv, tp, sp) + (adverse_bp(r, s, lv, tp), r["e"]))
         else:
             days.append(None)
-    if mode == "eod":
-        res = [attempt_days([x[:3] if x else None for x in days], s0, "two-win") for s0 in range(0, len(days) - 260)]
+    if mode in ("eod", "room"):
+        W.INTRA = mode == "room"
+        tp_days = [trade_pts(sig[d][0], (flip or {}).get(d, sig[d][1]), lv, tp, sp) if d in sig else None for d in cal]
+        res = [attempt_days(tp_days, s0, "two-win") for s0 in range(0, len(days) - 260)]
     else:
         res = [attempt_intra(days, s0, mode) for s0 in range(0, len(days) - 260)]
     res = [x for x in res if x]
@@ -126,13 +131,13 @@ def main():
         print(f"--- {lab}  pass rate per evaluation (days, fees to a pass)")
         for name, (sig, lv) in S.items():
             tp, sp = BR[name]
-            for mode in ("eod", "full", "half"):
+            for mode in ("eod", "full", "room"):
                 real, rd, fee = pass_rate(sig, cal, lv, tp, sp, mode=mode)
                 rnd = []
                 for seed in range(20):
                     g = random.Random(seed)
                     rnd.append(pass_rate(sig, cal, lv, tp, sp, {d: g.choice((1, -1)) for d in sig}, mode)[0])
-                tag = {"eod": "sim as today", "full": "intraday, plan size", "half": "intraday, half size"}[mode]
+                tag = {"eod": "old sim (closed)", "full": "intraday, plan size", "room": "intraday, fit room"}[mode]
                 print(f"   {name:<6} {tag:<20} real {real * 100:5.1f}% ({rd:5.1f} d, ${fee:4.0f})   "
                       f"random {st.mean(rnd) * 100:5.1f}% (range {min(rnd) * 100:4.1f}-{max(rnd) * 100:4.1f})")
 

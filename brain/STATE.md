@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-25T22:08Z (night shift 2026-10-25/26 RUNNING: P2 eval re-run with intraday drawdown)
+heartbeat: 2026-10-25T22:13Z (night shift 2026-10-25/26 RUNNING: P2 done, P3 next)
 last shift: 2026-10-25/26 night shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -21,11 +21,15 @@ P1. 2026-10-25 (owner sent SSRN 7445798, barrier model of prop challenges): DONE
     breaches intraday. With the intraday check (2022-25): RS sprint passes 34% of evaluations, not 54%;
     fees to a pass $265, not $165; days to a pass about the same (7.9 vs 8.7); random direction 26%
     (ceiling 40% holds). After a first full loss the evaluation is practically dead (~$50 room).
-P2. NEXT SHIFT: re-run every evaluation result on attempt_intra (guardrail 6d): two-win / finishing trade,
+P2. DONE (night 25/26; registry): re-run every evaluation result on attempt_intra (guardrail 6d): two-win / finishing trade,
     pair of accounts + hedge guard, sprint_reset (continue vs new evaluation), eval_spread, 2026 eval
     holdout, integrated seat (eval cost per funded seat), PLAYBOOK eval numbers. Then test eval sizing
     under the intraday rule (full size won vs half size in every era; try "after a loss buy a new one").
-    Also from the paper: Mozek view of EV per evaluation; funded withdrawal order check.
+    Result: RS alone on one account recommended (beats the pair by $1.0-1.3k per seat); Lucid 7/8 got
+    "Drawdown line now"; playbook + FINAL_PLAN updated.
+P3. NEXT: from the paper - EV per evaluation in Mozek metrics (eval p, fee); funded withdrawal-order /
+    payout-size check in funded_model ("large day last" idea is about consistency, funded has none -> low
+    priority); AUTOMATION_SPEC eval sizing with the room cap.
 17. Waiting for the owner: (a) funded size: STAY at 3 MNQ per leg at NQ ~28,500 (night's 4 withdrawn 24.10;
     rule MNQ per leg ~ 90,000 / NQ price), (b) drop ORB (recommended),
     (c) confirm LucidFlex funded rules (five profitable days >= $150, 50% / $2,000 payout cap, scaling
