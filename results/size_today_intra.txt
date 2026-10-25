@@ -1,0 +1,32 @@
+--- 2018-21 at NQ 28,530: 24-month cash per seat | first payout | evaluations
+   1 each         $ 19,619  p10 $  7,620  first payout 39.4%  funded accounts  8.0
+   2 each         $ 30,245  p10 $  9,365  first payout 26.5%  funded accounts 11.2
+   3 each         $ 33,375  p10 $  8,040  first payout 20.4%  funded accounts 12.0
+   4 each         $ 32,820  p10 $  5,180  first payout 14.5%  funded accounts 13.1
+   VG/Z 3, RS 2   $ 33,413  p10 $ 10,370  first payout 23.9%  funded accounts 10.7
+   VG/Z 2, RS 1   $ 28,839  p10 $ 11,695  first payout 30.3%  funded accounts  8.9
+   VG/Z 3, RS 1   $ 32,110  p10 $ 12,225  first payout 26.0%  funded accounts  9.1
+--- 2022-25 at NQ 28,530: 24-month cash per seat | first payout | evaluations
+   1 each         $ 20,020  p10 $  8,415  first payout 55.4%  funded accounts  6.7
+   2 each         $ 31,934  p10 $ 12,700  first payout 31.0%  funded accounts 10.5
+   3 each         $ 36,274  p10 $ 13,440  first payout 21.7%  funded accounts 10.5
+   4 each         $ 38,203  p10 $ 12,965  first payout 19.8%  funded accounts 10.8
+   VG/Z 3, RS 2   $ 34,636  p10 $ 13,495  first payout 26.7%  funded accounts  9.7
+   VG/Z 2, RS 1   $ 27,696  p10 $ 12,225  first payout 39.8%  funded accounts  8.5
+   VG/Z 3, RS 1   $ 31,883  p10 $ 14,025  first payout 31.9%  funded accounts  8.5
+--- 2010-13 at NQ 28,530: 24-month cash per seat | first payout | evaluations
+   1 each         $ 14,935  p10 $  3,490  first payout 32.7%  funded accounts 12.3
+   2 each         $ 20,433  p10 $  2,375  first payout 18.4%  funded accounts 17.5
+   3 each         $ 23,533  p10 $  1,315  first payout 15.5%  funded accounts 18.9
+   4 each         $ 25,091  p10 $    520  first payout 12.7%  funded accounts 19.4
+   VG/Z 3, RS 2   $ 22,418  p10 $  1,580  first payout 16.3%  funded accounts 18.8
+   VG/Z 2, RS 1   $ 19,487  p10 $  2,905  first payout 22.2%  funded accounts 16.6
+   VG/Z 3, RS 1   $ 20,705  p10 $  1,845  first payout 16.4%  funded accounts 18.6
+--- 2014-17 at NQ 28,530: 24-month cash per seat | first payout | evaluations
+   1 each         $ 10,896  p10 $  1,690  first payout 20.0%  funded accounts 11.5
+   2 each         $ 21,564  p10 $  6,240  first payout 23.0%  funded accounts 16.0
+   3 each         $ 24,930  p10 $  4,175  first payout 17.8%  funded accounts 17.3
+   4 each         $ 26,470  p10 $  2,850  first payout 14.7%  funded accounts 17.9
+   VG/Z 3, RS 2   $ 23,702  p10 $  4,705  first payout 18.8%  funded accounts 17.2
+   VG/Z 2, RS 1   $ 18,656  p10 $  5,235  first payout 23.9%  funded accounts 15.2
+   VG/Z 3, RS 1   $ 22,891  p10 $  5,975  first payout 24.3%  funded accounts 16.3

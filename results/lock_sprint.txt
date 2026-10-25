@@ -1,0 +1,16 @@
+--- 2018-21 at NQ 28,530: 24-month cash per seat (paired) | first payout from every start day
+   BOOK         $ 33,157  p10 $  7,775  vs BOOK     +0 (+/- 0) better   0%  first payout 20.4% in  12.6 d
+   LOCK idle    $ 24,971  p10 $    100  vs BOOK -8,186 (+/- 688) better  35%  first payout 17.4% in   9.6 d
+   LOCK + book  $ 28,720  p10 $  2,640  vs BOOK -4,437 (+/- 631) better  40%  first payout 16.0% in   9.3 d
+--- 2022-25 at NQ 28,530: 24-month cash per seat (paired) | first payout from every start day
+   BOOK         $ 36,047  p10 $ 12,700  vs BOOK     +0 (+/- 0) better   0%  first payout 21.7% in  16.4 d
+   LOCK idle    $ 28,570  p10 $  3,170  vs BOOK -7,477 (+/- 630) better  34%  first payout 22.0% in  14.2 d
+   LOCK + book  $ 29,731  p10 $  3,645  vs BOOK -6,315 (+/- 619) better  35%  first payout 20.6% in  13.7 d
+--- 2010-13 at NQ 28,530: 24-month cash per seat (paired) | first payout from every start day
+   BOOK         $ 23,619  p10 $  1,580  vs BOOK     +0 (+/- 0) better   0%  first payout 15.5% in  10.9 d
+   LOCK idle    $  1,162  p10 $ -2,385  vs BOOK -22,458 (+/- 648) better   9%  first payout  4.7% in  20.8 d
+   LOCK + book  $ 14,834  p10 $ -2,760  vs BOOK -8,786 (+/- 613) better  30%  first payout 15.1% in  10.4 d
+--- 2014-17 at NQ 28,530: 24-month cash per seat (paired) | first payout from every start day
+   BOOK         $ 25,110  p10 $  4,705  vs BOOK     +0 (+/- 0) better   0%  first payout 17.8% in  11.0 d
+   LOCK idle    $  4,256  p10 $ -3,180  vs BOOK -20,854 (+/- 624) better   9%  first payout 13.1% in  14.1 d
+   LOCK + book  $  9,482  p10 $ -4,560  vs BOOK -15,627 (+/- 603) better  16%  first payout 13.1% in  11.6 d
