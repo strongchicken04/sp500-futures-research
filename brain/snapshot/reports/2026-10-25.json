@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-25T07:10",
+  "summary": "CO UDĚLAT TY (beze změny)\n1) Velikost 3 MNQ na nohu (MNQ ≈ 90 000 / cena NQ).\n2) ORB (Lucid 1) vyřadit.\n3) Nahraj novou Lucid 8 (funded RS noha: Target 1,25 / Stop 1,25, Fixed contracts 3, filtr volatility ZAP).\n4) Potvrď v Lucidu pravidla výplaty a scaling.\n5) Automatizace: vyber cestu.\n\nVÝSLEDKY NOCI\n• Plán B za noise (strana VWAP v 11:00) ZAMÍTNUT – funguje jen přesně v 11:00; při vstupu 10:55 nebo 11:05 se výsledky v některých obdobích obracejí. Když noise do konce 2026 nevydělá, jen ji snížit / vyřadit, bez náhrady.\n• RS noha: kontroly posunuté o ±5 min jsou kladné ve všech obdobích 2010–2025 (+11 až +41 $ na MNQ a obchod) → robustní.\n• Noise momentum: rozhodování posunuté o ±5 min dává podobný edge do roku 2024 (+9 až +45 $) → robustní; v 2025–26 je ale kolem nuly ve všech variantách → útlum je skutečný, pravidlo pro noise platí.\n• Nové pravidlo pro budoucí testy: noha s pevným časem vstupu musí vydržet posun ±5 minut.\n\nPodrobně: brain/reports/2026-10-25.md.",
+  "title": "Noční směna 24./25. 10. – test robustnosti času, plán B zamítnut",
+  "verdicts": [
+    {
+      "name": "RS – robustní na čas",
+      "status": "candidate"
+    },
+    {
+      "name": "Noise – robustní, ale útlum 2025–26",
+      "status": "candidate"
+    },
+    {
+      "name": "Plán B VWAP 11:00",
+      "status": "rejected"
+    }
+  ]
+}

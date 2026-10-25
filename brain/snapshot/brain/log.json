@@ -1,6 +1,21 @@
 {
   "events": [
     {
+      "sphere": "Manažer",
+      "t": "2026-10-25T06:09:40Z",
+      "text": "Noc 24./25. 10.: test robustnosti času (±5 min) – RS noha i noise momentum PROŠLY (edge nestojí na přesné svíčce); VWAP nohy (10:00, 11:00) neprošly."
+    },
+    {
+      "sphere": "Interpret",
+      "t": "2026-10-25T06:09:40Z",
+      "text": "Noční směna uzavřena. Plán beze změny: 3 MNQ, bez ORB, nová Lucid 8, noise hlídat (bez náhrady)."
+    },
+    {
+      "sphere": "Manažer",
+      "t": "2026-10-24T21:14:04Z",
+      "text": "Noc 24./25. 10.: plán B (strana VWAP v 11:00) ZAMÍTNUT – funguje jen přesně v 11:00, při vstupu 10:55 nebo 11:05 se výsledky obracejí. Když noise spustí pravidlo, jen ji snížit / vyřadit, bez náhrady."
+    },
+    {
       "sphere": "Interpret",
       "t": "2026-10-24T19:08:56Z",
       "text": "Denní směna 24. 10. uzavřena. Report v Mozku a v brain/reports/2026-10-24-den.md: zůstat na 3 MNQ, vyřadit ORB, nová Lucid 8, hlídat noise (plán B: VWAP 11:00)."
@@ -284,21 +299,6 @@
       "sphere": "Importér",
       "t": "2026-10-23T09:06:50Z",
       "text": "Denní směna: 7 jednoduchých pravidel s volume profilem a klíčovými úrovněmi (VA 80 %, POC, IB, high/low předchozího dne, overnight sweep) zapsáno předem."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T09:06:50Z",
-      "text": "QC export 5min svíček NQ + volume profil každého dne (2018–25) běží – laboratoř úrovní."
-    },
-    {
-      "sphere": "Interpret",
-      "t": "2026-10-23T07:32:00Z",
-      "text": "Playbook s přesným nastavením indikátorů pro evaluaci (2 účty) i funded (flat 3): PLAYBOOK_CZ.md."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T07:31:00Z",
-      "text": "Po první prohře ve sprintu: vzdát a koupit novou evaluaci = o 1,5–2 dny rychlejší, o 125–200 $ dražší."
     }
   ]
 }
