@@ -21,7 +21,7 @@ Daily inputs always come from the last COMPLETED session (no look-ahead):
 | account | stage | runs |
 |---|---|---|
 | A | evaluation | RS sprint (Lucid 8) |
-| B | evaluation | 09:31 trend sprint (Lucid 7) |
+| B | evaluation (optional since 2026-10-26: RS alone earns more per funded seat) | 09:31 trend sprint (Lucid 7) |
 | F1..F5 | funded | the book, identical copies (VG + Z + RS leg; ORB dropped if the owner agrees) |
 
 ### Cross-account hedge guards (Lucid bans opposite positions across own accounts)
@@ -43,6 +43,13 @@ if evalPnl >= 2100 and 3000 - evalPnl <= 1450:
     fin  = max(1, ceil((3000 - evalPnl + 60) / (winPer - 2)))
     safe = max(1, floor((evalPnl - 100 - 50) / (lossPer + 3)))
     n = min(n, fin, safe)
+# intraday drawdown (2026-10-25): Lucid breaches as soon as the INTRADAY
+# balance touches the line (line = -2000 at the start, best EOD profit - 2000,
+# +100 once an EOD balance cleared +2,100). Every trade must fit the room:
+stopPer = lossPer + 0.75 * 2 + 1                  # stop slippage + costs as in the sims (Pine: lossPer + 3)
+fit = floor((evalPnl - line - 50) / stopPer)
+if fit < 1: no trade - the account is dead, start a new evaluation
+else: n = min(n, fit)
 ```
 Stop the evaluation account after it reaches +$3,000 with the best day <= 50%
 of the profit; a bust (balance at the trailing drawdown) ends it.
