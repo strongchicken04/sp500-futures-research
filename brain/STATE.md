@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-25T07:08Z (night shift 2026-10-24/25 FINISHED; report brain/reports/2026-10-25.md)
-last shift: 2026-10-24/25 night shift (report brain/reports/2026-10-25.md, 07:10 Prague)
+heartbeat: 2026-10-25T22:08Z (night shift 2026-10-25/26 RUNNING: P2 eval re-run with intraday drawdown)
+last shift: 2026-10-25/26 night shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-24/25:
