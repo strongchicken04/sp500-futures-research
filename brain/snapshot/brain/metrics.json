@@ -1,18 +1,18 @@
 {
   "book": {
-    "caption": "24. 10.: kniha bez ORB (VWAP pásmo + noise + RS) · přepočteno na dnešní cenu NQ ~28 500 · 2018–21 | 2022–25",
+    "caption": "kniha bez ORB (VWAP pásmo + noise + RS), 3 MNQ · dnešní cena NQ ~28 500 · nová cena evaluace po pádu · 2018–21 | 2022–25",
     "tiles": [
       {
         "label": "3 MNQ na nohu (doporučeno)",
         "sub": "za 24 měsíců na funded místo",
         "tone": "ok",
-        "value": "$33,2k / $36,3k"
+        "value": "$33,4k / $36,3k"
       },
       {
         "label": "2010–17 při dnešní ceně",
         "sub": "3 MNQ, klidnější trh",
         "tone": "arc",
-        "value": "$22,9k / $25,5k"
+        "value": "$23,5k / $24,9k"
       },
       {
         "label": "Test 2026 (leden–červenec)",
@@ -29,9 +29,9 @@
     ]
   },
   "eval": {
-    "caption": "RS sprint (stop 0,30 %) + 09:31 (target 0,25 %) na dvou účtech · návrh",
+    "caption": "RS sprint (Lucid 8) na jednom účtu · drawdown hlídaný i během dne (oprava 25./26. 10.)",
     "fee": 90,
-    "p": 0.5,
+    "p": 0.37,
     "rules": [
       [
         "Trh",
@@ -39,7 +39,7 @@
       ],
       [
         "Kontroly",
-        "10:00, 11:00, 13:00, 14:30 ET (16:00, 17:00, 19:00, 20:30 Praha)"
+        "10:00, 11:00, 13:00, 14:30 ET"
       ],
       [
         "Long",
@@ -55,40 +55,40 @@
       ],
       [
         "Target / stop",
-        "+0,20 % / −0,40 % ceny, flat 15:55"
+        "+0,20 % / −0,30 % ceny, flat 15:55"
       ],
       [
         "Velikost",
-        "stop = max. ztráta 1 900 $ (~1 000 $ výhra)"
+        "výhra do 1 450 $, prohra do ~1 900 $; vždy se vejde do zbývajícího drawdownu (pole „Drawdown line now“)"
       ],
       [
         "Pass",
-        "3 výhry (nejlepší den ~1/3 zisku); prohra ukončí pokus"
+        "2 velké výhry + malý dokončovací obchod; po plné prohře kup novou evaluaci"
       ]
     ],
     "tiles": [
       {
-        "label": "Dva účty: dní do funded",
+        "label": "Jen RS: dní do funded",
         "sub": "2018–21 / 2022–25",
         "tone": "ok",
-        "value": "6,8 / 6,5"
+        "value": "12,4 / 8,1"
       },
       {
         "label": "Poplatky do funded",
-        "sub": "oba účty dohromady",
+        "sub": "dřív 208 / 165 $",
         "tone": "gold",
-        "value": "~$305"
+        "value": "$285 / $241"
       },
       {
-        "label": "Jeden účet RS 0,30 %",
-        "sub": "poplatky ~185–200 $",
+        "label": "Projde evaluací",
+        "sub": "náhodný směr 26 / 29 %, strop bez edge 40 %",
         "tone": "arc",
-        "value": "~11 dní"
+        "value": "32 / 37 %"
       },
       {
-        "label": "Dosavadní RS 0,40 %",
-        "sub": "pass 48 / 52 %",
-        "value": "~13 dní"
+        "label": "Dvojice RS + 09:31",
+        "sub": "poplatky 452 / 432 $, na funded místo horší",
+        "value": "7,1 / 5,9 dne"
       }
     ]
   }

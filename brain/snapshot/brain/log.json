@@ -1,6 +1,31 @@
 {
   "events": [
     {
+      "sphere": "Interpret",
+      "t": "2026-10-25T22:16:43Z",
+      "text": "Noční směna 25./26. 10. hotová – report v Mozku. Evaluace: jen RS na jednom účtu; nahraj nové Lucid 7 a 8."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-25T22:16:43Z",
+      "text": "Sprint na funded účtu do zamčení drawdownu (+2 100 $): zamítnuto, horší ve všech 4 obdobích o 4–22 tisíc $."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-25T22:16:43Z",
+      "text": "Lucid 7 a 8: nové pole „Drawdown line now“, stop se vždy vejde do zbývajícího drawdownu, jinak NO TRADE."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-25T22:16:43Z",
+      "text": "Evaluace s drawdownem během dne: RS sám 12,4 / 8,1 dne, 285 / 241 $; dvojice 7,1 / 5,9 dne, 452 / 432 $. RS sám vydělá na funded místo o 1,0–1,3 tisíce $ víc."
+    },
+    {
+      "sphere": "Importér",
+      "t": "2026-10-25T13:30:00Z",
+      "text": "Článek SSRN 7445798 (bariérový model): náhodný směr prošel v naší simulaci nad stropem 40 % → drawdown se musí hlídat i během dne."
+    },
+    {
       "sphere": "Manažer",
       "t": "2026-10-25T06:09:40Z",
       "text": "Noc 24./25. 10.: test robustnosti času (±5 min) – RS noha i noise momentum PROŠLY (edge nestojí na přesné svíčce); VWAP nohy (10:00, 11:00) neprošly."
@@ -274,31 +299,6 @@
       "sphere": "Backtester",
       "t": "2026-10-23T09:44:34Z",
       "text": "Zamítnuto: EMA 9/21, Supertrend, MACD, Bollinger (5 min), ICT Silver Bullet, režimy Yu-Rentzler-Wolf. Čekám na úrovně Londýna a Asie."
-    },
-    {
-      "sphere": "Systémový manažer",
-      "t": "2026-10-23T09:39:49Z",
-      "text": "Hedging mezi účty A a B: opačné pozice současně ~7 % dní. Pojistka: A přeskočí signál proti otevřenému obchodu na B (stojí 0,2–0,4 dne). V playbooku."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T09:39:49Z",
-      "text": "Objem jako filtr (relativní objem na otevření, spike, ORB 5 min, trend 14:00) zamítnut; open drive na ES slabý."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T09:37:43Z",
-      "text": "Open drive ani IB do funded knihy nepřidávají (flat 3: 17 500 / 27 200 $ a 15 800 / 26 300 $ místo 18 600 / 28 300 $)."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T09:37:43Z",
-      "text": "Volume profile (80 %, POC, nahý POC, hodnota) zamítnut – nedrží 2022–25. Open drive kandidát: +7,1 / +22,6 b. na obchod, celé okolí parametrů kladné."
-    },
-    {
-      "sphere": "Importér",
-      "t": "2026-10-23T09:06:50Z",
-      "text": "Denní směna: 7 jednoduchých pravidel s volume profilem a klíčovými úrovněmi (VA 80 %, POC, IB, high/low předchozího dne, overnight sweep) zapsáno předem."
     }
   ]
 }

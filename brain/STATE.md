@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-25T22:13Z (night shift 2026-10-25/26 RUNNING: P2 done, P3 next)
-last shift: 2026-10-25/26 night shift (running)
+heartbeat: 2026-10-25T22:17Z (night shift 2026-10-25/26 FINISHED; report brain/reports/2026-10-26.md)
+last shift: 2026-10-25/26 night shift (report brain/reports/2026-10-26.md)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-24/25:
@@ -27,14 +27,17 @@ P2. DONE (night 25/26; registry): re-run every evaluation result on attempt_intr
     under the intraday rule (full size won vs half size in every era; try "after a loss buy a new one").
     Result: RS alone on one account recommended (beats the pair by $1.0-1.3k per seat); Lucid 7/8 got
     "Drawdown line now"; playbook + FINAL_PLAN updated.
-P3. NEXT: from the paper - EV per evaluation in Mozek metrics (eval p, fee); funded withdrawal-order /
-    payout-size check in funded_model ("large day last" idea is about consistency, funded has none -> low
-    priority); AUTOMATION_SPEC eval sizing with the room cap.
+P3. DONE (night 25/26): AUTOMATION_SPEC room cap; funded_model eval cost 10 d / $265 (headline unchanged:
+    $33.4k / $36.3k); funded 'sprint to the lock' REJECTED (-4k..-22k); Mozek eval metrics p / fee updated.
+    Withdrawal-order idea of the paper is about the consistency rule (funded has none) -> not tested.
 17. Waiting for the owner: (a) funded size: STAY at 3 MNQ per leg at NQ ~28,500 (night's 4 withdrawn 24.10;
     rule MNQ per leg ~ 90,000 / NQ price), (b) drop ORB (recommended),
     (c) confirm LucidFlex funded rules (five profitable days >= $150, 50% / $2,000 payout cap, scaling
     20 MNQ below $1,000 profit, 5-payout cap), (d) automation route (NinjaScript on own PC or TradingView
     webhook) -> then code the eval sprints (Lucid 8 + Lucid 7 with both hedge guards) first.
+    (e) NEW 25/26: re-upload Lucid 7 + Lucid 8 ("Drawdown line now" input), evaluation = RS alone on one
+    account (recommended; the pair is 1-2 days faster but $1.0-1.3k worse per seat), (f) check the Lucid
+    agreement: pooling/hedging clause vs copy-trading, review of 'excessive single-day profits'.
 18. WATCH: noise momentum (Z) flat since 2025-01 (t -2.0 vs history); rule: Z mean 2025-26 <= 0 at end of 2026 ->
     cut Z to 2 MNQ; still <= 0 mid-2027 -> drop. V11 as a replacement REJECTED (night 24/25: only the exact
     11:00 bar works, 10:55 / 11:05 flip - fragile). No replacement leg for now.

@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-26",
+  "summary": "## Co je potřeba udělat ty\n1. Nahraj nové Lucid 7 a Lucid 8. Mají nové pole „Drawdown line now“.\n   - Každé ráno vyplň „Eval profit so far“ a „Drawdown line now“. Čára\n     drawdownu je v $ oproti startu: −2 000 na začátku, pak nejlepší zisk na\n     konci dne − 2 000, po zamčení +100.\n   - Indikátor zmenší velikost tak, aby stop skončil aspoň 50 $ nad čárou.\n   - Když se nevejde ani 1 MNQ, napíše NO TRADE – kup novou evaluaci.\n2. Evaluace: stačí jen RS (Lucid 8) na jednom účtu.\n   - Na jedno funded místo za 24 měsíců vydělá o 1 000–1 300 $ víc než\n     dvojice s 09:31.\n   - Dvojice je o 1–2 dny rychlejší, ale dražší.\n   - Sprint z 09:31 sám edge nemá.\n3. V Lucid smlouvě ověř:\n   - zákaz „sdružování nebo hedgingu rizika“ mezi účty (kopírování knihy na\n     víc funded účtů);\n   - zpětné posouzení „nadměrných zisků z jednoho dne“.\n4. Platí dál: 3 MNQ na nohu, vyřadit ORB, potvrdit pravidla Lucidu a\n   vybrat cestu automatizace.\n\n## Hlavní zjištění: simulace evaluace byla optimistická\nPodnět dal článek SSRN 7445798, který jsi poslal. Bez edge lze projít nejvýš\ndrawdown / (cíl + drawdown) = 40 % evaluací. Naše simulace dávala\nnáhodnému směru 41–43 %, tedy nad stropem. Důvod: drawdown kontrolovala\njen po uzavřeném obchodu. Lucid ale účet ukončí, jakmile se ho zůstatek\ndotkne během dne.\n\nOpravená simulace (každý obchod se vejde do zbývajícího drawdownu, mrtvý\núčet = nová evaluace), 2018–21 / 2022–25:\n\n| plán | dny do prvního funded | poplatky | dřív |\n|---|---|---|---|\n| jen RS na jednom účtu | 12,4 / 8,1 | 285 / 241 $ | 10,9 / 8,7 dne, 208 / 165 $ |\n| dvojice RS + 09:31 | 7,1 / 5,9 | 452 / 432 $ | 6,9 / 6,3 dne, 352 / 295 $ |\n| rok 2026 (leden–červenec): RS / dvojice | 7,5 / 6,2 | 237 / 418 $ | 8,3 / 5,9 dne, 150 / 260 $ |\n\n- RS projde 32 / 37 % evaluací, náhodný směr 26 / 29 %. Strop 40 % drží\n  a RS má pořád edge.\n- Dny do funded se skoro nemění. Dražší jsou jen poplatky, protože po první\n  plné prohře je evaluace ztracená.\n- Na jedno funded místo za 24 měsíců to stojí 0–1 000 $. Při dnešní ceně\n  NQ (3 MNQ, bez ORB):\n  - 2018–21 / 2022–25: 33 400 / 36 300 $;\n  - 2010–13 / 2014–17: 23 500 / 24 900 $.\n- Funded model se nemění. Otevřené pozice v něm kontroluju během dne\n  už od 24. 10.\n\n## Co dalšího se testovalo\n- Sprint na funded účtu jen do zamčení drawdownu (+2 100 $), pak kniha\n  (nápad z článku): zamítnuto.\n  - Horší ve všech čtyřech obdobích o 4 400–22 500 $ na funded místo.\n  - Účtů s první výplatou není víc.\n  - Kniha vydělává i ve fázi, kdy se drawdown ještě posouvá.\n- Poloviční velikost v evaluaci (prohra max. 950 $): mnohem horší, 14–16 %\n  průchodů. Hra naplno, jak píše článek, platí.\n- RS bracket 0,25 / 0,40 byl v letech 2010–17 rychlejší, v 2018–25\n  stejný. Neměním ho, byl by to výběr z mřížky.\n\n## Poznámka k metodě\n- Nová pojistka 6d: každá simulace evaluace kontroluje drawdown během\n  dne a náhodný směr v ní nesmí projít víc než 40 % evaluací.\n- Funded model teď počítá novou evaluaci po pádu za 10 dní a 265 $ (dřív\n  11 dní a 180 $).\n- Výsledky jsou v results/paper_barrier.txt, two_win_sprint_intra.txt,\n  two_win_pair_intra.txt, eval_2026_intra.txt,\n  integrated_seat_intra.txt, size_today_intra.txt a lock_sprint.txt.\n- Rozbor článku je v brain/reports/2026-10-25-clanek.md.\n",
+  "title": "Noční směna 25./26. 10. – evaluace s drawdownem během dne",
+  "verdicts": [
+    {
+      "name": "Simulace evaluace s drawdownem během dne (pojistka 6d)",
+      "status": "opraveno"
+    },
+    {
+      "name": "Evaluace jen RS na jednom účtu",
+      "status": "doporučeno"
+    },
+    {
+      "name": "Lucid 7 / 8 – pole Drawdown line now",
+      "status": "nahrát"
+    },
+    {
+      "name": "Funded sprint do zamčení drawdownu",
+      "status": "zamítnuto"
+    }
+  ]
+}
