@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-25T05:08Z (night shift 2026-10-24/25 running; draft report written)
-last shift: 2026-10-24 day shift (report brain/reports/2026-10-24-den.md); night shift 24/25 running
+heartbeat: 2026-10-25T07:08Z (night shift 2026-10-24/25 FINISHED; report brain/reports/2026-10-25.md)
+last shift: 2026-10-24/25 night shift (report brain/reports/2026-10-25.md, 07:10 Prague)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-24/25:
@@ -30,6 +30,8 @@ D5. DONE: true 2026 holdout (Jan - Jul 24): book VG+Z+RS +$11.6k at 4 MNQ, first
 4. Treasury auction effect (ZN): BLOCKED (treasury.gov and fiscaldata refused by the network policy).
 
 ## Done this shift
+- Night 24/25: V11 plan B rejected (timing-fragile); RS and noise pass the +/-5 min timing check (rs_timing.py,
+  z_timing.py); guardrail 6c added.
 - Day 24.10: 2026 holdout (Jan-Jul): plan holds, ORB drop confirmed, V10 not added; eval pair 5.9 days.
   SIZE AT TODAY'S PRICE (NQ 28,530): 3 MNQ per leg is right, 4 is not -> night's '4 MNQ' withdrawn.
   IMPORTANT for all future funded dollar questions: re-price every era at the current NQ level (size_today.py).
