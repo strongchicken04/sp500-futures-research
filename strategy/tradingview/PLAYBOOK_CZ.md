@@ -60,6 +60,13 @@ Rozptyl (`results/eval_spread.txt`, s pojistkou proti hedgingu): medián 6 dní 
 >   (`results/integrated_seat_intra.txt`). Dvojice je o ~1–2 dny rychlejší
 >   a dražší.
 > - **Po první plné prohře** je evaluace prakticky ztracená, kup novou.
+> - **Rozptyl, jen RS, 2022–25** (`results/eval_spread_intra.txt`):
+>   - medián 7 dní a 180 $;
+>   - 8 z 10 startů do 11 dní a 360 $, 19 z 20 do 19 dní a 540 $;
+>   - nejhorší start 40 dní a 900 $.
+>
+>   V letech 2018–21: medián 9 dní, 19 z 20 do 30 dní a 720 $, nejhorší
+>   66 dní a 1 530 $. Rok 2026: medián 6 dní, nejhorší 22 dní a 720 $.
 >   Text níže o „pokračování“ už neplatí.
 
 Po první prohře se v backtestu pokračuje stejně dál (zbývá ~100 $ do
