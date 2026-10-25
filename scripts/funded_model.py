@@ -10,7 +10,7 @@ Fixes against mc_book / timed_book / funded_sizing:
 Rules: $2,000 EOD-trailing drawdown (intraday equity checked after every
 trade in exit order) that locks at +$100 once the balance clears +$2,100;
 payout when profit >= trig (default $4,000) withdrawing amt (default $2,000),
-owner gets 90%; a bust costs a new evaluation ($180, 11 trading days).
+owner gets 90%; a bust costs a new evaluation ($265, 10 trading days).
 
 API:
   day lists: days = [ {"book": [usd per 1 MNQ, exit order], "rs": sig, "vw": sig} ]
@@ -24,7 +24,10 @@ from __future__ import annotations
 
 import random
 
-EVAL_DAYS, EVAL_COST, HORIZON, BLOCK = 11, 180.0, 504, 20
+# A bust buys a new evaluation: RS sprint on one account with the intraday
+# drawdown (guardrail 6d, 2026-10-25): 12.4 / 8.1 days, $285 / $241 in
+# 2018-21 / 2022-25 -> 10 days, $265 (was 11 days, $180 before the fix).
+EVAL_DAYS, EVAL_COST, HORIZON, BLOCK = 10, 265.0, 504, 20
 
 
 def run_path(days, choose, first_only=False, trig=4000.0, amt=2000.0, stats=None):
