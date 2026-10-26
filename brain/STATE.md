@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-26T11:24Z (day shift 2026-10-26 BIG: local fresh ideas, QC bubbles + pilot running)
+heartbeat: 2026-10-26T12:09Z (day shift 2026-10-26 BIG: in-QC bubbles 2018 + local fresh ideas)
 last shift: 2026-10-26 day shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
