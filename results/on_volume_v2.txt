@@ -1,0 +1,6 @@
+ONR terciles (2018-21): 0.863 / 1.180
+2010-13  low: follow ON  -0.5 (t-0.1) |move|  48.5 n313 || mid: follow ON  +2.9 (t+0.6) |move|  61.4 n308 || high: follow ON  +9.5 (t+1.9) |move|  63.7 n289
+2014-17  low: follow ON  +2.4 (t+0.8) |move|  39.9 n355 || mid: follow ON  +4.6 (t+1.4) |move|  41.7 n303 || high: follow ON  +1.1 (t+0.2) |move|  60.7 n332
+2018-21  low: follow ON +19.2 (t+3.4) |move|  68.4 n332 || mid: follow ON  -0.9 (t-0.2) |move|  59.6 n332 || high: follow ON  +3.7 (t+0.6) |move|  83.4 n333
+2022-25  low: follow ON +14.2 (t+2.7) |move|  66.9 n310 || mid: follow ON  -3.3 (t-0.7) |move|  69.2 n424 || high: follow ON -14.2 (t-1.6) |move|  99.4 n265
+2026     low: follow ON  +3.1 (t+0.2) |move|  63.0 n24 || mid: follow ON +19.9 (t+1.9) |move|  61.2 n56 || high: follow ON  +6.2 (t+0.6) |move|  64.9 n60
