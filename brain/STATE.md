@@ -19,6 +19,10 @@ QC 2026-10-26: our data exports were flagged as a Terms of Service violation -> 
 E5. DONE (no change; RS10 = lower tail risk, same mean): RS leg by signal strength |rs| bucket and by check time (10:00 / 11:00 / 13:00 / 14:30), four eras
     + 2026 -> sizing by strength or dropping a check only if monotonic / consistent in all eras.
 E3d. STOPPED: RS spread NQ-ES (2018-25 t 2.8) - the 2010-17 / 2026 ES panels cannot be exported.
+E6. NEXT: RS leg hedged with MES (NQ long + ES short on the RS signal, 1:1 and 1:1.25 notional) in the
+    funded model, 2018-25 only (no ES panel for 2010-17 / 2026 -> information only; Lucid hedging rule to be
+    checked by the owner before any use).
+E7. NEXT: RS10 as a risk option - check timing 6c (MFEAT*_M5 / _P5: 09:55 / 10:05) and 2026 before offering it.
 E4. Test the best E3 ideas (four eras, 6c timing, funded via funded_model + mtm_check at today's NQ).
 Night 2026-10-24/25:
 N1. DONE: V11 plateau at today's NQ -> fragile (only exact 11:00 works) -> rejected as plan B.
