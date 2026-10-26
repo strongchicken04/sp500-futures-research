@@ -81,3 +81,15 @@ year 2021 done in 501s
 2020 F3P R3.0 K2.0 = +1.9/+0.6/77 stops 19
 2020 F3P R3.0 K3.0 = +2.1/+0.4/20 stops 4
 year 2020 done in 460s
+### 2019 2ad4ec67d90884025b39f3fbf7b5c3a4 error: None
+2019 F3P R1.5 K1.5 = +0.0/+0.0/242 stops 32
+2019 F3P R1.5 K2.0 = +0.4/+0.5/232 stops 20
+2019 F3P R1.5 K3.0 = +0.6/+0.6/148 stops 6
+2019 F3P R2.0 K1.5 = +0.2/+0.2/228 stops 26
+2019 F3P R2.0 K2.0 = +1.2/+1.3/197 stops 14
+2019 F3P R2.0 K3.0 = +0.4/+0.3/96 stops 5
+2019 F3P R3.0 K1.5 = +1.2/+1.0/169 stops 20
+2019 F3P R3.0 K2.0 = +0.6/+0.5/116 stops 12
+2019 F3P R3.0 K3.0 = +1.9/+1.1/42 stops 2
+year 2019 done in 491s
+ALL DONE
