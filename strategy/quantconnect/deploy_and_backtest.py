@@ -109,6 +109,12 @@ def main():
             print(f"  progress {progress:.2%}"); last = progress
         if completed:
             print("[backtest] completed")
+            # runtime statistics can still be empty right at completion: re-read a few times
+            for _ in range(12):
+                if bt.get("runtimeStatistics") and len(bt["runtimeStatistics"]) > 8:
+                    break
+                time.sleep(10)
+                bt = call("backtests/read", {"projectId": pid, "backtestId": bid}).get("backtest", bt)
             out = {"projectId": pid, "backtestId": bid, "name": bt_name,
                    "statistics": bt.get("statistics"),
                    "runtimeStatistics": bt.get("runtimeStatistics"),
