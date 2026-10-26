@@ -3,3 +3,8 @@
 2024 VG confirm = +24.1pt/+1.6/15 wins 7
 2024 VG neutral = +6.4pt/+1.7/187 wins 52
 year 2024 done in 470s
+### 2023 4357d9f8c33d6efb80551712b821a732 error: None
+2023 VG all = +0.9pt/+0.3/197 wins 44
+2023 VG confirm = -0.7pt/-0.0/6 wins 1
+2023 VG neutral = +0.4pt/+0.1/190 wins 42
+year 2023 done in 425s
