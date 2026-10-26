@@ -1,0 +1,6 @@
+AC terciles (2018-21): -0.031 / +0.047
+2010-13  next-day momentum bp/slot: low  +0.2 (t+0.6) n243 | mid  +0.3 (t+1.2) n479 | high  +0.7 (t+1.8) n255
+2014-17  next-day momentum bp/slot: low  -0.0 (t-0.1) n335 | mid  -0.1 (t-0.2) n362 | high  +0.5 (t+1.5) n302
+2018-21  next-day momentum bp/slot: low  +0.5 (t+1.0) n333 | mid  +0.2 (t+0.4) n333 | high  +0.1 (t+0.1) n333
+2022-25  next-day momentum bp/slot: low  +0.9 (t+1.6) n323 | mid  +0.8 (t+1.9) n339 | high  +0.4 (t+0.8) n337
+2026     next-day momentum bp/slot: low  +1.2 (t+1.4) n51 | mid  -0.6 (t-0.8) n57 | high  -0.4 (t-0.3) n32
