@@ -22,3 +22,7 @@ year 2026 done in 313s
 2021 F3T hold15 = -0.2/-0.1/149 stops 17
 2021 F3T hold30 = +0.1/+0.1/149 stops 32
 year 2021 done in 544s
+### 2020 7b014ee137fcce3e88de18056c8d2a19 error: None
+2020 F3T hold15 = +3.9/+1.8/144 stops 23
+2020 F3T hold30 = +4.7/+1.7/144 stops 41
+year 2020 done in 475s
