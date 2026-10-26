@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-26T19:11Z (day shift 2026-10-26 FINISHED; report brain/reports/2026-10-26-den.md)
-last shift: 2026-10-26 day shift (report brain/reports/2026-10-26-den.md)
+heartbeat: 2026-10-26T22:09Z (night shift 2026-10-26/27 RUNNING: F3 plateau in QC, E6 local)
+last shift: 2026-10-26/27 night shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 Day shift 2026-10-26 (owner: "spusť zase na celý den, i research"; hourly 12:07-22:07 Prague, report brain/reports/2026-10-26-den.md):
@@ -37,6 +37,9 @@ E14. DONE local fresh batch 2 (owner: "co jde spolehlivě otestovat testuj loká
     half-hour slot scan, POC migration - all rejected. Keep QC only for data we lack locally.
 E10. NEXT fresh ideas (owner wants many): e.g. 1-min-free order-flow ideas are exhausted on OHLCV; try
     volatility-regime timing of the whole book (rv20 / VIX buckets), weekday x RS, holiday-week, month-start flows.
+Night 2026-10-26/27:
+N1. F3 absorption PLATEAU inside QC (aggregates only): volume multiple 1.5 / 2 / 3 x side ratio 1.5 / 2 / 3,
+    hold 15 min, stop 0.25%, first event per day per cell, 2019-2026 -> robust family or a lucky cell?
 E6. NEXT: RS leg hedged with MES (NQ long + ES short on the RS signal, 1:1 and 1:1.25 notional) in the
     funded model, 2018-25 only (no ES panel for 2010-17 / 2026 -> information only; Lucid hedging rule to be
     checked by the owner before any use).
