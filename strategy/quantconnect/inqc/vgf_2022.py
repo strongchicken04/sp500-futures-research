@@ -16,6 +16,9 @@ import math
 # Order flow of the breakout 5-min bar: I = (buy - sell) / (buy + sell) of
 # aggressive volume (trade close vs quote mid, tick rule at the mid), x the
 # break direction. Groups: CONFIRM (I >= +0.20), NEUTRAL, AGAINST (I <= -0.20).
+# v2 (after 2023-24 gave only 6-15 CONFIRM and no AGAINST trades a year -
+# breakout bars are rarely that one-sided; stated openly): groups by sign
+# POS (I > 0) / NEG (I <= 0) and C05 (I >= +0.05) / A05 (I <= -0.05).
 # Gross points per trade (per contract), mean / t / n / wins per year.
 
 START = (2022, 1, 1)
@@ -54,7 +57,8 @@ class VGFlowInQC(QCAlgorithm):
 
     def _close(self, x):
         y = self.day.year
-        self._add((y, self.tr["g"]), x)
+        for g in self.tr["g"]:
+            self._add((y, g), x)
         self._add((y, "all"), x)
         self.tr = None
 
@@ -107,7 +111,11 @@ class VGFlowInQC(QCAlgorithm):
                     d = 1 if c > up else -1
                     tot = self.bb + self.bs
                     imb = d * (self.bb - self.bs) / tot if tot > 0 else 0.0
-                    g = "confirm" if imb >= 0.2 else ("against" if imb <= -0.2 else "neutral")
+                    g = ["pos" if imb > 0 else "neg"]
+                    if imb >= 0.05:
+                        g.append("c05")
+                    if imb <= -0.05:
+                        g.append("a05")
                     self.tr = {"d": d, "e": c, "g": g}
                     self.done = True
                 self.prev_inside = inside
