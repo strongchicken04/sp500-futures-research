@@ -1,0 +1,5 @@
+2010-13  n  534 | POC shift  -3.4 (t-1.4) | momentum same days  -2.1 (t-0.8) | POC when it disagrees with momentum (n 117)  -3.2 (t-0.6)
+2014-17  n  477 | POC shift  -0.5 (t-0.2) | momentum same days  -2.2 (t-0.9) | POC when it disagrees with momentum (n 102)  +4.0 (t+0.7)
+2018-21  n  503 | POC shift  +1.7 (t+0.4) | momentum same days  +1.6 (t+0.4) | POC when it disagrees with momentum (n 118)  +0.1 (t+0.0)
+2022-25  n  563 | POC shift  +2.0 (t+0.5) | momentum same days  +0.3 (t+0.1) | POC when it disagrees with momentum (n 126)  +3.9 (t+0.5)
+2026     n   92 | POC shift  +7.9 (t+1.3) | momentum same days -13.2 (t-2.2) | POC when it disagrees with momentum (n 25) +39.0 (t+2.8)
