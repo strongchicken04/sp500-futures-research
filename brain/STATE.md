@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-26T10:09Z (day shift 2026-10-26 RUNNING: research E3)
+heartbeat: 2026-10-26T10:11Z (day shift 2026-10-26 RUNNING: E3d RS spread, ES panels on QC)
 last shift: 2026-10-26 day shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -14,6 +14,7 @@ E2. DONE: QC data now ends 2026-07-28 (+2 days, not worth a re-run; re-check ~we
 E3. Importer: web research for new intraday NQ/ES ideas (2025-26 studies), each as exact rules -> registry.
 E3a. DONE midday fade (rejected). E3b. CANCELLED: RS vs YM / RTY was already rejected (registry 'RS sprint variants').
 E3c. DONE: RS funded leg exit variants (VWAP exit, breakeven stop) rejected.
+E3d. RUNNING: RS spread NQ-ES (2018-25 t 2.8; ES panels 2010-17 + 2026 exporting on QC: B2ES_0A, B2ES_0B, B2ES_26).
 E4. Test the best E3 ideas (four eras, 6c timing, funded via funded_model + mtm_check at today's NQ).
 Night 2026-10-24/25:
 N1. DONE: V11 plateau at today's NQ -> fragile (only exact 11:00 works) -> rejected as plan B.
