@@ -9,3 +9,9 @@ year 2024 done in 771s
 2023 all = leg +4.0/+0.8/214 win 19/40 | sprint +1.3/+0.8/214 win 131/209
 2023 neutral = leg +5.1/+1.0/198 win 18/37 | sprint +1.0/+0.6/198 win 120/193
 year 2023 done in 794s
+### 2022 86e48955d3dea419158f3eadcafcab97 error: None
+2022 against = leg +52.7/+1.4/8 win 5/7 | sprint -11.2/-1.3/8 win 3/8
+2022 agree = leg +47.7/+2.0/11 win 4/5 | sprint +6.4/+0.9/11 win 8/11
+2022 all = leg +2.5/+0.4/231 win 66/132 | sprint +2.7/+1.7/231 win 151/231
+2022 neutral = leg -1.8/-0.3/212 win 57/120 | sprint +3.0/+1.9/212 win 140/212
+year 2022 done in 1026s
