@@ -10,3 +10,7 @@ year 2023 done in 510s
 2022 F3T hold15 = +3.5/+1.6/161 stops 44
 2022 F3T hold30 = +4.2/+1.4/161 stops 72
 year 2022 done in 502s
+### 2025 dcd54562ed3c9dc0aa4bbfb78470aac2 error: None
+2025 F3T hold15 = -1.1/-0.9/188 stops 35
+2025 F3T hold30 = -0.1/-0.1/188 stops 48
+year 2025 done in 469s
