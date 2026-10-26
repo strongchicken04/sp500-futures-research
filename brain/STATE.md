@@ -26,6 +26,12 @@ E9. DONE: absorption / delta divergence proxies rejected; RS x session volume: h
 E11. RUNNING: big trades with REAL aggressor side inside QC (inqc/bubbles_YYYY.py, runner in scratchpad
     run_inqc.sh, output results/bubbles_inqc_raw.txt), years 2024, 2023, 2022, 2025, 2026, 2021..2018.
 E12. QUEUED: RS x real order flow (cum delta) inside QC, after E11 (runner run_rsd.sh).
+E13. FRESH IDEAS (owner: "kompletně fresh" = new angles like big trades - order flow, liquidity,
+    microstructure, cross-market; not variants of our legs). In-QC (aggregates only): F1 spread blow-out
+    (>= 3x normal) -> next move; F2 top-of-book size imbalance for a minute; F3 real absorption (big
+    aggressive volume, no price progress) -> reversal; F4 real delta divergence; F5 ES flow leads NQ by 1-5
+    min; F6 09:30-10:00 aggressive imbalance -> rest of day. Local: F7 round numbers (000 / 500) first touch;
+    F8 intraday range compression -> breakout.
 E10. NEXT fresh ideas (owner wants many): e.g. 1-min-free order-flow ideas are exhausted on OHLCV; try
     volatility-regime timing of the whole book (rv20 / VIX buckets), weekday x RS, holiday-week, month-start flows.
 E6. NEXT: RS leg hedged with MES (NQ long + ES short on the RS signal, 1:1 and 1:1.25 notional) in the
