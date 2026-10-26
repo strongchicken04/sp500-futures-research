@@ -24,6 +24,8 @@ import math
 #               side while NQ moved < 0.02% in that minute -> NQ in ES direction
 #   F6 OPEN30   D = (buy - sell) / (buy + sell) of NQ 09:30-10:00; |D| >= 0.05
 #               -> direction sign(D), entry at 10:00, returns to 12:00 / 15:55
+# Added after the Jan-Mar 2024 pilot (thresholds too rare, stated openly):
+#   F6b |D| >= 0.02; F2b book imbalance >= 0.3; F2N = days with book sizes.
 # Horizons 1 / 5 / 15 / 30 min (F6: 120 min and 15:55). Gross bp, averaged per
 # day (one event per idea per day), mean / t / days per year.
 
@@ -59,6 +61,7 @@ class FreshInQC(QCAlgorithm):
         self.side = {"nq": 0, "es": 0}
         self.events = {}            # idea -> (minute, dir)
         self.open30 = None
+        self.book_seen = False
 
     def _side(self, key, c, q):
         s = 0
@@ -119,16 +122,21 @@ class FreshInQC(QCAlgorithm):
                 dd = (b - s) / (b + s)
                 if abs(dd) >= 0.05:
                     ev["F6 OPEN30"] = (m, 1 if dd > 0 else -1)
+                if abs(dd) >= 0.02:
+                    ev["F6b OPEN30"] = (m, 1 if dd > 0 else -1)
             self.open30 = True
         n = self.m["sprn"][m]
         ms = self._mean("spr", m)
         if "F1 SPREAD" not in ev and n > 0 and ms and self.m["spr"][m] / n >= 3 * ms and p != p0:
             ev["F1 SPREAD"] = (m, 1 if p > p0 else -1)
         ni = self.m["imbn"][m]
-        if "F2 BOOK" not in ev and ni > 0:
+        if ni > 0:
+            self.book_seen = True
             im = self.m["imb"][m] / ni
-            if abs(im) >= 0.5:
+            if "F2 BOOK" not in ev and abs(im) >= 0.5:
                 ev["F2 BOOK"] = (m, 1 if im > 0 else -1)
+            if "F2b BOOK" not in ev and abs(im) >= 0.3:
+                ev["F2b BOOK"] = (m, 1 if im > 0 else -1)
         b, s = self.m["nqb"][m], self.m["nqs"][m]
         mb, msl = self._mean("nqb", m), self._mean("nqs", m)
         if "F3 ABSORB" not in ev and mb and msl:
@@ -158,15 +166,17 @@ class FreshInQC(QCAlgorithm):
             return
         y = self.day.year
         for idea, (m, d) in self.events.items():
-            hs = ((120, 120), (999, M_EOD)) if idea == "F6 OPEN30" else tuple((h, m + h) for h in HORIZ)
+            f6 = idea.startswith("F6")
+            hs = ((120, M_FIRST + 120), (999, M_EOD)) if f6 else tuple((h, m + h) for h in HORIZ)
             for h, j in hs:
-                r = self._ret(m, d, j if idea != "F6 OPEN30" else (M_FIRST + 120 if h == 120 else M_EOD))
+                r = self._ret(m, d, j)
                 if r is not None:
                     self._add((y, idea, h), r)
             if idea == "F1 SPREAD":
                 r = self._ret(m, 1, m + 15)
                 if r is not None:
                     self._add((y, "F1 ABSMOVE", 15), abs(r))
+        self.f2n = getattr(self, "f2n", 0) + (1 if self.book_seen else 0)
         for k in ("nqb", "nqs", "esb", "ess"):
             for mm in range(390):
                 self.hist[k][mm].append(self.m[k][mm])
@@ -186,3 +196,4 @@ class FreshInQC(QCAlgorithm):
             out.setdefault(f"{y} {idea}", []).append(f"{h}m {mm:+.1f}/{tt:+.1f}/{n}")
         for k, parts in out.items():
             self.set_runtime_statistic(k, " ".join(parts))
+        self.set_runtime_statistic("F2N days with book sizes", str(getattr(self, "f2n", 0)))
