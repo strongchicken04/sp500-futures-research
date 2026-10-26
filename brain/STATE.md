@@ -26,7 +26,7 @@ E9. DONE: absorption / delta divergence proxies rejected; RS x session volume: h
 E11. DONE (REJECTED, 2019-2026 no edge): big trades with REAL aggressor side inside QC (inqc/bubbles_YYYY.py, runner in scratchpad
     run_inqc.sh, output results/bubbles_inqc_raw.txt), years 2024, 2023, 2022, 2025, 2026, 2021..2018.
 E12. DONE: RS x real order flow 2019-26: AGREE subset (|D|>=0.05, 7% of signals) leg +21.3 bp pooled, 8/8 years >0,
-    sprint win 75% vs 65%; AGAINST not worse. E12b QUEUED: dose-response (six D buckets, rsd2_YYYY, after F1-F6).
+    sprint win 75% vs 65%; AGAINST not worse. E12b DONE: dose-response not monotonic -> watch only.
 E13. FRESH IDEAS (owner: "kompletně fresh" = new angles like big trades - order flow, liquidity,
     microstructure, cross-market; not variants of our legs). In-QC (aggregates only): F1 spread blow-out
     (>= 3x normal) -> next move; F2 top-of-book size imbalance for a minute; F3 real absorption (big
