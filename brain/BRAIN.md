@@ -50,7 +50,9 @@ English.
    Do NOT run any exporter on QC and do not try to get around the check. New
    data only from a source the owner licenses (owner decides).
    Owner 2026-10-26: "pokračuj takhle" - keep researching on the existing
-   local data (data/tags, restore_data.sh); no new QC runs.
+   local data (data/tags, restore_data.sh); no new QC EXPORTS. Allowed (owner,
+   path 1): algorithms that compute research statistics INSIDE QC and return
+   only aggregates (runtime statistics), e.g. strategy/quantconnect/inqc/.
 3. **Optimiser** — book and funded sizing questions go through
    `scripts/timed_book.py` (time-aware: trades realised in exit order, day
    stop only blocks later entries); older sequential sims overstate day stops.
