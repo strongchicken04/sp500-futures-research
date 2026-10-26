@@ -21,3 +21,9 @@ year 2022 done in 1026s
 2025 all = leg +5.8/+1.1/184 win 21/40 | sprint +1.7/+1.0/184 win 111/171
 2025 neutral = leg +3.4/+0.6/164 win 19/37 | sprint +1.3/+0.7/164 win 97/152
 year 2025 done in 885s
+### 2026 aa9bf7752491a9a4b895e4284c532c01 error: None
+2026 against = leg +15.6/+0.3/4 win 1/2 | sprint -12.5/-1.2/4 win 1/3
+2026 agree = leg +24.2/+0.9/6 win 1/1 | sprint +11.7/+1.5/6 win 5/6
+2026 all = leg +9.7/+1.5/117 win 17/28 | sprint +2.4/+1.1/117 win 75/115
+2026 neutral = leg +8.7/+1.3/107 win 15/25 | sprint +2.4/+1.1/107 win 69/106
+year 2026 done in 620s
