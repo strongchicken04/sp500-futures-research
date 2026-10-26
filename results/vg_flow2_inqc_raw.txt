@@ -1,0 +1,7 @@
+### 2024 e85cfbf833f58b01f222d2da7dfc4f60 error: None
+2024 VG a05 = +8.7pt/+0.8/26 wins 7
+2024 VG all = +7.7pt/+2.1/202 wins 59
+2024 VG c05 = +10.9pt/+2.0/94 wins 31
+2024 VG neg = +7.3pt/+1.0/58 wins 16
+2024 VG pos = +7.9pt/+1.8/144 wins 43
+year 2024 done in 1024s
