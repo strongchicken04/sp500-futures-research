@@ -44,6 +44,12 @@ English.
    RUSSELL_2000_E_MINI (verified). The other renamed tickers in the exporters
    (CRUDE_OIL_WTI, Y_10_TREASURY_NOTE, GOLD) are not yet verified on QC.
    QC data ended 2026-07-28 on 2026-10-26 (about 3 months behind).
+   STOP (2026-10-26): QuantConnect rejected the ES panel export as a "Terms of
+   Service Violation: exports raw ES 5-minute bars ... via order tags". Our
+   exporters carry market data out of QC in order tags; QC now flags that.
+   Do NOT run any exporter on QC and do not try to get around the check. New
+   data only from a source the owner licenses (owner decides). Whether the
+   existing data/tags may still be used is the owner's call (asked 2026-10-26).
 3. **Optimiser** — book and funded sizing questions go through
    `scripts/timed_book.py` (time-aware: trades realised in exit order, day
    stop only blocks later entries); older sequential sims overstate day stops.
