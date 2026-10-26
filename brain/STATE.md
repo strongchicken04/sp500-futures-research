@@ -1,9 +1,17 @@
 # Brain state
 
-heartbeat: 2026-10-26T00:11Z (night shift 2026-10-25/26 FINISHED, idle - queue waits for the owner; report brain/reports/2026-10-26.md)
-last shift: 2026-10-25/26 night shift (report brain/reports/2026-10-26.md)
+heartbeat: 2026-10-26T10:01Z (day shift 2026-10-26 RUNNING: E1 eval bracket shape)
+last shift: 2026-10-26 day shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
+Day shift 2026-10-26 (owner: "spusť zase na celý den, i research"; hourly 12:07-22:07 Prague, report brain/reports/2026-10-26-den.md):
+E1. Eval bracket SHAPE under the intraday rule (fixed before results): RS sprint with target >= stop
+    (0.30/0.20, 0.25/0.25, 0.30/0.30, 0.40/0.30, 0.50/0.40) vs the plan 0.20/0.30 and 0.25/0.40; two-win sizing
+    (win <= $1,450, loss <= $1,950, every trade fits the room). Idea: a loss that leaves room for a second trade.
+    Adopt only if faster AND cheaper in all four eras + 2026; random-direction check <= 40%.
+E2. QC: does the data extend past 2026-07-24? If yes, re-run the *26 exports (holdout, Z watch).
+E3. Importer: web research for new intraday NQ/ES ideas (2025-26 studies), each as exact rules -> registry.
+E4. Test the best E3 ideas (four eras, 6c timing, funded via funded_model + mtm_check at today's NQ).
 Night 2026-10-24/25:
 N1. DONE: V11 plateau at today's NQ -> fragile (only exact 11:00 works) -> rejected as plan B.
 Day shift 2026-10-24 (owner: "jeď to zase dnes celý den"; until 22:00 Prague, report brain/reports/2026-10-24-den.md):
