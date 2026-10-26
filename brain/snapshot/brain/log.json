@@ -2,6 +2,96 @@
   "events": [
     {
       "sphere": "Interpret",
+      "t": "2026-10-26T19:11:35Z",
+      "text": "Denní směna 26. 10. hotová – report v Mozku. Plán beze změny; big trades a ~30 čerstvých nápadů zamítnuto, absorpce malý kandidát."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T19:11:35Z",
+      "text": "Absorpce jako obchod (QuantConnect 2019–26): +1,4 bp na obchod, t ~2,5, kladně 6 z 8 let – malé, potřebuje skutečný order flow."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T19:11:35Z",
+      "text": "RS × delta podle pásem: výsledek neroste se sílou delty, jen krajní pásmo vyčnívá – jen pozorovat."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T15:17:11Z",
+      "text": "RS × skutečná delta (QuantConnect 2019–26): když delta souhlasí se směrem RS (7 % signálů), funded noha +21 bp a sprint 75 % výher, kladné všech 8 let. Kandidát; ve starších letech (odhad) efekt není."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T15:17:11Z",
+      "text": "Čerstvé nápady F1–F6 na skutečných datech: 2022–2024 hotovo – nerovnováha prvních 30 minut nestálá (+21 / −1 / +33 bp), absorpce, ES jako první, nerovnováha bid/ask bez edge."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T15:17:11Z",
+      "text": "Adaptivní režim (autokorelace) a objem v noci: bez konzistentního edge."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T13:18:08Z",
+      "text": "Big trades se skutečnou stranou agresora (QuantConnect, 2019–2026): žádná ze 36 variant nemá konzistentní edge – zamítnuto."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T13:18:08Z",
+      "text": "RS × skutečný order flow: 2022–2025 hotovo, skupiny malé a nekonzistentní; běží 2026 a 2018–2021."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T13:18:08Z",
+      "text": "Objem v noci: směr dne nepředpovídá konzistentně, jen velikost pohybu. Lokálně dále zamítnuto: VIX/SMT divergence, sloty, POC, kulatá čísla, komprese."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T11:24:53Z",
+      "text": "Lokální čerstvé nápady: divergence VIX, SMT divergence NQ/ES, půlhodinové sloty, posun POC, kulatá čísla, komprese – vše bez edge."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T11:24:53Z",
+      "text": "Big trades se skutečnou stranou agresora (výpočet uvnitř QuantConnectu, ven jen souhrny): 2023 a 2024 bez edge, další roky běží."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-26T11:24:53Z",
+      "text": "RS jen v 10:00 prošel časovým testem ±5 min; v knize stejný průměr, menší riziko – nabídnuto jako volba."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T11:24:53Z",
+      "text": "Big trades (odhad z 5min svíček): jít s bublinou prodělává, fade jako obchod bez edge. Absorpce a divergence delty zamítnuty."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T10:11:47Z",
+      "text": "RS signál na spreadu NQ − ES: +3,3 / +3,0 bp na obchod (t 2,8) v 2018–21 / 2022–25 s třetinovým rozptylem; čekám na data ES 2010–17 a 2026."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-26T10:11:47Z",
+      "text": "Výstup RS nohy přes VWAP nebo posun stopu na nulu: zamítnuto, není lepší ve všech obdobích."
+    },
+    {
+      "sphere": "Importér",
+      "t": "2026-10-26T10:11:47Z",
+      "text": "Polední obrat (0DTE nápad): zamítnuto, žádné období kladné. RS proti YM/RTY už testováno dřív – zrušeno."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-26T10:11:47Z",
+      "text": "QuantConnect změnil názvy kontraktů – všechny exportéry opraveny. Data končí 28. 7. 2026."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-26T10:11:47Z",
+      "text": "Bracket evaluace s targetem ≥ stop při drawdownu během dne: zamítnuto, 0,20 / 0,30 zůstává."
+    },
+    {
+      "sphere": "Interpret",
       "t": "2026-10-25T22:16:43Z",
       "text": "Noční směna 25./26. 10. hotová – report v Mozku. Evaluace: jen RS na jednom účtu; nahraj nové Lucid 7 a 8."
     },
@@ -209,96 +299,6 @@
       "sphere": "Optimalizátor",
       "t": "2026-10-23T12:38:15Z",
       "text": "Velikost podle volatility u noise ani podle polštáře nepomáhá – flat 3 zůstává. Příjem ~740–1 060 $/měsíc na funded účet (kniha bez ORB)."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T12:23:41Z",
-      "text": "Kniha je na hraně drawdownu: nové slabé nohy ani druhá kniha nepomáhají; víc peněz = víc funded účtů se stejnou knihou (kopie). Flat 3 zůstává."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T12:23:41Z",
-      "text": "Průřez 4 obdobími: kladné všude jen open drive, trend ve 14:00 a Silver Bullet – všechny slabé. Odpolední pravidla a VWAP noha zamítnuty."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-23T10:44:04Z",
-      "text": "Lucid 12 – VWAP Sprint (10:00) napsán: nejrychlejší sprint pro jediný evaluační účet, kód v Mozku."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T10:44:04Z",
-      "text": "Strana od VWAP dopoledne má edge ve 35 z 36 kombinací přes 16 let. Pro dva účty ale RS + 09:31 zůstává (ostatní dvojice nejsou stabilně lepší)."
-    },
-    {
-      "sphere": "Interpret",
-      "t": "2026-10-23T10:39:28Z",
-      "text": "Doporučení zúženo: funded kniha bez ORB (Lucid 1), zbytek beze změny. Noise bez filtru, open drive a NR4 v 2010–17 nepotvrzeny."
-    },
-    {
-      "sphere": "Systémový manažer",
-      "t": "2026-10-23T10:39:28Z",
-      "text": "Sprinty přes 4 období: RS vyhrává 62,5–65,8 % proti náhodným 60 % (edge všude); 09:31 jen náhoda (druhý nezávislý los na účtu B)."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T10:39:28Z",
-      "text": "Nezávislé období 2010–17: hrubý edge noise a VWAP pásma kladný, ale zhruba poloviční; ORB bez edge ve všech obdobích."
-    },
-    {
-      "sphere": "Interpret",
-      "t": "2026-10-23T10:12:11Z",
-      "text": "Návrh pro funded: vypnout Lucid 1 (ORB), v Lucid 6 odškrtnout filtr volatility. První výplata u 46 / 42 % účtů místo 37 / 36 %. FINAL_PLAN + playbook."
-    },
-    {
-      "sphere": "Systémový manažer",
-      "t": "2026-10-23T10:12:11Z",
-      "text": "Evaluace na dvou účtech: medián 6 dní / 270 $, v 19 z 20 případů do 15–17 dní."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-23T10:12:11Z",
-      "text": "Lucid 11 – NR4 Break (kandidát) napsán, kód v Mozku."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T10:12:11Z",
-      "text": "NR4 průraz kandidát (+7,0 / +11,0 b.); gap and go, fade gapu, inside day, velký den zamítnuty. Noise: 30 min je nejlepší frekvence."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-23T10:00:33Z",
-      "text": "Lucid 10 – Open Drive (kandidát) napsán, kód je v Mozku."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T10:00:33Z",
-      "text": "Nová přesnější simulace (bootstrap): kniha bez ORB, noise bez filtru + open drive = +3 800 / +3 100 $ na účet; na skutečném pořadí 2022–25 ale horší. Kandidát."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T10:00:33Z",
-      "text": "Noise momentum na zlatě a ropě bez edge. Na NQ jsou dny vyřazené filtrem volatility pro noise naopak dobré."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T09:48:42Z",
-      "text": "Funded: menší velikost nových nohou, zámek denního zisku i vynechání FOMC dní – nic stabilně nepomáhá (rozdíly v šumu simulace). Plán beze změny."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T09:48:42Z",
-      "text": "ICT sweepy (Londýn, Asie, minulý týden) zamítnuty; průraz high/low minulého týdne slabý a knihu zhoršuje."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T09:44:34Z",
-      "text": "Open drive místo RS na účtu A: 2018–21 o 2 dny rychlejší, 2022–25 jen o 0,3 dne – plán beze změny."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T09:44:34Z",
-      "text": "Zamítnuto: EMA 9/21, Supertrend, MACD, Bollinger (5 min), ICT Silver Bullet, režimy Yu-Rentzler-Wolf. Čekám na úrovně Londýna a Asie."
     }
   ]
 }

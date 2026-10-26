@@ -1,9 +1,8 @@
 {
-  "heartbeat": "2026-10-25T22:16:43Z",
+  "heartbeat": "2026-10-26T19:11:35Z",
   "phase": "idle",
   "qc": "ok",
-  "runs": 0,
-  "shift": "2026-10-25/26 noc",
+  "shift": "2026-10-26 den",
   "sphere": "interpreter",
-  "task": "Noční směna hotová – report v Mozku (Interpret)"
+  "task": "Denní směna hotová – report v Mozku (Interpret)"
 }
