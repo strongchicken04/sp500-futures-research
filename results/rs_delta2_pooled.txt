@@ -1,0 +1,16 @@
+--- leg
+   o>=5      +12.0 bp (t~+1.0) n   47 | years > 0: 4/7
+   o2-5       +3.2 bp (t~+0.6) n  201 | years > 0: 5/8
+   o0-2       +9.6 bp (t~+2.4) n  381 | years > 0: 7/8
+   a0-2       +1.6 bp (t~+0.5) n  469 | years > 0: 5/8
+   a2-5       +2.1 bp (t~+0.5) n  361 | years > 0: 6/8
+   a>=5      +21.3 bp (t~+3.0) n  104 | years > 0: 8/8
+   all        +5.5 bp (t~+2.9) n 1563 | years > 0: 7/8
+--- sprint
+   o>=5       +3.5 bp (t~+1.1) n   47 | years > 0: 5/7 | resolved win 31/45 = 69%
+   o2-5       +2.2 bp (t~+1.4) n  201 | years > 0: 7/8 | resolved win 127/195 = 65%
+   o0-2       +2.9 bp (t~+2.6) n  381 | years > 0: 6/8 | resolved win 243/364 = 67%
+   a0-2       +1.7 bp (t~+1.6) n  469 | years > 0: 5/8 | resolved win 283/443 = 64%
+   a2-5       +2.0 bp (t~+1.5) n  361 | years > 0: 6/8 | resolved win 224/348 = 64%
+   a>=5       +7.0 bp (t~+3.4) n  104 | years > 0: 7/8 | resolved win 76/102 = 75%
+   all        +2.5 bp (t~+3.9) n 1563 | years > 0: 8/8 | resolved win 984/1497 = 66%

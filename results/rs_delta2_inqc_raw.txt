@@ -61,3 +61,13 @@ year 2021 done in 753s
 2020 o2-5 = leg +7.1/+0.4/26 win 8/14 | sprint +4.6/+1.0/26 win 18/26
 2020 o>=5 = leg -41.7/-0.6/3 win 1/3 | sprint +3.3/+0.2/3 win 2/3
 year 2020 done in 714s
+### 2019 4606ec4cf7142e51695fa14beeb44649 error: None
+2019 a0-2 = leg -9.7/-1.4/66 win 1/6 | sprint -0.8/-0.3/66 win 37/62
+2019 a2-5 = leg +9.4/+0.9/33 win 2/4 | sprint +1.3/+0.3/33 win 18/30
+2019 a>=5 = leg +22.2/+1.3/10 win 1/1 | sprint +10.0/+1.6/10 win 8/10
+2019 all = leg -1.6/-0.4/179 win 8/18 | sprint +0.3/+0.1/179 win 100/162
+2019 o0-2 = leg +3.4/+0.4/35 win 2/2 | sprint -2.7/-0.7/35 win 16/28
+2019 o2-5 = leg -24.6/-2.3/20 win 0/2 | sprint +0.1/+0.0/20 win 11/17
+2019 o>=5 = leg +12.9/+0.8/15 win 2/3 | sprint +3.3/+0.5/15 win 10/15
+year 2019 done in 788s
+ALL DONE
