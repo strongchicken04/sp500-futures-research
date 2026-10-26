@@ -80,7 +80,10 @@ def main():
         if st == "BuildSuccess":
             print("[compile] BuildSuccess"); break
         if st == "BuildError":
-            print("[compile] BuildError:", json.dumps(cr.get("logs", ""))[:1000]); sys.exit(1)
+            logs = cr.get("logs", "")
+            logs = logs if isinstance(logs, list) else [logs]
+            errs = [x for x in logs if "Warning" not in str(x)[:12]]   # warnings first, real errors last
+            print("[compile] BuildError:", json.dumps(errs or logs)[:1500]); sys.exit(1)
         time.sleep(3)
     else:
         print("compile timed out"); sys.exit(1)
