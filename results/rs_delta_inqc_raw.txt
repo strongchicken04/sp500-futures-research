@@ -45,3 +45,6 @@ year 2020 done in 837s
 2019 all = leg -1.6/-0.4/179 win 8/18 | sprint +0.3/+0.1/179 win 100/162
 2019 neutral = leg -4.6/-1.0/154 win 5/14 | sprint -0.7/-0.4/154 win 82/137
 year 2019 done in 862s
+### 2018 857b1dfd1a82864e1f1c37dfe2e4b728 error: None
+year 2018 done in 827s
+ALL DONE
