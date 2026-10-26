@@ -1,0 +1,2 @@
+hold 15m: pooled gross +1.41 bp (t~+2.5) n 1274 trades 2019-26, years > 0: 6/8, net after ~0.35 bp costs +1.06 bp = $+6.1 per MNQ trade at NQ 28,530 | 2019:+1.2 2020:+3.9 2021:-0.2 2022:+3.5 2023:+0.2 2024:+1.2 2025:-1.1 2026:+3.9
+hold 30m: pooled gross +1.71 bp (t~+2.6) n 1273 trades 2019-26, years > 0: 6/8, net after ~0.35 bp costs +1.36 bp = $+7.7 per MNQ trade at NQ 28,530 | 2019:+1.5 2020:+4.7 2021:+0.1 2022:+4.2 2023:-0.3 2024:+1.6 2025:-0.1 2026:+2.8
