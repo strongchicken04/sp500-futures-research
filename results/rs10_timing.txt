@@ -1,0 +1,15 @@
+--- checks shifted _M5: first check | later checks
+   2010-13 (first 09:55):  +5.5 bp (t+1.2, n295) |  +2.3 bp (t+0.8, n417)
+   2014-17 (first 09:55):  +3.1 bp (t+0.8, n298) |  +0.1 bp (t+0.0, n422)
+   2018-21 (first 09:55): +10.7 bp (t+2.6, n410) |  +1.3 bp (t+0.4, n400)
+   2022-25 (first 09:55):  +4.5 bp (t+1.1, n455) |  +4.2 bp (t+1.3, n389)
+--- checks shifted live: first check | later checks
+   2010-13 (first 10:00):  +4.3 bp (t+1.1, n319) |  +3.0 bp (t+1.1, n390)
+   2014-17 (first 10:00):  +2.4 bp (t+0.6, n313) |  -0.8 bp (t-0.3, n399)
+   2018-21 (first 10:00):  +9.8 bp (t+2.4, n401) |  +0.5 bp (t+0.2, n421)
+   2022-25 (first 10:00): +10.4 bp (t+2.7, n474) |  -0.6 bp (t-0.2, n364)
+--- checks shifted _P5: first check | later checks
+   2010-13 (first 10:05):  +5.9 bp (t+1.4, n318) |  +1.7 bp (t+0.6, n401)
+   2014-17 (first 10:05):  +2.2 bp (t+0.6, n323) |  -1.5 bp (t-0.6, n388)
+   2018-21 (first 10:05):  +6.9 bp (t+1.8, n418) |  +1.3 bp (t+0.4, n391)
+   2022-25 (first 10:05):  +8.4 bp (t+2.2, n474) |  +0.5 bp (t+0.1, n359)
