@@ -23,7 +23,7 @@ E8. DONE: big-trades bubbles (owner idea; BVC proxy on 5-min OHLCV): follow lose
     event averages, as a strategy ~0 / negative -> rejected. A real test needs tick data with the aggressor side.
 E9. DONE: absorption / delta divergence proxies rejected; RS x session volume: high-volume days weakest everywhere
     but skipping them in the book is mixed -> rejected.
-E11. RUNNING: big trades with REAL aggressor side inside QC (inqc/bubbles_YYYY.py, runner in scratchpad
+E11. DONE (REJECTED, 2019-2026 no edge): big trades with REAL aggressor side inside QC (inqc/bubbles_YYYY.py, runner in scratchpad
     run_inqc.sh, output results/bubbles_inqc_raw.txt), years 2024, 2023, 2022, 2025, 2026, 2021..2018.
 E12. QUEUED: RS x real order flow (cum delta) inside QC, after E11 (runner run_rsd.sh).
 E13. FRESH IDEAS (owner: "kompletně fresh" = new angles like big trades - order flow, liquidity,
