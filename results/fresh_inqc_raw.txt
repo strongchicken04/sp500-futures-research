@@ -33,3 +33,5 @@ year 2023 done in 907s
 2022 F6b OPEN30 = 120m +0.9/+0.1/145 999m +2.3/+0.2/145
 F2N days with book sizes = 280
 year 2022 done in 1011s
+### 2025 1e4d84913dd276097b7f151c1dcdee60 error: None
+year 2025 done in 1064s
