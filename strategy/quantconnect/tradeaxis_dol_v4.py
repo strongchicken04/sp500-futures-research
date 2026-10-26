@@ -52,7 +52,7 @@ class TradeAxisDOLv4(QCAlgorithm):
         self.SetEndDate(END_YEAR, 12, 31)
         self.SetCash(1_000_000)
         f = self.AddFuture(
-            Futures.Indices.NASDAQ100EMini, Resolution.Minute,
+            Futures.Indices.NASDAQ_100_E_MINI, Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=False)

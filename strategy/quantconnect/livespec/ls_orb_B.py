@@ -30,7 +30,7 @@ from collections import deque
 
 MODE = "ORB"
 START, END = 2022, 2025
-TICKER = Futures.Indices.NASDAQ100EMini
+TICKER = Futures.Indices.NASDAQ_100_E_MINI
 SL_PTS, TP_PTS = 25.0, 100.0
 BAND = 0.002
 LOOKBACK = 14

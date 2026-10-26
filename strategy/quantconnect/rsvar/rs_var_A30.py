@@ -37,10 +37,10 @@ class RSVariantsExporter(QCAlgorithm):
         self.SetEndDate(END, 12, 31)
         self.SetCash(1_000_000)
         self.n_tags = 0
-        self.nq = self._fut(Futures.Indices.NASDAQ100EMini)
-        self.oth = {"es": self._fut(Futures.Indices.SP500EMini),
-                    "ym": self._fut(Futures.Indices.Dow30EMini),
-                    "rty": self._fut(Futures.Indices.Russell2000EMini)}
+        self.nq = self._fut(Futures.Indices.NASDAQ_100_E_MINI)
+        self.oth = {"es": self._fut(Futures.Indices.SP_500_E_MINI),
+                    "ym": self._fut(Futures.Indices.DOW_30_E_MINI),
+                    "rty": self._fut(Futures.Indices.RUSSELL_2000_E_MINI)}
         self.closes = deque(maxlen=21)
         self.ema = None
         self.day = None

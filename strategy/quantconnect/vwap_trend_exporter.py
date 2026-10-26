@@ -17,7 +17,7 @@ from collections import deque
 #
 # Tag: W,<variant>,<yyyymmdd>,<gross pts>,<entries>,<rv20 x1000>
 
-TICKER = Futures.Indices.NASDAQ100EMini
+TICKER = Futures.Indices.NASDAQ_100_E_MINI
 VARIANTS = {"V1": (1, 0.0), "V5": (5, 0.0), "V15": (15, 0.0), "B5": (5, 0.001)}
 EOD = 15 * 60 + 55
 

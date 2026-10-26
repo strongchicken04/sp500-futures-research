@@ -38,7 +38,7 @@ class NasdaqFinalORB(QCAlgorithm):
         self.vt_k, self.vt_lo, self.vt_hi = 0.001, 0.002, 0.012
 
         future = self.AddFuture(
-            Futures.Indices.NASDAQ100EMini, resolution=Resolution.Minute,
+            Futures.Indices.NASDAQ_100_E_MINI, resolution=Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=True)

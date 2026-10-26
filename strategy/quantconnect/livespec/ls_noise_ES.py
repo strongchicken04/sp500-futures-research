@@ -28,7 +28,7 @@ from collections import deque
 #      <reason>,<rv20 x1000 known at the open>
 
 MODE = "NOISE"
-TICKER = Futures.Indices.SP500EMini
+TICKER = Futures.Indices.SP_500_E_MINI
 SL_PTS, TP_PTS = 25.0, 100.0
 BAND = 0.002
 LOOKBACK = 14

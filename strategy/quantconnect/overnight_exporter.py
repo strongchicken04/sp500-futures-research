@@ -15,7 +15,7 @@ from AlgorithmImports import *
 # the Globex VWAP. Tracking runs from the minute after entry to 09:29 ET.
 
 INST = "NQ"
-TICKERS = {"NQ": Futures.Indices.NASDAQ100EMini, "ES": Futures.Indices.SP500EMini}
+TICKERS = {"NQ": Futures.Indices.NASDAQ_100_E_MINI, "ES": Futures.Indices.SP_500_E_MINI}
 LEVELS = [5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 100, 125, 150]
 END = 9 * 60 + 29
 

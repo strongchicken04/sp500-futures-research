@@ -46,7 +46,7 @@ class NasdaqOpeningRangeBreakout(QCAlgorithm):
 
         # ---- NQ continuous future, raw prices (correct for intraday levels) ----
         future = self.AddFuture(
-            Futures.Indices.NASDAQ100EMini,
+            Futures.Indices.NASDAQ_100_E_MINI,
             resolution=Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,

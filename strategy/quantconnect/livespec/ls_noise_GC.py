@@ -30,7 +30,7 @@ from collections import deque
 
 MODE = "NOISE"
 START, END = 2018, 2025
-TICKER = Futures.Metals.Gold
+TICKER = Futures.Metals.GOLD
 SL_PTS, TP_PTS = 25.0, 100.0
 BAND = 0.002
 LOOKBACK = 14

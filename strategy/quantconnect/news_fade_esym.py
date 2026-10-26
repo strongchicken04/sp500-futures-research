@@ -55,7 +55,7 @@ FOMC = set("""
 20250129 20250319 20250507 20250618 20250730 20250917 20251029 20251210
 """.split())
 
-INSTS = [("ES", Futures.Indices.SP500EMini, 0.25), ("YM", Futures.Indices.Dow30EMini, 1.0)]
+INSTS = [("ES", Futures.Indices.SP_500_E_MINI, 0.25), ("YM", Futures.Indices.DOW_30_E_MINI, 1.0)]
 SIDE_TESTS = False
 
 

@@ -34,8 +34,8 @@ class MultiFeatureExporter(QCAlgorithm):
         self.SetEndDate(2017, 12, 31)
         self.SetCash(1_000_000)
         self.n_tags = 0
-        self.nq = self._fut(Futures.Indices.NASDAQ100EMini)
-        self.es = self._fut(Futures.Indices.SP500EMini)
+        self.nq = self._fut(Futures.Indices.NASDAQ_100_E_MINI)
+        self.es = self._fut(Futures.Indices.SP_500_E_MINI)
         self.vix_sym = None
         try:
             self.vix_sym = self.AddIndex("VIX", Resolution.Minute).Symbol

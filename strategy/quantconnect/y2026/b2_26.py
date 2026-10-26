@@ -19,7 +19,7 @@ from collections import defaultdict
 # a contract change between two sessions is visible from the expiry field.
 
 START, END = 2025, 2026
-TICKER = Futures.Indices.NASDAQ100EMini
+TICKER = Futures.Indices.NASDAQ_100_E_MINI
 VA_SHARE = 0.70
 
 

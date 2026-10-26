@@ -51,7 +51,7 @@ class CondBracketExporter(QCAlgorithm):
         self.SetCash(1_000_000)
         self.n_tags = 0
         self.fut = self.AddFuture(
-            Futures.Indices.NASDAQ100EMini, Resolution.Minute,
+            Futures.Indices.NASDAQ_100_E_MINI, Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=True)

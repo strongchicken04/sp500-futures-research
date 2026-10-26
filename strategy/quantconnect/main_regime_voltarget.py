@@ -42,7 +42,7 @@ class NasdaqRegimeVolTargetORB(QCAlgorithm):
         self.f_up = 0.0406
 
         future = self.AddFuture(
-            Futures.Indices.NASDAQ100EMini, resolution=Resolution.Minute,
+            Futures.Indices.NASDAQ_100_E_MINI, resolution=Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=True)

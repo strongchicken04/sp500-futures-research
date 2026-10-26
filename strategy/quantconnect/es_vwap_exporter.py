@@ -22,7 +22,7 @@ class ESVwapTrend(QCAlgorithm):
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
         f = self.AddFuture(
-            Futures.Indices.SP500EMini, Resolution.Minute,
+            Futures.Indices.SP_500_E_MINI, Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=True)

@@ -9,7 +9,8 @@ E1. DONE (rejected, keep 0.20/0.30): Eval bracket SHAPE under the intraday rule 
     (0.30/0.20, 0.25/0.25, 0.30/0.30, 0.40/0.30, 0.50/0.40) vs the plan 0.20/0.30 and 0.25/0.40; two-win sizing
     (win <= $1,450, loss <= $1,950, every trade fits the room). Idea: a loss that leaves room for a second trade.
     Adopt only if faster AND cheaper in all four eras + 2026; random-direction check <= 40%.
-E2. QC: does the data extend past 2026-07-24? If yes, re-run the *26 exports (holdout, Z watch).
+E2. DONE: QC data now ends 2026-07-28 (+2 days, not worth a re-run; re-check ~weekly). QC build now needs
+    new ticker names (fixed in all exporters). Was: does the data extend past 2026-07-24? If yes, re-run the *26 exports (holdout, Z watch).
 E3. Importer: web research for new intraday NQ/ES ideas (2025-26 studies), each as exact rules -> registry.
 E4. Test the best E3 ideas (four eras, 6c timing, funded via funded_model + mtm_check at today's NQ).
 Night 2026-10-24/25:

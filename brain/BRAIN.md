@@ -39,6 +39,11 @@ English.
    (one QC node: ~15-20 min per run; max ~10,000 order tags per run; reuse the
    slot project). Data: `brain/bin/restore_data.sh` unpacks all tags to
    $BRAIN_DATA (default /tmp/brain_data); scorers take that dir.
+   QC change (seen 2026-10-26): old ticker names (Futures.Indices.NASDAQ100EMini)
+   now fail the build; use NASDAQ_100_E_MINI / SP_500_E_MINI / DOW_30_E_MINI /
+   RUSSELL_2000_E_MINI (verified). The other renamed tickers in the exporters
+   (CRUDE_OIL_WTI, Y_10_TREASURY_NOTE, GOLD) are not yet verified on QC.
+   QC data ended 2026-07-28 on 2026-10-26 (about 3 months behind).
 3. **Optimiser** — book and funded sizing questions go through
    `scripts/timed_book.py` (time-aware: trades realised in exit order, day
    stop only blocks later entries); older sequential sims overstate day stops.

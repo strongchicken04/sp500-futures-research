@@ -19,7 +19,7 @@ class ZNDailyExporter(QCAlgorithm):
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
         self.n_tags = 0
-        self.zn = self.AddFuture(Futures.Financials.Y10TreasuryNote, Resolution.Minute,
+        self.zn = self.AddFuture(Futures.Financials.Y_10_TREASURY_NOTE, Resolution.Minute,
                                  dataNormalizationMode=DataNormalizationMode.Raw,
                                  dataMappingMode=DataMappingMode.OpenInterest,
                                  contractDepthOffset=0, extendedMarketHours=True)

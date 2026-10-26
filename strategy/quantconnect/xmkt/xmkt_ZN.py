@@ -19,12 +19,12 @@ from AlgorithmImports import *
 INST = "ZN"
 SPECS = {
     # ticker, session start, session end (bar-end minutes, ET), mid check
-    "ES":  (Futures.Indices.SP500EMini, 9 * 60 + 30, 16 * 60, 12 * 60),
-    "YM":  (Futures.Indices.Dow30EMini, 9 * 60 + 30, 16 * 60, 12 * 60),
-    "RTY": (Futures.Indices.Russell2000EMini, 9 * 60 + 30, 16 * 60, 12 * 60),
-    "GC":  (Futures.Metals.Gold, 8 * 60 + 20, 13 * 60 + 30, 11 * 60),
-    "CL":  (Futures.Energies.CrudeOilWTI, 9 * 60, 14 * 60 + 30, 12 * 60),
-    "ZN":  (Futures.Financials.Y10TreasuryNote, 8 * 60 + 20, 15 * 60, 11 * 60 + 30),
+    "ES":  (Futures.Indices.SP_500_E_MINI, 9 * 60 + 30, 16 * 60, 12 * 60),
+    "YM":  (Futures.Indices.DOW_30_E_MINI, 9 * 60 + 30, 16 * 60, 12 * 60),
+    "RTY": (Futures.Indices.RUSSELL_2000_E_MINI, 9 * 60 + 30, 16 * 60, 12 * 60),
+    "GC":  (Futures.Metals.GOLD, 8 * 60 + 20, 13 * 60 + 30, 11 * 60),
+    "CL":  (Futures.Energies.CRUDE_OIL_WTI, 9 * 60, 14 * 60 + 30, 12 * 60),
+    "ZN":  (Futures.Financials.Y_10_TREASURY_NOTE, 8 * 60 + 20, 15 * 60, 11 * 60 + 30),
 }
 LEVELS = [5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 100, 125, 150]
 

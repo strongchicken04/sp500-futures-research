@@ -22,7 +22,7 @@ class PropS1Orb15Long(QCAlgorithm):
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
         f = self.AddFuture(
-            Futures.Metals.Gold, Resolution.Minute,
+            Futures.Metals.GOLD, Resolution.Minute,
             dataNormalizationMode=DataNormalizationMode.Raw,
             dataMappingMode=DataMappingMode.OpenInterest,
             contractDepthOffset=0, extendedMarketHours=True)

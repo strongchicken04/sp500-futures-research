@@ -32,8 +32,8 @@ class CrossAssetExporter(QCAlgorithm):
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
         self.n_tags = 0
-        self.cl = self._add(Futures.Energies.CrudeOilWTI)
-        self.gc = self._add(Futures.Metals.Gold)
+        self.cl = self._add(Futures.Energies.CRUDE_OIL_WTI)
+        self.gc = self._add(Futures.Metals.GOLD)
         self.marks = {}
         self.open = []
         self.cl_day = None

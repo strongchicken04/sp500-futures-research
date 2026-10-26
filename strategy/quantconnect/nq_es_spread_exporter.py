@@ -20,12 +20,12 @@ class NQESSpread(QCAlgorithm):
         self.SetStartDate(2018, 1, 1)
         self.SetEndDate(2025, 12, 31)
         self.SetCash(1_000_000)
-        nq = self.AddFuture(Futures.Indices.NASDAQ100EMini, Resolution.Minute,
+        nq = self.AddFuture(Futures.Indices.NASDAQ_100_E_MINI, Resolution.Minute,
                             dataNormalizationMode=DataNormalizationMode.Raw,
                             dataMappingMode=DataMappingMode.OpenInterest,
                             contractDepthOffset=0, extendedMarketHours=True)
         nq.SetFilter(0, 120)
-        es = self.AddFuture(Futures.Indices.SP500EMini, Resolution.Minute,
+        es = self.AddFuture(Futures.Indices.SP_500_E_MINI, Resolution.Minute,
                             dataNormalizationMode=DataNormalizationMode.Raw,
                             dataMappingMode=DataMappingMode.OpenInterest,
                             contractDepthOffset=0, extendedMarketHours=True)

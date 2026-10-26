@@ -30,7 +30,7 @@ from collections import deque
 
 MODE = "VWAP"
 START, END = 2010, 2017
-TICKER = Futures.Indices.NASDAQ100EMini
+TICKER = Futures.Indices.NASDAQ_100_E_MINI
 SL_PTS, TP_PTS = 25.0, 100.0
 BAND = 0.0025
 LOOKBACK = 14
