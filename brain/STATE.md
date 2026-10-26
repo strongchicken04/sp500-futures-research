@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-26T10:40Z (day shift 2026-10-26 BIG: big-trades study done, next fresh ideas)
+heartbeat: 2026-10-26T10:43Z (day shift 2026-10-26 BIG: E9 done)
 last shift: 2026-10-26 day shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -21,6 +21,10 @@ E5. DONE (no change; RS10 = lower tail risk, same mean): RS leg by signal streng
 E3d. STOPPED: RS spread NQ-ES (2018-25 t 2.8) - the 2010-17 / 2026 ES panels cannot be exported.
 E8. DONE: big-trades bubbles (owner idea; BVC proxy on 5-min OHLCV): follow loses at all horizons, fade only in
     event averages, as a strategy ~0 / negative -> rejected. A real test needs tick data with the aggressor side.
+E9. DONE: absorption / delta divergence proxies rejected; RS x session volume: high-volume days weakest everywhere
+    but skipping them in the book is mixed -> rejected.
+E10. NEXT fresh ideas (owner wants many): e.g. 1-min-free order-flow ideas are exhausted on OHLCV; try
+    volatility-regime timing of the whole book (rv20 / VIX buckets), weekday x RS, holiday-week, month-start flows.
 E6. NEXT: RS leg hedged with MES (NQ long + ES short on the RS signal, 1:1 and 1:1.25 notional) in the
     funded model, 2018-25 only (no ES panel for 2010-17 / 2026 -> information only; Lucid hedging rule to be
     checked by the owner before any use).

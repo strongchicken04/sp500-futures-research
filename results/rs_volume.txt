@@ -1,0 +1,6 @@
+rvol terciles from 2018-21: low < 0.90 <= mid < 1.12 <= high
+--- 2010-13: low leg  +1.8 bp (t+0.5) win 63.7% n230 | mid leg +10.7 bp (t+2.6) win 61.2% n193 | high leg  +0.6 bp (t+0.1) win 66.2% n278
+--- 2014-17: low leg  +2.5 bp (t+0.8) win 64.0% n250 | mid leg  +0.6 bp (t+0.2) win 53.7% n174 | high leg  -1.0 bp (t-0.2) win 67.3% n278
+--- 2018-21: low leg  +6.4 bp (t+1.6) win 71.3% n270 | mid leg  +6.2 bp (t+1.4) win 65.3% n271 | high leg  +2.9 bp (t+0.6) win 60.2% n271
+--- 2022-25: low leg  +5.3 bp (t+1.1) win 68.8% n232 | mid leg  +6.7 bp (t+1.6) win 63.2% n316 | high leg  +4.3 bp (t+0.9) win 66.1% n284
+--- 2026: low leg +18.4 bp (t+1.4) win 61.5% n27 | mid leg +17.4 bp (t+1.8) win 70.0% n50 | high leg  -6.0 bp (t-0.5) win 62.2% n38
