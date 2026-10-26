@@ -5,7 +5,7 @@ last shift: 2026-10-26 day shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
 Day shift 2026-10-26 (owner: "spusť zase na celý den, i research"; hourly 12:07-22:07 Prague, report brain/reports/2026-10-26-den.md):
-E1. Eval bracket SHAPE under the intraday rule (fixed before results): RS sprint with target >= stop
+E1. DONE (rejected, keep 0.20/0.30): Eval bracket SHAPE under the intraday rule (fixed before results): RS sprint with target >= stop
     (0.30/0.20, 0.25/0.25, 0.30/0.30, 0.40/0.30, 0.50/0.40) vs the plan 0.20/0.30 and 0.25/0.40; two-win sizing
     (win <= $1,450, loss <= $1,950, every trade fits the room). Idea: a loss that leaves room for a second trade.
     Adopt only if faster AND cheaper in all four eras + 2026; random-direction check <= 40%.

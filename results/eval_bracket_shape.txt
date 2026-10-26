@@ -1,0 +1,40 @@
+--- 2010-13: days / fees to a pass | pass per evaluation | random direction (10 seeds)
+   +0.20/-0.30  120.7 d  $ 599  pass 15.0%  random 16.5%
+   +0.25/-0.40   84.5 d  $ 429  pass 21.0%  random 15.5%
+   +0.30/-0.20  109.6 d  $ 576  pass 15.6%  random 14.3%
+   +0.25/-0.25  116.9 d  $ 647  pass 13.9%  random 16.3%
+   +0.30/-0.30   86.9 d  $ 503  pass 17.9%  random 14.2%
+   +0.40/-0.30   46.7 d  $ 314  pass 28.7%  random 16.3%
+   +0.50/-0.40   48.1 d  $ 386  pass 23.3%  random 19.8%
+--- 2014-17: days / fees to a pass | pass per evaluation | random direction (10 seeds)
+   +0.20/-0.30   38.1 d  $ 381  pass 23.6%  random 20.3%
+   +0.25/-0.40   33.6 d  $ 347  pass 25.9%  random 21.7%
+   +0.30/-0.20   59.5 d  $ 538  pass 16.7%  random 17.2%
+   +0.25/-0.25   32.6 d  $ 341  pass 26.4%  random 20.1%
+   +0.30/-0.30   33.9 d  $ 416  pass 21.7%  random 22.3%
+   +0.40/-0.30   26.5 d  $ 343  pass 26.2%  random 24.4%
+   +0.50/-0.40   33.9 d  $ 308  pass 29.2%  random 25.5%
+--- 2018-21: days / fees to a pass | pass per evaluation | random direction (10 seeds)
+   +0.20/-0.30   12.4 d  $ 285  pass 31.6%  random 25.8%
+   +0.25/-0.40   12.2 d  $ 278  pass 32.4%  random 27.2%
+   +0.30/-0.20   16.6 d  $ 286  pass 31.5%  random 23.7%
+   +0.25/-0.25   16.2 d  $ 298  pass 30.2%  random 23.5%
+   +0.30/-0.30   19.1 d  $ 327  pass 27.5%  random 24.8%
+   +0.40/-0.30   20.8 d  $ 326  pass 27.6%  random 23.5%
+   +0.50/-0.40   26.0 d  $ 327  pass 27.5%  random 27.8%
+--- 2022-25: days / fees to a pass | pass per evaluation | random direction (10 seeds)
+   +0.20/-0.30    8.1 d  $ 241  pass 37.4%  random 27.9%
+   +0.25/-0.40    8.4 d  $ 241  pass 37.3%  random 25.7%
+   +0.30/-0.20   14.2 d  $ 253  pass 35.5%  random 24.0%
+   +0.25/-0.25   13.0 d  $ 230  pass 39.2%  random 28.0%
+   +0.30/-0.30   13.7 d  $ 256  pass 35.2%  random 29.4%
+   +0.40/-0.30   16.4 d  $ 252  pass 35.7%  random 28.5%
+   +0.50/-0.40   16.6 d  $ 237  pass 38.0%  random 25.8%
+--- 2026: days / fees to a pass | pass per evaluation | random direction (10 seeds)
+   +0.20/-0.30    7.5 d  $ 237  pass 38.0%  random 27.5%
+   +0.25/-0.40    9.9 d  $ 291  pass 30.9%  random 26.4%
+   +0.30/-0.20   10.3 d  $ 163  pass 55.3%  random 36.4%
+   +0.25/-0.25   10.2 d  $ 194  pass 46.5%  random 33.0%
+   +0.30/-0.30   13.8 d  $ 219  pass 41.0%  random 31.4%
+   +0.40/-0.30   16.2 d  $ 290  pass 31.1%  random 33.2%
+   +0.50/-0.40   17.7 d  $ 309  pass 29.2%  random 31.5%
