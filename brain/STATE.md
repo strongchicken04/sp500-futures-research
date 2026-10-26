@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-26T10:01Z (day shift 2026-10-26 RUNNING: E1 eval bracket shape)
+heartbeat: 2026-10-26T10:08Z (day shift 2026-10-26 RUNNING: E3b RS vs YM / RTY exports on QC)
 last shift: 2026-10-26 day shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -12,6 +12,7 @@ E1. DONE (rejected, keep 0.20/0.30): Eval bracket SHAPE under the intraday rule 
 E2. DONE: QC data now ends 2026-07-28 (+2 days, not worth a re-run; re-check ~weekly). QC build now needs
     new ticker names (fixed in all exporters). Was: does the data extend past 2026-07-24? If yes, re-run the *26 exports (holdout, Z watch).
 E3. Importer: web research for new intraday NQ/ES ideas (2025-26 studies), each as exact rules -> registry.
+E3a. DONE midday fade (rejected). E3b. RUNNING: RS vs YM / RTY (QC exports MFY*, scorer rsx_score.py).
 E4. Test the best E3 ideas (four eras, 6c timing, funded via funded_model + mtm_check at today's NQ).
 Night 2026-10-24/25:
 N1. DONE: V11 plateau at today's NQ -> fragile (only exact 11:00 works) -> rejected as plan B.
