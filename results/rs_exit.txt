@@ -1,0 +1,5 @@
+--- 2010-13: BASE  +3.8 bp (t+1.6, n701) | VWX  +2.0 bp (vs BASE  -1.8, t-1.0) | BE  +4.3 bp (vs BASE  +0.5, t+0.6)
+--- 2014-17: BASE  +0.7 bp (t+0.3, n703) | VWX  +1.8 bp (vs BASE  +1.1, t+0.7) | BE  +2.4 bp (vs BASE  +1.7, t+2.3)
+--- 2018-21: BASE  +5.2 bp (t+2.0, n812) | VWX  +4.1 bp (vs BASE  -1.1, t-0.5) | BE  +4.6 bp (vs BASE  -0.6, t-0.6)
+--- 2022-25: BASE  +5.5 bp (t+2.0, n832) | VWX  +4.4 bp (vs BASE  -1.1, t-0.4) | BE  +5.5 bp (vs BASE  -0.0, t-0.0)
+--- 2026: BASE  +9.9 bp (t+1.5, n115) | VWX  +1.0 bp (vs BASE  -8.9, t-1.6) | BE  +6.4 bp (vs BASE  -3.5, t-1.4)
