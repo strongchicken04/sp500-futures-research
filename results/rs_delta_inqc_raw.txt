@@ -39,3 +39,9 @@ year 2021 done in 922s
 2020 all = leg +9.1/+1.5/222 win 50/93 | sprint +4.7/+3.1/222 win 152/217
 2020 neutral = leg +9.3/+1.5/200 win 44/81 | sprint +4.8/+3.0/200 win 137/195
 year 2020 done in 837s
+### 2019 ed850b9bdb31cab079680c6b3c283ef5 error: None
+2019 against = leg +12.9/+0.8/15 win 2/3 | sprint +3.3/+0.5/15 win 10/15
+2019 agree = leg +22.2/+1.3/10 win 1/1 | sprint +10.0/+1.6/10 win 8/10
+2019 all = leg -1.6/-0.4/179 win 8/18 | sprint +0.3/+0.1/179 win 100/162
+2019 neutral = leg -4.6/-1.0/154 win 5/14 | sprint -0.7/-0.4/154 win 82/137
+year 2019 done in 862s
