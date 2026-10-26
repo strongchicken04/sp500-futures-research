@@ -1,0 +1,12 @@
+--- 2018-21 at NQ 28,530: 24-month cash per seat (paired) | first payout
+   BOOK  $ 33,527  p10 $  8,570  vs BOOK     +0 (+/- 0) better   0%  first payout 20.4%  RS trades 685
+   RS10  $ 32,275  p10 $  9,895  vs BOOK -1,252 (+/- 485) better  39%  first payout 16.6%  RS trades 334
+--- 2022-25 at NQ 28,530: 24-month cash per seat (paired) | first payout
+   BOOK  $ 35,865  p10 $ 12,965  vs BOOK     +0 (+/- 0) better   0%  first payout 21.7%  RS trades 686
+   RS10  $ 37,279  p10 $ 19,690  vs BOOK +1,414 (+/- 428) better  46%  first payout 34.4%  RS trades 386
+--- 2010-13 at NQ 28,530: 24-month cash per seat (paired) | first payout
+   BOOK  $ 23,481  p10 $    785  vs BOOK     +0 (+/- 0) better   0%  first payout 15.5%  RS trades 617
+   RS10  $ 22,913  p10 $  1,580  vs BOOK   -569 (+/- 478) better  47%  first payout 15.1%  RS trades 279
+--- 2014-17 at NQ 28,530: 24-month cash per seat (paired) | first payout
+   BOOK  $ 24,861  p10 $  5,180  vs BOOK     +0 (+/- 0) better   0%  first payout 17.8%  RS trades 643
+   RS10  $ 25,446  p10 $  6,980  vs BOOK   +586 (+/- 415) better  50%  first payout 19.0%  RS trades 286

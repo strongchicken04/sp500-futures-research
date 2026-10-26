@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-26T10:24Z (day shift 2026-10-26 RUNNING on local data: E5)
+heartbeat: 2026-10-26T10:26Z (day shift 2026-10-26 RUNNING on local data: E5 done)
 last shift: 2026-10-26 day shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -16,7 +16,7 @@ E3a. DONE midday fade (rejected). E3b. CANCELLED: RS vs YM / RTY was already rej
 E3c. DONE: RS funded leg exit variants (VWAP exit, breakeven stop) rejected.
 QC 2026-10-26: our data exports were flagged as a Terms of Service violation -> NO QC runs. Owner: keep
     researching on the existing local data ("pokračuj takhle"). New data only from a licensed source.
-E5. RS leg: return by signal strength |rs| bucket and by check time (10:00 / 11:00 / 13:00 / 14:30), four eras
+E5. DONE (no change; RS10 = lower tail risk, same mean): RS leg by signal strength |rs| bucket and by check time (10:00 / 11:00 / 13:00 / 14:30), four eras
     + 2026 -> sizing by strength or dropping a check only if monotonic / consistent in all eras.
 E3d. STOPPED: RS spread NQ-ES (2018-25 t 2.8) - the 2010-17 / 2026 ES panels cannot be exported.
 E4. Test the best E3 ideas (four eras, 6c timing, funded via funded_model + mtm_check at today's NQ).

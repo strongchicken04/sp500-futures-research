@@ -1,0 +1,40 @@
+--- 2010-13
+   |rs| 0.15-0.25  leg  +1.4 bp (t+0.5) win 61.3% n356
+   |rs| 0.25-0.40  leg  +8.7 bp (t+2.1) win 69.4% n242
+   |rs| >0.40      leg  -0.6 bp (t-0.1) win 60.6% n111
+   check 10:00      leg  +4.3 bp (t+1.1) win 66.7% n319
+   check 11:00      leg  +5.4 bp (t+1.2) win 63.1% n215
+   check 13:00      leg  -1.0 bp (t-0.2) win 55.9% n116
+   check 14:30      leg  +2.3 bp (t+0.5) win 69.2% n 59
+--- 2014-17
+   |rs| 0.15-0.25  leg  -0.8 bp (t-0.3) win 62.5% n395
+   |rs| 0.25-0.40  leg  +6.5 bp (t+1.8) win 62.9% n229
+   |rs| >0.40      leg  -8.4 bp (t-1.0) win 61.9% n 88
+   check 10:00      leg  +2.4 bp (t+0.6) win 62.1% n313
+   check 11:00      leg  -0.9 bp (t-0.2) win 63.0% n195
+   check 13:00      leg  -1.0 bp (t-0.3) win 60.8% n143
+   check 14:30      leg  +0.2 bp (t+0.0) win 68.8% n 61
+--- 2018-21
+   |rs| 0.15-0.25  leg  +2.0 bp (t+0.6) win 67.4% n367
+   |rs| 0.25-0.40  leg  +8.4 bp (t+1.9) win 62.6% n266
+   |rs| >0.40      leg  +6.2 bp (t+1.0) win 64.9% n189
+   check 10:00      leg  +9.8 bp (t+2.4) win 66.8% n401
+   check 11:00      leg  +0.6 bp (t+0.1) win 65.2% n236
+   check 13:00      leg  +0.3 bp (t+0.1) win 57.0% n140
+   check 14:30      leg  +0.6 bp (t+0.1) win 77.4% n 45
+--- 2022-25
+   |rs| 0.15-0.25  leg  +8.7 bp (t+2.4) win 63.5% n372
+   |rs| 0.25-0.40  leg  +3.8 bp (t+0.8) win 67.8% n282
+   |rs| >0.40      leg  +2.2 bp (t+0.3) win 67.2% n184
+   check 10:00      leg +10.4 bp (t+2.7) win 67.4% n474
+   check 11:00      leg  -4.1 bp (t-0.8) win 62.3% n208
+   check 13:00      leg  +6.1 bp (t+1.0) win 66.3% n100
+   check 14:30      leg  +0.1 bp (t+0.0) win 63.4% n 56
+--- 2026
+   |rs| 0.15-0.25  leg  +2.2 bp (t+0.3) win 66.0% n 53
+   |rs| 0.25-0.40  leg +14.1 bp (t+1.2) win 69.8% n 43
+   |rs| >0.40      leg +20.3 bp (t+1.2) win 55.0% n 20
+   check 10:00      leg +11.6 bp (t+1.2) win 55.2% n 67
+   check 11:00      leg  +9.4 bp (t+0.9) win 74.2% n 31
+   check 13:00      leg  +2.7 bp (t+0.3) win 100.0% n 13
+   check 14:30      leg  +5.4 bp (t+0.7) win 75.0% n  5
