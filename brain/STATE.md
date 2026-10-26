@@ -25,6 +25,7 @@ E9. DONE: absorption / delta divergence proxies rejected; RS x session volume: h
     but skipping them in the book is mixed -> rejected.
 E11. RUNNING: big trades with REAL aggressor side inside QC (inqc/bubbles_YYYY.py, runner in scratchpad
     run_inqc.sh, output results/bubbles_inqc_raw.txt), years 2024, 2023, 2022, 2025, 2026, 2021..2018.
+E12. QUEUED: RS x real order flow (cum delta) inside QC, after E11 (runner run_rsd.sh).
 E10. NEXT fresh ideas (owner wants many): e.g. 1-min-free order-flow ideas are exhausted on OHLCV; try
     volatility-regime timing of the whole book (rv20 / VIX buckets), weekday x RS, holiday-week, month-start flows.
 E6. NEXT: RS leg hedged with MES (NQ long + ES short on the RS signal, 1:1 and 1:1.25 notional) in the
