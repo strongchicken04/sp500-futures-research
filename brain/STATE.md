@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-26T15:16Z (day shift 2026-10-26 BIG: in-QC F1-F6 yearly running; local F6 proxy)
+heartbeat: 2026-10-26T16:12Z (day shift 2026-10-26 BIG: in-QC fresh 2019 + RS x delta dose-response; F3 trade test next)
 last shift: 2026-10-26 day shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
