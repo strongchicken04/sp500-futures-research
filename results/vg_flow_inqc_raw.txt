@@ -1,0 +1,5 @@
+### 2024 618007c93dafb628f5039c1f38c4d11f error: None
+2024 VG all = +7.7pt/+2.1/202 wins 59
+2024 VG confirm = +24.1pt/+1.6/15 wins 7
+2024 VG neutral = +6.4pt/+1.7/187 wins 52
+year 2024 done in 470s
