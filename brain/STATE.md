@@ -40,7 +40,7 @@ E10. NEXT fresh ideas (owner wants many): e.g. 1-min-free order-flow ideas are e
 Night 2026-10-26/27:
 N1. F3 absorption PLATEAU inside QC (aggregates only): volume multiple 1.5 / 2 / 3 x side ratio 1.5 / 2 / 3,
     hold 15 min, stop 0.25%, first event per day per cell, 2019-2026 -> robust family or a lucky cell?
-E6. NEXT: RS leg hedged with MES (NQ long + ES short on the RS signal, 1:1 and 1:1.25 notional) in the
+E6. CLOSED (no risk-adjusted gain): RS leg hedged with MES (NQ long + ES short on the RS signal, 1:1 and 1:1.25 notional) in the
     funded model, 2018-25 only (no ES panel for 2010-17 / 2026 -> information only; Lucid hedging rule to be
     checked by the owner before any use).
 E7. DONE (passes 6c; offer as lower-risk option): RS10 as a risk option - check timing 6c (MFEAT*_M5 / _P5: 09:55 / 10:05) and 2026 before offering it.
