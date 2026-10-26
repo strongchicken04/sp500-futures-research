@@ -73,3 +73,6 @@ year 2021 done in 1067s
 2020 F6b OPEN30 = 120m +5.8/+0.7/142 999m +6.0/+0.5/142
 F2N days with book sizes = 280
 year 2020 done in 957s
+### 2019 97a8c56bdbfc1fb4f710ca90eb32b10c error: None
+year 2019 done in 934s
+ALL DONE
