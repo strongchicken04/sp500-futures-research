@@ -20,6 +20,9 @@ import math
 # breakout bars are rarely that one-sided; stated openly): groups by sign
 # POS (I > 0) / NEG (I <= 0) and C05 (I >= +0.05) / A05 (I <= -0.05).
 # Gross points per trade (per contract), mean / t / n / wins per year.
+# v3 (night 2026-10-27): also the RISK view of ALL trades vs C05-only: per year
+# the sum of points, the max drawdown of cumulative points and the worst
+# 20-trading-day sum (a proxy for the funded drawdown).
 
 START = (2024, 1, 1)
 END = (2024, 12, 31)
@@ -39,6 +42,8 @@ class VGFlowInQC(QCAlgorithm):
                                   contract_depth_offset=0, extended_market_hours=False)
         self.nq.set_filter(0, 180)
         self.agg = {}
+        self.path = {"all": [], "c05": []}     # (year, daily points)
+        self.daypl = {}
         self.day = None
         self._new_day()
 
@@ -57,6 +62,9 @@ class VGFlowInQC(QCAlgorithm):
 
     def _close(self, x):
         y = self.day.year
+        self.daypl["all"] = self.daypl.get("all", 0.0) + x
+        if "c05" in self.tr["g"]:
+            self.daypl["c05"] = self.daypl.get("c05", 0.0) + x
         for g in self.tr["g"]:
             self._add((y, g), x)
         self._add((y, "all"), x)
@@ -67,6 +75,10 @@ class VGFlowInQC(QCAlgorithm):
         if self.day != t.date():
             if self.tr is not None and self.last is not None:
                 self._close(self.tr["d"] * (self.last - self.tr["e"]))
+            if self.day is not None:
+                for k in self.path:
+                    self.path[k].append((self.day.year, self.daypl.get(k, 0.0)))
+            self.daypl = {}
             self.day = t.date()
             self._new_day()
         bar = data.bars.get(self.nq.symbol)
@@ -122,6 +134,18 @@ class VGFlowInQC(QCAlgorithm):
             self.bb = self.bs = 0.0
 
     def on_end_of_algorithm(self):
+        for k, p in self.path.items():
+            by = {}
+            for y, x in p:
+                by.setdefault(y, []).append(x)
+            for y, xs in by.items():
+                cum = peak = dd = 0.0
+                for x in xs:
+                    cum += x
+                    peak = max(peak, cum)
+                    dd = max(dd, peak - cum)
+                w20 = min(sum(xs[i:i + 20]) for i in range(max(1, len(xs) - 19))) if xs else 0.0
+                self.set_runtime_statistic(f"{y} VGR {k}", f"sum {cum:+.0f}pt maxDD {dd:.0f}pt worst20d {w20:+.0f}pt worstday {min(xs):+.0f}pt days {len(xs)}")
         for (y, g), (n, s1, s2, w) in sorted(self.agg.items()):
             if n < 2:
                 continue
