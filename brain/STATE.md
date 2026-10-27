@@ -11,6 +11,9 @@ Q1. Importer: more published INTRADAY QQQ/NQ/SPY rule sets (Quantified Strategie
     exact rules -> local test on NQ 5-min, four eras + 2026, 6c timing.
 Q2. DONE (late-session effect from 14:00 in all eras; LL leg +$0.3-1.9k per seat, ungated): Where does the late-day long edge sit: same day-type filter (prev close < SMA50 + gap up) with other
     entry times (10:00 / 12:00 / 14:00 -> close) -> one effect or a 15:00 artefact?
+Q5. RUNNING (in-QC, aggregates only; run_fmin.sh -> results/first_minute_inqc_raw.txt): first-minute REAL order flow
+    (09:30-09:31 aggressive imbalance) -> 09:31 sprint direction, bracket 0.25 / 0.40, 2019-2026; vs price-move baseline;
+    adopt only if resolved win > random 61.5% in most years (eval plan relevance: Lucid 7 has no direction edge).
 Q4. DONE (rejected; STR+ watch only, non-monotonic) (in-QC, aggregates only; runner scratchpad run_lflow.sh -> results/late_flow_inqc_raw.txt):
     late-session REAL order flow -> last hour (inqc/late_flow_inqc.py, years 2019-2026): delta 09:30-15:00 agree /
     diverge with the day move, strong-day long x delta, closing-imbalance proxy 15:00-15:50 -> last 10 min.
