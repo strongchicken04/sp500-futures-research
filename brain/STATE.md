@@ -43,6 +43,7 @@ N1. DONE (8/9 cells positive, small; candidate add-on, owner decides): F3 absorp
 N2. DONE (information; confirmed breakouts better per trade 7/8 years, but less total): VG leg (Lucid 2 VWAP band break) x REAL order flow on the breakout 5-min bar inside QC
     (confirm >= +0.2 / neutral / against <= -0.2 imbalance in the break direction), stop 25 / target 100 pt,
     2019-2026 -> can a flow filter rescue the weak VG leg?
+N2b. DONE: VG order-flow-confirmed = -30% profit, smaller drawdown in 8/8 years -> candidate (needs live order flow).
 E6. CLOSED (no risk-adjusted gain): RS leg hedged with MES (NQ long + ES short on the RS signal, 1:1 and 1:1.25 notional) in the
     funded model, 2018-25 only (no ES panel for 2010-17 / 2026 -> information only; Lucid hedging rule to be
     checked by the owner before any use).
