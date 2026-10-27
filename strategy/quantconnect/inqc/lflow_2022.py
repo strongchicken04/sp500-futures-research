@@ -23,7 +23,13 @@ import math
 #   STR+  strong and D >= +0.05: long R60;  STR-  strong and D <= -0.05: long R60
 #   WK-   weak and D <= -0.05: short R60;   WK+   weak and D >= +0.05: short R60
 #   C10   |d50| >= 0.05: R10 x sign d50 (closing-imbalance proxy)
+# v2 (after 2024 gave NO day with |D| >= 0.05 and only 48 with |d50| >= 0.05 -
+# a whole-day imbalance is much smaller than a 5-min one; stated openly): the
+# threshold is TH = 0.02 for every group above, plus sign-only groups
+#   AGRs / DIVs (D x M > 0 / < 0), STRs+ / STRs- (strong and D > 0 / <= 0),
+#   C10s (sign of d50, any size).
 
+TH = 0.02
 START = (2022, 1, 1)
 END = (2022, 12, 31)
 
@@ -66,23 +72,29 @@ class LateFlowInQC(QCAlgorithm):
         r60 = (self.last / self.c15 - 1.0) * 1e4
         if M != 0:
             self._add((y, "ALL"), r60 * M)
-            if abs(D) >= 0.05:
+            if abs(D) >= TH:
                 self._add((y, "AGR" if D * M > 0 else "DIV"), r60 * M)
-        if abs(D) >= 0.05:
+            self._add((y, "AGRs" if D * M > 0 else "DIVs"), r60 * M)
+        if abs(D) >= TH:
             self._add((y, "FLW"), r60 * (1 if D > 0 else -1))
-        if strong and D >= 0.05:
+        if strong:
+            self._add((y, "STRs+" if D > 0 else "STRs-"), r60)
+        if strong and D >= TH:
             self._add((y, "STR+"), r60)
-        if strong and D <= -0.05:
+        if strong and D <= -TH:
             self._add((y, "STR-"), r60)
-        if weak and D <= -0.05:
+        if weak and D <= -TH:
             self._add((y, "WK-"), -r60)
-        if weak and D >= 0.05:
+        if weak and D >= TH:
             self._add((y, "WK+"), -r60)
         tot2 = self.b2 + self.s2
         if self.c1550 is not None and tot2 > 0:
             d50 = (self.b2 - self.s2) / tot2
-            if abs(d50) >= 0.05:
-                self._add((y, "C10"), (self.last / self.c1550 - 1.0) * 1e4 * (1 if d50 > 0 else -1))
+            r10 = (self.last / self.c1550 - 1.0) * 1e4
+            if abs(d50) >= TH:
+                self._add((y, "C10"), r10 * (1 if d50 > 0 else -1))
+            if d50 != 0:
+                self._add((y, "C10s"), r10 * (1 if d50 > 0 else -1))
 
     def on_data(self, data: Slice):
         t = self.time
