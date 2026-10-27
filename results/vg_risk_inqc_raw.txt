@@ -1,0 +1,27 @@
+### 2024 89931fb80fe2557dd4d8bb32a5dfc6f3 error: None
+2024 VG a05 = +8.7pt/+0.8/26 wins 7
+2024 VG all = +7.7pt/+2.1/202 wins 59
+2024 VG c05 = +10.9pt/+2.0/94 wins 31
+2024 VG neg = +7.3pt/+1.0/58 wins 16
+2024 VG pos = +7.9pt/+1.8/144 wins 43
+2024 VGR all = sum +1583pt maxDD 376pt worst20d -322pt worstday -25pt days 258
+2024 VGR c05 = sum +1023pt maxDD 363pt worst20d -225pt worstday -25pt days 258
+year 2024 done in 450s
+### 2023 98617a01763a5ad4dd0382ddef8e266b error: None
+2023 VG a05 = -1.0pt/-0.1/25 wins 5
+2023 VG all = +0.9pt/+0.3/197 wins 44
+2023 VG c05 = +3.8pt/+0.7/94 wins 24
+2023 VG neg = +1.3pt/+0.2/56 wins 12
+2023 VG pos = +0.7pt/+0.2/141 wins 32
+2023 VGR all = sum +135pt maxDD 946pt worst20d -400pt worstday -25pt days 256
+2023 VGR c05 = sum +318pt maxDD 317pt worst20d -225pt worstday -25pt days 256
+year 2023 done in 442s
+### 2022 b41b7721f5cfcd5eac66d51f86629c95 error: None
+2022 VG a05 = +5.1pt/+0.6/35 wins 9
+2022 VG all = +3.5pt/+0.9/201 wins 47
+2022 VG c05 = +6.2pt/+1.1/84 wins 21
+2022 VG neg = +3.3pt/+0.6/77 wins 18
+2022 VG pos = +3.6pt/+0.8/124 wins 29
+2022 VGR all = sum +723pt maxDD 475pt worst20d -275pt worstday -25pt days 257
+2022 VGR c05 = sum +550pt maxDD 400pt worst20d -225pt worstday -25pt days 257
+year 2022 done in 425s
