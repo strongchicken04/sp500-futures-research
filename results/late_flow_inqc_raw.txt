@@ -13,3 +13,19 @@
 2024 LF STRs- = -1.3bp/-0.4/25 wins 12
 2024 LF WK- = +9.6bp/+0.5/10 wins 3
 year 2024 done in 898s
+### 2023 546f3c6139f0e02934d6a6a554d977a0 error: None
+2023 LF AGR = +6.5bp/+1.2/19 wins 12
+2023 LF AGRs = +3.9bp/+1.4/139 wins 84
+2023 LF ALL = +4.0bp/+2.0/248 wins 137
+2023 LF C10 = +0.8bp/+0.6/143 wins 75
+2023 LF C10s = +1.1bp/+1.0/248 wins 132
+2023 LF DIV = +7.5bp/+1.2/16 wins 10
+2023 LF DIVs = +4.0bp/+1.3/109 wins 53
+2023 LF FLW = +0.1bp/+0.0/35 wins 18
+2023 LF STR+ = +6.2bp/+0.7/8 wins 5
+2023 LF STR- = +23.9bp/+2.9/7 wins 6
+2023 LF STRs+ = +0.5bp/+0.1/53 wins 29
+2023 LF STRs- = +5.4bp/+1.0/35 wins 20
+2023 LF WK+ = -5.4bp/-0.8/2 wins 1
+2023 LF WK- = +7.5bp/+0.9/5 wins 3
+year 2023 done in 466s
