@@ -1,0 +1,20 @@
+--- 2018-21 at NQ 28,530: 24-month cash per seat (paired) | first payout
+   BOOK         $ 33,326  p10 $  8,570  vs BOOK     +0 (+/- 0) better   0%  first payout 20.4%  LL trades 0
+   +LL 3        $ 35,125  p10 $  9,840  vs BOOK +1,799 (+/- 258) better  57%  first payout 19.2%  LL trades 34
+   +LL 3 gated  $ 33,174  p10 $  7,775  vs BOOK   -152 (+/- 166) better  17%  first payout 19.0%  LL trades 19
+   +LL 2        $ 34,903  p10 $  9,310  vs BOOK +1,576 (+/- 221) better  58%  first payout 20.5%  LL trades 34
+--- 2022-25 at NQ 28,530: 24-month cash per seat (paired) | first payout
+   BOOK         $ 36,578  p10 $ 13,705  vs BOOK     +0 (+/- 0) better   0%  first payout 21.7%  LL trades 0
+   +LL 3        $ 38,432  p10 $ 15,770  vs BOOK +1,854 (+/- 216) better  58%  first payout 24.8%  LL trades 31
+   +LL 3 gated  $ 36,418  p10 $ 13,440  vs BOOK   -160 (+/- 156) better  10%  first payout 22.1%  LL trades 22
+   +LL 2        $ 37,993  p10 $ 14,500  vs BOOK +1,414 (+/- 198) better  55%  first payout 24.0%  LL trades 31
+--- 2010-13 at NQ 28,530: 24-month cash per seat (paired) | first payout
+   BOOK         $ 23,430  p10 $  1,050  vs BOOK     +0 (+/- 0) better   0%  first payout 15.5%  LL trades 0
+   +LL 3        $ 23,702  p10 $  1,050  vs BOOK   +273 (+/- 202) better  30%  first payout 15.5%  LL trades 22
+   +LL 3 gated  $ 23,271  p10 $    785  vs BOOK   -159 (+/- 184) better  17%  first payout 15.3%  LL trades 17
+   +LL 2        $ 23,611  p10 $  1,050  vs BOOK   +182 (+/- 166) better  24%  first payout 15.7%  LL trades 22
+--- 2014-17 at NQ 28,530: 24-month cash per seat (paired) | first payout
+   BOOK         $ 24,861  p10 $  4,175  vs BOOK     +0 (+/- 0) better   0%  first payout 17.8%  LL trades 0
+   +LL 3        $ 25,933  p10 $  4,915  vs BOOK +1,072 (+/- 175) better  34%  first payout 19.1%  LL trades 20
+   +LL 3 gated  $ 25,310  p10 $  4,650  vs BOOK   +449 (+/- 150) better  20%  first payout 17.9%  LL trades 16
+   +LL 2        $ 25,635  p10 $  4,915  vs BOOK   +774 (+/- 149) better  30%  first payout 19.1%  LL trades 20
