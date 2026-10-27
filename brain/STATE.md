@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-27T00:09Z (night shift 2026-10-26/27 RUNNING: N2 VG x order flow v2 in QC)
+heartbeat: 2026-10-27T01:09Z (night shift 2026-10-26/27 RUNNING: N2 VG risk view in QC)
 last shift: 2026-10-26/27 night shift (running)
 
 ## Queue (top = next). Move finished items to registry.md.
