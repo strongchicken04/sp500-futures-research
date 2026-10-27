@@ -18,3 +18,7 @@ median 7.64962434640748 worst -68.0078333630052 best 157.2194446117714
 overlap with Z (close at 15:00 above the noise band = Z long):
   Z long too: n 65 mean +10.6 bp, eras +11.0(+1.2)n13   +4.2(+0.7)n11  +12.2(+1.2)n25  +11.6(+1.2)n15  +22.7(+0.0)n1  
   Z not long: n 45 mean +17.3 bp, eras +10.6(+1.2)n9   +42.2(+2.6)n9   +19.2(+1.4)n9    +9.2(+1.6)n16   -9.4(+0.0)n2  
+adversarial: roll windows (Mar/Jun/Sep/Dec day 5-22) excluded vs only
+  no roll +10.5(+1.3)n17  +20.5(+2.2)n19  +18.1(+1.9)n29   +9.3(+1.4)n25   +1.3(+0.1)n3  
+  roll    +12.1(+1.4)n5   +36.8(+0.0)n1    -9.5(-0.6)n5   +14.7(+1.7)n6         -      
+  fills 2 ticks worse  +8.6(+1.3)n22  +20.2(+2.2)n20  +13.5(+1.6)n34  +10.0(+1.8)n31   +1.1(+0.1)n3  
