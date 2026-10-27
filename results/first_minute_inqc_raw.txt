@@ -1,0 +1,8 @@
+### 2024 2842ffdc8352bc41c9e9dded2931dd87 error: None
+2024 FM AGREE = win 79/139 -3.0bp/-1.2/151
+2024 FM CLASH = win 60/103 -2.4bp/-0.8/105
+2024 FM F10 = win 84/135 +0.2bp/+0.1/140
+2024 FM F20 = win 42/60 +5.5bp/+1.5/61
+2024 FM FLOW = win 140/244 -2.8bp/-1.4/258
+2024 FM PX = win 142/241 -1.8bp/-1.0/257
+year 2024 done in 459s
