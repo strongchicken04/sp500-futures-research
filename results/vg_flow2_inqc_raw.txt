@@ -40,3 +40,18 @@ year 2026 done in 300s
 2021 VG neg = -11.7pt/-2.3/44 wins 7
 2021 VG pos = +16.3pt/+3.7/153 wins 58
 year 2021 done in 490s
+### 2020 554d6f734ff544a24cf4e5f1d7b3424e error: None
+2020 VG a05 = +10.2pt/+1.0/26 wins 8
+2020 VG all = +5.6pt/+1.6/204 wins 56
+2020 VG c05 = +11.3pt/+2.1/102 wins 33
+2020 VG neg = +5.1pt/+0.8/62 wins 17
+2020 VG pos = +5.8pt/+1.3/142 wins 39
+year 2020 done in 473s
+### 2019 354d96614d3e822f1c4b61e1db4a77eb error: None
+2019 VG a05 = +3.6pt/+0.6/37 wins 15
+2019 VG all = +1.5pt/+0.6/189 wins 70
+2019 VG c05 = +3.9pt/+0.9/93 wins 37
+2019 VG neg = +2.4pt/+0.5/59 wins 23
+2019 VG pos = +1.1pt/+0.3/130 wins 47
+year 2019 done in 477s
+ALL DONE
