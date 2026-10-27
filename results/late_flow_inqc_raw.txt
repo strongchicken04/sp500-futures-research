@@ -1,0 +1,15 @@
+### 2024 e39c5414470ef3029961f2cc8235117a error: None
+2024 LF AGR = +4.8bp/+0.8/40 wins 17
+2024 LF AGRs = -1.6bp/-0.6/165 wins 83
+2024 LF ALL = -1.3bp/-0.6/251 wins 125
+2024 LF C10 = +1.1bp/+0.7/147 wins 76
+2024 LF C10s = +0.9bp/+0.8/249 wins 128
+2024 LF DIV = +1.2bp/+0.3/12 wins 6
+2024 LF DIVs = -0.8bp/-0.3/86 wins 42
+2024 LF FLW = +3.4bp/+0.7/52 wins 23
+2024 LF STR+ = +1.6bp/+0.3/13 wins 5
+2024 LF STR- = -3.4bp/-1.1/3 wins 1
+2024 LF STRs+ = -5.9bp/-1.2/57 wins 29
+2024 LF STRs- = -1.3bp/-0.4/25 wins 12
+2024 LF WK- = +9.6bp/+0.5/10 wins 3
+year 2024 done in 898s
