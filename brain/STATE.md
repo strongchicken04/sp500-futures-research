@@ -40,7 +40,7 @@ E10. NEXT fresh ideas (owner wants many): e.g. 1-min-free order-flow ideas are e
 Night 2026-10-26/27:
 N1. DONE (8/9 cells positive, small; candidate add-on, owner decides): F3 absorption PLATEAU inside QC (aggregates only): volume multiple 1.5 / 2 / 3 x side ratio 1.5 / 2 / 3,
     hold 15 min, stop 0.25%, first event per day per cell, 2019-2026 -> robust family or a lucky cell?
-N2. RUNNING: VG leg (Lucid 2 VWAP band break) x REAL order flow on the breakout 5-min bar inside QC
+N2. DONE (information; confirmed breakouts better per trade 7/8 years, but less total): VG leg (Lucid 2 VWAP band break) x REAL order flow on the breakout 5-min bar inside QC
     (confirm >= +0.2 / neutral / against <= -0.2 imbalance in the break direction), stop 25 / target 100 pt,
     2019-2026 -> can a flow filter rescue the weak VG leg?
 E6. CLOSED (no risk-adjusted gain): RS leg hedged with MES (NQ long + ES short on the RS signal, 1:1 and 1:1.25 notional) in the
