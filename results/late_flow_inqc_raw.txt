@@ -29,3 +29,19 @@ year 2024 done in 898s
 2023 LF WK+ = -5.4bp/-0.8/2 wins 1
 2023 LF WK- = +7.5bp/+0.9/5 wins 3
 year 2023 done in 466s
+### 2022 64b6677e6978412b9885f143986c3319 error: None
+2022 LF AGR = +3.2bp/+0.2/15 wins 8
+2022 LF AGRs = +10.4bp/+2.2/144 wins 92
+2022 LF ALL = +7.6bp/+1.9/250 wins 149
+2022 LF C10 = -1.4bp/-0.6/136 wins 65
+2022 LF C10s = -1.9bp/-1.0/250 wins 125
+2022 LF DIV = -26.5bp/-0.7/10 wins 5
+2022 LF DIVs = +3.7bp/+0.5/106 wins 57
+2022 LF FLW = +12.5bp/+0.7/25 wins 13
+2022 LF STR+ = +12.7bp/+1.3/5 wins 3
+2022 LF STR- = -94.1bp/-1.4/4 wins 2
+2022 LF STRs+ = +11.2bp/+1.5/48 wins 34
+2022 LF STRs- = +18.3bp/+1.5/36 wins 26
+2022 LF WK+ = -3.5bp/-0.7/2 wins 1
+2022 LF WK- = -7.5bp/-0.2/8 wins 3
+year 2022 done in 494s
