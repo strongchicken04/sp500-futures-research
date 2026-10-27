@@ -106,3 +106,18 @@ year 2021 done in 525s
 2020 LF STRs- = -2.5bp/-0.2/30 wins 15
 2020 LF WK- = +14.7bp/+1.0/5 wins 3
 year 2020 done in 413s
+### 2019 025cc578447c0ef660442bf95f81e782 error: None
+2019 LF AGR = -5.7bp/-1.5/42 wins 18
+2019 LF AGRs = -2.0bp/-1.0/158 wins 73
+2019 LF ALL = -1.8bp/-1.2/249 wins 118
+2019 LF C10 = -0.5bp/-0.5/160 wins 74
+2019 LF C10s = -1.1bp/-1.2/249 wins 111
+2019 LF DIV = -4.8bp/-1.5/18 wins 7
+2019 LF DIVs = -1.6bp/-0.7/91 wins 45
+2019 LF FLW = -2.6bp/-0.9/60 wins 29
+2019 LF STR+ = +0.5bp/+0.1/19 wins 11
+2019 LF STRs+ = -1.3bp/-0.5/63 wins 32
+2019 LF STRs- = +10.8bp/+2.1/15 wins 11
+2019 LF WK- = -6.8bp/-0.5/5 wins 2
+year 2019 done in 473s
+ALL DONE

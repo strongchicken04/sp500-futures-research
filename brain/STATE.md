@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-27T22:56Z (night 2026-10-27/28: Q4 in-QC late flow v2 running, 3/8 years)
+heartbeat: 2026-10-27T23:32Z (night 2026-10-27/28: Q4 done)
 last shift: 2026-10-26/27 night shift (report brain/reports/2026-10-27.md)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -11,7 +11,7 @@ Q1. Importer: more published INTRADAY QQQ/NQ/SPY rule sets (Quantified Strategie
     exact rules -> local test on NQ 5-min, four eras + 2026, 6c timing.
 Q2. DONE (late-session effect from 14:00 in all eras; LL leg +$0.3-1.9k per seat, ungated): Where does the late-day long edge sit: same day-type filter (prev close < SMA50 + gap up) with other
     entry times (10:00 / 12:00 / 14:00 -> close) -> one effect or a 15:00 artefact?
-Q4. RUNNING (in-QC, aggregates only; runner scratchpad run_lflow.sh -> results/late_flow_inqc_raw.txt):
+Q4. DONE (rejected; STR+ watch only, non-monotonic) (in-QC, aggregates only; runner scratchpad run_lflow.sh -> results/late_flow_inqc_raw.txt):
     late-session REAL order flow -> last hour (inqc/late_flow_inqc.py, years 2019-2026): delta 09:30-15:00 agree /
     diverge with the day move, strong-day long x delta, closing-imbalance proxy 15:00-15:50 -> last 10 min.
 Q3. DONE (rejected; also day-type batch rejected): E10 leftovers: weekday x RS, month-start flows (four eras; only if consistent everywhere).
