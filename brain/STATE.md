@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-27T23:32Z (night 2026-10-27/28: Q4 done)
+heartbeat: 2026-10-27T23:42Z (night 2026-10-27/28: Q5 first-minute flow running; Mozek db synced)
 last shift: 2026-10-26/27 night shift (report brain/reports/2026-10-27.md)
 
 ## Queue (top = next). Move finished items to registry.md.
