@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-27T01:09Z (night shift 2026-10-26/27 RUNNING: N2 VG risk view in QC)
-last shift: 2026-10-26/27 night shift (running)
+heartbeat: 2026-10-27T02:08Z (night shift 2026-10-26/27 report written; brain/reports/2026-10-27.md)
+last shift: 2026-10-26/27 night shift (report brain/reports/2026-10-27.md)
 
 ## Queue (top = next). Move finished items to registry.md.
 Day shift 2026-10-26 (owner: "spusť zase na celý den, i research"; hourly 12:07-22:07 Prague, report brain/reports/2026-10-26-den.md):
