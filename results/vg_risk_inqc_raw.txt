@@ -52,3 +52,22 @@ year 2026 done in 262s
 2021 VGR all = sum +2012pt maxDD 538pt worst20d -275pt worstday -25pt days 257
 2021 VGR c05 = sum +1458pt maxDD 203pt worst20d -175pt worstday -25pt days 257
 year 2021 done in 481s
+### 2020 c2856f1bbeac8b204afc7f6d936d6eef error: None
+2020 VG a05 = +10.2pt/+1.0/26 wins 8
+2020 VG all = +5.6pt/+1.6/204 wins 56
+2020 VG c05 = +11.3pt/+2.1/102 wins 33
+2020 VG neg = +5.1pt/+0.8/62 wins 17
+2020 VG pos = +5.8pt/+1.3/142 wins 39
+2020 VGR all = sum +1172pt maxDD 609pt worst20d -400pt worstday -25pt days 258
+2020 VGR c05 = sum +1154pt maxDD 577pt worst20d -275pt worstday -25pt days 258
+year 2020 done in 455s
+### 2019 8a451ad38e23717eefb3d67a4e977f62 error: None
+2019 VG a05 = +3.6pt/+0.6/37 wins 15
+2019 VG all = +1.5pt/+0.6/189 wins 70
+2019 VG c05 = +3.9pt/+0.9/93 wins 37
+2019 VG neg = +2.4pt/+0.5/59 wins 23
+2019 VG pos = +1.1pt/+0.3/130 wins 47
+2019 VGR all = sum +311pt maxDD 344pt worst20d -193pt worstday -25pt days 257
+2019 VGR c05 = sum +384pt maxDD 187pt worst20d -162pt worstday -25pt days 257
+year 2019 done in 401s
+ALL DONE
