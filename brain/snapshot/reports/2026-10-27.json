@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-27",
+  "summary": "## Co je potřeba udělat ty\n1. Plán se nemění. Ranní body ze 26. 10. platí:\n   - evaluace jen RS (Lucid 8) na jednom účtu;\n   - nahrát nové Lucid 7 a 8;\n   - funded kniha VWAP pásmo + noise + RS, 3 MNQ na nohu, bez ORB;\n   - volitelně RS noha jen v 10:00.\n2. Nová otázka jen pro případ, že máš platformu se skutečným order flow\n   (NinjaTrader Order Flow+, ATAS). Dva kandidáti:\n   - Noha VWAP pásma jen s potvrzením order flow: −30 % zisku, ale\n     menší propady v každém roce. Nejhorších 20 dní při 3 MNQ dnes\n     −1 650 $ místo −2 400 $, tedy pod drawdownem 2 000 $.\n   - Absorpce jako malá přídavná noha: ~2–3 tisíce $ ročně na účet.\n\n## Absorpce – mřížka parametrů (QuantConnect, 2019–2026, skutečná strana agresora)\n| práh objemu × poměr stran | na obchod | kladné roky |\n|---|---|---|\n| 1,5× / 1,5 | −0,45 bp | 4/8 |\n| 2× / 2 (hlavní) | +1,41 bp (t 2,5) | 6/8 |\n| 2× / 3 | +1,68 bp | 7/8 |\n| 3× / 1,5 | +1,42 bp | 6/8 |\n| ostatní | +0,6 až +2,1 bp | 6–7/8 |\n\n- Je to skutečná rodina: 8 z 9 kombinací je kladných, ne jedna šťastná\n  kombinace.\n- Je ale malá: ~6–12 $ na MNQ a obchod po poplatcích, ~160 obchodů ročně.\n- Pro starší roky nejde ověřit, QuantConnect pro ně nemá sekundová data.\n\n## Noha VWAP pásma × skutečný order flow na průrazové svíčce\n| | všechny průrazy | jen potvrzené (nerovnováha ≥ 5 % ve směru průrazu) |\n|---|---|---|\n| na obchod | +4,8 bodu | +7,5 bodu (lepší v 7 z 8 let) |\n| součet 2019–2026 | +7 291 bodů | +5 079 bodů |\n| nejhorší roční propad | 946 bodů | 577 bodů |\n| nejhorších 20 dní | −400 bodů | −275 bodů (lépe v 8 z 8 let) |\n\n- Slabina: v roce 2025 filtr zaostal (+52 proti +1 362 bodů).\n- Pravidla: první verze rozdělovala průrazy podle prahu ±20 % a takové\n  skupiny byly moc malé. Druhou verzi (znaménko a ±5 %) jsem udělal až po\n  výsledku, je to v kódu poznamenané.\n\n## Uzavřeno\n- Zajištění RS nohy pomocí MES (spread NQ − ES): sníží kolísání, ale\n  zisk na jednotku rizika nezlepší. Lucid by to navíc mohl brát jako\n  hedging.\n\n## Poznámka k metodě\n- Na QuantConnectu nic neexportuji, z výpočtů odchází jen souhrnná čísla.\n- V noci se restartoval kontejner. Přerušený výpočet jsem dokončil\n  znovu, nic se neztratilo.\n- Kde jsou výsledky: results/f3_plateau_*.txt, vg_flow2_*.txt,\n  vg_risk_*.txt, registr v brain/registry.md.\n",
+  "title": "Noční směna 26./27. 10. – absorpce a VWAP pásmo se skutečným order flow",
+  "verdicts": [
+    {
+      "name": "Absorpce – mřížka 9 kombinací (8 kladných)",
+      "status": "malý kandidát"
+    },
+    {
+      "name": "VWAP pásmo jen s potvrzením order flow (menší propady 8/8 let, −30 % zisku)",
+      "status": "kandidát"
+    },
+    {
+      "name": "RS noha zajištěná MES",
+      "status": "uzavřeno"
+    }
+  ]
+}
