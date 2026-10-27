@@ -12,3 +12,10 @@ year 2024 done in 1024s
 2023 VG neg = +1.3pt/+0.2/56 wins 12
 2023 VG pos = +0.7pt/+0.2/141 wins 32
 year 2023 done in 441s
+### 2022 afb7fc623feab802b91ee19e2dfc187d error: None
+2022 VG a05 = +5.1pt/+0.6/35 wins 9
+2022 VG all = +3.5pt/+0.9/201 wins 47
+2022 VG c05 = +6.2pt/+1.1/84 wins 21
+2022 VG neg = +3.3pt/+0.6/77 wins 18
+2022 VG pos = +3.6pt/+0.8/124 wins 29
+year 2022 done in 489s
