@@ -1,9 +1,17 @@
 # Brain state
 
-heartbeat: 2026-10-27T02:08Z (night shift 2026-10-26/27 report written; brain/reports/2026-10-27.md)
+heartbeat: 2026-10-27T22:10Z (night shift 2026-10-27/28 started)
 last shift: 2026-10-26/27 night shift (report brain/reports/2026-10-27.md)
 
 ## Queue (top = next). Move finished items to registry.md.
+Night 2026-10-27/28 (report brain/reports/2026-10-28.md):
+Q0. DONE (owner screenshots 27.10): QQQ late-day long on NQ -> WATCH (small, weak since 2023, overlaps Z);
+    QQQ RSI(3) swing -> real edge but overnight (not Lucid); intraday versions none.
+Q1. Importer: more published INTRADAY QQQ/NQ/SPY rule sets (Quantified Strategies style, flat by the close),
+    exact rules -> local test on NQ 5-min, four eras + 2026, 6c timing.
+Q2. Where does the late-day long edge sit: same day-type filter (prev close < SMA50 + gap up) with other
+    entry times (10:00 / 12:00 / 14:00 -> close) -> one effect or a 15:00 artefact?
+Q3. E10 leftovers: weekday x RS, month-start flows (four eras; only if consistent everywhere).
 Day shift 2026-10-26 (owner: "spusť zase na celý den, i research"; hourly 12:07-22:07 Prague, report brain/reports/2026-10-26-den.md):
 E1. DONE (rejected, keep 0.20/0.30): Eval bracket SHAPE under the intraday rule (fixed before results): RS sprint with target >= stop
     (0.30/0.20, 0.25/0.25, 0.30/0.30, 0.40/0.30, 0.50/0.40) vs the plan 0.20/0.30 and 0.25/0.40; two-win sizing
