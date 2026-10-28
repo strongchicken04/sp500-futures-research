@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-27T23:42Z (night 2026-10-27/28: Q5 first-minute flow running; Mozek db synced)
+heartbeat: 2026-10-28T00:38Z (night 2026-10-27/28: Q5 done)
 last shift: 2026-10-26/27 night shift (report brain/reports/2026-10-27.md)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -11,7 +11,7 @@ Q1. Importer: more published INTRADAY QQQ/NQ/SPY rule sets (Quantified Strategie
     exact rules -> local test on NQ 5-min, four eras + 2026, 6c timing.
 Q2. DONE (late-session effect from 14:00 in all eras; LL leg +$0.3-1.9k per seat, ungated): Where does the late-day long edge sit: same day-type filter (prev close < SMA50 + gap up) with other
     entry times (10:00 / 12:00 / 14:00 -> close) -> one effect or a 15:00 artefact?
-Q5. RUNNING (in-QC, aggregates only; run_fmin.sh -> results/first_minute_inqc_raw.txt): first-minute REAL order flow
+Q5. DONE (rejected: 62.7% vs random 61.5%) (in-QC, aggregates only; run_fmin.sh -> results/first_minute_inqc_raw.txt): first-minute REAL order flow
     (09:30-09:31 aggressive imbalance) -> 09:31 sprint direction, bracket 0.25 / 0.40, 2019-2026; vs price-move baseline;
     adopt only if resolved win > random 61.5% in most years (eval plan relevance: Lucid 7 has no direction edge).
 Q4. DONE (rejected; STR+ watch only, non-monotonic) (in-QC, aggregates only; runner scratchpad run_lflow.sh -> results/late_flow_inqc_raw.txt):

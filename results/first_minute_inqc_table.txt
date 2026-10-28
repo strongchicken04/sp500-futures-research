@@ -1,0 +1,6 @@
+PX    resolved win 62.0% (random 61.5%, z +0.4) n 1857  mean  +0.1 bp  above random 5/8  19:65% 20:59% 21:63% 22:63% 23:67% 24:59% 25:64% 26:53%
+FLOW  resolved win 62.7% (random 61.5%, z +1.1) n 1875  mean  +0.5 bp  above random 6/8  19:62% 20:63% 21:64% 22:65% 23:63% 24:57% 25:66% 26:59%
+F10   resolved win 62.5% (random 61.5%, z +0.6) n 1048  mean  +0.4 bp  above random 4/8  19:64% 20:61% 21:61% 22:64% 23:56% 24:62% 25:71% 26:56%
+F20   resolved win 64.2% (random 61.5%, z +1.2) n  483  mean  +1.3 bp  above random 5/8  19:69% 20:61% 21:62% 22:62% 23:57% 24:70% 25:69% 26:58%
+AGREE resolved win 62.7% (random 61.5%, z +0.8) n 1071  mean  +0.5 bp  above random 5/8  19:66% 20:61% 21:62% 22:65% 23:65% 24:57% 25:68% 26:55%
+CLASH resolved win 62.6% (random 61.5%, z +0.6) n  792  mean  +0.6 bp  above random 5/8  19:57% 20:67% 21:67% 22:67% 23:60% 24:58% 25:63% 26:63%
