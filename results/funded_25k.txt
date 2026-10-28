@@ -1,0 +1,20 @@
+--- 2018-21 at NQ 28,530: 24-month cash per seat | p10 | first payout | evaluations bought | payouts
+   50K flat 3        $ 33,276  p10 $  8,305  first payout 20.4%  evals 12.1
+   25K flat 1        $ 13,952  p10 $  3,240  first payout 23.4%  evals 11.9
+   25K flat 2        $ 15,548  p10 $  1,080  first payout 14.2%  evals 13.4
+   25K VG/Z 2, RS 1  $ 16,666  p10 $  4,680  first payout 19.8%  evals 10.6
+--- 2022-25 at NQ 28,530: 24-month cash per seat | p10 | first payout | evaluations bought | payouts
+   50K flat 3        $ 35,658  p10 $ 11,695  first payout 21.7%  evals 10.6
+   25K flat 1        $ 15,157  p10 $  5,220  first payout 30.7%  evals 10.7
+   25K flat 2        $ 18,231  p10 $  5,040  first payout 19.3%  evals 11.0
+   25K VG/Z 2, RS 1  $ 17,083  p10 $  5,940  first payout 22.9%  evals  9.7
+--- 2010-13 at NQ 28,530: 24-month cash per seat | p10 | first payout | evaluations bought | payouts
+   50K flat 3        $ 23,554  p10 $  1,050  first payout 15.5%  evals 18.8
+   25K flat 1        $  9,091  p10 $   -360  first payout 17.1%  evals 17.8
+   25K flat 2        $ 11,203  p10 $ -1,620  first payout 12.6%  evals 19.8
+   25K VG/Z 2, RS 1  $ 10,561  p10 $ -1,080  first payout 13.2%  evals 19.6
+--- 2014-17 at NQ 28,530: 24-month cash per seat | p10 | first payout | evaluations bought | payouts
+   50K flat 3        $ 24,351  p10 $  4,440  first payout 17.8%  evals 17.6
+   25K flat 1        $  9,685  p10 $  1,800  first payout 22.7%  evals 16.5
+   25K flat 2        $ 12,049  p10 $      0  first payout 14.7%  evals 18.3
+   25K VG/Z 2, RS 1  $ 11,500  p10 $    360  first payout 16.5%  evals 17.7
