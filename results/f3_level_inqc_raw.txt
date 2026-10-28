@@ -25,3 +25,49 @@ year 2023 done in 464s
 2022 F3L S_LOW = -7.9/-1.7/16 stops 7
 2022 F3L S_MID = +4.3/+1.6/112 stops 31
 year 2022 done in 523s
+### 2025 a6fa383b5851272a15de7504d6b69238 error: None
+2025 F3L ALL = +0.8/+0.8/393 stops 66
+2025 F3L L_HIGH = +0.8/+0.5/31 stops 0
+2025 F3L L_LOW = +1.4/+0.5/46 stops 11
+2025 F3L L_MID = -1.8/-1.1/122 stops 28
+2025 F3L S_HIGH = +0.3/+0.1/77 stops 5
+2025 F3L S_LOW = +2.6/+0.7/19 stops 1
+2025 F3L S_MID = +4.4/+1.7/106 stops 21
+year 2025 done in 502s
+### 2026 23d6614c76aa2abce891355f58e93004 error: None
+2026 F3L ALL = +1.6/+1.3/258 stops 34
+2026 F3L L_HIGH = -0.9/-0.2/14 stops 1
+2026 F3L L_LOW = +6.1/+1.1/26 stops 7
+2026 F3L L_MID = -0.8/-0.4/81 stops 11
+2026 F3L S_HIGH = +3.4/+1.3/44 stops 4
+2026 F3L S_LOW = +8.4/+1.2/12 stops 3
+2026 F3L S_MID = +1.1/+0.5/81 stops 8
+year 2026 done in 313s
+### 2021 b9e2197a1073ab7ad38e1eb6c426f2cd error: None
+2021 F3L ALL = +0.0/+0.0/251 stops 37
+2021 F3L L_HIGH = +1.7/+0.8/23 stops 1
+2021 F3L L_LOW = +6.1/+2.2/27 stops 3
+2021 F3L L_MID = +0.2/+0.1/81 stops 17
+2021 F3L S_HIGH = -2.4/-1.1/25 stops 1
+2021 F3L S_LOW = +1.6/+0.4/12 stops 0
+2021 F3L S_MID = -2.2/-1.3/85 stops 15
+year 2021 done in 509s
+### 2020 689f28f77f4b55ce0465fac815f59927 error: None
+2020 F3L ALL = +2.8/+1.7/249 stops 53
+2020 F3L L_HIGH = +8.3/+2.6/18 stops 0
+2020 F3L L_LOW = +7.7/+1.3/19 stops 3
+2020 F3L L_MID = +0.7/+0.3/87 stops 25
+2020 F3L S_HIGH = +7.4/+2.2/30 stops 0
+2020 F3L S_LOW = +10.6/+1.8/11 stops 0
+2020 F3L S_MID = +0.1/+0.0/86 stops 25
+year 2020 done in 444s
+### 2019 81f7aeb67896e5913e00122f49d93e1a error: None
+2019 F3L ALL = +0.8/+1.5/477 stops 31
+2019 F3L L_HIGH = +0.1/+0.1/46 stops 2
+2019 F3L L_LOW = +2.7/+1.5/63 stops 6
+2019 F3L L_MID = +0.7/+0.6/122 stops 9
+2019 F3L S_HIGH = +0.9/+1.0/85 stops 0
+2019 F3L S_LOW = -0.4/-0.2/32 stops 4
+2019 F3L S_MID = +0.9/+0.9/138 stops 10
+year 2019 done in 424s
+ALL DONE
