@@ -1,9 +1,14 @@
 # Brain state
 
-heartbeat: 2026-10-28T02:44Z (night 2026-10-27/28 report written; brain/reports/2026-10-28.md)
+heartbeat: 2026-10-28T22:09Z (night shift 2026-10-28/29 started)
 last shift: 2026-10-27/28 night shift (report brain/reports/2026-10-28.md)
 
 ## Queue (top = next). Move finished items to registry.md.
+Night 2026-10-28/29 (report brain/reports/2026-10-29.md):
+R1. Funded 25K vs 50K per seat (owner question 28.10): book VG+Z+RS at 1 / 2 MNQ on a 25K funded account
+    (ASSUMED half of 50K: $1,000 DD lock +$100, payout at +$2,000 withdrawing $1,000, five days >= $75;
+    owner to confirm) vs 50K flat 3; eval cost from eval_25k.py.
+R2. Owner open items: Lucid 7 table line (bias numbers) - waiting for the owner's screenshot.
 Night 2026-10-27/28 (report brain/reports/2026-10-28.md):
 Q0. DONE (owner screenshots 27.10): QQQ late-day long on NQ -> WATCH (small, weak since 2023, overlaps Z);
     QQQ RSI(3) swing -> real edge but overnight (not Lucid); intraday versions none.
