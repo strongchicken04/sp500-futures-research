@@ -7,3 +7,21 @@
 2024 F3L S_LOW = -1.2/-0.5/13 stops 0
 2024 F3L S_MID = +3.0/+1.6/63 stops 5
 year 2024 done in 435s
+### 2023 60985bf3b5d9e136c6277be330b13f96 error: None
+2023 F3L ALL = +1.3/+1.3/257 stops 27
+2023 F3L L_HIGH = +1.8/+0.6/23 stops 2
+2023 F3L L_LOW = +4.8/+2.0/38 stops 2
+2023 F3L L_MID = -1.1/-0.6/77 stops 12
+2023 F3L S_HIGH = +2.9/+1.4/52 stops 2
+2023 F3L S_LOW = +0.9/+0.2/14 stops 2
+2023 F3L S_MID = +1.0/+0.4/54 stops 7
+year 2023 done in 464s
+### 2022 c99a63ea3399f5bcc3f24e2a8fcc7e6a error: None
+2022 F3L ALL = +1.9/+1.2/297 stops 94
+2022 F3L L_HIGH = +4.6/+0.7/10 stops 1
+2022 F3L L_LOW = -0.7/-0.1/35 stops 16
+2022 F3L L_MID = +2.0/+0.7/91 stops 28
+2022 F3L S_HIGH = -0.5/-0.1/34 stops 12
+2022 F3L S_LOW = -7.9/-1.7/16 stops 7
+2022 F3L S_MID = +4.3/+1.6/112 stops 31
+year 2022 done in 523s
