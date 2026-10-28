@@ -1,0 +1,103 @@
+// @version=5
+indicator("Lucid 13 — Late-day long (15:00 -> 16:00)", overlay=true, max_labels_count=500, max_lines_count=50)
+
+// =========================================================================
+// CANDIDATE FUNDED LEG, NOT IN THE PLAN (night 2026-10-27/28; owner decides)
+// USE A 5-MINUTE MNQ/NQ CHART. Rules as published for QQQ ("Quantified
+// Strategies" screenshot sent by the owner 2026-10-27), tested on NQ:
+//   1 yesterday's RTH close (16:00) < SMA50 of the RTH closes
+//   2 today's RTH open (09:30) > yesterday's RTH close x (1 + 0.60%)
+//   3 at 15:00 the close is above today's open
+//   4 at 15:00 the close is in the top 23% of today's RTH range
+//      (close - low) / (high - low) > 0.77
+//   -> LONG at the close of the 14:55-15:00 bar, stop 1% below the entry
+//      (filled at the worse of stop and bar open), exit at the 16:00 close.
+// NQ 2010-2026, 5-min RTH bars (scripts/qqq_late_long.py, gross per trade):
+//   +10.9 / +21.3 / +14.0 / +10.4 bp (2010-13 / 2014-17 / 2018-21 / 2022-25),
+//   ~6.5 trades a year, 61% winners, the 1% stop never hit in 110 trades.
+//   Weak since 2023 (-77 bp over 18 trades). No vol gate (the gated version
+//   adds nothing - the signal lives on volatile downtrend days).
+// Funded book at NQ 28,530 (scripts/late_long_book.py, open-P&L check):
+//   + 3 MNQ adds +$1.8k / +$1.9k / +$0.3k / +$1.1k per seat over 24 months.
+// =========================================================================
+
+gapPct  = input.float(0.60, "Min gap up at the open (%)") / 100.0
+rngMin  = input.float(0.77, "Min range position at 15:00")
+stopPct = input.float(1.0, "Stop below entry (%)") / 100.0
+smaLen  = input.int(50, "SMA length (RTH closes)")
+cts     = input.int(3, "Contracts (MNQ)")
+ptValue = input.float(2.0, "$ per point per contract (MNQ = 2, NQ = 20)")
+showHist = input.bool(true, "Show historical trades")
+
+etMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")   // bar OPEN time
+rthFlag = not na(time(timeframe.period, "0930-1600", "America/New_York"))
+rthStart = rthFlag and not nz(rthFlag[1], false)
+is5 = timeframe.period == "5"
+
+// RTH closes (the close of the last bar inside 09:30-16:00) for the SMA, as in the backtest
+var float[] closes = array.new_float()
+var float lastRthClose = na
+if rthFlag
+    lastRthClose := close
+var float prevClose = na
+var float smaPrev = na
+var float dOpen = na
+var float dHi = na
+var float dLo = na
+if rthStart
+    if not na(lastRthClose[1])
+        array.push(closes, lastRthClose[1])
+        if array.size(closes) > smaLen
+            array.shift(closes)
+    prevClose := lastRthClose[1]
+    smaPrev := array.size(closes) == smaLen ? array.avg(closes) : na
+    dOpen := open
+    dHi := high
+    dLo := low
+else if rthFlag
+    dHi := math.max(dHi, high)
+    dLo := math.min(dLo, low)
+
+downtrend = not na(smaPrev) and prevClose < smaPrev
+gapUp = not na(prevClose) and dOpen > prevClose * (1 + gapPct)
+
+var float lEntry = na
+var float lStop = na
+var int lBar = na
+
+decide = is5 and rthFlag and etMin == 895 and barstate.isconfirmed and na(lEntry)
+rngPos = dHi > dLo ? (close - dLo) / (dHi - dLo) : 0.0
+goLong = decide and downtrend and gapUp and close > dOpen and rngPos > rngMin
+if goLong
+    lEntry := close
+    lStop := close * (1 - stopPct)
+    lBar := bar_index
+    if showHist
+        label.new(bar_index, low, "LATE LONG " + str.tostring(cts) + "\nstop " + str.tostring(lStop, format.mintick) + "\nrisk ~$" + str.tostring((close - lStop) * cts * ptValue, "#"), color=color.new(color.teal, 10), textcolor=color.white, style=label.style_label_up, size=size.small)
+
+if not na(lEntry) and bar_index > lBar
+    exR = ""
+    exP = 0.0
+    if low <= lStop
+        exR := "SL"
+        exP := math.min(lStop, open)
+    else if etMin >= 955 or not rthFlag
+        exR := "16:00"
+        exP := close
+    if exR != ""
+        pnl = (exP - lEntry) * cts * ptValue
+        if showHist
+            label.new(bar_index, exP, "LL " + exR + "\n" + (pnl >= 0 ? "+$" : "-$") + str.tostring(math.abs(pnl), "#"), color=pnl >= 0 ? color.new(color.green, 20) : color.new(color.red, 20), textcolor=color.white, style=label.style_label_down, size=size.tiny)
+        lEntry := na
+        lStop := na
+
+alertcondition(goLong, "Late-day LONG", "Lucid 13: late-day long at 15:00")
+
+plot(rthFlag and downtrend and gapUp and etMin < 900 ? dLo + rngMin * (dHi - dLo) : na, "range 77% line", color=color.new(color.teal, 40), style=plot.style_linebr)
+plot(not na(lStop) ? lStop : na, "stop", color=color.new(color.red, 10), style=plot.style_linebr, linewidth=2)
+
+var table tb = table.new(position.top_right, 1, 2, border_width=1, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    st = not is5 ? "LATE LONG: use a 5-minute chart" : not na(lEntry) ? "LONG " + str.tostring(lEntry, format.mintick) : not downtrend ? "no setup: above SMA50" : not gapUp ? "no setup: no gap up > " + str.tostring(gapPct * 100, "#.##") + "%" : "setup day - check at 15:00"
+    table.cell(tb, 0, 0, "LUCID 13 · LATE LONG (candidate)", text_color=color.white, bgcolor=color.new(color.teal, 40))
+    table.cell(tb, 0, 1, st, text_color=color.white, bgcolor=not na(lEntry) ? color.new(color.orange, 20) : color.new(color.gray, 50))
