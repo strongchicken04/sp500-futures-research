@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-10-28T22:10Z (night 2026-10-28/29: R1 done)
-last shift: 2026-10-27/28 night shift (report brain/reports/2026-10-28.md)
+heartbeat: 2026-10-28T22:11Z (night 2026-10-28/29 report written; brain/reports/2026-10-29.md)
+last shift: 2026-10-28/29 night shift (report brain/reports/2026-10-29.md)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-28/29 (report brain/reports/2026-10-29.md):
