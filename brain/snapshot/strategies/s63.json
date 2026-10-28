@@ -1,0 +1,8 @@
+{
+  "diedAt": "plateau",
+  "files": "inqc/late_flow_inqc.py, pool_lflow.py",
+  "name": "Pozdní skutečná delta (QuantConnect) → poslední hodina; uzavírací nerovnováha → posledních 10 minut",
+  "order": 63,
+  "result": "souhlas / nesouhlas +1,8 / −3,8 bp (t ≤ 0,7); silný den + delta ≥ 0,02 +7,4 bp (7/8 let), ale podle znaménka obráceně; uzavírací nerovnováha +0,8 bp",
+  "status": "rejected"
+}

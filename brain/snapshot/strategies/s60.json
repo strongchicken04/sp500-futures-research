@@ -1,0 +1,8 @@
+{
+  "diedAt": "live",
+  "files": "qqq_rsi3_swing.py",
+  "name": "QQQ RSI(3) < 22 + 10denní VWAP swing (obrázek)",
+  "order": 60,
+  "result": "swing +86 / +96 / +60 / +51 bp, 80 % výher, ale drží přes noc (Lucid nepovoluje); intradenní verze bez edge",
+  "status": "rejected"
+}

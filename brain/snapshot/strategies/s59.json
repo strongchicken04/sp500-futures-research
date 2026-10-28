@@ -1,0 +1,12 @@
+{
+  "files": "qqq_late_long.py, late_long_book.py, late_long_decomp.py",
+  "isVal": "+14,0 bp",
+  "name": "Pozdní long (QQQ obrázek): pod SMA50, gap nahoru > 0,6 %, v 15:00 silný den → long do 16:00, stop 1 %",
+  "note": "bez vol filtru; 60 % signálů v dnech, kdy je noise noha už long",
+  "oosVal": "+10,4 bp",
+  "order": 59,
+  "reached": "audit",
+  "result": "+10,9 / +21,3 / +14,0 / +10,4 bp na obchod, ~6,5 obchodu ročně; ve funded knize +1 800 / +1 850 / +270 / +1 070 $ na účet (24 m); slábne od 2023",
+  "status": "candidate",
+  "unit": "bp/obchod"
+}

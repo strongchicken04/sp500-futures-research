@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-28",
+  "summary": "## Co je potřeba udělat ty\n1. Plán se nemění. Platí body z 26. a 27. 10.:\n   - evaluace jen RS (Lucid 8);\n   - nahrát nové Lucid 7 a 8;\n   - funded kniha VWAP pásmo + noise + RS, 3 MNQ na nohu, bez ORB.\n2. Nová volitelná noha: pozdní long z tvého obrázku (indikátor lucid_13_late_long.pine).\n   - Ve funded knize při 3 MNQ přidá ve všech čtyřech obdobích +1 800 / +1 850 / +270 / +1 070 $\n     na účet za 24 měsíců. Je to málo, ~6,5 obchodu ročně.\n   - Slábne od roku 2023. Rozhodnutí je na tobě, nepovinné.\n3. Sprint 9:31 ani se skutečným order flow nemá směr. Evaluace tedy zůstává na RS.\n\n## Tvoje obrázky (QQQ strategie, testováno na NQ 2010–2026)\n| strategie | na obchod (2010-13 / 14-17 / 18-21 / 22-25) | verdikt |\n|---|---|---|\n| pozdní long 15:00–16:00 | +10,9 / +21,3 / +14,0 / +10,4 bp | kandidát (malý) |\n| RSI(3) swing přes noc | +86 / +96 / +60 / +51 bp, 80 % výher | edge skutečný, ale drží přes noc (Lucid ne) |\n| RSI(3) jen v rámci dne | +17,5 / +18,8 / +4,9 / +14,4 bp, t ≤ 1,2 | zamítnuto |\n\nPozdní long:\n- Edge se tvoří až od 14:00, v 10:00 a 12:00 ne. Platí ve všech obdobích.\n- Potřebuje obě podmínky zároveň: klesající trend (pod SMA50) a velký gap. Na dnech nad SMA50\n  je kolem nuly.\n- Vydrží zhoršené podmínky: horší plnění o 2 ticky i vynechání dní kolem rolování kontraktu.\n- S filtrem volatility nic nepřidá. Signál vzniká hlavně ve volatilních dnech.\n- 60 % signálů připadne na dny, kdy je noise noha už long.\n\n## Skutečný order flow (QuantConnect, jen souhrnná čísla, 2019–2026)\n| test | výsledek | verdikt |\n|---|---|---|\n| delta první minuty → směr sprintu 9:31 | 62,7 % rozhodnutých výher proti náhodě 61,5 % | zamítnuto |\n| delta 09:30–15:00 → poslední hodina | souhlas / nesouhlas se směrem dne +1,8 / −3,8 bp, t ≤ 0,7 | zamítnuto |\n| uzavírací nerovnováha 15:00–15:50 → posledních 10 min | +0,8 bp | zamítnuto |\n| absorpce u úrovní (minimum / maximum dne a včerejška) | všechny události +1,3 bp (t 3,4, 7/8 let); long u minima +3,4 bp | informace, absorpce zůstává malý kandidát |\n| noise noha (Z) × order flow před vstupem | souhlasný +11,3 proti nesouhlasnému +11,2 bodu na obchod | zamítnuto |\n\nK noise noze (Z), pravidlo sledování:\n- Bez filtru volatility vychází rok 2025 kladně: +3,7 bp místo −0,8 bp s filtrem. Rok 2026 je\n  kolem nuly.\n- Z je slabá, ale není mrtvá. Pravidlo sledování platí dál beze změny (rozhodnutí na konci 2026).\n\n## Ostatní zamítnuté (lokálně, 2010–2026)\n- Zrcadlový pozdní short: −1,5 / +18,7 / −0,6 / −2,6 bp.\n- Návrat k průměru podle IBS: v roce 2026 −26,8 bp.\n- Long po 3 poklesech v rámci dne: funguje jen v letech 2018–25.\n- RS podle dne v týdnu a začátku měsíce: žádné pravidlo neplatí ve všech obdobích.\n\n## Poznámka k metodě\n- QuantConnect: běží tam jen výpočty, ven odcházejí jen souhrnná čísla. Data končí 30. 7. 2026.\n- Upravený práh: u pozdní delty se celodenní nerovnováha ±5 % v roce 2024 nevyskytla ani jednou.\n  Práh jsem po prvním roce snížil na ±2 %, v kódu je to poznamenané.\n- Restart kontejneru: v noci se jednou restartoval, přerušené roky jsem dopočítal.\n- Kde jsou výsledky: results/ (qqq_*, late_long_*, *_inqc_raw/table), registr brain/registry.md.\n",
+  "title": "Noční směna 27./28. 10. – obrázky QQQ strategií a skutečný order flow",
+  "verdicts": [
+    {
+      "name": "Pozdní long 15:00–16:00 (obrázek QQQ, Lucid 13)",
+      "status": "kandidát (malý)"
+    },
+    {
+      "name": "RSI(3) swing přes noc (obrázek QQQ)",
+      "status": "zamítnuto – drží přes noc"
+    },
+    {
+      "name": "Delta první minuty → sprint 9:31",
+      "status": "zamítnuto"
+    },
+    {
+      "name": "Pozdní delta → poslední hodina",
+      "status": "zamítnuto"
+    },
+    {
+      "name": "Absorpce u úrovní",
+      "status": "informace"
+    },
+    {
+      "name": "Noise noha × order flow",
+      "status": "zamítnuto"
+    },
+    {
+      "name": "Zrcadlový short, IBS, long po 3 poklesech, RS podle kalendáře",
+      "status": "zamítnuto"
+    }
+  ]
+}

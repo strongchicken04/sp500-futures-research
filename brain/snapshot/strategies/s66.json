@@ -1,0 +1,9 @@
+{
+  "diedAt": "plateau",
+  "files": "inqc/z_flow_inqc.py, pool_zflow.py",
+  "name": "Noise noha (Z) × skutečný order flow před vstupem",
+  "note": "Z bez vol filtru 2025 kladná (+3,7 bp lokálně) – slabá, ne mrtvá",
+  "order": 66,
+  "result": "souhlasný +11,3 vs nesouhlasný +11,2 b. na obchod; filtr jen ubere zisk",
+  "status": "rejected"
+}

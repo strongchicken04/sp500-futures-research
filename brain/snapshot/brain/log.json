@@ -2,6 +2,71 @@
   "events": [
     {
       "sphere": "Interpret",
+      "t": "2026-10-28T02:43:36Z",
+      "text": "Noční report 27./28. 10. hotový. Plán beze změny; nová volitelná noha Lucid 13 (pozdní long), rozhoduješ ty."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-28T02:43:36Z",
+      "text": "Lucid 13 – pozdní long (15:00 → 16:00), Pine indikátor jako kandidát, mimo plán."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-28T02:43:36Z",
+      "text": "Noise noha × skutečný order flow (QuantConnect 2019–26): souhlasný +11,3 vs nesouhlasný +11,2 b. na obchod – zamítnuto."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-28T02:43:36Z",
+      "text": "Absorpce u úrovní: všechny události +1,3 bp (t 3,4, 7/8 let); long u minima +3,4 bp – bez čistého efektu úrovní."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-28T02:43:36Z",
+      "text": "Delta první minuty → sprint 9:31: 62,7 % výher vs náhoda 61,5 % – zamítnuto, 9:31 nemá směr."
+    },
+    {
+      "sphere": "Správce systémů",
+      "t": "2026-10-28T02:43:36Z",
+      "text": "Data QuantConnectu končí 30. 7. 2026 (+2 dny) – nic se nepřepočítává."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-27T23:41:59Z",
+      "text": "Delta první minuty → směr sprintu 9:31 (QuantConnect, jen souhrny) běží, roky 2019–2026."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-27T23:41:59Z",
+      "text": "Pozdní delta (09:30–15:00) → poslední hodina, QuantConnect 2019–2026: zamítnuto, souhlas / nesouhlas delty se směrem dne +1,8 / −3,8 bp, nemonotónní."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-27T23:41:59Z",
+      "text": "RS podle dne v týdnu a začátku měsíce: žádné pravidlo neplatí ve všech obdobích."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-27T23:41:59Z",
+      "text": "Zamítnuto: zrcadlový short, IBS návrat, long po 3 poklesech intradenně (jen 2018–25)."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-27T23:41:59Z",
+      "text": "Pozdní long (QQQ obrázek) jako noha funded knihy, 3 MNQ: +1 800 / +1 850 / +270 / +1 070 $ na účet za 24 měsíců, bez vol filtru; kandidát."
+    },
+    {
+      "sphere": "Správce systémů",
+      "t": "2026-10-27T23:41:59Z",
+      "text": "Pozdní long: edge od 14:00 ve všech obdobích, jen v dnech s trendem pod SMA50 a velkým gapem; vydrží horší plnění i vynechání rolování."
+    },
+    {
+      "sphere": "Importér",
+      "t": "2026-10-27T23:41:59Z",
+      "text": "Noční směna 27./28. 10. začala – obrázky QQQ strategií otestované, web nedal nic nového."
+    },
+    {
+      "sphere": "Interpret",
       "t": "2026-10-27T02:09:08Z",
       "text": "Noční směna 26./27. 10. hotová – report v Mozku. Plán beze změny; dva kandidáti jen pro platformu se skutečným order flow."
     },
@@ -234,71 +299,6 @@
       "sphere": "Interpret",
       "t": "2026-10-23T21:52:00Z",
       "text": "Ranní report v Mozku: opravený model funded účtu – 4 MNQ na nohu (21 700 / 33 000 $ za 24 měsíců na funded místo), ORB vyřadit, potvrď pravidla výplaty v Lucidu."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-23T21:52:00Z",
-      "text": "Lucid 8: nové vstupy „Fixed contracts“ a filtr volatility pro funded RS nohu (dřív strop výhry 1 450 $ ořízl nohu na ~2 MNQ). Nahraj novou verzi."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-23T21:52:00Z",
-      "text": "Sepsána přesná pravidla všech strategií pro automatizaci (strategy/AUTOMATION_SPEC.md) – podklad pro NinjaScript i webhook."
-    },
-    {
-      "sphere": "Manažer",
-      "t": "2026-10-23T21:52:00Z",
-      "text": "ORB v přísném modelu horší ve všech 4 obdobích; všechny 3 nohy knihy přidávají; filtr volatility nechat; denní stop zhoršuje."
-    },
-    {
-      "sphere": "Manažer",
-      "t": "2026-10-23T21:36:00Z",
-      "text": "Přísná kontrola drawdownu i s otevřenými pozicemi (každá 5min svíčka): 4 MNQ pořád lepší než 3 ve všech čtyřech obdobích (+3 500 / +4 300 $, 2010–17 +2 600 / +2 500 $)."
-    },
-    {
-      "sphere": "Manažer",
-      "t": "2026-10-23T21:36:00Z",
-      "text": "Open drive (Lucid 10) jako čtvrtá noha jen volitelně: s přísnou kontrolou přidá ~+600 $ ve třech obdobích ze čtyř."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T21:36:00Z",
-      "text": "RS noha: bracket ±1,25 % nechat (0,75–1,50 % nic lepšího ve všech obdobích). Velikost podle fáze účtu (3→4, 5→4…) nepřináší jasné zlepšení – 4 MNQ pořád."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T21:27:00Z",
-      "text": "NOVÉ DOPORUČENÍ: funded 4 MNQ na nohu místo 3 – +4 900 / +5 000 $ na funded místo za 24 měsíců (2018–21 / 2022–25), i v 2010–17 přepočteném na dnešní cenu +3 200 / +4 000 $. První výplata o 1–5 bodů méně často."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T21:27:00Z",
-      "text": "Opravený model funded účtu: všechny dny, pravidlo 5 ziskových dní (≥150 $), zisk nad +4 000 $ po výplatě zůstává. Kniha bez ORB, 3 MNQ: 19 500 / 31 900 $ za 24 měsíců (810 / 1 330 $ měsíčně)."
-    },
-    {
-      "sphere": "Manažer",
-      "t": "2026-10-23T21:27:00Z",
-      "text": "ORB v opraveném modelu: peníze zhruba stejné (−800 / +900 $), první výplata 34 / 32 % místo 40 / 41 % → dál doporučuji vyřadit."
-    },
-    {
-      "sphere": "Backtester",
-      "t": "2026-10-23T21:27:00Z",
-      "text": "Zamítnuto: sprint na funded účtu do první výplaty (kvůli pravidlu 5 ziskových dní), 2 MNQ před výplatou, jiné načasování výplaty, bracket sprintu podle volatility."
-    },
-    {
-      "sphere": "Interpret",
-      "t": "2026-10-23T19:08:37Z",
-      "text": "Denní směna uzavřena: finální report v Mozku (Interpret) a v brain/reports/2026-10-23-den.md. Na tobě: nahrát Lucid 7/8, rozhodnout o ORB a o automatizaci."
-    },
-    {
-      "sphere": "Optimalizátor",
-      "t": "2026-10-23T19:08:37Z",
-      "text": "Funded: 2 MNQ místo 3 těsně před výplatou +1 200 / +1 600 $ (2018–25), v 2010–17 beze změny – jen volitelné."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-23T13:21:53Z",
-      "text": "Lucid 7 a 8: dokončovací obchod – vyplň „Eval profit so far“; od +2 100 $ se poslední obchod zmenší, aby právě dotáhl na 3 000 $."
     }
   ]
 }

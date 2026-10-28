@@ -1,0 +1,8 @@
+{
+  "diedAt": "random",
+  "files": "inqc/first_minute_inqc.py, pool_fmin.py",
+  "name": "Delta první minuty (skutečný order flow) → směr sprintu 9:31",
+  "order": 64,
+  "result": "62,7 % rozhodnutých výher vs náhoda 61,5 % (z +1,1); |I| ≥ 0,20 64,2 % (z +1,2)",
+  "status": "rejected"
+}

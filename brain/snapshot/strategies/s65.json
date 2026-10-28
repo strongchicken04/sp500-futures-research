@@ -1,0 +1,9 @@
+{
+  "files": "inqc/f3_level_inqc.py, pool_f3l.py",
+  "name": "Absorpce × úroveň (minimum/maximum dne a včerejška), všechny události",
+  "note": "potřebuje živý order flow; jen 2019–2026",
+  "order": 65,
+  "reached": "years",
+  "result": "všechny +1,3 bp (t 3,4, 7/8 let, ~300/rok); long u minima +3,4 bp (t 2,6); short strana nezrcadlí",
+  "status": "candidate"
+}
