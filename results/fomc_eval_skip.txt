@@ -1,0 +1,6 @@
+--- 2018-21: days to a pass | evaluations | fees
+   trade FOMC days  50K:   9.5 d  3.21 eval  $ 289   25K:   9.5 d  3.21 eval  $ 192
+   skip FOMC days   50K:  10.1 d  3.29 eval  $ 296   25K:  10.0 d  3.28 eval  $ 197
+--- 2022-25: days to a pass | evaluations | fees
+   trade FOMC days  50K:   7.9 d  2.59 eval  $ 233   25K:   7.5 d  2.51 eval  $ 150
+   skip FOMC days   50K:   8.2 d  2.59 eval  $ 233   25K:   7.6 d  2.51 eval  $ 151
