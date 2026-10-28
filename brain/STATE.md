@@ -11,6 +11,7 @@ Q1. Importer: more published INTRADAY QQQ/NQ/SPY rule sets (Quantified Strategie
     exact rules -> local test on NQ 5-min, four eras + 2026, 6c timing.
 Q2. DONE (late-session effect from 14:00 in all eras; LL leg +$0.3-1.9k per seat, ungated): Where does the late-day long edge sit: same day-type filter (prev close < SMA50 + gap up) with other
     entry times (10:00 / 12:00 / 14:00 -> close) -> one effect or a 15:00 artefact?
+Q7. DONE: QC NQ data now ends 2026-07-30 (checked 2026-10-28 with inqc/data_end_inqc.py, aggregates only) -> +2 days, no re-runs.
 Q6. DONE (info: all events +1.3 bp t 3.4; long at lows +3.4 bp; no clean level effect) (in-QC, aggregates only; run_f3l.sh -> results/f3_level_inqc_raw.txt): F3 absorption x LOCATION
     (near day / prior-day low, high, mid; all events, one trade at a time), 2019-2026 -> does a level make the
     small F3 candidate stronger?
