@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-29",
+  "summary": "## Co je potřeba udělat ty\n1. Plán se nemění. Evaluace jen RS (Lucid 8), funded kniha VWAP pásmo + noise + RS,\n   3 MNQ na nohu.\n2. Lucid 7: nahraj novou verzi a pošli mi, co je v druhém řádku tabulky. Podle toho\n   poznáme, jestli je short skutečný trh, nebo chybějící denní data.\n3. 25K účet: pošli mi pravidla 25K funded účtu (výplata, minimální zisk, ziskové dny).\n   Výsledky níže stojí na předpokladu, že je všechno poloviční oproti 50K.\n\n## 25K vs 50K – funded část (24 měsíců na jeden účet, dnešní cena NQ)\n| účet a velikost | 2018–21 | 2022–25 | 2010–13 | 2014–17 |\n|---|---|---|---|---|\n| 50K, 3 MNQ na nohu (plán) | 33 300 $ | 35 700 $ | 23 600 $ | 24 400 $ |\n| 25K, 1 MNQ na nohu | 14 000 $ | 15 200 $ | 9 100 $ | 9 700 $ |\n| 25K, 2 MNQ na nohu | 15 500 $ | 18 200 $ | 11 200 $ | 12 000 $ |\n| 25K, VWAP + noise 2, RS 1 | 16 700 $ | 17 100 $ | 10 600 $ | 11 500 $ |\n\n- Jeden 25K účet vydělá zhruba 45–50 % toho, co 50K. Dva 25K účty tedy dají přibližně\n  tolik jako jeden 50K, spíš o 0–2 400 $ méně.\n- Evaluace 25K je stejně rychlá a o třetinu levnější (výsledek z 28. 10.).\n- Výhoda 25K je jen v levnějším startu, ne ve vyšším výdělku.\n- Na 25K vychází nejlépe VWAP + noise po 2 MNQ a RS po 1 MNQ. Stop RS nohy (1,25 %) se při\n  2 MNQ do drawdownu 1 000 $ nevejde.\n- Při 2 MNQ na všechny nohy jsou horší scénáře a méně první výplaty (13–19 % účtů).\n\n## FOMC a evaluace\n- Když v dny FOMC nehraješ, evaluace se neurychlí ani nezlevní. Při 50K to vychází 9,5 → 10,1 dne\n  (2018–21) a 7,9 → 8,2 dne (2022–25), poplatky stejné nebo o 7 $ vyšší.\n- RS sprint v dny FOMC tedy dál obchodovat. Jeho slabší výsledek v ty dny (61 % vs 66 % výher)\n  je na malém vzorku a vynechání nepomůže.\n\n## Poznámka k metodě\n- Pravidla 25K funded účtu jsou předpoklad. Drawdown 1 000 $, výplata od +2 000 $ max\n  1 000 $, pět dní se ziskem ≥ 75 $.\n- Kde jsou výsledky: results/funded_25k.txt, results/eval_25k.txt, results/fomc_*.txt,\n  registr brain/registry.md.\n",
+  "title": "Noční směna 28./29. 10. – 25K vs 50K a FOMC",
+  "verdicts": [
+    {
+      "name": "25K vs 50K evaluace",
+      "status": "stejně rychlá, o 1/3 levnější"
+    },
+    {
+      "name": "25K vs 50K funded (předpoklad)",
+      "status": "25K ~45–50 % 50K účtu"
+    },
+    {
+      "name": "Vynechat FOMC v evaluaci",
+      "status": "zamítnuto"
+    }
+  ]
+}

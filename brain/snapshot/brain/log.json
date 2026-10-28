@@ -2,6 +2,36 @@
   "events": [
     {
       "sphere": "Interpret",
+      "t": "2026-10-28T22:11:59Z",
+      "text": "Noční report 28./29. 10. hotový: 25K vs 50K a FOMC. Plán beze změny."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-28T22:11:59Z",
+      "text": "Evaluace RS: vynechat dny FOMC nepomůže (50K 9,5 → 10,1 dne, poplatky stejné)."
+    },
+    {
+      "sphere": "Optimalizátor",
+      "t": "2026-10-28T22:11:59Z",
+      "text": "Funded 25K (předpoklad: poloviční pravidla) vydělá ~45–50 % 50K účtu; dva 25K ≈ jeden 50K. Nejlepší 25K: VWAP + noise 2 MNQ, RS 1 MNQ."
+    },
+    {
+      "sphere": "Kodér",
+      "t": "2026-10-28T22:11:59Z",
+      "text": "Lucid 7: už neukazuje short, když chybí denní SMA50; tabulka ukazuje close a SMA50. Lucid 13: záložní denní SMA50."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-28T22:11:59Z",
+      "text": "Sprinty ve dnech FOMC (2018–25): 9:31 69 % (náhoda 67 %), RS 61 % (běžně 66 %), VWAP 10:00 68 % – malý vzorek, žádné pravidlo."
+    },
+    {
+      "sphere": "Backtester",
+      "t": "2026-10-28T22:11:59Z",
+      "text": "Evaluace 25K vs 50K s RS sprintem: stejně dní i úspěšnost, 25K o třetinu levnější."
+    },
+    {
+      "sphere": "Interpret",
       "t": "2026-10-28T02:43:36Z",
       "text": "Noční report 27./28. 10. hotový. Plán beze změny; nová volitelná noha Lucid 13 (pozdní long), rozhoduješ ty."
     },
@@ -269,36 +299,6 @@
       "sphere": "Backtester",
       "t": "2026-10-24T11:23:57Z",
       "text": "Denní směna 24. 10.: znovu prověřeny slabší nohy na opraveném modelu. Nová kandidátní funded noha: strana VWAP v 10:00 (+0,30 % / −0,50 %, 4 MNQ) – +3 500 / +4 900 $ na funded místo za 24 měsíců, v 2010–17 +1 900 / +3 900 $."
-    },
-    {
-      "sphere": "Manažer",
-      "t": "2026-10-24T11:23:57Z",
-      "text": "VWAP noha drží v okolí (vstup 10:00 i 11:00, tři brackety) i s horším plněním; vstup v 10:30 ne. Open drive a NR4 malé, PMTREND / Silver Bullet / 14:00 trend ne."
-    },
-    {
-      "sphere": "Kodér",
-      "t": "2026-10-24T11:23:57Z",
-      "text": "Lucid 12: nové vstupy „Fixed contracts“ a filtr volatility – jako funded noha Target 0,30 / Stop 0,50, Fixed 4, filtr ZAP."
-    },
-    {
-      "sphere": "Interpret",
-      "t": "2026-10-24T07:08:43Z",
-      "text": "Noční směna uzavřena (09:10 Praha). Finální report v Mozku a v brain/reports/2026-10-24.md: 4 MNQ na nohu, vyřadit ORB, nová Lucid 8, potvrdit pravidla Lucidu."
-    },
-    {
-      "sphere": "Manažer",
-      "t": "2026-10-24T07:08:43Z",
-      "text": "Mírnější kontrola drawdownu (ocenění na závěru svíčky) dává stejné závěry: 4 MNQ +2 300 až +5 100 $, ORB −800 až −3 600 $."
-    },
-    {
-      "sphere": "Interpret",
-      "t": "2026-10-23T21:53:00Z",
-      "text": "Noční směna uzavřena. Na tobě: potvrdit pravidla výplaty v Lucidu, rozhodnout 4 MNQ a ORB, nahrát novou Lucid 8, zvolit automatizaci."
-    },
-    {
-      "sphere": "Interpret",
-      "t": "2026-10-23T21:52:00Z",
-      "text": "Ranní report v Mozku: opravený model funded účtu – 4 MNQ na nohu (21 700 / 33 000 $ za 24 měsíců na funded místo), ORB vyřadit, potvrď pravidla výplaty v Lucidu."
     }
   ]
 }

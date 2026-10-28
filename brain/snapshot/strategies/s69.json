@@ -1,0 +1,8 @@
+{
+  "diedAt": "is",
+  "files": "fomc_sprints.py, fomc_eval_skip.py",
+  "name": "Sprinty ve dnech FOMC / vynechat FOMC v evaluaci",
+  "order": 69,
+  "result": "RS v den FOMC 61 % vs 66 % výher (n 51); vynechání FOMC evaluaci zpomalí (9,5 → 10,1 d) a nezlevní",
+  "status": "rejected"
+}

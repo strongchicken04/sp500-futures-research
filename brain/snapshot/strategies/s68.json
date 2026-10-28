@@ -1,0 +1,8 @@
+{
+  "files": "funded_25k.py",
+  "name": "Lucid 25K vs 50K – funded (předpoklad: poloviční pravidla 25K)",
+  "note": "čeká na potvrzení pravidel 25K funded",
+  "order": 68,
+  "result": "na účet za 24 m: 50K 33 300 / 35 700 $; 25K nejlépe VWAP+noise 2, RS 1: 16 700 / 17 100 $ (2018–21 / 2022–25); dva 25K ≈ jeden 50K",
+  "status": "info"
+}
