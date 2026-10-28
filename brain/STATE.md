@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-28T01:41Z (night 2026-10-27/28: Q6 done)
+heartbeat: 2026-10-28T02:09Z (night 2026-10-27/28: Q8 Z x flow running, 3/8 years)
 last shift: 2026-10-26/27 night shift (report brain/reports/2026-10-27.md)
 
 ## Queue (top = next). Move finished items to registry.md.

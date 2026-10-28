@@ -10,3 +10,27 @@
 2025 ZR C02 = sum +2390pt maxDD 681pt worst20d -322pt days 259
 2025 ZR POS = sum +1220pt maxDD 1523pt worst20d -624pt days 259
 year 2025 done in 563s
+### 2026 f25f3cb898753b49671626eda4fd842e error: None
+2026 Z A02 = +13.6pt/+0.7/51 wins 23
+2026 Z A05 = -34.3pt/-1.3/12 wins 2
+2026 Z ALL = +5.0pt/+0.4/122 wins 48
+2026 Z C02 = +3.5pt/+0.1/25 wins 12
+2026 Z C05 = +35.1pt/+0.8/10 wins 4
+2026 Z NEG = +1.7pt/+0.1/70 wins 28
+2026 Z POS = +9.5pt/+0.5/52 wins 20
+2026 ZR ALL = sum +613pt maxDD 971pt worst20d -769pt days 149
+2026 ZR C02 = sum +86pt maxDD 273pt worst20d -172pt days 149
+2026 ZR POS = sum +493pt maxDD 525pt worst20d -337pt days 149
+year 2026 done in 261s
+### 2024 e75ccd533f2bb35add23bd92a271abf6 error: None
+2024 Z A02 = +50.3pt/+2.0/27 wins 14
+2024 Z A05 = +58.4pt/+2.7/6 wins 5
+2024 Z ALL = +11.0pt/+1.8/199 wins 80
+2024 Z C02 = +7.3pt/+0.9/106 wins 39
+2024 Z C05 = +12.3pt/+0.8/42 wins 11
+2024 Z NEG = +20.0pt/+1.4/57 wins 25
+2024 Z POS = +7.4pt/+1.1/142 wins 55
+2024 ZR ALL = sum +2191pt maxDD 537pt worst20d -537pt days 259
+2024 ZR C02 = sum +778pt maxDD 740pt worst20d -357pt days 259
+2024 ZR POS = sum +1051pt maxDD 576pt worst20d -431pt days 259
+year 2024 done in 469s
