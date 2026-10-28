@@ -6,3 +6,35 @@
 2024 FM FLOW = win 140/244 -2.8bp/-1.4/258
 2024 FM PX = win 142/241 -1.8bp/-1.0/257
 year 2024 done in 459s
+### 2023 3ac902d0e6bb865bcbe9f35f9bd059c7 error: None
+2023 FM AGREE = win 98/150 +1.6bp/+0.7/159
+2023 FM CLASH = win 56/94 -1.3bp/-0.4/97
+2023 FM F10 = win 71/127 -3.7bp/-1.4/135
+2023 FM F20 = win 31/54 -2.8bp/-0.7/58
+2023 FM FLOW = win 155/245 +0.6bp/+0.3/257
+2023 FM PX = win 164/245 +2.9bp/+1.5/256
+year 2023 done in 441s
+### 2022 05420922aabc01f1ef1cc486ed541cc3 error: None
+2022 FM AGREE = win 86/133 +2.0bp/+0.7/134
+2022 FM CLASH = win 82/123 +3.3bp/+1.2/123
+2022 FM F10 = win 98/153 +1.6bp/+0.6/154
+2022 FM F20 = win 38/61 +0.5bp/+0.1/61
+2022 FM FLOW = win 168/257 +2.5bp/+1.3/258
+2022 FM PX = win 159/254 +0.5bp/+0.3/257
+year 2022 done in 493s
+### 2025 cda89904ab899b94edbe1668a32222ec error: None
+2025 FM AGREE = win 87/128 +4.0bp/+1.5/132
+2025 FM CLASH = win 74/118 +0.6bp/+0.2/124
+2025 FM F10 = win 103/146 +5.3bp/+2.3/155
+2025 FM F20 = win 53/77 +4.0bp/+1.3/85
+2025 FM FLOW = win 162/247 +2.5bp/+1.3/257
+2025 FM PX = win 158/247 +1.5bp/+0.8/256
+year 2025 done in 450s
+### 2026 f93e78d3a3b2f6245e19c6b9357bf075 error: None
+2026 FM AGREE = win 40/73 -4.4bp/-1.2/73
+2026 FM CLASH = win 44/70 +1.0bp/+0.3/73
+2026 FM F10 = win 43/77 -3.4bp/-1.0/81
+2026 FM F20 = win 21/36 -1.8bp/-0.3/38
+2026 FM FLOW = win 84/143 -1.7bp/-0.7/147
+2026 FM PX = win 76/143 -5.4bp/-2.0/146
+year 2026 done in 263s
