@@ -1,0 +1,12 @@
+### 2025 822829ad11100ffa0da193160b337293 error: None
+2025 Z A02 = +16.1pt/+0.9/54 wins 25
+2025 Z A05 = +41.1pt/+1.0/21 wins 9
+2025 Z ALL = +10.1pt/+0.8/198 wins 77
+2025 Z C02 = +34.6pt/+1.2/69 wins 28
+2025 Z C05 = -10.7pt/-0.9/24 wins 7
+2025 Z NEG = +8.4pt/+0.6/93 wins 40
+2025 Z POS = +11.6pt/+0.6/105 wins 37
+2025 ZR ALL = sum +2001pt maxDD 1093pt worst20d -703pt days 259
+2025 ZR C02 = sum +2390pt maxDD 681pt worst20d -322pt days 259
+2025 ZR POS = sum +1220pt maxDD 1523pt worst20d -624pt days 259
+year 2025 done in 563s
