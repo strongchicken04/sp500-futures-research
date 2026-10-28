@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-10-28T02:09Z (night 2026-10-27/28: Q8 Z x flow running, 3/8 years)
+heartbeat: 2026-10-28T02:42Z (night 2026-10-27/28: Q8 done)
 last shift: 2026-10-26/27 night shift (report brain/reports/2026-10-27.md)
 
 ## Queue (top = next). Move finished items to registry.md.
@@ -11,7 +11,7 @@ Q1. Importer: more published INTRADAY QQQ/NQ/SPY rule sets (Quantified Strategie
     exact rules -> local test on NQ 5-min, four eras + 2026, 6c timing.
 Q2. DONE (late-session effect from 14:00 in all eras; LL leg +$0.3-1.9k per seat, ungated): Where does the late-day long edge sit: same day-type filter (prev close < SMA50 + gap up) with other
     entry times (10:00 / 12:00 / 14:00 -> close) -> one effect or a 15:00 artefact?
-Q8. RUNNING (in-QC, aggregates only; run_zf.sh -> results/z_flow_inqc_raw.txt): Z leg (noise momentum) x REAL order flow
+Q8. DONE (rejected: flow does not sort Z trades; Z 2025 ungated positive - info for item 18) (in-QC, aggregates only; run_zf.sh -> results/z_flow_inqc_raw.txt): Z leg (noise momentum) x REAL order flow
     of the 30 min before entry (POS/NEG, +/-0.02, +/-0.05) + risk view ALL vs C02 vs POS, 2019-2026 -> can flow rescue Z?
 Q7. DONE: QC NQ data now ends 2026-07-30 (checked 2026-10-28 with inqc/data_end_inqc.py, aggregates only) -> +2 days, no re-runs.
 Q6. DONE (info: all events +1.3 bp t 3.4; long at lows +3.4 bp; no clean level effect) (in-QC, aggregates only; run_f3l.sh -> results/f3_level_inqc_raw.txt): F3 absorption x LOCATION
