@@ -58,7 +58,12 @@ else if rthFlag
     dHi := math.max(dHi, high)
     dLo := math.min(dLo, low)
 
-downtrend = not na(smaPrev) and prevClose < smaPrev
+// 2026-10-28: a 5-minute chart rarely holds 50 days of bars (free TradingView), so the
+// in-chart RTH-close SMA can stay na; fall back to the daily SMA50 of the last completed
+// session (settlement close, a small difference from the backtest's 16:00 close).
+dSma50 = request.security(syminfo.tickerid, "D", (ta.sma(close, 50))[1], lookahead=barmerge.lookahead_on)
+smaUse = not na(smaPrev) ? smaPrev : dSma50
+downtrend = not na(smaUse) and not na(prevClose) and prevClose < smaUse
 gapUp = not na(prevClose) and dOpen > prevClose * (1 + gapPct)
 
 var float lEntry = na
@@ -98,6 +103,6 @@ plot(not na(lStop) ? lStop : na, "stop", color=color.new(color.red, 10), style=p
 
 var table tb = table.new(position.top_right, 1, 2, border_width=1, bgcolor=color.new(color.black, 30))
 if barstate.islast
-    st = not is5 ? "LATE LONG: use a 5-minute chart" : not na(lEntry) ? "LONG " + str.tostring(lEntry, format.mintick) : not downtrend ? "no setup: above SMA50" : not gapUp ? "no setup: no gap up > " + str.tostring(gapPct * 100, "#.##") + "%" : "setup day - check at 15:00"
+    st = not is5 ? "LATE LONG: use a 5-minute chart" : not na(lEntry) ? "LONG " + str.tostring(lEntry, format.mintick) : na(smaUse) ? "SMA50: no data (scroll back / load more history)" : not downtrend ? "no setup: above SMA50 (" + str.tostring(smaUse, "#.##") + ")" : not gapUp ? "no setup: no gap up > " + str.tostring(gapPct * 100, "#.##") + "%" : "setup day - check at 15:00"
     table.cell(tb, 0, 0, "LUCID 13 · LATE LONG (candidate)", text_color=color.white, bgcolor=color.new(color.teal, 40))
     table.cell(tb, 0, 1, st, text_color=color.white, bgcolor=not na(lEntry) ? color.new(color.orange, 20) : color.new(color.gray, 50))
