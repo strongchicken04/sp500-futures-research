@@ -9,7 +9,7 @@ class DataEndInQC(QCAlgorithm):
 
     def initialize(self):
         self.set_start_date(2026, 7, 20)
-        self.set_end_date(2026, 10, 27)
+        self.set_end_date(2026, 11, 2)
         self.set_cash(1_000_000)
         self.nq = self.add_future(Futures.Indices.NASDAQ_100_E_MINI, Resolution.MINUTE,
                                   data_normalization_mode=DataNormalizationMode.RAW,

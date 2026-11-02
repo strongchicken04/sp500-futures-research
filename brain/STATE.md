@@ -1,7 +1,7 @@
 # Brain state
 
-heartbeat: 2026-11-01T22:08Z (night 2026-11-01/02: waiting for the owner; report brain/reports/2026-11-02.md)
-last shift: 2026-11-01/02 night shift (report brain/reports/2026-11-02.md)
+heartbeat: 2026-11-02T22:09Z (night 2026-11-02/03: waiting for the owner; QC data ends 2026-08-04; report brain/reports/2026-11-03.md)
+last shift: 2026-11-02/03 night shift (report brain/reports/2026-11-03.md)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-28/29 (report brain/reports/2026-10-29.md):
@@ -18,7 +18,7 @@ Q2. DONE (late-session effect from 14:00 in all eras; LL leg +$0.3-1.9k per seat
     entry times (10:00 / 12:00 / 14:00 -> close) -> one effect or a 15:00 artefact?
 Q8. DONE (rejected: flow does not sort Z trades; Z 2025 ungated positive - info for item 18) (in-QC, aggregates only; run_zf.sh -> results/z_flow_inqc_raw.txt): Z leg (noise momentum) x REAL order flow
     of the 30 min before entry (POS/NEG, +/-0.02, +/-0.05) + risk view ALL vs C02 vs POS, 2019-2026 -> can flow rescue Z?
-Q7. DONE: QC NQ data now ends 2026-07-30 (checked 2026-10-28 with inqc/data_end_inqc.py, aggregates only) -> +2 days, no re-runs.
+Q7. DONE: QC NQ data now ends 2026-08-04 (checked 2026-11-02; was 2026-07-30 on 10-28) (checked 2026-10-28 with inqc/data_end_inqc.py, aggregates only) -> +2 days, no re-runs.
 Q6. DONE (info: all events +1.3 bp t 3.4; long at lows +3.4 bp; no clean level effect) (in-QC, aggregates only; run_f3l.sh -> results/f3_level_inqc_raw.txt): F3 absorption x LOCATION
     (near day / prior-day low, high, mid; all events, one trade at a time), 2019-2026 -> does a level make the
     small F3 candidate stronger?
