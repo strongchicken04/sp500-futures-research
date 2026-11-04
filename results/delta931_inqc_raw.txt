@@ -1,0 +1,28 @@
+### 2024 38464289c27219dcad06e1da11c06258 error: None
+2024 D ASIA FAD = win 159/251 -2.1bp/-1.2/259
+2024 D ASIA FAD strong = win 29/41 +2.2bp/+0.5/43
+2024 D ASIA FOL = win 166/247 -0.2bp/-0.1/259
+2024 D ASIA FOL strong = win 22/39 -6.1bp/-1.4/43
+2024 D LDN FAD = win 147/251 -5.0bp/-2.8/259
+2024 D LDN FAD strong = win 26/48 -7.6bp/-1.8/49
+2024 D LDN FOL = win 178/247 +2.8bp/+1.7/259
+2024 D LDN FOL strong = win 32/46 +1.0bp/+0.3/49
+2024 D LONG = win 163/250 -1.1bp/-0.7/259
+2024 D ON FAD = win 163/250 -1.2bp/-0.7/259
+2024 D ON FAD strong = win 48/74 -1.6bp/-0.5/79
+2024 D ON FOL = win 162/248 -1.1bp/-0.6/259
+2024 D ON FOL strong = win 45/75 -3.7bp/-1.2/79
+2024 D PD FAD = win 152/250 -3.6bp/-2.0/259
+2024 D PD FAD strong = win 34/56 -3.4bp/-0.9/57
+2024 D PD FOL = win 173/248 +1.3bp/+0.8/259
+2024 D PD FOL strong = win 34/53 -2.2bp/-0.6/57
+2024 D PDLH FAD = win 159/240 -0.6bp/-0.3/249
+2024 D PDLH FAD strong = win 30/52 -5.4bp/-1.4/54
+2024 D PDLH FOL = win 156/240 -1.3bp/-0.7/249
+2024 D PDLH FOL strong = win 38/51 +4.4bp/+1.3/54
+2024 D PRE FAD = win 166/250 -0.4bp/-0.2/259
+2024 D PRE FAD strong = win 32/48 -0.9bp/-0.2/53
+2024 D PRE FOL = win 159/248 -1.8bp/-1.1/259
+2024 D PRE FOL strong = win 32/48 -0.2bp/-0.0/53
+2024 D SHORT = win 162/248 -1.1bp/-0.6/259
+year 2024 done in 1270s
