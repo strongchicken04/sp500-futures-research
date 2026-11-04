@@ -1,6 +1,6 @@
 # Brain state
 
-heartbeat: 2026-11-03T22:09Z (night 2026-11-03/04: waiting for the owner; report brain/reports/2026-11-04.md)
+heartbeat: 2026-11-04 (night shifts PAUSED by the owner 2026-11-04: trigger trig_01B4r87kDhBbXX4qsUwAEPse disabled; resume when the owner answers)
 last shift: 2026-11-03/04 night shift (report brain/reports/2026-11-04.md)
 
 ## Queue (top = next). Move finished items to registry.md.

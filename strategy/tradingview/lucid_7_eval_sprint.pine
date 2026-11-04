@@ -48,6 +48,14 @@ dSma50 = request.security(volSym, "D", (ta.sma(close, 50))[1], lookahead=barmerg
 smaOK = not na(dClose) and not na(dSma50)
 bias = biasMode == "Long" ? 1 : biasMode == "Short" ? -1 : smaOK ? (dClose > dSma50 ? 1 : -1) : 0
 
+// 2026-11-04 (owner): draw the 50-day SMA as a line. On a daily chart it is the SMA of each
+// day (same as TradingView's own SMA 50 on NQ1!); on intraday charts it is the value the
+// bias uses (SMA of the last completed day), so the line and the bias always agree.
+showSma = input.bool(true, "Show the 50-day SMA line")
+dSmaNow = request.security(volSym, "D", ta.sma(close, 50))
+smaLine = timeframe.isdaily ? dSmaNow : dSma50
+plot(showSma ? smaLine : na, "SMA50 (daily)", color=color.orange, linewidth=2)
+
 oMin = hour(time, "America/New_York") * 60 + minute(time, "America/New_York")
 cMin = hour(time_close, "America/New_York") * 60 + minute(time_close, "America/New_York")
 is1 = timeframe.period == "1"
