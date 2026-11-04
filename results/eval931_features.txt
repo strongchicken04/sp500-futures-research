@@ -1,0 +1,82 @@
+T931 rows 4269 (2010-01-05 .. 2026-07-24), panel days 4271
+
+=== A. single rules, +0.20 / -0.40, resolved win minus random 66.7% | mean bp | n; z = pooled 2010-25
+rule                                  2010-13         |        2014-17         |        2018-21         |        2022-25         |          2026          |   z   verdict
+GAP follow                      -3.6pp  -2.6bp n 887  |  -0.0pp  -0.9bp n 920  |  -4.1pp  -2.6bp n 966  |  -1.2pp  -0.9bp n 951  |  -4.0pp  -2.4bp n 136  |  -2.9 -
+GAP fade                        +2.9pp  +1.1bp n 887  |  +3.2pp  +0.9bp n 920  |  +3.5pp  +1.7bp n 966  |  +0.5pp  +0.1bp n 951  |  -1.0pp  -0.6bp n 136  |  +3.2 STRONG
+GAP >=0.5% follow               -6.7pp  -4.3bp n 330  |  -2.1pp  -1.8bp n 241  |  -4.6pp  -2.9bp n 427  |  +0.5pp  +0.3bp n 448  | -10.3pp  -6.3bp n  79  |  -2.5 -
+GAP 0.05-0.25% fade             -0.4pp  -1.0bp n 287  |  +4.7pp  +1.5bp n 392  |  +1.3pp  +0.2bp n 260  |  -1.8pp  -1.2bp n 274  |  -7.3pp  -4.5bp n  33  |  +0.9 -
+1st minute follow               +2.4pp  +0.9bp n 762  |  +1.4pp  -0.1bp n 750  |  +0.5pp  -0.0bp n 822  |  +0.7pp  +0.3bp n 889  |  -8.9pp  -5.5bp n 125  |  +1.5 -
+1st minute fade                 -1.3pp  -1.2bp n 762  |  +1.5pp  +0.3bp n 750  |  -1.2pp  -0.9bp n 822  |  -2.9pp  -1.9bp n 889  |  +3.3pp  +2.0bp n 125  |  -1.3 -
+gap+1st min agree               -0.2pp  -0.5bp n 364  |  -3.1pp  -2.5bp n 324  |  -3.1pp  -2.1bp n 388  |  +0.7pp  +0.3bp n 400  |  -9.5pp  -5.9bp n  57  |  -1.1 -
+ON range pos >.5                -0.6pp  -0.9bp n 987  |  +1.4pp  -0.1bp n1031  |  -1.9pp  -1.5bp n1031  |  +0.3pp  -0.0bp n1033  |  -7.2pp  -4.4bp n 145  |  -0.3 -
+ON range extremes fade          -1.0pp  -1.0bp n 231  |  +1.6pp  +0.1bp n 226  |  +6.6pp  +3.6bp n 235  |  -1.4pp  -1.1bp n 282  |  +3.6pp  +2.4bp n  38  |  +0.9 -
+ON high/low break follow        -4.0pp  -2.9bp n  78  |  +7.3pp  +3.0bp n  79  |  -8.6pp  -5.6bp n  96  |  -5.3pp  -3.6bp n 118  | -31.0pp -18.3bp n  15  |  -1.3 -
+ON high/low break fade          -1.7pp  -1.9bp n  78  |  -2.4pp  -2.3bp n  79  |  +3.9pp  +2.2bp n  96  |  +0.3pp  +0.1bp n 118  | +11.9pp  +7.5bp n  15  |  +0.1 -
+vs ON POC follow                +0.6pp  -0.1bp n 956  |  +2.5pp  +0.5bp n1011  |  -0.8pp  -0.8bp n1028  |  +1.3pp  +0.6bp n1028  |  -4.4pp  -2.8bp n 145  |  +1.2 -
+London took Asia side follow    +0.5pp  -0.1bp n 729  |  +0.9pp  -0.4bp n 745  |  -1.2pp  -1.0bp n 769  |  -0.4pp  -0.4bp n 806  |  -5.9pp  -3.6bp n 104  |  -0.1 -
+London took Asia side fade      -0.4pp  -0.9bp n 729  |  +2.6pp  +0.6bp n 745  |  +0.9pp  +0.3bp n 769  |  -1.4pp  -1.0bp n 806  |  -2.0pp  -1.1bp n 104  |  +0.4 -
+vs London mid follow            -0.8pp  -1.1bp n 975  |  +0.7pp  -0.4bp n1017  |  -1.1pp  -1.0bp n1026  |  +0.4pp  +0.1bp n1032  |  -7.2pp  -4.4bp n 145  |  -0.3 -
+vs London mid fade              +1.3pp  +0.2bp n 975  |  +3.3pp  +0.8bp n1017  |  +1.1pp  +0.3bp n1026  |  -1.1pp  -0.9bp n1032  |  +1.9pp  +1.2bp n 145  |  +1.5 -
+outside Asia range follow       -2.6pp  -1.9bp n 632  |  +1.0pp  -0.3bp n 666  |  -3.2pp  -2.1bp n 629  |  -0.4pp  -0.4bp n 699  |  -9.8pp  -6.0bp n  89  |  -1.4 -
+outside Asia range fade         +1.2pp  +0.2bp n 632  |  +3.8pp  +1.2bp n 666  |  +2.2pp  +1.1bp n 629  |  +0.2pp  -0.2bp n 699  |  +2.7pp  +1.7bp n  89  |  +1.9 -
+high ON vol: gap follow         -8.8pp  -5.7bp n 288  |  -5.1pp  -3.6bp n 329  |  -7.4pp  -4.5bp n 340  |  +0.1pp  +0.0bp n 250  |  -7.5pp  -4.5bp n  49  |  -4.1 -
+low ON vol: gap fade            -2.0pp  -2.3bp n 230  |  -1.7pp  -1.9bp n 289  |  -3.3pp  -2.5bp n 270  |  +1.8pp  +0.6bp n 231  | -16.7pp  -9.0bp n  26  |  -0.9 -
+narrow ON range: gap follow     +2.9pp  +1.1bp n  76  |  +9.6pp  +3.1bp n 215  |  +3.3pp  +1.1bp n  57  |  +1.1pp  -0.7bp n  39  |           -            |  +2.5 CANDIDATE
+prior day ret follow            +2.0pp  +0.8bp n 950  |  +2.5pp  +0.7bp n 996  |  +0.3pp  -0.1bp n 996  |  +0.5pp  +0.2bp n 999  |  -8.0pp  -4.7bp n 140  |  +1.7 -
+prior day ret fade              -2.0pp  -1.8bp n 950  |  +1.2pp  -0.4bp n 996  |  -0.1pp  -0.5bp n 996  |  -1.2pp  -0.9bp n 999  |  +2.2pp  +1.2bp n 140  |  -0.7 -
+IBS <.2 long / >.8 short        -2.9pp  -2.4bp n 439  |  -1.9pp  -2.3bp n 458  |  -0.3pp  -0.6bp n 513  |  -1.8pp  -1.3bp n 514  | -11.3pp  -6.8bp n  56  |  -1.5 -
+IBS follow (>.5 long)           +0.4pp  -0.2bp n 957  |  +2.4pp  +0.8bp n 999  |  +2.1pp  +1.0bp n 998  |  +1.8pp  +0.9bp n 999  |  -4.3pp  -2.6bp n 140  |  +2.2 CANDIDATE
+prior last hour follow          -0.6pp  -0.9bp n 940  |  +2.8pp  +1.0bp n 984  |  +1.3pp  +0.5bp n 994  |  +1.8pp  +0.9bp n 994  |  +3.6pp  +2.0bp n 140  |  +1.7 -
+prior last hour fade            +0.3pp  -0.4bp n 940  |  +0.9pp  -0.6bp n 984  |  -1.1pp  -1.0bp n 994  |  -2.5pp  -1.7bp n 994  |  -9.4pp  -5.5bp n 140  |  -0.9 -
+prior close vs VWAP follow      +1.7pp  +0.6bp n 954  |  +3.1pp  +1.3bp n 999  |  +1.3pp  +0.5bp n 998  |  +1.5pp  +0.7bp n 997  |  -2.2pp  -1.3bp n 140  |  +2.5 CANDIDATE
+prior close vs VWAP fade        -1.7pp  -1.6bp n 954  |  +0.5pp  -1.0bp n 999  |  -1.1pp  -1.1bp n 998  |  -2.1pp  -1.5bp n 997  |  -3.6pp  -2.2bp n 140  |  -1.5 -
+prior delta(BVC) follow         +1.2pp  +0.3bp n 775  |  +0.6pp  -0.5bp n 782  |  +1.9pp  +0.8bp n 822  |  +0.7pp  +0.2bp n 856  |  -5.2pp  -2.9bp n 124  |  +1.3 -
+prior delta(BVC) fade           +0.0pp  -0.7bp n 775  |  +3.1pp  +0.7bp n 782  |  -2.2pp  -1.7bp n 822  |  -2.1pp  -1.5bp n 856  |  -2.7pp  -1.8bp n 124  |  -0.5 -
+last-hour delta follow          +0.1pp  -0.4bp n 789  |  +2.2pp  +0.4bp n 818  |  +2.1pp  +1.0bp n 825  |  +3.4pp  +1.8bp n 815  |  -3.4pp  -2.1bp n 119  |  +2.3 CANDIDATE
+last-hour delta fade            +1.1pp  +0.1bp n 789  |  +1.1pp  -0.4bp n 818  |  -1.7pp  -1.4bp n 825  |  -3.9pp  -2.5bp n 815  |  -3.4pp  -2.0bp n 119  |  -1.1 -
+open vs prior VA follow         -3.3pp  -2.4bp n 616  |  +1.0pp  -0.2bp n 650  |  -3.2pp  -2.1bp n 684  |  +0.7pp  +0.2bp n 611  | -10.5pp  -6.3bp n  89  |  -1.3 -
+open vs prior VA fade           +2.4pp  +0.9bp n 616  |  +2.2pp  +0.1bp n 650  |  +1.1pp  +0.3bp n 684  |  -1.7pp  -1.1bp n 611  |  +1.9pp  +1.1bp n  89  |  +1.1 -
+open vs prior POC follow        -0.7pp  -0.9bp n 932  |  +0.9pp  -0.1bp n 977  |  -2.3pp  -1.6bp n 980  |  +0.2pp  -0.1bp n 983  |  -6.4pp  -3.9bp n 138  |  -0.6 -
+open beyond PDH/PDL follow      -3.7pp  -2.6bp n 376  |  -0.3pp  -0.8bp n 392  |  -5.2pp  -3.2bp n 448  |  -1.7pp  -1.2bp n 406  | -11.1pp  -6.7bp n  63  |  -2.3 -
+open beyond PDH/PDL fade        +1.3pp  +0.1bp n 376  |  +1.4pp  -0.6bp n 392  |  +1.8pp  +0.6bp n 448  |  +0.9pp  +0.4bp n 406  |  +1.6pp  +0.9bp n  63  |  +1.1 -
+NR7: gap follow                 -4.9pp  -3.5bp n 118  |  +1.2pp  -0.3bp n 122  |  +0.3pp  -0.3bp n 127  |  +0.0pp  -0.2bp n 116  |           -            |  -0.4 -
+big prior vol: ret follow       -6.7pp  -4.3bp n  46  |  -2.2pp  -2.0bp n  63  |  +8.9pp  +5.3bp n  45  |           -            |           -            |  -0.2 -
+RSI2 <10 long / >90 short       +3.4pp  +0.8bp n 329  |  +0.8pp  -1.2bp n 321  |  +0.1pp  -0.6bp n 312  |  -0.1pp  -0.5bp n 323  |  +2.8pp  +1.6bp n  36  |  +0.8 -
+3+ day streak fade              +3.6pp  +1.3bp n 260  |  +0.6pp  -1.0bp n 238  |  -5.5pp  -3.6bp n 232  |  -0.4pp  -0.6bp n 235  | +14.6pp  +8.7bp n  32  |  -0.2 -
+3+ day streak follow            +0.0pp  -0.2bp n 260  |  +2.5pp  +0.6bp n 238  |  +7.3pp  +3.5bp n 232  |  +2.9pp  +1.4bp n 235  | -13.5pp  -8.2bp n  32  |  +2.0 -
+5-day ret follow                -2.3pp  -1.8bp n 985  |  +0.7pp  -0.2bp n1029  |  +2.5pp  +1.1bp n1031  |  +0.2pp  -0.0bp n1033  |  -4.4pp  -2.6bp n 145  |  +0.4 -
+5-day ret fade                  +2.8pp  +1.0bp n 985  |  +3.0pp  +0.4bp n1029  |  -2.4pp  -1.7bp n1031  |  -0.9pp  -0.7bp n1033  |  -0.9pp  -0.6bp n 145  |  +0.7 -
+20-day high/low follow          +0.8pp  +0.1bp n 328  |  +0.6pp  -0.2bp n 322  |  -0.6pp  -0.9bp n 337  |  +2.5pp  +1.1bp n 305  |  +2.4pp  +1.4bp n  42  |  +0.6 -
+SMA50 (Lucid 7)                 +0.8pp  +0.0bp n 980  |  +0.5pp  -0.2bp n1031  |  +0.7pp  +0.0bp n1031  |  +0.2pp  -0.1bp n1033  |  -3.0pp  -2.0bp n 145  |  +0.7 -
+SMA50 + gap agree               -4.0pp  -2.7bp n 462  |  -1.6pp  -1.7bp n 492  |  -4.4pp  -2.9bp n 531  |  +1.9pp  +0.9bp n 495  |  -3.8pp  -2.5bp n  79  |  -1.9 -
+SMA50 + prior VA agree          -3.2pp  -2.3bp n 361  |  -0.4pp  -0.9bp n 381  |  -2.5pp  -1.7bp n 408  |  +1.7pp  +0.7bp n 336  |  -6.7pp  -4.0bp n  55  |  -0.9 -
+always long                     +3.1pp  +1.4bp n 987  |  +3.0pp  +1.3bp n1031  |  +0.8pp  +0.1bp n1031  |  -1.4pp  -1.0bp n1033  |  -2.3pp  -1.5bp n 145  |  +1.8 -
+Monday long                     +5.4pp  +2.7bp n 197  | +11.8pp  +6.0bp n 205  |  -0.7pp  -0.8bp n 208  |  -0.8pp  -0.7bp n 205  |  +2.3pp  +1.4bp n  29  |  +2.2 -
+Tuesday long                    +3.6pp  +1.9bp n 197  |  +6.1pp  +2.8bp n 208  |  +0.0pp  -0.2bp n 206  |  -1.1pp  -0.8bp n 209  |  +2.3pp  +1.3bp n  29  |  +1.2 -
+Wednesday long                  +2.2pp  +1.0bp n 198  |  -1.0pp  -0.9bp n 208  |  +1.3pp  +0.2bp n 206  |  +0.3pp  +0.1bp n 207  |  -1.1pp  -0.7bp n  29  |  +0.4 -
+Thursday long                   +3.6pp  +1.6bp n 200  |  -1.0pp  -0.8bp n 207  |  +5.4pp  +2.8bp n 209  | -10.7pp  -6.4bp n 208  | -18.4pp -11.1bp n  29  |  -0.4 -
+Friday long                     +0.5pp  +0.1bp n 195  |  -0.4pp  -0.6bp n 203  |  -2.0pp  -1.3bp n 202  |  +5.3pp  +3.1bp n 204  |  +3.7pp  +1.4bp n  29  |  +0.5 -
+turn of month long              +2.4pp  +1.2bp n 181  | -10.1pp  -5.9bp n 192  |  -0.4pp  -0.7bp n 192  |  +0.2pp  -0.2bp n 192  |  -1.3pp  -1.3bp n  27  |  -1.1 -
+pre-holiday long                         -            |           -            |           -            |           -            |           -            |  +1.1 -
+post-holiday long                        -            |           -            |           -            |           -            |           -            |  +0.3 -
+coin flip                       +1.4pp  +0.2bp n 987  |  +3.1pp  +0.8bp n1031  |  -2.9pp  -2.1bp n1031  |  -1.0pp  -0.7bp n1033  |  -0.9pp  -0.5bp n 145  |  +0.1 -
+NQ stronger than ES ON                   -            |           -            |  -0.2pp  -0.5bp n 838  |  -0.2pp  -0.3bp n 849  |           -            |  -0.2 -
+NQ stronger than RTY ON                  -            |           -            |  -0.6pp  -0.7bp n 777  |  -0.3pp  -0.4bp n 840  |           -            |  -0.4 -
+bonds (ZN) ON follow                     -            |           -            |  +4.3pp  +2.2bp n 780  |  -0.7pp  -0.6bp n 895  |           -            |  +1.4 -
+gold ON follow                           -            |           -            |  +1.1pp  +0.2bp n 834  |  -0.5pp  -0.4bp n 887  |           -            |  +0.2 -
+crude ON follow                          -            |           -            |  -3.3pp  -2.2bp n 915  |  +2.7pp  +1.5bp n 906  |           -            |  -0.3 -
+
+null check: 9 of 300 coin-flip rules reach CANDIDATE -> expect ~1.9 false candidates among 64 rules
+
+=== B. walk-forward combination (all features, label = +0.20 vs -0.20 first), traded +0.20 / -0.40
+train 2010-17 logit  (in-sample acc 58.1%)           -            |           -            |  +2.6pp  +1.2bp n1031  |  +0.2pp  -0.0bp n1033  |  +2.6pp  +1.5bp n 145 
+train 2010-17 gbm    (in-sample acc 66.4%)           -            |           -            |  +1.7pp  +0.6bp n1031  |  +1.7pp  +0.9bp n1033  |  -3.7pp  -2.2bp n 145 
+train 2018-25 logit  (in-sample acc 56.4%)  +2.7pp  +1.0bp n 969  |  +2.3pp  +0.3bp n1031  |           -            |           -            |  -0.2pp  -0.1bp n 145 
+train 2018-25 gbm    (in-sample acc 64.3%)  +1.5pp  +0.2bp n 969  |  +2.5pp  +0.4bp n1031  |           -            |           -            |  -7.9pp  -4.6bp n 145 
+
+=== C. 50K evaluation (INTRA, NQ 28,530, +0.20/-0.40): days to a pass | evaluations | fees
+   2010-2013: SMA50 12.8d $351 | coin  9.9d $327 | GAP fade 10.8d $309 | IBS follow (>.5 long) 10.4d $347 | prior close vs VWAP follow 10.5d $342 | last-hour delta follow 12.2d $298 | logit 2018-25 11.9d $290 | gbm 2018-25 13.1d $352
+   2014-2017: SMA50 10.8d $361 | coin 11.0d $324 | GAP fade 16.7d $424 | narrow ON range: gap follow 71.9d $177 | IBS follow (>.5 long) 11.1d $329 | prior close vs VWAP follow 10.2d $296 | last-hour delta follow 14.6d $341 | logit 2018-25 12.0d $350 | gbm 2018-25 12.1d $389
+   2018-2021: SMA50 10.1d $345 | coin 14.5d $488 | GAP fade 11.8d $356 | IBS follow (>.5 long) 11.3d $386 | prior close vs VWAP follow 10.8d $365 | last-hour delta follow 12.3d $331 | logit 2010-17  9.9d $324 | gbm 2010-17 10.8d $374
+   2022-2025: SMA50  9.6d $322 | coin 10.1d $328 | GAP fade 12.6d $404 | IBS follow (>.5 long)  9.1d $274 | prior close vs VWAP follow  9.3d $287 | last-hour delta follow 12.2d $294 | logit 2010-17 10.4d $347 | gbm 2010-17  9.2d $317

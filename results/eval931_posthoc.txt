@@ -1,0 +1,12 @@
+rule (POST-HOC)                   2010-13         |        2014-17         |        2018-21         |        2022-25         |          2026          |   z
+SMA50 (Lucid 7)             +0.8pp  +0.0bp n 980  |  +0.5pp  -0.2bp n1031  |  +0.7pp  +0.0bp n1031  |  +0.2pp  -0.1bp n1033  |  -3.0pp  -2.0bp n 145  |  +0.7
+vote |V|>=2                 +2.2pp  +0.8bp n 713  |  +2.4pp  +0.9bp n 743  |  +3.3pp  +1.8bp n 781  |  +2.7pp  +1.4bp n 757  |  -3.9pp  -2.3bp n 104  |  +3.1
+vote |V|>=3                 +4.7pp  +2.3bp n 357  |  +6.0pp  +3.1bp n 356  |  +4.4pp  +2.4bp n 386  |  +3.0pp  +1.7bp n 384  |  -2.1pp  -1.3bp n  48  |  +3.6
+vote sign (any)             +0.9pp  +0.1bp n 823  |  +2.7pp  +1.1bp n 868  |  +3.0pp  +1.5bp n 880  |  +2.4pp  +1.2bp n 877  |  -2.9pp  -1.7bp n 118  |  +2.8
+vote, else SMA50            +1.1pp  +0.2bp n 987  |  +2.8pp  +1.1bp n1031  |  +1.5pp  +0.6bp n1031  |  +1.7pp  +0.8bp n1033  |  -2.3pp  -1.4bp n 145  |  +2.4
+
+50K evaluation (INTRA, NQ 28,530): days | fees
+   2010-2013: SMA50 (Lucid 7) 12.8d $351 | vote |V|>=2 13.8d $332 | vote |V|>=3 22.6d $223 | vote sign (any) 11.9d $336 | vote, else SMA50 10.3d $338
+   2014-2017: SMA50 (Lucid 7) 10.8d $361 | vote |V|>=2 14.8d $329 | vote |V|>=3 24.1d $213 | vote sign (any) 12.0d $312 | vote, else SMA50 10.0d $311
+   2018-2021: SMA50 (Lucid 7) 10.1d $345 | vote |V|>=2 14.1d $327 | vote |V|>=3 25.5d $303 | vote sign (any) 12.5d $336 | vote, else SMA50 11.3d $373
+   2022-2025: SMA50 (Lucid 7)  9.6d $322 | vote |V|>=2 11.9d $286 | vote |V|>=3 22.4d $296 | vote sign (any) 10.2d $274 | vote, else SMA50  9.2d $294
