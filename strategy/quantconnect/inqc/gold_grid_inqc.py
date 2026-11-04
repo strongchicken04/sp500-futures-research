@@ -9,7 +9,10 @@ import numpy as np
 # no market data: only aggregate statistics (log lines + runtime statistics).
 # Rules fixed before results:
 #   Market: COMEX gold front contract (GC prices; P&L in MGC = $10 / point),
-#     window 08:00-16:40 ET (flat by 16:40 - prop rule: no overnight), long only.
+#     long only, flat at the window end (prop rule: no position over the
+#     16:45 ET break). v2 (after v1 = US window only, every variant lost and the
+#     log was cut): WINDOW = US 08:00-16:40, ASIA 18:00-02:00, FULL
+#     18:00-16:40 (gold's known overnight drift); output as runtime statistics.
 #   Basket: open 1 unit at a bar close; every 3 bars, while the basket is
 #     under water (close < average price) and entries < L, add at the close:
 #     FLAT = +1 unit each time (L = 1, 4, 8, 13, 20; L = 1 is a plain long),
@@ -35,6 +38,8 @@ import numpy as np
 
 START = (2018, 1, 1)
 END = (2026, 12, 31)
+WINDOW = "US"
+WIN = {"US": (14 * 60, 22 * 60 + 40), "ASIA": (0, 8 * 60), "FULL": (0, 22 * 60 + 40)}
 TFS = (1, 5, 15, 60)
 EXITS = (("T0.05", 0.0005, 0.0, 0.0), ("T0.10", 0.0010, 0.0, 0.0), ("T0.20", 0.0020, 0.0, 0.0),
          ("T0.30", 0.0030, 0.0, 0.0), ("T0.50", 0.0050, 0.0, 0.0), ("TRAIL", 0.0, 0.0010, 0.0005))
@@ -43,7 +48,8 @@ SIZINGS = [("FLAT", 1), ("FLAT", 4), ("FLAT", 8), ("FLAT", 13), ("FLAT", 20),
 KS = (1, 2, 3, 5, 10)
 MART_L = {1: 5, 2: 4, 3: 3, 5: 3, 10: 2}
 PV, COST = 10.0, 2.5
-W0, W_NEW, W_ADD, W_END = 8 * 60, 16 * 60, 16 * 60 + 30, 16 * 60 + 40
+W0, W_END = WIN[WINDOW]                 # minutes since 18:00 ET (bar END time)
+W_NEW, W_ADD = W_END - 40, W_END - 10
 
 
 class Sims:
@@ -199,18 +205,19 @@ class GoldGridInQC(QCAlgorithm):
         if bar is None:
             return
         t = self.time
-        m = t.hour * 60 + t.minute                         # bar END time
-        if self.day != t.date():
+        m = ((t.hour * 60 + t.minute) - 18 * 60) % 1440        # bar END, minutes since 18:00
+        sess = (t + timedelta(minutes=360)).date()               # 18:00 -> next calendar day's session
+        if self.day != sess:
             if self.day is not None and not self.done_day and self.started:
                 self._finish_day(self.lastpx)
-            self.day = t.date()
+            self.day = sess
             self.done_day = False
             self.started = False
             self.lastpx = None
             self.mapped = self.gc.mapped
             for s in self.sims.values():
                 s.new_day()
-        if self.done_day or m <= W0 or m > W_END:
+        if self.done_day or m <= W0 or m > W_END or m == 0:
             return
         if self.gc.mapped != self.mapped:                  # contract roll inside the window: end the day
             self._finish_day(self.lastpx)
@@ -235,32 +242,29 @@ class GoldGridInQC(QCAlgorithm):
         if not self.done_day and getattr(self, "started", False):
             self._finish_day(self.lastpx)
         y0 = f"{START[0]}-{min(END[0], self.time.year)}"
-        best = []
         for tf in TFS:
             s = self.sims[tf]
             if not s.days:
                 continue
             R = np.array([d[0] for d in s.days])            # days x sims, $ per base unit
             M = np.array([d[1] for d in s.days])
+            rows = {}
             for j, (sz, L, ex) in enumerate(s.par):
                 wr = s.wins[j] / max(1.0, s.baskets[j]) * 100.0
-                cells = []
-                for k in KS:
-                    if sz == "MART" and MART_L[k] != L:
-                        continue
-                    if sz == "FLAT" and k * L > 40:
-                        continue
-                    p, mm = R[:, j] * k, M[:, j] * k
-                    cum = np.cumsum(p)
-                    mdd = float(np.max(np.maximum.accumulate(np.concatenate(([0.0], cum)))[1:] - cum)) if len(cum) else 0.0
-                    pa, dd, fee, nres = lucid(list(p), list(mm))
-                    cells.append(f"k{k} {p.mean():+.0f}/d w{p.min():+.0f} p1{np.percentile(p, 1):+.0f} "
-                                 f"dd{mdd:.0f} 1k{np.mean(mm < -1000) * 100:.1f}% ev{pa * 100:.0f}% {dd:.1f}d ${fee:.0f}")
-                    if nres:
-                        best.append((fee if pa > 0 else 1e9, dd, f"{tf}m {sz}{L} {ex[0]} k{k}", pa, wr, p.mean()))
-                if cells:
-                    self.log(f"GG {y0} {tf}m {sz}{L} {ex[0]} win {wr:.1f}% n {int(s.baskets[j])} || " + " | ".join(cells))
-        best.sort()
-        for r, (fee, dd, name, pa, wr, mu) in enumerate(best[:20]):
-            self.set_runtime_statistic(f"GG{r:02d} {name}", f"pass {pa * 100:.0f}% {dd:.1f}d ${fee:.0f} win {wr:.0f}% ${mu:+.0f}/d")
-        self.set_runtime_statistic("GG days", str(len(self.sims[TFS[0]].days)))
+                ks = [k for k in KS if (sz == "MART" and MART_L[k] == L) or (sz == "FLAT" and k * L <= 40)]
+                if not ks:
+                    continue
+                k0 = ks[0]
+                p0, m0 = R[:, j] * k0, M[:, j] * k0
+                best = None
+                for k in ks:
+                    pa, dd, fee, nres = lucid(list(R[:, j] * k), list(M[:, j] * k))
+                    if pa > 0 and (best is None or fee < best[3]):
+                        best = (k, pa, dd, fee)
+                bt = f"k{best[0]} ev{best[1] * 100:.0f}%/{best[2]:.0f}d/${best[3]:.0f}" if best else "no pass"
+                rows.setdefault((sz, L), []).append(
+                    f"{ex[0][1:] if ex[0][0] == 'T' else 'TR'} w{wr:.0f} k{k0} {p0.mean():+.0f}/d min{p0.min():+.0f} "
+                    f"1k{np.mean(m0 < -1000) * 100:.0f}% {bt}")
+            for (sz, L), cells in rows.items():
+                self.set_runtime_statistic(f"GG {WINDOW} {tf}m {sz}{L}", " | ".join(cells))
+        self.set_runtime_statistic("GG days", f"{len(self.sims[TFS[0]].days)} {y0}")

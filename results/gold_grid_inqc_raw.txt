@@ -1,0 +1,24 @@
+### gold_grid_inqc 38926478 addc1652d86ee34a3aa5c160b2056573 error: None
+GG days = 2180
+GG00 60m FLAT13 T0.05 k2 = pass 100% 86.0d $90 win 82% $-31/d
+GG01 60m FLAT20 T0.05 k2 = pass 100% 86.0d $90 win 82% $-31/d
+GG02 60m FLAT4 T0.05 k2 = pass 100% 86.0d $90 win 82% $-31/d
+GG03 60m FLAT8 T0.05 k2 = pass 100% 86.0d $90 win 82% $-31/d
+GG04 15m FLAT1 T0.50 k1 = pass 85% 149.6d $106 win 55% $-6/d
+GG05 1m FLAT1 T0.50 k1 = pass 85% 150.6d $106 win 56% $-6/d
+GG06 1m FLAT1 T0.20 k1 = pass 84% 150.7d $107 win 71% $-11/d
+GG07 5m FLAT1 T0.30 k1 = pass 82% 170.8d $109 win 63% $-13/d
+GG08 5m FLAT1 T0.50 k1 = pass 82% 148.9d $110 win 56% $-8/d
+GG09 1m FLAT1 T0.30 k1 = pass 80% 149.8d $112 win 64% $-9/d
+GG10 1m FLAT1 TRAIL k1 = pass 75% 150.5d $119 win 80% $-11/d
+GG11 60m FLAT1 T0.20 k1 = pass 73% 123.6d $124 win 64% $-9/d
+GG12 15m FLAT1 TRAIL k1 = pass 71% 153.0d $127 win 68% $-4/d
+GG13 15m FLAT1 T0.30 k1 = pass 69% 150.2d $130 win 62% $-10/d
+GG14 60m FLAT13 T0.30 k1 = pass 63% 126.7d $143 win 64% $-10/d
+GG15 60m FLAT20 T0.30 k1 = pass 63% 126.7d $143 win 64% $-10/d
+GG16 60m FLAT4 T0.30 k1 = pass 63% 126.7d $143 win 64% $-10/d
+GG17 60m FLAT8 T0.30 k1 = pass 63% 126.7d $143 win 64% $-10/d
+GG18 60m FLAT13 T0.20 k1 = pass 61% 143.4d $147 win 68% $-14/d
+GG19 60m FLAT20 T0.20 k1 = pass 61% 143.4d $147 win 68% $-14/d
+log lines: 0
+gold_grid_inqc done in 584s
