@@ -261,10 +261,11 @@ class GoldGridInQC(QCAlgorithm):
                     pa, dd, fee, nres = lucid(list(R[:, j] * k), list(M[:, j] * k))
                     if pa > 0 and (best is None or fee < best[3]):
                         best = (k, pa, dd, fee)
-                bt = f"k{best[0]} ev{best[1] * 100:.0f}%/{best[2]:.0f}d/${best[3]:.0f}" if best else "no pass"
+                bt = f"k{best[0]} {best[1] * 100:.0f}%/{best[2]:.0f}d/${best[3]:.0f}" if best else "nopass"
                 rows.setdefault((sz, L), []).append(
-                    f"{ex[0][1:] if ex[0][0] == 'T' else 'TR'} w{wr:.0f} k{k0} {p0.mean():+.0f}/d min{p0.min():+.0f} "
-                    f"1k{np.mean(m0 < -1000) * 100:.0f}% {bt}")
-            for (sz, L), cells in rows.items():
-                self.set_runtime_statistic(f"GG {WINDOW} {tf}m {sz}{L}", " | ".join(cells))
+                    f"{ex[0][1:] if ex[0][0] == 'T' else 'TR'} w{wr:.0f} {p0.mean():+.0f}/d m{p0.min():+.0f} "
+                    f"1k{np.mean(m0 < -1000) * 100:.0f} {bt}")
+            for (sz, L), cells in rows.items():            # QC cuts a value at ~200 chars: 3 exits per key
+                self.set_runtime_statistic(f"GG {WINDOW} {tf}m {sz}{L} a", " | ".join(cells[:3]))
+                self.set_runtime_statistic(f"GG {WINDOW} {tf}m {sz}{L} b", " | ".join(cells[3:]))
         self.set_runtime_statistic("GG days", f"{len(self.sims[TFS[0]].days)} {y0}")
