@@ -23,7 +23,9 @@ import numpy as np
 #     (bar-level, filled at the trail level or the open if it gaps through).
 #     Otherwise flat at 16:40. After an exit a new basket starts 3 bars later;
 #     no new basket after 16:00 (adds allowed until 16:30).
-#   Timeframes 1 / 5 / 15 / 60 minutes (bars aligned to 08:00).
+#   Timeframes 1 / 5 / 15 / 60 minutes (bars aligned to the window start).
+#   fill-forward off (from the v2 rerun on 2026-11-05: repeated bars could fake
+#   target hits in quiet minutes).
 #   Costs $2.50 per MGC round trip (fees + 1 tick). Intraday equity at each
 #     bar low (open P&L counted before an exit in the same bar).
 #   Sizes: base k = 1, 2, 3, 5, 10 MGC per unit, position <= 40 MGC (Lucid
@@ -177,7 +179,7 @@ class GoldGridInQC(QCAlgorithm):
         self.set_start_date(*START)
         self.set_end_date(*END)
         self.set_cash(1_000_000)
-        self.gc = self.add_future(Futures.Metals.GOLD, Resolution.MINUTE,
+        self.gc = self.add_future(Futures.Metals.GOLD, Resolution.MINUTE, fill_forward=False,
                                   data_normalization_mode=DataNormalizationMode.RAW,
                                   data_mapping_mode=DataMappingMode.OPEN_INTEREST,
                                   contract_depth_offset=0, extended_market_hours=True)

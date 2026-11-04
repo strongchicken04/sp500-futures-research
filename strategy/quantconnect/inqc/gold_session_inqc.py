@@ -11,6 +11,9 @@ import numpy as np
 #
 # Sessions (ET, hourly bars, entry at the open of the first bar):
 #   A = Asia 18:00-02:00, L = London 02:00-08:00, N = New York 08:00-16:00.
+#   v2 (v1 used HOUR bars: QC hourly futures data has no overnight bars and
+#   fill-forward repeated the last day bar -> Asia / London were fake): MINUTE
+#   bars, fill-forward off, sessions built from minute bars (end times).
 #   Session return r = last close / first open - 1 (gold front contract,
 #   back-adjusted continuous prices); MAE from the session high / low.
 # Features known at the session start (ideas from the literature / practice):
@@ -40,16 +43,18 @@ TEST0 = 2013
 ASSETS = (("GC", "Metals", "GOLD"), ("SI", "Metals", "SILVER"), ("ES", "Indices", "SP_500_E_MINI"),
           ("ZN", "Financials", "Y_10_TREASURY_NOTE"), ("EU", "Currencies", "EUR"),
           ("JY", "Currencies", "JPY"), ("CL", "Energies", "CRUDE_OIL_WTI"))
-MINB = {"A": 6, "L": 5, "N": 6}
+MINB = {"A": 150, "L": 150, "N": 250}           # minute bars needed for a valid gold session
 SESS = ("A", "L", "N")
 
 
-def sess_of(h):
-    if h >= 19 or h <= 2:
+def sess_of(hm):
+    """hm = bar END minute of the day (ET) -> session."""
+    m = (hm - 18 * 60) % 1440
+    if 0 < m <= 480:
         return "A"
-    if 3 <= h <= 8:
+    if 480 < m <= 840:
         return "L"
-    if 9 <= h <= 16:
+    if 840 < m <= 1320:
         return "N"
     return None
 
@@ -68,7 +73,7 @@ def build(days, xkeys):
             x = {}
             for k in xkeys:
                 w = rec.get(k, {}).get(s)
-                x[k] = (w[1] / w[0] - 1.0) if (w and w[0] > 0 and w[4] >= 3) else 0.0
+                x[k] = (w[1] / w[0] - 1.0) if (w and w[0] > 0 and w[4] >= 20) else 0.0
             seq.append({"d": d, "s": s, "o": v[0], "r": v[1] / v[0] - 1.0, "hi": v[2] / v[0] - 1.0,
                         "lo": v[3] / v[0] - 1.0, "rng": (v[2] - v[3]) / v[0], "x": x, "c": v[1]})
     closes = []                                  # daily closes (NY session close)
@@ -268,7 +273,7 @@ class GoldSessionInQC(QCAlgorithm):
         for key, grp, name in ASSETS:
             try:
                 tk = getattr(getattr(Futures, grp), name)
-                f = self.add_future(tk, Resolution.HOUR,
+                f = self.add_future(tk, Resolution.MINUTE, fill_forward=False,
                                     data_normalization_mode=DataNormalizationMode.BACKWARDS_RATIO,
                                     data_mapping_mode=DataMappingMode.OPEN_INTEREST,
                                     contract_depth_offset=0, extended_market_hours=True)
@@ -280,7 +285,7 @@ class GoldSessionInQC(QCAlgorithm):
 
     def on_data(self, data: Slice):
         t = self.time
-        s = sess_of(t.hour)
+        s = sess_of(t.hour * 60 + t.minute)
         if s is None:
             return
         D = (t + timedelta(hours=6)).date()
