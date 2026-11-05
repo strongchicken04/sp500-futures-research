@@ -1,0 +1,372 @@
+
+=== entry 10:00 (window 09:30-10:00), bracket +0.20 / -0.30: resolved win minus random 60.0% | mean bp | n; z pooled 2010-25
+rule                                  2010-13         |        2014-17         |        2018-21         |        2022-25         |          2026          |   z   verdict
+30m color FOLLOW                +3.3pp  +1.1bp n 835  |  +0.2pp  -0.3bp n 862  |  +4.1pp  +1.8bp n 896  |  +1.2pp  +0.5bp n 902  |  -6.1pp  -3.1bp n 128  |  +2.6 -
+30m color FADE                  -2.2pp  -1.6bp n 835  |  +0.5pp  -0.3bp n 862  |  -1.9pp  -1.2bp n 896  |  -2.0pp  -1.1bp n 902  |  +0.6pp  +0.2bp n 128  |  -1.7 -
+|ret|>=0.15% FOLLOW             +5.4pp  +2.2bp n 611  |  +0.7pp  +0.0bp n 602  |  +5.5pp  +2.5bp n 690  |  +2.3pp  +1.1bp n 705  |  -6.8pp  -3.4bp n 109  |  +3.7 -
+|ret|>=0.15% FADE               -3.9pp  -2.4bp n 611  |  -1.7pp  -1.2bp n 602  |  -3.3pp  -1.9bp n 690  |  -3.5pp  -1.8bp n 705  |  +1.1pp  +0.4bp n 109  |  -3.2 -
+|ret|>=0.30% FOLLOW             +9.3pp  +4.2bp n 339  |  +6.9pp  +3.3bp n 294  |  +7.5pp  +3.6bp n 421  |  +3.1pp  +1.5bp n 478  | -12.1pp  -6.1bp n  71  |  +5.1 -
+|ret|>=0.30% FADE               -6.7pp  -3.9bp n 339  |  -7.8pp  -4.1bp n 294  |  -3.8pp  -2.1bp n 421  |  -4.8pp  -2.5bp n 478  |  +4.8pp  +2.4bp n  71  |  -4.4 -
+|ret|>=0.50% FOLLOW            +12.5pp  +5.7bp n 133  |  +7.0pp  +3.3bp n 109  | +10.6pp  +5.1bp n 206  |  +3.6pp  +1.8bp n 264  | -10.0pp  -5.0bp n  42  |  +4.2 -
+|ret|>=0.50% FADE               -3.9pp  -2.4bp n 133  | -10.5pp  -5.5bp n 109  |  -7.6pp  -3.9bp n 206  |  -8.1pp  -4.1bp n 264  |  +1.9pp  +0.9bp n  42  |  -4.1 -
+vs VWAP FOLLOW                  +3.8pp  +1.4bp n 718  |  +1.0pp  +0.1bp n 745  |  +5.4pp  +2.4bp n 785  |  +3.9pp  +1.9bp n 819  |  -6.6pp  -3.3bp n 118  |  +4.0 -
+vs VWAP FADE                    -2.4pp  -1.7bp n 718  |  +0.1pp  -0.5bp n 745  |  -2.8pp  -1.7bp n 785  |  -5.3pp  -2.7bp n 819  |  +1.5pp  +0.6bp n 118  |  -3.0 -
+vs EMA20 5m FOLLOW              +1.5pp  +0.2bp n 879  |  -0.9pp  -0.8bp n 912  |  +2.5pp  +1.0bp n 949  |  +2.0pp  +0.9bp n 939  |  -5.7pp  -2.9bp n 129  |  +1.6 -
+vs EMA20 5m FADE                +0.3pp  -0.4bp n 879  |  +1.1pp  +0.0bp n 912  |  -0.5pp  -0.5bp n 949  |  -2.7pp  -1.5bp n 939  |  -0.6pp  -0.4bp n 129  |  -0.6 -
+vs EMA50 5m FOLLOW              +1.2pp  +0.1bp n 902  |  -0.1pp  -0.4bp n 948  |  +1.6pp  +0.6bp n 954  |  +0.8pp  +0.3bp n 959  |  -3.0pp  -1.5bp n 135  |  +1.1 -
+vs EMA50 5m FADE                +0.4pp  -0.4bp n 902  |  +0.9pp  -0.2bp n 948  |  +0.7pp  +0.0bp n 954  |  -1.8pp  -1.0bp n 959  |  -2.5pp  -1.4bp n 135  |  +0.0 -
+vs SMA20 5m FOLLOW              +2.0pp  +0.4bp n 895  |  -0.5pp  -0.7bp n 929  |  +3.0pp  +1.3bp n 952  |  +2.3pp  +1.1bp n 953  |  -5.8pp  -2.9bp n 131  |  +2.1 -
+vs SMA20 5m FADE                +0.1pp  -0.5bp n 895  |  +1.4pp  +0.1bp n 929  |  -0.8pp  -0.7bp n 952  |  -3.1pp  -1.7bp n 953  |  +0.0pp  -0.1bp n 131  |  -0.8 -
+CLV >.7/<.3 FOLLOW              +3.9pp  +1.4bp n 625  |  +0.6pp  -0.2bp n 687  |  +6.2pp  +2.8bp n 664  |  +3.5pp  +1.7bp n 686  |  -8.4pp  -4.3bp n  95  |  +3.7 -
+CLV >.7/<.3 FADE                -1.6pp  -1.3bp n 625  |  -0.5pp  -0.9bp n 687  |  -3.8pp  -2.2bp n 664  |  -4.7pp  -2.5bp n 686  |  +4.9pp  +2.3bp n  95  |  -2.8 -
+vs prior close FOLLOW           +0.8pp  -0.2bp n 885  |  -0.1pp  -0.5bp n 923  |  +1.3pp  +0.5bp n 949  |  +0.9pp  +0.4bp n 956  |  -6.3pp  -3.2bp n 134  |  +0.9 -
+vs prior close FADE             +0.9pp  -0.1bp n 885  |  +0.8pp  -0.1bp n 923  |  +0.3pp  -0.2bp n 949  |  -2.2pp  -1.2bp n 956  |  +0.9pp  +0.3bp n 134  |  -0.1 -
+beyond ON hi/lo FOLLOW          +7.1pp  +3.0bp n 311  |  +4.4pp  +1.7bp n 364  |  +7.7pp  +3.7bp n 312  |  +3.4pp  +1.6bp n 360  | -12.5pp  -6.3bp n  40  |  +4.1 -
+beyond ON hi/lo FADE            -6.1pp  -3.6bp n 311  |  -3.6pp  -2.3bp n 364  |  -3.3pp  -2.0bp n 312  |  -3.8pp  -2.1bp n 360  |  +1.5pp  +0.5bp n  40  |  -3.1 -
+beyond PDH/PDL FOLLOW           +0.7pp  -0.1bp n 411  |  +1.5pp  +0.5bp n 419  |  +4.1pp  +1.9bp n 461  |  +4.9pp  +2.4bp n 454  | -11.6pp  -5.8bp n  64  |  +2.5 -
+beyond PDH/PDL FADE             +0.4pp  -0.4bp n 411  |  -2.6pp  -1.9bp n 419  |  -1.2pp  -1.0bp n 461  |  -4.1pp  -2.1bp n 454  |  +5.1pp  +2.3bp n  64  |  -1.6 -
+strong body FOLLOW              +9.6pp  +4.1bp n 331  |  +3.0pp  +1.0bp n 359  |  +9.5pp  +4.5bp n 344  |  +5.6pp  +2.7bp n 375  | -11.9pp  -6.0bp n  52  |  +5.2 -
+strong body FADE                -6.1pp  -3.6bp n 331  |  -2.8pp  -1.7bp n 359  |  -6.6pp  -3.6bp n 344  |  -7.7pp  -3.9bp n 375  |  +5.4pp  +2.7bp n  52  |  -4.4 -
+high volume FOLLOW              +8.2pp  +3.6bp n 178  |  +2.4pp  +1.0bp n 165  |  +0.9pp  +0.3bp n 134  |  -1.2pp  -0.7bp n  97  | -20.0pp -10.1bp n  20  |  +1.6 -
+high volume FADE                -5.5pp  -3.1bp n 178  |  -9.1pp  -4.8bp n 165  |  +1.9pp  +0.9bp n 134  |  -1.2pp  -0.7bp n  97  | +20.0pp +10.0bp n  20  |  -2.0 -
+low volume FOLLOW               -1.2pp  -1.4bp n 206  |  -0.8pp  -1.0bp n 214  |  +1.5pp  +0.4bp n 154  |  +0.0pp  +0.0bp n 133  |           -            |  -0.1 -
+low volume FADE                 +4.3pp  +1.5bp n 206  |  +3.2pp  +0.8bp n 214  |  +0.7pp  +0.1bp n 154  |  +0.9pp  +0.1bp n 133  |           -            |  +1.3 -
+narrow range FOLLOW             -2.7pp  -1.8bp n 114  |  -0.5pp  -0.9bp n 130  |  +0.0pp  -0.1bp n 156  |  -1.2pp  -0.6bp n 149  |  -3.7pp  -1.9bp n  16  |  -0.5 -
+narrow range FADE               +3.6pp  +1.0bp n 114  |  +6.1pp  +2.0bp n 130  |  +1.4pp  +0.5bp n 156  |  +7.1pp  +3.2bp n 149  |  -3.7pp  -1.9bp n  16  |  +2.1 CANDIDATE
+wide range FOLLOW              +11.1pp  +5.0bp n 130  |  +4.9pp  +2.2bp n 174  |  +3.7pp  +1.8bp n 171  |  +2.0pp  +0.9bp n 142  |  -4.4pp  -2.3bp n  18  |  +2.6 CANDIDATE
+wide range FADE                -11.9pp  -6.4bp n 130  |  -9.4pp  -5.0bp n 174  |  -3.5pp  -2.0bp n 171  |  -2.6pp  -1.2bp n 142  | -10.0pp  -5.0bp n  18  |  -3.4 -
+opening drive FOLLOW           +10.2pp  +4.3bp n 198  |  +1.5pp  +0.4bp n 238  |  +7.9pp  +3.6bp n 190  |  +3.1pp  +1.6bp n 201  | -17.1pp  -8.6bp n  21  |  +3.2 -
+opening drive FADE              -6.4pp  -3.6bp n 198  |  -0.8pp  -0.9bp n 238  |  -6.8pp  -3.8bp n 190  |  -3.1pp  -1.7bp n 201  | +11.4pp  +5.7bp n  21  |  -2.4 -
+5m vs window disagree FOLLOW    +1.5pp  +0.3bp n 172  |  -0.9pp  -1.2bp n 192  |  +5.7pp  +2.7bp n 215  |  -0.1pp  -0.1bp n 207  |  -1.5pp  -0.8bp n  41  |  +0.9 -
+5m vs window disagree FADE      -4.4pp  -2.7bp n 172  |  +0.6pp  -0.2bp n 192  |  -1.8pp  -1.1bp n 215  |  -3.7pp  -1.9bp n 207  |  +2.5pp  +1.0bp n  41  |  -1.3 -
+color+VWAP FOLLOW               +4.7pp  +1.8bp n 617  |  +0.4pp  -0.2bp n 646  |  +5.7pp  +2.6bp n 657  |  +2.9pp  +1.3bp n 688  |  -5.2pp  -2.6bp n 104  |  +3.5 -
+color+VWAP FADE                 -2.7pp  -1.9bp n 617  |  -0.0pp  -0.6bp n 646  |  -2.3pp  -1.5bp n 657  |  -4.1pp  -2.2bp n 688  |  +2.1pp  +0.9bp n 104  |  -2.4 -
+color+SMA50 daily FOLLOW        +2.0pp  +0.5bp n 408  |  -1.6pp  -0.9bp n 444  |  +4.3pp  +2.0bp n 460  |  +2.1pp  +1.0bp n 453  |  -3.1pp  -1.6bp n  65  |  +1.5 -
+color+SMA50 daily FADE          -1.2pp  -1.2bp n 408  |  +2.5pp  +0.2bp n 444  |  -1.2pp  -1.0bp n 460  |  -2.9pp  -1.6bp n 453  |  -2.2pp  -1.3bp n  65  |  -0.6 -
+color+VWAP+EMA20 FOLLOW         +3.9pp  +1.4bp n 461  |  +1.8pp  +0.6bp n 503  |  +7.5pp  +3.5bp n 477  |  +4.3pp  +2.1bp n 529  |  -4.4pp  -2.3bp n  72  |  +3.9 STRONG
+color+VWAP+EMA20 FADE           -2.2pp  -1.7bp n 461  |  -2.0pp  -1.5bp n 503  |  -4.3pp  -2.5bp n 477  |  -5.3pp  -2.8bp n 529  |  +0.6pp  +0.1bp n  72  |  -3.2 -
+gap-and-go FOLLOW               +3.9pp  +1.5bp n 258  |  +5.6pp  +2.4bp n 236  |  +4.3pp  +2.0bp n 294  |  +3.0pp  +1.5bp n 298  | -11.2pp  -5.6bp n  43  |  +2.7 -
+gap-and-go FADE                 -5.5pp  -3.2bp n 258  |  -6.6pp  -3.7bp n 236  |  -7.2pp  -3.9bp n 294  |  -3.8pp  -2.0bp n 298  |  +4.3pp  +1.8bp n  43  |  -3.8 -
+gap filled FOLLOW               +3.2pp  +0.9bp n  58  |  +5.2pp  +2.2bp n  47  |  +6.0pp  +2.9bp n  54  |  -3.5pp  -1.9bp n  62  |           -            |  +0.7 -
+gap filled FADE                 -1.4pp  -1.1bp n  58  |  +0.9pp  +0.3bp n  47  |  -2.6pp  -1.4bp n  54  |  -0.3pp  -0.2bp n  62  |           -            |  -0.3 -
+VWAP stretch >.30% FOLLOW       +9.4pp  +4.4bp n  85  | +11.9pp  +5.8bp n  64  |  +6.0pp  +2.9bp n 145  |  +3.5pp  +1.7bp n 192  |  -7.2pp  -3.7bp n  36  |  +2.9 -
+VWAP stretch >.30% FADE         -2.4pp  -1.7bp n  85  | -14.7pp  -7.7bp n  64  |  -1.4pp  -0.8bp n 145  |  -6.4pp  -3.3bp n 192  |  +1.1pp  +0.5bp n  36  |  -2.4 -
+high VIX FOLLOW                +10.7pp  +5.0bp n 167  |  +0.5pp  +0.1bp n 173  |  +3.6pp  +1.6bp n 196  |  -5.6pp  -2.9bp n 193  |  -1.2pp  -0.6bp n  34  |  +1.1 -
+high VIX FADE                   -7.9pp  -4.4bp n 167  |  -3.3pp  -1.8bp n 173  |  -1.3pp  -0.8bp n 196  |  +0.1pp  -0.0bp n 193  |  +1.8pp  +0.8bp n  34  |  -1.6 -
+low VIX FOLLOW                  +3.0pp  +1.1bp n 168  |  -1.5pp  -1.7bp n 162  |  +3.9pp  +1.8bp n 222  |  +2.0pp  +1.0bp n 193  | -10.0pp  -5.0bp n  16  |  +1.2 -
+low VIX FADE                    -0.4pp  -0.6bp n 168  |  +5.3pp  +2.3bp n 162  |  -1.8pp  -1.1bp n 222  |  +1.1pp  +0.3bp n 193  |  +2.5pp  +1.2bp n  16  |  +0.4 -
+always long                     +1.2pp  +0.2bp n 957  |  -0.7pp  -0.5bp n 999  |  +1.3pp  +0.5bp n 998  |  -1.0pp  -0.6bp n 999  |  +0.0pp  -0.0bp n 140  |  +0.2 -
+coin flip                       -1.4pp  -1.2bp n 957  |  +1.8pp  +0.3bp n 999  |  +0.5pp  -0.1bp n 998  |  -2.5pp  -1.3bp n 999  |  -3.2pp  -1.7bp n 140  |  -0.5 -
+RS (Lucid 8) this check         +6.7pp  +2.7bp n 310  |  +2.4pp  +0.9bp n 309  |  +7.1pp  +3.2bp n 396  |  +7.2pp  +3.5bp n 471  |  -4.8pp  -2.4bp n  67  |  +4.7 STRONG
+null: 6/300 coin-flip rules pass -> ~1.1 false passes expected among 57
+
+=== entry 10:00 (window 09:30-10:00), bracket +0.20 / -0.40: resolved win minus random 66.7% | mean bp | n; z pooled 2010-25
+rule                                  2010-13         |        2014-17         |        2018-21         |        2022-25         |          2026          |   z   verdict
+30m color FOLLOW                +3.1pp  +1.1bp n 835  |  +1.1pp  -0.2bp n 862  |  +4.0pp  +2.0bp n 896  |  +2.1pp  +1.1bp n 902  |  -7.3pp  -4.4bp n 128  |  +3.2 -
+30m color FADE                  -2.8pp  -2.3bp n 835  |  +1.7pp  -0.1bp n 862  |  -0.0pp  -0.4bp n 896  |  -2.9pp  -1.9bp n 902  |  -0.3pp  -0.4bp n 128  |  -1.3 -
+|ret|>=0.15% FOLLOW             +4.7pp  +2.1bp n 611  |  +1.7pp  +0.4bp n 602  |  +4.8pp  +2.5bp n 690  |  +2.6pp  +1.4bp n 705  |  -8.0pp  -4.8bp n 109  |  +3.7 -
+|ret|>=0.15% FADE               -4.1pp  -3.0bp n 611  |  -0.4pp  -1.0bp n 602  |  -0.5pp  -0.6bp n 690  |  -4.0pp  -2.6bp n 705  |  +0.3pp  -0.1bp n 109  |  -2.4 -
+|ret|>=0.30% FOLLOW             +8.2pp  +4.3bp n 339  |  +7.4pp  +4.0bp n 294  |  +6.3pp  +3.7bp n 421  |  +4.1pp  +2.4bp n 478  | -11.7pp  -7.1bp n  71  |  +5.1 -
+|ret|>=0.30% FADE               -7.3pp  -5.0bp n 339  |  -5.0pp  -3.6bp n 294  |  -2.2pp  -1.5bp n 421  |  -5.0pp  -3.1bp n 478  |  +2.9pp  +1.4bp n  71  |  -3.9 -
+|ret|>=0.50% FOLLOW             +9.7pp  +5.3bp n 133  |  +9.5pp  +5.5bp n 109  |  +8.2pp  +4.7bp n 206  |  +4.8pp  +2.9bp n 264  |  -9.5pp  -5.8bp n  42  |  +4.2 -
+|ret|>=0.50% FADE               -2.3pp  -1.7bp n 133  |  -5.2pp  -3.3bp n 109  |  -6.5pp  -4.0bp n 206  |  -7.7pp  -4.7bp n 264  |  -2.4pp  -1.5bp n  42  |  -3.3 -
+vs VWAP FOLLOW                  +2.9pp  +1.0bp n 718  |  +1.0pp  -0.2bp n 745  |  +4.9pp  +2.6bp n 785  |  +4.2pp  +2.3bp n 819  |  -5.1pp  -3.0bp n 118  |  +3.8 -
+vs VWAP FADE                    -2.8pp  -2.3bp n 718  |  +2.3pp  +0.2bp n 745  |  -0.3pp  -0.6bp n 785  |  -5.3pp  -3.4bp n 819  |  +1.2pp  +0.4bp n 118  |  -1.9 -
+vs EMA20 5m FOLLOW              +1.5pp  +0.2bp n 879  |  -0.5pp  -1.0bp n 912  |  +2.5pp  +1.2bp n 949  |  +1.1pp  +0.5bp n 939  |  -3.9pp  -2.4bp n 129  |  +1.5 -
+vs EMA20 5m FADE                +0.0pp  -0.7bp n 879  |  +2.6pp  +0.4bp n 912  |  +1.2pp  +0.2bp n 949  |  -2.5pp  -1.7bp n 939  |  -2.4pp  -1.7bp n 129  |  +0.4 -
+vs EMA50 5m FOLLOW              +1.5pp  +0.2bp n 902  |  +0.6pp  -0.4bp n 948  |  +2.3pp  +1.1bp n 954  |  +0.1pp  -0.1bp n 959  |  -2.5pp  -1.4bp n 135  |  +1.5 -
+vs EMA50 5m FADE                -0.3pp  -1.0bp n 902  |  +2.5pp  +0.2bp n 948  |  +2.0pp  +0.6bp n 954  |  -1.7pp  -1.2bp n 959  |  -3.0pp  -2.0bp n 135  |  +0.7 -
+vs SMA20 5m FOLLOW              +1.8pp  +0.4bp n 895  |  +0.2pp  -0.7bp n 929  |  +2.9pp  +1.4bp n 952  |  +1.4pp  +0.6bp n 953  |  -4.8pp  -2.9bp n 131  |  +2.1 CANDIDATE
+vs SMA20 5m FADE                -0.2pp  -0.9bp n 895  |  +3.0pp  +0.6bp n 929  |  +0.9pp  -0.0bp n 952  |  -2.9pp  -1.9bp n 953  |  -1.3pp  -0.9bp n 131  |  +0.2 -
+CLV >.7/<.3 FOLLOW              +2.9pp  +0.9bp n 625  |  +0.2pp  -0.7bp n 687  |  +5.8pp  +3.0bp n 664  |  +4.0pp  +2.2bp n 686  |  -5.0pp  -2.8bp n  95  |  +3.5 STRONG
+CLV >.7/<.3 FADE                -2.5pp  -2.2bp n 625  |  +1.0pp  -0.7bp n 687  |  -1.2pp  -1.2bp n 664  |  -5.0pp  -3.3bp n 686  |  +5.1pp  +2.6bp n  95  |  -2.1 -
+vs prior close FOLLOW           +1.0pp  -0.1bp n 885  |  +1.0pp  -0.4bp n 923  |  +2.0pp  +0.9bp n 949  |  -0.0pp  -0.2bp n 956  |  -4.7pp  -2.9bp n 134  |  +1.2 -
+vs prior close FADE             +0.0pp  -0.7bp n 885  |  +2.1pp  +0.1bp n 923  |  +1.1pp  +0.1bp n 949  |  -1.6pp  -1.1bp n 956  |  +0.3pp  -0.0bp n 134  |  +0.5 -
+beyond ON hi/lo FOLLOW          +5.8pp  +2.9bp n 311  |  +5.2pp  +2.1bp n 364  |  +6.4pp  +3.5bp n 312  |  +3.7pp  +1.9bp n 360  | -11.7pp  -7.0bp n  40  |  +4.0 -
+beyond ON hi/lo FADE            -6.3pp  -4.5bp n 311  |  -1.3pp  -2.0bp n 364  |  -2.4pp  -1.9bp n 312  |  -4.3pp  -2.8bp n 360  |  +3.6pp  +1.2bp n  40  |  -2.7 -
+beyond PDH/PDL FOLLOW           +1.2pp  -0.0bp n 411  |  +1.9pp  +0.4bp n 419  |  +4.5pp  +2.4bp n 461  |  +2.9pp  +1.7bp n 454  | -10.4pp  -6.3bp n  64  |  +2.3 -
+beyond PDH/PDL FADE             -0.7pp  -1.1bp n 411  |  +1.1pp  -0.8bp n 419  |  -0.7pp  -1.1bp n 461  |  -4.6pp  -2.9bp n 454  |  +4.3pp  +2.1bp n  64  |  -1.2 -
+strong body FOLLOW              +8.6pp  +4.2bp n 331  |  +4.0pp  +1.4bp n 359  |  +8.1pp  +4.4bp n 344  |  +7.2pp  +4.0bp n 375  | -12.8pp  -7.7bp n  52  |  +5.4 -
+strong body FADE                -6.0pp  -4.3bp n 331  |  -1.3pp  -1.8bp n 359  |  -3.9pp  -2.7bp n 344  |  -7.8pp  -4.8bp n 375  |  +3.9pp  +2.0bp n  52  |  -3.8 -
+high volume FOLLOW              +6.6pp  +3.6bp n 178  |  +3.1pp  +1.5bp n 165  |  +0.8pp  +0.3bp n 134  |  -2.7pp  -1.7bp n  97  | -21.7pp -13.0bp n  20  |  +1.3 -
+high volume FADE                -5.2pp  -3.5bp n 178  |  -5.3pp  -3.7bp n 165  |  +0.5pp  +0.2bp n 134  |  -1.7pp  -1.1bp n  97  | +13.3pp  +8.0bp n  20  |  -1.7 -
+low volume FOLLOW               +1.0pp  -0.7bp n 206  |  -0.4pp  -1.3bp n 214  |  +0.2pp  -0.4bp n 154  |  -1.6pp  -1.0bp n 133  |           -            |  -0.0 -
+low volume FADE                 +4.0pp  +1.1bp n 206  |  +2.2pp  -0.1bp n 214  |  +4.5pp  +2.3bp n 154  |  -2.1pp  -1.6bp n 133  |           -            |  +1.3 -
+narrow range FOLLOW             +0.0pp  -1.1bp n 114  |  +0.0pp  -1.5bp n 130  |  +1.1pp  +0.3bp n 156  |  -0.9pp  -0.8bp n 149  | -10.4pp  -6.3bp n  16  |  +0.0 -
+narrow range FADE               +2.9pp  -0.0bp n 114  |  +5.6pp  +0.6bp n 130  |  +4.2pp  +2.1bp n 156  |  +5.6pp  +2.7bp n 149  |  +2.1pp  +1.2bp n  16  |  +2.2 CANDIDATE
+wide range FOLLOW               +9.1pp  +5.0bp n 130  |  +5.1pp  +2.7bp n 174  |  +2.2pp  +1.3bp n 171  |  +1.6pp  +0.9bp n 142  | -11.1pp  -6.7bp n  18  |  +2.3 CANDIDATE
+wide range FADE                -11.2pp  -7.2bp n 130  |  -5.3pp  -3.5bp n 174  |  -1.4pp  -1.1bp n 171  |  -0.7pp  -0.4bp n 142  | -16.7pp -10.0bp n  18  |  -2.3 -
+opening drive FOLLOW            +8.1pp  +3.9bp n 198  |  +2.5pp  +0.7bp n 238  |  +7.1pp  +3.7bp n 190  |  +7.4pp  +4.2bp n 201  |  -9.5pp  -5.8bp n  21  |  +3.6 -
+opening drive FADE              -6.3pp  -4.4bp n 198  |  -1.0pp  -1.8bp n 238  |  -3.3pp  -2.6bp n 190  |  -2.6pp  -1.9bp n 201  |  +9.5pp  +5.7bp n  21  |  -1.9 -
+5m vs window disagree FOLLOW    -1.2pp  -1.1bp n 172  |  +0.4pp  -0.6bp n 192  |  +5.7pp  +3.1bp n 215  |  +0.7pp  +0.1bp n 207  |  -3.3pp  -2.0bp n  41  |  +0.9 -
+5m vs window disagree FADE      -3.4pp  -2.6bp n 172  |  +4.1pp  +1.8bp n 192  |  +1.4pp  +0.7bp n 215  |  -4.5pp  -2.8bp n 207  |  +0.8pp  +0.2bp n  41  |  -0.4 -
+color+VWAP FOLLOW               +3.6pp  +1.4bp n 617  |  +0.7pp  -0.3bp n 646  |  +5.3pp  +2.8bp n 657  |  +3.7pp  +2.0bp n 688  |  -6.1pp  -3.7bp n 104  |  +3.6 -
+color+VWAP FADE                 -3.6pp  -2.9bp n 617  |  +2.3pp  +0.1bp n 646  |  -0.3pp  -0.6bp n 657  |  -4.5pp  -2.9bp n 688  |  +1.7pp  +0.6bp n 104  |  -1.7 -
+color+SMA50 daily FOLLOW        +1.5pp  +0.4bp n 408  |  -0.8pp  -0.9bp n 444  |  +4.3pp  +2.3bp n 460  |  +2.3pp  +1.1bp n 453  |  -5.1pp  -3.1bp n  65  |  +1.7 -
+color+SMA50 daily FADE          -2.8pp  -2.4bp n 408  |  +5.4pp  +1.1bp n 444  |  +0.2pp  -0.6bp n 460  |  -4.1pp  -2.7bp n 453  |  -2.2pp  -1.7bp n  65  |  -0.4 -
+color+VWAP+EMA20 FOLLOW         +3.4pp  +1.2bp n 461  |  +1.2pp  +0.1bp n 503  |  +6.4pp  +3.6bp n 477  |  +4.7pp  +2.5bp n 529  |  -4.2pp  -2.5bp n  72  |  +3.6 STRONG
+color+VWAP+EMA20 FADE           -3.2pp  -2.6bp n 461  |  +0.7pp  -0.8bp n 503  |  -1.9pp  -1.6bp n 477  |  -5.4pp  -3.4bp n 529  |  +1.4pp  +0.4bp n  72  |  -2.3 -
+gap-and-go FOLLOW               +2.9pp  +1.2bp n 258  |  +6.2pp  +2.9bp n 236  |  +3.0pp  +1.5bp n 294  |  +2.4pp  +1.4bp n 298  |  -8.5pp  -5.2bp n  43  |  +2.4 -
+gap-and-go FADE                 -4.8pp  -3.3bp n 258  |  -3.7pp  -3.2bp n 236  |  -6.6pp  -4.3bp n 294  |  -5.0pp  -3.1bp n 298  |  +4.1pp  +1.8bp n  43  |  -3.5 -
+gap filled FOLLOW               +1.8pp  +0.5bp n  58  |  +6.1pp  +2.8bp n  47  |  +6.4pp  +4.0bp n  54  |  -5.4pp  -3.3bp n  62  |           -            |  +0.5 -
+gap filled FADE                 +1.2pp  -0.4bp n  58  |  +0.0pp  -0.4bp n  47  |  -4.4pp  -2.9bp n  54  |  -2.2pp  -1.4bp n  62  |           -            |  -0.4 -
+VWAP stretch >.30% FOLLOW       +7.5pp  +4.2bp n  85  | +13.0pp  +7.7bp n  64  |  +5.6pp  +3.2bp n 145  |  +3.6pp  +2.1bp n 192  |  -2.8pp  -1.7bp n  36  |  +2.9 CANDIDATE
+VWAP stretch >.30% FADE         -2.0pp  -1.6bp n  85  |  -5.7pp  -3.7bp n  64  |  +2.3pp  +1.3bp n 145  |  -6.8pp  -4.1bp n 192  |  -2.8pp  -1.7bp n  36  |  -1.4 -
+high VIX FOLLOW                 +8.2pp  +4.7bp n 167  |  +0.0pp  -0.2bp n 173  |  +3.6pp  +2.0bp n 196  |  -6.6pp  -4.0bp n 193  |  -2.0pp  -1.2bp n  34  |  +0.6 -
+high VIX FADE                   -8.0pp  -5.2bp n 167  |  -0.4pp  -0.5bp n 173  |  +1.7pp  +0.9bp n 196  |  +0.2pp  +0.1bp n 193  |  +3.9pp  +2.3bp n  34  |  -0.8 -
+low VIX FOLLOW                  +6.5pp  +2.8bp n 168  |  -0.2pp  -1.5bp n 162  |  +4.5pp  +2.3bp n 222  |  +2.8pp  +1.7bp n 193  | -16.7pp -10.0bp n  16  |  +2.0 -
+low VIX FADE                    -0.6pp  -0.9bp n 168  |  +3.0pp  +1.1bp n 162  |  -1.2pp  -0.9bp n 222  |  -0.7pp  -0.7bp n 193  |  -4.2pp  -2.5bp n  16  |  -0.1 -
+always long                     +0.5pp  -0.3bp n 957  |  +0.3pp  -0.3bp n 999  |  +2.0pp  +0.9bp n 998  |  -1.2pp  -0.8bp n 999  |  -0.5pp  -0.2bp n 140  |  +0.5 -
+coin flip                       -2.0pp  -1.8bp n 957  |  +2.8pp  +0.5bp n 999  |  +1.9pp  +0.7bp n 998  |  -2.3pp  -1.5bp n 999  |  -2.0pp  -1.3bp n 140  |  +0.1 -
+RS (Lucid 8) this check         +4.7pp  +2.0bp n 310  |  +4.0pp  +1.9bp n 309  |  +5.9pp  +3.0bp n 396  |  +8.2pp  +4.7bp n 471  |  -5.5pp  -3.3bp n  67  |  +4.8 -
+null: 17/300 coin-flip rules pass -> ~3.2 false passes expected among 57
+
+=== entry 10:30 (window 09:30-10:30), bracket +0.20 / -0.30: resolved win minus random 60.0% | mean bp | n; z pooled 2010-25
+rule                                  2010-13         |        2014-17         |        2018-21         |        2022-25         |          2026          |   z   verdict
+30m color FOLLOW                +2.4pp  +0.5bp n 861  |  +2.3pp  +0.5bp n 867  |  +0.9pp  +0.2bp n 903  |  +5.2pp  +2.5bp n 919  |  +0.2pp  +0.0bp n 128  |  +3.3 STRONG
+30m color FADE                  -2.3pp  -1.6bp n 861  |  -2.9pp  -2.0bp n 867  |  -1.5pp  -1.0bp n 903  |  -5.4pp  -2.8bp n 919  |  +4.0pp  +1.7bp n 128  |  -3.6 -
+|ret|>=0.15% FOLLOW             +2.8pp  +0.8bp n 685  |  +1.6pp  +0.3bp n 621  |  +1.5pp  +0.6bp n 734  |  +5.3pp  +2.5bp n 773  |  +1.5pp  +0.7bp n 104  |  +3.1 STRONG
+|ret|>=0.15% FADE               -2.5pp  -1.8bp n 685  |  -2.2pp  -1.7bp n 621  |  -2.8pp  -1.6bp n 734  |  -6.1pp  -3.1bp n 773  |  +3.4pp  +1.3bp n 104  |  -3.7 -
+|ret|>=0.30% FOLLOW             +3.0pp  +0.9bp n 474  |  +1.8pp  +0.4bp n 386  |  +2.8pp  +1.2bp n 513  |  +4.2pp  +2.0bp n 595  |  +6.3pp  +3.1bp n  86  |  +2.8 CANDIDATE
+|ret|>=0.30% FADE               -3.0pp  -2.0bp n 474  |  -2.4pp  -1.5bp n 386  |  -4.2pp  -2.3bp n 513  |  -5.1pp  -2.6bp n 595  |  +0.7pp  +0.1bp n  86  |  -3.4 -
+|ret|>=0.50% FOLLOW             +3.8pp  +1.4bp n 266  |  +6.3pp  +2.8bp n 192  |  +6.6pp  +3.1bp n 308  |  +5.4pp  +2.6bp n 392  |  +3.0pp  +1.4bp n  54  |  +3.8 STRONG
+|ret|>=0.50% FADE               -3.3pp  -2.0bp n 266  |  -4.9pp  -2.9bp n 192  |  -6.7pp  -3.5bp n 308  |  -6.8pp  -3.5bp n 392  |  +9.8pp  +4.5bp n  54  |  -3.9 -
+vs VWAP FOLLOW                  +3.0pp  +0.9bp n 805  |  +2.5pp  +0.5bp n 757  |  +0.9pp  +0.3bp n 835  |  +2.3pp  +1.0bp n 860  |  +3.5pp  +1.7bp n 126  |  +2.5 CANDIDATE
+vs VWAP FADE                    -3.1pp  -2.1bp n 805  |  -2.2pp  -1.6bp n 757  |  -1.5pp  -1.0bp n 835  |  -2.9pp  -1.5bp n 860  |  +0.2pp  -0.2bp n 126  |  -2.8 -
+vs EMA20 5m FOLLOW              +1.7pp  +0.4bp n 867  |  +1.7pp  +0.2bp n 876  |  +0.5pp  +0.1bp n 921  |  +1.2pp  +0.4bp n 915  |  +3.2pp  +1.5bp n 133  |  +1.5 -
+vs EMA20 5m FADE                -2.2pp  -1.7bp n 867  |  -1.8pp  -1.5bp n 876  |  -1.4pp  -1.0bp n 921  |  -1.3pp  -0.8bp n 915  |  -2.3pp  -1.4bp n 133  |  -2.0 -
+vs EMA50 5m FOLLOW              +1.8pp  +0.4bp n 895  |  +1.7pp  +0.3bp n 930  |  +0.8pp  +0.2bp n 954  |  +0.5pp  +0.1bp n 950  |  +3.7pp  +1.8bp n 135  |  +1.4 -
+vs EMA50 5m FADE                -1.6pp  -1.4bp n 895  |  -1.7pp  -1.5bp n 930  |  -1.1pp  -0.8bp n 954  |  -0.7pp  -0.5bp n 950  |  -0.2pp  -0.3bp n 135  |  -1.5 -
+vs SMA20 5m FOLLOW              +1.5pp  +0.3bp n 891  |  +1.1pp  -0.1bp n 914  |  +0.6pp  +0.1bp n 945  |  +0.5pp  +0.1bp n 937  |  +2.7pp  +1.3bp n 134  |  +1.1 -
+vs SMA20 5m FADE                -1.3pp  -1.2bp n 891  |  -1.2pp  -1.2bp n 914  |  -1.3pp  -0.9bp n 945  |  -1.1pp  -0.7bp n 937  |  -1.2pp  -0.9bp n 134  |  -1.5 -
+CLV >.7/<.3 FOLLOW              +2.9pp  +0.9bp n 642  |  +2.1pp  +0.3bp n 640  |  +1.0pp  +0.3bp n 649  |  +4.6pp  +2.1bp n 689  |  +4.7pp  +2.3bp n 102  |  +2.8 CANDIDATE
+CLV >.7/<.3 FADE                -3.5pp  -2.2bp n 642  |  -2.0pp  -1.6bp n 640  |  -1.8pp  -1.2bp n 649  |  -5.7pp  -2.9bp n 689  |  +1.6pp  +0.5bp n 102  |  -3.4 -
+vs prior close FOLLOW           -0.0pp  -0.5bp n 893  |  +1.0pp  -0.1bp n 906  |  +0.8pp  +0.2bp n 944  |  +0.0pp  -0.1bp n 948  |  +3.9pp  +1.9bp n 133  |  +0.5 -
+vs prior close FADE             -0.1pp  -0.6bp n 893  |  -1.8pp  -1.3bp n 906  |  -0.8pp  -0.7bp n 944  |  -0.7pp  -0.4bp n 948  |  -0.8pp  -0.6bp n 133  |  -1.0 -
+beyond ON hi/lo FOLLOW          +0.8pp  -0.1bp n 388  |  +1.6pp  +0.3bp n 423  |  +2.7pp  +1.1bp n 377  |  +3.2pp  +1.5bp n 428  |  -1.5pp  -0.8bp n  53  |  +1.7 -
+beyond ON hi/lo FADE            +0.1pp  -0.6bp n 388  |  -3.9pp  -2.5bp n 423  |  -4.9pp  -2.7bp n 377  |  -6.2pp  -3.2bp n 428  |  +2.7pp  +1.0bp n  53  |  -3.1 -
+beyond PDH/PDL FOLLOW           +0.8pp  -0.1bp n 437  |  +1.8pp  +0.5bp n 451  |  +1.4pp  +0.5bp n 475  |  -0.3pp  -0.3bp n 462  |  -1.7pp  -0.9bp n  72  |  +0.8 -
+beyond PDH/PDL FADE             -1.8pp  -1.5bp n 437  |  -4.0pp  -2.4bp n 451  |  -3.0pp  -1.8bp n 475  |  -0.7pp  -0.5bp n 462  |  +5.7pp  +2.6bp n  72  |  -2.0 -
+strong body FOLLOW              +6.0pp  +2.5bp n 343  |  +0.9pp  -0.2bp n 326  |  +7.0pp  +3.2bp n 340  |  +6.8pp  +3.3bp n 375  |  +9.2pp  +4.6bp n  52  |  +4.0 STRONG
+strong body FADE                -5.2pp  -3.1bp n 343  |  -3.3pp  -2.2bp n 326  |  -7.1pp  -3.8bp n 340  | -10.3pp  -5.2bp n 375  |  +6.0pp  +2.5bp n  52  |  -4.9 -
+high volume FOLLOW              +5.5pp  +2.2bp n 170  |  +4.6pp  +1.9bp n 184  |  +0.4pp  +0.1bp n 144  |  +6.7pp  +3.3bp n  84  |  -7.1pp  -3.6bp n  17  |  +2.0 CANDIDATE
+high volume FADE               -10.9pp  -5.8bp n 170  |  -2.9pp  -1.6bp n 184  |  +0.6pp  +0.0bp n 144  |  -7.6pp  -3.9bp n  84  |  -1.2pp  -0.6bp n  17  |  -2.5 -
+low volume FOLLOW               +2.4pp  +0.1bp n 219  |  +3.5pp  +1.0bp n 225  |  -3.4pp  -2.0bp n 166  | +14.1pp  +6.5bp n 123  |           -            |  +1.8 -
+low volume FADE                 +1.5pp  -0.0bp n 219  |  -5.4pp  -3.4bp n 225  |  -2.4pp  -1.5bp n 166  |  -5.3pp  -2.8bp n 123  |           -            |  -1.4 -
+narrow range FOLLOW             +6.9pp  +2.0bp n 133  |  +5.6pp  +2.1bp n 151  |  -2.2pp  -1.3bp n 160  |  +5.3pp  +2.4bp n 151  | +10.6pp  +5.3bp n  17  |  +1.7 -
+narrow range FADE               -3.1pp  -2.2bp n 133  |  -8.4pp  -4.7bp n 151  |  +0.1pp  -0.4bp n 160  |  -3.1pp  -1.9bp n 151  |  -1.2pp  -0.6bp n  17  |  -1.6 -
+wide range FOLLOW               +2.4pp  +0.8bp n 125  |  +3.6pp  +1.5bp n 189  |  +1.1pp  +0.5bp n 193  |  +2.3pp  +1.1bp n 154  |  +1.5pp  +0.7bp n  26  |  +1.2 -
+wide range FADE                 -1.9pp  -1.4bp n 125  |  -1.3pp  -1.0bp n 189  |  -1.5pp  -0.8bp n 193  |  -4.2pp  -2.1bp n 154  |  +5.4pp  +2.7bp n  26  |  -1.1 -
+opening drive FOLLOW            +2.9pp  +0.5bp n 170  |  +4.0pp  +1.3bp n 203  |  +5.8pp  +2.6bp n 160  |  +5.4pp  +2.6bp n 168  | -10.0pp  -5.0bp n  18  |  +2.4 CANDIDATE
+opening drive FADE              -2.7pp  -1.9bp n 170  |  -5.3pp  -3.0bp n 203  | -10.3pp  -5.3bp n 160  |  -9.7pp  -5.1bp n 168  | +23.3pp +11.7bp n  18  |  -3.6 -
+5m vs window disagree FOLLOW    +1.8pp  +0.5bp n 218  |  +5.3pp  +1.9bp n 207  |  -2.9pp  -1.6bp n 270  |  +3.0pp  +1.2bp n 275  |  -6.7pp  -3.4bp n  45  |  +0.9 -
+5m vs window disagree FADE      -4.2pp  -2.6bp n 218  |  -4.6pp  -2.6bp n 207  |  +5.8pp  +2.4bp n 270  |  -1.9pp  -0.9bp n 275  |  +7.4pp  +2.9bp n  45  |  -0.5 -
+color+VWAP FOLLOW               +3.1pp  +1.0bp n 679  |  +3.2pp  +0.9bp n 617  |  +1.4pp  +0.6bp n 684  |  +4.5pp  +2.1bp n 734  |  +2.6pp  +1.3bp n 107  |  +3.2 STRONG
+color+VWAP FADE                 -3.3pp  -2.2bp n 679  |  -3.8pp  -2.4bp n 617  |  -2.3pp  -1.4bp n 684  |  -5.8pp  -2.9bp n 734  |  +2.5pp  +0.9bp n 107  |  -4.0 -
+color+SMA50 daily FOLLOW        +4.2pp  +1.6bp n 424  |  -0.6pp  -0.6bp n 433  |  -1.1pp  -0.6bp n 482  |  +4.7pp  +2.1bp n 459  |  +1.7pp  +0.8bp n  60  |  +1.5 -
+color+SMA50 daily FADE          -2.2pp  -1.6bp n 424  |  -0.5pp  -1.4bp n 433  |  -0.9pp  -0.8bp n 482  |  -4.2pp  -2.3bp n 459  |  +0.3pp  -0.1bp n  60  |  -1.7 -
+color+VWAP+EMA20 FOLLOW         +3.1pp  +1.0bp n 573  |  +3.3pp  +1.0bp n 537  |  +2.1pp  +0.9bp n 571  |  +4.2pp  +2.0bp n 610  |  +3.6pp  +1.8bp n  88  |  +3.1 STRONG
+color+VWAP+EMA20 FADE           -3.3pp  -2.1bp n 573  |  -3.9pp  -2.4bp n 537  |  -3.2pp  -1.9bp n 571  |  -5.5pp  -2.8bp n 610  |  +1.2pp  +0.2bp n  88  |  -3.8 -
+gap-and-go FOLLOW               +5.9pp  +2.5bp n 235  |  +4.4pp  +1.6bp n 236  |  +5.4pp  +2.5bp n 303  |  +3.0pp  +1.4bp n 315  |  -4.4pp  -2.3bp n  45  |  +3.1 STRONG
+gap-and-go FADE                 -1.0pp  -1.0bp n 235  |  -5.7pp  -3.4bp n 236  |  -4.4pp  -2.4bp n 303  |  -5.7pp  -3.0bp n 315  |  +7.4pp  +3.2bp n  45  |  -2.9 -
+gap filled FOLLOW               -1.6pp  -1.5bp n  78  |  +7.8pp  +3.0bp n  62  |  +2.9pp  +1.4bp n  89  |  +3.2pp  +1.5bp n  95  | +20.0pp +10.0bp n  15  |  +1.0 -
+gap filled FADE                 -1.6pp  -1.5bp n  78  | -10.8pp  -5.3bp n  62  |  -7.1pp  -3.8bp n  89  |  -3.0pp  -1.4bp n  95  |  +0.0pp  -0.0bp n  15  |  -1.9 -
+VWAP stretch >.30% FOLLOW       +5.9pp  +2.6bp n 208  |  +1.9pp  +0.7bp n 113  |  +5.5pp  +2.6bp n 252  |  +2.9pp  +1.3bp n 338  |  +3.0pp  +1.5bp n  46  |  +2.6 CANDIDATE
+VWAP stretch >.30% FADE         -5.1pp  -3.0bp n 208  |  +2.2pp  +0.6bp n 113  |  -4.4pp  -2.3bp n 252  |  -3.7pp  -1.9bp n 338  |  +0.0pp  -0.4bp n  46  |  -2.2 -
+high VIX FOLLOW                          -            |           -            |           -            |           -            |           -            |  +0.0 -
+high VIX FADE                            -            |           -            |           -            |           -            |           -            |  +0.0 -
+low VIX FOLLOW                           -            |           -            |           -            |           -            |           -            |  +0.0 -
+low VIX FADE                             -            |           -            |           -            |           -            |           -            |  +0.0 -
+always long                     +1.1pp  +0.1bp n 957  |  +0.0pp  -0.1bp n 999  |  -0.5pp  -0.4bp n 998  |  -0.5pp  -0.3bp n 999  |  +5.7pp  +2.8bp n 140  |  +0.0 -
+coin flip                       +2.0pp  +0.5bp n 957  |  -0.8pp  -1.0bp n 999  |  -1.3pp  -0.9bp n 998  |  -0.1pp  -0.2bp n 999  |  +1.6pp  +0.7bp n 140  |  -0.1 -
+RS (Lucid 8) this check                  -            |           -            |           -            |           -            |           -            |  +0.0 -
+null: 4/300 coin-flip rules pass -> ~0.8 false passes expected among 57
+
+=== entry 10:30 (window 09:30-10:30), bracket +0.20 / -0.40: resolved win minus random 66.7% | mean bp | n; z pooled 2010-25
+rule                                  2010-13         |        2014-17         |        2018-21         |        2022-25         |          2026          |   z   verdict
+30m color FOLLOW                +3.2pp  +0.9bp n 861  |  +3.3pp  +0.5bp n 867  |  +1.4pp  +0.3bp n 903  |  +4.8pp  +2.5bp n 919  |  -2.9pp  -2.0bp n 128  |  +3.9 STRONG
+30m color FADE                  -2.4pp  -2.2bp n 861  |  -1.5pp  -2.4bp n 867  |  -1.1pp  -1.7bp n 903  |  -4.4pp  -2.9bp n 919  |  +2.4pp  +0.8bp n 128  |  -2.9 -
+|ret|>=0.15% FOLLOW             +3.5pp  +1.4bp n 685  |  +2.9pp  +0.3bp n 621  |  +1.8pp  +0.5bp n 734  |  +4.5pp  +2.3bp n 773  |  -1.6pp  -1.3bp n 104  |  +3.5 STRONG
+|ret|>=0.15% FADE               -3.5pp  -2.8bp n 685  |  -1.0pp  -1.9bp n 621  |  -2.6pp  -2.3bp n 734  |  -4.6pp  -3.0bp n 773  |  +2.0pp  +0.5bp n 104  |  -3.3 -
+|ret|>=0.30% FOLLOW             +3.5pp  +1.4bp n 474  |  +3.0pp  +0.8bp n 386  |  +3.4pp  +1.6bp n 513  |  +3.5pp  +1.7bp n 595  |  +3.1pp  +1.8bp n  86  |  +3.1 STRONG
+|ret|>=0.30% FADE               -3.9pp  -2.9bp n 474  |  -2.6pp  -2.4bp n 386  |  -4.0pp  -2.9bp n 513  |  -4.4pp  -2.8bp n 595  |  +0.4pp  -0.5bp n  86  |  -3.5 -
+|ret|>=0.50% FOLLOW             +3.0pp  +1.4bp n 266  |  +5.5pp  +2.9bp n 192  |  +6.6pp  +3.6bp n 308  |  +3.5pp  +1.8bp n 392  |  +1.9pp  +1.1bp n  54  |  +3.3 STRONG
+|ret|>=0.50% FADE               -5.3pp  -3.7bp n 266  |  -5.2pp  -3.8bp n 192  |  -6.9pp  -4.5bp n 308  |  -6.7pp  -4.2bp n 392  |  +8.8pp  +4.9bp n  54  |  -4.4 -
+vs VWAP FOLLOW                  +4.1pp  +1.6bp n 805  |  +3.3pp  +0.3bp n 757  |  +2.0pp  +0.5bp n 835  |  +2.2pp  +1.0bp n 860  |  -0.3pp  -0.4bp n 126  |  +3.4 STRONG
+vs VWAP FADE                    -4.0pp  -3.2bp n 805  |  -0.1pp  -1.5bp n 757  |  -1.6pp  -1.7bp n 835  |  -3.1pp  -2.1bp n 860  |  +0.3pp  -0.4bp n 126  |  -2.6 -
+vs EMA20 5m FOLLOW              +2.9pp  +0.9bp n 867  |  +2.4pp  +0.0bp n 876  |  +0.7pp  -0.2bp n 921  |  +1.0pp  +0.3bp n 915  |  +0.0pp  -0.2bp n 133  |  +2.1 CANDIDATE
+vs EMA20 5m FADE                -3.1pp  -2.8bp n 867  |  +0.4pp  -1.6bp n 876  |  -0.6pp  -1.2bp n 921  |  -1.2pp  -1.0bp n 915  |  -3.4pp  -2.5bp n 133  |  -1.4 -
+vs EMA50 5m FOLLOW              +2.2pp  +0.6bp n 895  |  +2.8pp  +0.3bp n 930  |  +1.3pp  +0.1bp n 954  |  +0.8pp  +0.1bp n 950  |  +0.5pp  +0.1bp n 135  |  +2.2 CANDIDATE
+vs EMA50 5m FADE                -2.2pp  -2.3bp n 895  |  -0.3pp  -1.9bp n 930  |  -0.8pp  -1.3bp n 954  |  -0.5pp  -0.7bp n 950  |  -1.3pp  -1.3bp n 135  |  -1.2 -
+vs SMA20 5m FOLLOW              +2.9pp  +0.9bp n 891  |  +2.2pp  -0.2bp n 914  |  +0.7pp  -0.2bp n 945  |  +0.4pp  -0.1bp n 937  |  -0.5pp  -0.5bp n 134  |  +1.9 -
+vs SMA20 5m FADE                -2.4pp  -2.2bp n 891  |  +0.8pp  -1.3bp n 914  |  -0.4pp  -1.1bp n 945  |  -1.0pp  -0.9bp n 937  |  -2.3pp  -1.9bp n 134  |  -1.0 -
+CLV >.7/<.3 FOLLOW              +3.5pp  +1.3bp n 642  |  +3.6pp  +0.3bp n 640  |  +1.5pp  +0.3bp n 649  |  +4.2pp  +2.1bp n 689  |  +1.0pp  +0.6bp n 102  |  +3.4 STRONG
+CLV >.7/<.3 FADE                -4.5pp  -3.5bp n 642  |  +0.2pp  -1.6bp n 640  |  -2.4pp  -2.3bp n 649  |  -6.1pp  -3.8bp n 689  |  +2.4pp  +0.7bp n 102  |  -3.5 -
+vs prior close FOLLOW           +0.5pp  -0.5bp n 893  |  +2.2pp  -0.2bp n 906  |  +0.9pp  -0.1bp n 944  |  -0.2pp  -0.4bp n 948  |  +0.8pp  +0.2bp n 133  |  +1.0 -
+vs prior close FADE             -0.4pp  -1.1bp n 893  |  -0.6pp  -1.9bp n 906  |  -0.3pp  -1.0bp n 944  |  -0.3pp  -0.5bp n 948  |  -1.8pp  -1.6bp n 133  |  -0.5 -
+beyond ON hi/lo FOLLOW          +1.0pp  -0.0bp n 388  |  +2.1pp  -0.1bp n 423  |  +3.0pp  +1.1bp n 377  |  +1.7pp  +0.6bp n 428  |  -2.5pp  -1.5bp n  53  |  +1.6 -
+beyond ON hi/lo FADE            -0.6pp  -1.4bp n 388  |  -4.2pp  -4.0bp n 423  |  -4.8pp  -3.8bp n 377  |  -5.6pp  -3.7bp n 428  |  +2.7pp  +0.4bp n  53  |  -3.2 -
+beyond PDH/PDL FOLLOW           +1.4pp  +0.1bp n 437  |  +2.1pp  +0.2bp n 451  |  -0.1pp  -0.4bp n 475  |  -0.5pp  -0.6bp n 462  |  -2.8pp  -1.7bp n  72  |  +0.6 -
+beyond PDH/PDL FADE             -2.4pp  -2.4bp n 437  |  -2.3pp  -2.9bp n 451  |  -3.2pp  -2.8bp n 475  |  -0.5pp  -0.8bp n 462  |  +4.3pp  +1.8bp n  72  |  -1.8 -
+strong body FOLLOW              +5.7pp  +2.6bp n 343  |  +2.2pp  -0.2bp n 326  |  +7.7pp  +3.9bp n 340  |  +4.9pp  +2.5bp n 375  |  +6.4pp  +3.8bp n  52  |  +4.0 STRONG
+strong body FADE                -6.0pp  -4.3bp n 343  |  -3.4pp  -3.2bp n 326  |  -6.5pp  -4.9bp n 340  | -10.4pp  -6.4bp n 375  |  +4.8pp  +1.7bp n  52  |  -5.1 -
+high volume FOLLOW              +5.0pp  +2.3bp n 170  |  +3.0pp  +1.1bp n 184  |  +0.7pp  +0.3bp n 144  |  +4.4pp  +2.3bp n  84  |  -2.0pp  -1.2bp n  17  |  +1.6 -
+high volume FADE               -14.5pp  -9.1bp n 170  |  -3.7pp  -2.4bp n 184  |  +0.9pp  +0.3bp n 144  |  -2.4pp  -1.5bp n  84  |  -2.0pp  -1.2bp n  17  |  -2.8 -
+low volume FOLLOW               +1.0pp  -1.1bp n 219  |  +4.5pp  +0.4bp n 225  |  -2.6pp  -2.3bp n 166  | +14.4pp  +8.0bp n 123  |           -            |  +1.9 -
+low volume FADE                 +2.2pp  +0.3bp n 219  |  -2.1pp  -3.9bp n 225  |  -1.3pp  -2.5bp n 166  |  -2.1pp  -2.6bp n 123  |           -            |  -0.3 -
+narrow range FOLLOW             +8.3pp  +2.6bp n 133  |  +6.5pp  +1.7bp n 151  |  -2.5pp  -1.9bp n 160  |  +7.5pp  +4.1bp n 151  |  +3.9pp  +2.3bp n  17  |  +2.3 -
+narrow range FADE               -3.4pp  -3.1bp n 133  |  -3.3pp  -4.9bp n 151  |  -0.7pp  -2.0bp n 160  |  -4.3pp  -3.7bp n 151  |  -7.8pp  -4.7bp n  17  |  -1.4 -
+wide range FOLLOW               +0.5pp  -0.0bp n 125  |  +2.9pp  +0.9bp n 189  |  +1.0pp  +0.4bp n 193  |  -0.2pp  -0.5bp n 154  |  -1.3pp  -0.8bp n  26  |  +0.6 -
+wide range FADE                 -4.1pp  -2.9bp n 125  |  -1.1pp  -1.1bp n 189  |  -2.9pp  -1.9bp n 193  |  -2.4pp  -1.5bp n 154  |  +6.4pp  +3.8bp n  26  |  -1.4 -
+opening drive FOLLOW            +1.5pp  -0.3bp n 170  |  +5.7pp  +1.6bp n 203  |  +4.7pp  +1.9bp n 160  |  +5.3pp  +2.2bp n 168  | -11.1pp  -6.7bp n  18  |  +2.3 CANDIDATE
+opening drive FADE              -2.6pp  -2.5bp n 170  |  -3.4pp  -3.4bp n 203  |  -6.0pp  -5.3bp n 160  |  -8.4pp  -5.6bp n 168  | +16.7pp +10.0bp n  18  |  -2.7 -
+5m vs window disagree FOLLOW    +4.1pp  +1.8bp n 218  |  +7.0pp  +2.3bp n 207  |  -0.8pp  -1.1bp n 270  |  +3.3pp  +1.7bp n 275  | -11.1pp  -6.7bp n  45  |  +2.0 -
+5m vs window disagree FADE      -7.2pp  -5.0bp n 218  |  -3.2pp  -3.0bp n 207  |  +2.0pp  +0.7bp n 270  |  -0.7pp  -0.7bp n 275  | +11.9pp  +5.2bp n  45  |  -1.3 -
+color+VWAP FOLLOW               +4.5pp  +1.7bp n 679  |  +4.2pp  +0.9bp n 617  |  +1.5pp  +0.4bp n 684  |  +3.9pp  +1.9bp n 734  |  -0.6pp  -0.7bp n 107  |  +3.7 STRONG
+color+VWAP FADE                 -4.7pp  -3.5bp n 679  |  -1.4pp  -2.5bp n 617  |  -2.6pp  -2.5bp n 684  |  -5.2pp  -3.3bp n 734  |  +2.0pp  +0.4bp n 107  |  -3.8 -
+color+SMA50 daily FOLLOW        +5.0pp  +2.4bp n 424  |  +0.0pp  -0.8bp n 433  |  -1.5pp  -1.3bp n 482  |  +4.1pp  +2.0bp n 459  |  -1.7pp  -1.0bp n  60  |  +1.6 -
+color+SMA50 daily FADE          -2.4pp  -2.2bp n 424  |  +1.5pp  -1.7bp n 433  |  -0.3pp  -1.7bp n 482  |  -4.4pp  -3.0bp n 459  |  +1.2pp  -0.2bp n  60  |  -1.3 -
+color+VWAP+EMA20 FOLLOW         +4.5pp  +1.9bp n 573  |  +4.2pp  +0.8bp n 537  |  +2.1pp  +0.7bp n 571  |  +3.1pp  +1.5bp n 610  |  +1.1pp  +0.3bp n  88  |  +3.4 STRONG
+color+VWAP+EMA20 FADE           -4.6pp  -3.5bp n 573  |  -1.7pp  -2.8bp n 537  |  -3.1pp  -2.9bp n 571  |  -5.5pp  -3.5bp n 610  |  +2.0pp  +0.3bp n  88  |  -3.8 -
+gap-and-go FOLLOW               +6.1pp  +3.2bp n 235  |  +4.0pp  +1.3bp n 236  |  +4.0pp  +2.1bp n 303  |  +3.6pp  +1.9bp n 315  |  -6.7pp  -4.0bp n  45  |  +3.0 -
+gap-and-go FADE                 -1.8pp  -1.9bp n 235  |  -4.0pp  -3.8bp n 236  |  -3.7pp  -3.3bp n 303  |  -4.5pp  -3.1bp n 315  |  +7.1pp  +2.9bp n  45  |  -2.5 -
+gap filled FOLLOW               -2.2pp  -2.2bp n  78  | +10.1pp  +4.6bp n  62  |  +6.9pp  +3.4bp n  89  |  +1.1pp  +0.4bp n  95  | +13.3pp  +8.0bp n  15  |  +1.3 -
+gap filled FADE                 +1.3pp  -0.1bp n  78  | -10.5pp  -6.5bp n  62  |  -4.6pp  -2.9bp n  89  |  +4.8pp  +3.0bp n  95  |  -6.7pp  -4.0bp n  15  |  -0.6 -
+VWAP stretch >.30% FOLLOW       +5.8pp  +3.1bp n 208  |  +3.6pp  +1.9bp n 113  |  +6.6pp  +3.9bp n 252  |  +2.0pp  +1.0bp n 338  |  +0.7pp  +0.4bp n  46  |  +2.8 CANDIDATE
+VWAP stretch >.30% FADE         -6.4pp  -4.4bp n 208  |  +4.0pp  +2.0bp n 113  |  -4.8pp  -3.3bp n 252  |  -3.0pp  -1.8bp n 338  |  +8.3pp  +3.6bp n  46  |  -2.2 -
+high VIX FOLLOW                          -            |           -            |           -            |           -            |           -            |  +0.0 -
+high VIX FADE                            -            |           -            |           -            |           -            |           -            |  +0.0 -
+low VIX FOLLOW                           -            |           -            |           -            |           -            |           -            |  +0.0 -
+low VIX FADE                             -            |           -            |           -            |           -            |           -            |  +0.0 -
+always long                     +0.8pp  -0.1bp n 957  |  +1.8pp  +0.2bp n 999  |  -0.6pp  -0.8bp n 998  |  -1.1pp  -0.8bp n 999  |  +1.9pp  +1.1bp n 140  |  +0.2 -
+coin flip                       +1.0pp  -0.2bp n 957  |  +0.5pp  -1.2bp n 999  |  -0.7pp  -1.2bp n 998  |  +0.3pp  -0.1bp n 999  |  +1.0pp  +0.2bp n 140  |  +0.3 -
+RS (Lucid 8) this check                  -            |           -            |           -            |           -            |           -            |  +0.0 -
+null: 11/300 coin-flip rules pass -> ~2.1 false passes expected among 57
+
+=== entry 11:00 (window 09:30-11:00), bracket +0.20 / -0.30: resolved win minus random 60.0% | mean bp | n; z pooled 2010-25
+rule                                  2010-13         |        2014-17         |        2018-21         |        2022-25         |          2026          |   z   verdict
+30m color FOLLOW                +2.0pp  +0.3bp n 876  |  +4.5pp  +1.5bp n 891  |  +1.8pp  +0.5bp n 931  |  +0.4pp  +0.0bp n 934  |  +5.9pp  +2.8bp n 134  |  +2.5 CANDIDATE
+30m color FADE                  -1.0pp  -0.9bp n 876  |  -1.4pp  -1.4bp n 891  |  -3.1pp  -2.1bp n 931  |  -0.7pp  -0.5bp n 934  |  -7.7pp  -3.8bp n 134  |  -1.9 -
+|ret|>=0.15% FOLLOW             +2.7pp  +0.7bp n 714  |  +3.4pp  +1.2bp n 682  |  +3.7pp  +1.5bp n 765  |  -0.2pp  -0.3bp n 820  |  +9.8pp  +4.7bp n 118  |  +2.5 -
+|ret|>=0.15% FADE               -1.1pp  -0.9bp n 714  |  -1.4pp  -1.3bp n 682  |  -5.1pp  -3.0bp n 765  |  +0.0pp  -0.1bp n 820  | -10.0pp  -4.9bp n 118  |  -2.0 -
+|ret|>=0.30% FOLLOW             +2.5pp  +0.6bp n 526  |  +3.2pp  +1.1bp n 460  |  +3.1pp  +1.3bp n 562  |  +0.1pp  -0.1bp n 634  |  +8.9pp  +4.2bp n  92  |  +2.0 -
+|ret|>=0.30% FADE               -0.5pp  -0.6bp n 526  |  -2.5pp  -1.5bp n 460  |  -4.1pp  -2.5bp n 562  |  +0.3pp  +0.0bp n 634  |  -9.4pp  -4.5bp n  92  |  -1.5 -
+|ret|>=0.50% FOLLOW             +5.3pp  +2.1bp n 319  |  +6.2pp  +2.8bp n 244  |  +4.2pp  +2.0bp n 372  |  -0.9pp  -0.5bp n 427  |  +9.2pp  +4.3bp n  66  |  +2.4 -
+|ret|>=0.50% FADE               -1.4pp  -1.0bp n 319  |  -5.6pp  -3.1bp n 244  |  -5.1pp  -3.0bp n 372  |  +0.9pp  +0.4bp n 427  |  -6.2pp  -2.9bp n  66  |  -1.8 -
+vs VWAP FOLLOW                  +3.0pp  +0.9bp n 802  |  +3.9pp  +1.3bp n 800  |  +3.3pp  +1.3bp n 858  |  +0.1pp  -0.1bp n 890  |  +9.7pp  +4.6bp n 124  |  +2.9 CANDIDATE
+vs VWAP FADE                    -1.1pp  -1.1bp n 802  |  -1.1pp  -1.1bp n 800  |  -4.8pp  -2.9bp n 858  |  +0.0pp  -0.1bp n 890  | -11.7pp  -5.7bp n 124  |  -2.0 -
+vs EMA20 5m FOLLOW              +3.1pp  +0.9bp n 856  |  +4.9pp  +1.9bp n 864  |  +3.6pp  +1.5bp n 894  |  -0.2pp  -0.3bp n 909  | +10.9pp  +5.2bp n 129  |  +3.3 -
+vs EMA20 5m FADE                -1.4pp  -1.3bp n 856  |  -1.8pp  -1.6bp n 864  |  -5.4pp  -3.2bp n 894  |  +0.2pp  -0.0bp n 909  | -12.0pp  -5.9bp n 129  |  -2.5 -
+vs EMA50 5m FOLLOW              +1.9pp  +0.3bp n 909  |  +3.7pp  +1.4bp n 924  |  +2.7pp  +1.1bp n 948  |  +0.6pp  +0.1bp n 960  |  +9.7pp  +4.6bp n 135  |  +2.6 CANDIDATE
+vs EMA50 5m FADE                -0.5pp  -0.9bp n 909  |  -0.2pp  -1.1bp n 924  |  -4.3pp  -2.7bp n 948  |  -0.6pp  -0.4bp n 960  | -12.3pp  -6.1bp n 135  |  -1.7 -
+vs SMA20 5m FOLLOW              +2.8pp  +0.8bp n 869  |  +3.8pp  +1.3bp n 876  |  +3.2pp  +1.3bp n 906  |  +0.4pp  +0.0bp n 926  |  +9.8pp  +4.7bp n 128  |  +3.0 CANDIDATE
+vs SMA20 5m FADE                -1.4pp  -1.2bp n 869  |  -0.9pp  -1.1bp n 876  |  -4.8pp  -2.9bp n 906  |  -0.4pp  -0.3bp n 926  | -11.6pp  -5.7bp n 128  |  -2.2 -
+CLV >.7/<.3 FOLLOW              +4.8pp  +1.7bp n 625  |  +4.0pp  +1.4bp n 646  |  +4.6pp  +2.1bp n 655  |  +0.1pp  -0.0bp n 678  |  +9.9pp  +4.7bp n  95  |  +3.4 STRONG
+CLV >.7/<.3 FADE                -3.0pp  -2.0bp n 625  |  -1.1pp  -1.2bp n 646  |  -5.6pp  -3.3bp n 655  |  +0.9pp  +0.3bp n 678  | -10.5pp  -5.2bp n  95  |  -2.2 -
+vs prior close FOLLOW           +1.1pp  -0.1bp n 901  |  +3.8pp  +1.2bp n 909  |  +1.2pp  +0.3bp n 953  |  +0.2pp  -0.1bp n 933  | +10.6pp  +5.1bp n 139  |  +1.8 -
+vs prior close FADE             -0.0pp  -0.6bp n 901  |  -1.0pp  -1.2bp n 909  |  -3.0pp  -2.0bp n 953  |  -0.4pp  -0.3bp n 933  | -12.9pp  -6.5bp n 139  |  -1.3 -
+beyond ON hi/lo FOLLOW          +2.7pp  +0.7bp n 441  |  +4.2pp  +1.5bp n 473  |  +5.5pp  +2.4bp n 418  |  +0.7pp  +0.2bp n 467  | +10.0pp  +4.6bp n  62  |  +2.7 CANDIDATE
+beyond ON hi/lo FADE            -1.6pp  -1.3bp n 441  |  -3.2pp  -2.3bp n 473  |  -6.6pp  -3.9bp n 418  |  -0.8pp  -0.6bp n 467  | -12.5pp  -6.2bp n  62  |  -2.5 -
+beyond PDH/PDL FOLLOW           +2.4pp  +0.7bp n 444  |  +5.3pp  +2.1bp n 469  |  +1.5pp  +0.6bp n 490  |  +1.7pp  +0.7bp n 475  |  +8.8pp  +4.3bp n  82  |  +2.3 CANDIDATE
+beyond PDH/PDL FADE             -0.2pp  -0.8bp n 444  |  -3.7pp  -2.6bp n 469  |  -4.5pp  -2.8bp n 490  |  -0.7pp  -0.5bp n 475  | -13.7pp  -6.6bp n  82  |  -2.0 -
+strong body FOLLOW              +3.5pp  +0.9bp n 344  |  +6.3pp  +2.5bp n 342  |  +5.0pp  +2.3bp n 360  |  +0.3pp  -0.0bp n 367  | +10.9pp  +5.1bp n  56  |  +2.8 CANDIDATE
+strong body FADE                +0.1pp  -0.3bp n 344  |  -4.9pp  -2.8bp n 342  |  -6.4pp  -3.8bp n 360  |  +0.7pp  +0.2bp n 367  |  -8.1pp  -3.8bp n  56  |  -1.9 -
+high volume FOLLOW              +1.3pp  +0.0bp n 172  |  +2.6pp  +1.1bp n 189  |  -6.5pp  -3.5bp n 160  |  +4.9pp  +2.4bp n  94  |  -7.1pp  -3.6bp n  17  |  +0.1 -
+high volume FADE                -3.9pp  -2.4bp n 172  |  -1.6pp  -1.0bp n 189  |  +6.2pp  +3.0bp n 160  |  -3.0pp  -1.5bp n  94  |  -1.2pp  -0.6bp n  17  |  -0.2 -
+low volume FOLLOW               -0.5pp  -1.3bp n 221  |  +7.0pp  +2.3bp n 252  |  +0.5pp  -0.2bp n 177  |  +0.3pp  -0.2bp n 136  |  +0.0pp  -0.0bp n  15  |  +1.2 -
+low volume FADE                 +4.6pp  +1.6bp n 221  |  -4.3pp  -3.2bp n 252  |  -5.7pp  -3.5bp n 177  |  +0.8pp  +0.0bp n 136  |  +6.7pp  +3.3bp n  15  |  -0.6 -
+narrow range FOLLOW             +4.6pp  +0.8bp n 144  | +13.3pp  +5.0bp n 157  |  +0.0pp  -0.5bp n 179  |  +2.7pp  +1.0bp n 167  |  -4.4pp  -2.3bp n  18  |  +2.3 -
+narrow range FADE               -4.3pp  -2.6bp n 144  |  -5.7pp  -4.0bp n 157  |  -0.1pp  -0.5bp n 179  |  -5.1pp  -2.9bp n 167  |  +1.1pp  +0.5bp n  18  |  -1.8 -
+wide range FOLLOW               +1.3pp  +0.2bp n 144  |  +3.5pp  +1.4bp n 186  |  -0.9pp  -0.5bp n 217  |  -2.5pp  -1.3bp n 154  |  +8.4pp  +3.3bp n  20  |  +0.2 -
+wide range FADE                 +3.2pp  +1.2bp n 144  |  -2.4pp  -1.3bp n 186  |  -0.7pp  -0.6bp n 217  |  +4.7pp  +2.3bp n 154  | -10.0pp  -5.0bp n  20  |  +0.5 -
+opening drive FOLLOW            -1.3pp  -1.5bp n 158  |  +6.1pp  +2.1bp n 200  |  +6.7pp  +2.8bp n 151  |  +0.9pp  +0.3bp n 165  |           -            |  +1.6 -
+opening drive FADE              +0.8pp  +0.1bp n 158  |  -5.4pp  -3.4bp n 200  | -11.4pp  -6.3bp n 151  |  +3.1pp  +1.1bp n 165  |           -            |  -1.6 -
+5m vs window disagree FOLLOW    +0.3pp  -0.4bp n 237  |  +0.8pp  -0.1bp n 244  |  +0.6pp  +0.1bp n 297  |  -4.9pp  -2.7bp n 283  |  +4.3pp  +2.1bp n  43  |  -0.6 -
+5m vs window disagree FADE      -4.4pp  -2.7bp n 237  |  +1.4pp  +0.4bp n 244  |  -3.9pp  -2.3bp n 297  |  +2.5pp  +1.2bp n 283  |  -6.3pp  -3.5bp n  43  |  -0.7 -
+color+VWAP FOLLOW               +3.1pp  +0.9bp n 684  |  +4.4pp  +1.6bp n 661  |  +4.1pp  +1.7bp n 723  |  +0.5pp  +0.0bp n 736  |  +9.9pp  +4.7bp n 105  |  +3.1 STRONG
+color+VWAP FADE                 -1.2pp  -1.0bp n 684  |  -1.8pp  -1.5bp n 661  |  -5.3pp  -3.2bp n 723  |  -0.2pp  -0.3bp n 736  | -10.5pp  -5.2bp n 105  |  -2.2 -
+color+SMA50 daily FOLLOW        +4.3pp  +1.6bp n 428  |  +3.6pp  +1.4bp n 457  |  +5.2pp  +2.2bp n 469  |  +3.8pp  +1.7bp n 465  | +11.6pp  +5.7bp n  68  |  +3.6 STRONG
+color+SMA50 daily FADE          -3.8pp  -2.4bp n 428  |  +0.0pp  -1.2bp n 457  |  -5.0pp  -3.3bp n 469  |  -3.2pp  -1.7bp n 465  | -13.8pp  -6.8bp n  68  |  -2.5 -
+color+VWAP+EMA20 FOLLOW         +4.6pp  +1.7bp n 601  |  +4.6pp  +1.7bp n 604  |  +4.7pp  +2.1bp n 636  |  +0.4pp  +0.0bp n 658  | +11.0pp  +5.2bp n  95  |  +3.5 STRONG
+color+VWAP+EMA20 FADE           -2.1pp  -1.4bp n 601  |  -1.9pp  -1.5bp n 604  |  -5.9pp  -3.5bp n 636  |  +0.1pp  -0.1bp n 658  | -10.5pp  -5.2bp n  95  |  -2.4 -
+gap-and-go FOLLOW               +3.3pp  +1.1bp n 252  |  +8.2pp  +3.5bp n 233  |  +5.1pp  +2.4bp n 316  |  +0.3pp  +0.1bp n 304  | +10.0pp  +4.9bp n  51  |  +2.7 CANDIDATE
+gap-and-go FADE                 -1.9pp  -1.4bp n 252  |  -5.8pp  -3.6bp n 233  |  -7.0pp  -3.9bp n 316  |  -0.5pp  -0.4bp n 304  | -16.0pp  -7.9bp n  51  |  -2.5 -
+gap filled FOLLOW               -3.0pp  -2.4bp n 104  |  +8.4pp  +3.7bp n  81  |  +5.1pp  +2.3bp n 108  |  -4.9pp  -2.7bp n 120  |           -            |  +0.3 -
+gap filled FADE                 +7.0pp  +3.2bp n 104  |  -9.4pp  -4.9bp n  81  |  -8.1pp  -4.4bp n 108  |  +1.9pp  +1.1bp n 120  |           -            |  -0.7 -
+VWAP stretch >.30% FOLLOW       +5.4pp  +2.1bp n 258  |  +5.7pp  +2.7bp n 183  |  +6.7pp  +3.3bp n 322  |  -2.5pp  -1.4bp n 374  |  +4.7pp  +2.3bp n  51  |  +2.2 -
+VWAP stretch >.30% FADE         +1.0pp  +0.2bp n 258  |  -2.0pp  -1.4bp n 183  |  -7.5pp  -4.1bp n 322  |  +3.0pp  +1.5bp n 374  |  -5.1pp  -2.6bp n  51  |  -0.8 -
+high VIX FOLLOW                 +2.7pp  +1.0bp n 167  |  +5.9pp  +2.6bp n 175  |  -2.4pp  -1.5bp n 193  |  -2.0pp  -1.1bp n 193  |  +2.1pp  +1.0bp n  29  |  +0.5 -
+high VIX FADE                   -1.6pp  -1.1bp n 167  |  -2.0pp  -1.5bp n 175  |  -0.4pp  -0.3bp n 193  |  +0.1pp  -0.0bp n 193  |  +5.5pp  +2.7bp n  29  |  -0.5 -
+low VIX FOLLOW                  +2.1pp  +0.1bp n 181  |  +6.7pp  +2.1bp n 175  | +10.0pp  +4.3bp n 231  |  +6.7pp  +3.0bp n 214  |  +6.7pp  +3.3bp n  21  |  +3.7 STRONG
+low VIX FADE                    -1.9pp  -1.2bp n 181  |  -1.2pp  -1.3bp n 175  |  -8.2pp  -4.4bp n 231  |  -6.9pp  -3.5bp n 214  |  +1.9pp  +0.9bp n  21  |  -2.8 -
+always long                     +1.5pp  +0.3bp n 957  |  +2.9pp  +1.1bp n 999  |  +1.0pp  +0.3bp n 998  |  +2.6pp  +1.2bp n 999  |  +3.0pp  +1.5bp n 140  |  +2.5 CANDIDATE
+coin flip                       +1.1pp  -0.1bp n 957  |  +1.3pp  -0.1bp n 999  |  -2.6pp  -1.6bp n 998  |  -0.3pp  -0.3bp n 999  |  +0.7pp  +0.2bp n 140  |  -0.2 -
+RS (Lucid 8) this check         +5.1pp  +1.7bp n 388  |  +2.9pp  +1.1bp n 373  |  +5.4pp  +2.4bp n 475  |  +1.3pp  +0.4bp n 506  |  +5.7pp  +2.6bp n  71  |  +3.0 CANDIDATE
+null: 6/300 coin-flip rules pass -> ~1.1 false passes expected among 57
+
+=== entry 11:00 (window 09:30-11:00), bracket +0.20 / -0.40: resolved win minus random 66.7% | mean bp | n; z pooled 2010-25
+rule                                  2010-13         |        2014-17         |        2018-21         |        2022-25         |          2026          |   z   verdict
+30m color FOLLOW                +2.5pp  +0.4bp n 876  |  +4.5pp  +0.9bp n 891  |  +2.7pp  +0.8bp n 931  |  +2.8pp  +1.1bp n 934  |  +6.1pp  +3.5bp n 134  |  +3.8 STRONG
+30m color FADE                  -1.2pp  -1.4bp n 876  |  +0.5pp  -1.7bp n 891  |  -1.6pp  -2.0bp n 931  |  +0.1pp  -0.5bp n 934  |  -1.9pp  -1.2bp n 134  |  -0.7 -
+|ret|>=0.15% FOLLOW             +3.0pp  +0.8bp n 714  |  +4.0pp  +0.8bp n 682  |  +3.9pp  +1.6bp n 765  |  +2.4pp  +1.0bp n 820  | +10.1pp  +5.8bp n 118  |  +3.6 STRONG
+|ret|>=0.15% FADE               -1.2pp  -1.4bp n 714  |  +0.3pp  -1.7bp n 682  |  -3.6pp  -3.2bp n 765  |  +1.1pp  +0.1bp n 820  |  -2.4pp  -1.6bp n 118  |  -0.9 -
+|ret|>=0.30% FOLLOW             +2.8pp  +0.7bp n 526  |  +3.3pp  +0.6bp n 460  |  +3.4pp  +1.5bp n 562  |  +2.1pp  +0.9bp n 634  | +10.0pp  +5.7bp n  92  |  +2.7 CANDIDATE
+|ret|>=0.30% FADE               -1.4pp  -1.4bp n 526  |  -0.9pp  -1.9bp n 460  |  -3.5pp  -3.0bp n 562  |  +0.7pp  -0.0bp n 634  |  -2.0pp  -1.0bp n  92  |  -1.2 -
+|ret|>=0.50% FOLLOW             +5.5pp  +2.6bp n 319  |  +5.1pp  +2.3bp n 244  |  +5.4pp  +2.8bp n 372  |  +1.6pp  +0.9bp n 427  | +11.8pp  +6.8bp n  66  |  +3.2 STRONG
+|ret|>=0.50% FADE               -2.6pp  -2.1bp n 319  |  -4.2pp  -3.7bp n 244  |  -4.2pp  -3.2bp n 372  |  +1.5pp  +0.7bp n 427  |  +0.0pp  +0.1bp n  66  |  -1.5 -
+vs VWAP FOLLOW                  +3.8pp  +1.1bp n 802  |  +4.2pp  +0.8bp n 800  |  +3.7pp  +1.5bp n 858  |  +2.9pp  +1.3bp n 890  | +10.2pp  +5.9bp n 124  |  +4.2 STRONG
+vs VWAP FADE                    -1.8pp  -1.8bp n 802  |  +0.9pp  -1.3bp n 800  |  -3.3pp  -3.0bp n 858  |  +0.5pp  -0.3bp n 890  |  -6.0pp  -3.5bp n 124  |  -1.1 -
+vs EMA20 5m FOLLOW              +2.9pp  +0.8bp n 856  |  +5.0pp  +1.3bp n 864  |  +4.7pp  +1.9bp n 894  |  +2.2pp  +0.9bp n 909  | +10.5pp  +6.1bp n 129  |  +4.4 STRONG
+vs EMA20 5m FADE                -1.8pp  -1.9bp n 856  |  +0.3pp  -1.7bp n 864  |  -3.2pp  -3.0bp n 894  |  +1.2pp  +0.1bp n 909  |  -5.5pp  -3.4bp n 129  |  -1.1 -
+vs EMA50 5m FOLLOW              +1.7pp  +0.1bp n 909  |  +4.5pp  +1.0bp n 924  |  +3.2pp  +1.3bp n 948  |  +2.7pp  +1.0bp n 960  |  +9.7pp  +5.6bp n 135  |  +3.7 STRONG
+vs EMA50 5m FADE                -0.6pp  -1.3bp n 909  |  +1.2pp  -1.4bp n 924  |  -2.2pp  -2.6bp n 948  |  +0.8pp  -0.1bp n 960  |  -5.7pp  -3.6bp n 135  |  -0.3 -
+vs SMA20 5m FOLLOW              +3.2pp  +0.9bp n 869  |  +4.1pp  +0.7bp n 876  |  +3.9pp  +1.6bp n 906  |  +3.0pp  +1.2bp n 926  | +10.3pp  +6.0bp n 128  |  +4.3 STRONG
+vs SMA20 5m FADE                -2.3pp  -2.1bp n 869  |  +1.2pp  -1.2bp n 876  |  -3.3pp  -3.0bp n 906  |  +0.6pp  -0.2bp n 926  |  -5.8pp  -3.5bp n 128  |  -1.2 -
+CLV >.7/<.3 FOLLOW              +4.6pp  +1.8bp n 625  |  +3.8pp  +0.7bp n 646  |  +4.7pp  +2.0bp n 655  |  +3.0pp  +1.4bp n 678  |  +8.6pp  +4.9bp n  95  |  +4.2 STRONG
+CLV >.7/<.3 FADE                -3.6pp  -2.8bp n 625  |  +0.9pp  -1.4bp n 646  |  -3.9pp  -3.4bp n 655  |  +2.0pp  +0.5bp n 678  |  -5.3pp  -3.1bp n  95  |  -1.1 -
+vs prior close FOLLOW           +1.2pp  -0.2bp n 901  |  +4.6pp  +0.8bp n 909  |  +1.8pp  +0.4bp n 953  |  +1.9pp  +0.6bp n 933  |  +9.6pp  +5.6bp n 139  |  +2.8 CANDIDATE
+vs prior close FADE             -0.3pp  -1.0bp n 901  |  +0.4pp  -1.5bp n 909  |  -1.0pp  -1.8bp n 953  |  +1.4pp  +0.3bp n 933  |  -6.1pp  -3.7bp n 139  |  +0.2 -
+beyond ON hi/lo FOLLOW          +2.3pp  +0.4bp n 441  |  +4.7pp  +1.1bp n 473  |  +4.9pp  +2.2bp n 418  |  +2.0pp  +0.7bp n 467  | +11.7pp  +6.5bp n  62  |  +2.9 CANDIDATE
+beyond ON hi/lo FADE            -2.2pp  -2.2bp n 441  |  -0.8pp  -2.4bp n 473  |  -6.0pp  -5.0bp n 418  |  -0.8pp  -1.1bp n 467  |  -3.5pp  -2.4bp n  62  |  -2.0 -
+beyond PDH/PDL FOLLOW           +1.1pp  -0.2bp n 444  |  +4.8pp  +1.5bp n 469  |  +2.5pp  +0.9bp n 490  |  +3.7pp  +1.8bp n 475  |  +9.6pp  +5.6bp n  82  |  +2.7 CANDIDATE
+beyond PDH/PDL FADE             -0.7pp  -1.3bp n 444  |  -1.9pp  -2.9bp n 469  |  -2.8pp  -3.1bp n 490  |  +1.4pp  +0.4bp n 475  |  -4.8pp  -2.9bp n  82  |  -0.8 -
+strong body FOLLOW              +3.8pp  +1.2bp n 344  |  +6.8pp  +2.1bp n 342  |  +5.1pp  +2.4bp n 360  |  +1.9pp  +0.8bp n 367  | +11.5pp  +6.5bp n  56  |  +3.3 STRONG
+strong body FADE                +0.4pp  -0.6bp n 344  |  -2.3pp  -3.2bp n 342  |  -5.7pp  -4.6bp n 360  |  +1.7pp  +0.2bp n 367  |  +2.0pp  +1.1bp n  56  |  -1.1 -
+high volume FOLLOW              +0.0pp  -0.8bp n 172  |  +3.5pp  +1.1bp n 189  |  -0.7pp  -1.0bp n 160  |  +4.3pp  +2.5bp n  94  |  -2.0pp  -1.2bp n  17  |  +0.8 -
+high volume FADE                -6.1pp  -4.7bp n 172  |  -2.3pp  -2.0bp n 189  |  +5.7pp  +3.1bp n 160  |  -2.2pp  -1.3bp n  94  |  +8.3pp  +4.9bp n  17  |  -0.6 -
+low volume FOLLOW               +2.0pp  -0.7bp n 221  |  +7.4pp  +1.8bp n 252  |  -0.2pp  -0.8bp n 177  |  +2.8pp  +0.6bp n 136  |  +6.7pp  +4.0bp n  15  |  +1.8 -
+low volume FADE                 +6.7pp  +2.9bp n 221  |  -2.5pp  -3.8bp n 252  |  -2.6pp  -3.4bp n 177  |  +0.5pp  -0.7bp n 136  |  +0.0pp  -0.0bp n  15  |  +0.4 -
+narrow range FOLLOW             +7.7pp  +2.0bp n 144  |  +9.7pp  +3.8bp n 157  |  -0.7pp  -1.0bp n 179  |  +4.7pp  +1.5bp n 167  |  -5.6pp  -3.4bp n  18  |  +2.5 -
+narrow range FADE               -2.4pp  -2.1bp n 144  |  -2.7pp  -4.2bp n 157  |  +2.2pp  -0.4bp n 179  |  -5.2pp  -4.3bp n 167  |  -2.0pp  -0.4bp n  18  |  -1.0 -
+wide range FOLLOW               +2.4pp  +0.7bp n 144  |  +1.7pp  +0.2bp n 186  |  +0.9pp  +0.4bp n 217  |  -0.9pp  -0.5bp n 154  | +12.3pp  +6.4bp n  20  |  +0.6 -
+wide range FADE                 -0.2pp  -0.7bp n 144  |  -2.7pp  -2.2bp n 186  |  -0.6pp  -0.9bp n 217  |  +5.7pp  +3.4bp n 154  |  -1.7pp  -1.0bp n  20  |  +0.2 -
+opening drive FOLLOW            +1.2pp  -0.7bp n 158  |  +6.9pp  +1.3bp n 200  |  +7.1pp  +3.2bp n 151  |  -1.1pp  -1.2bp n 165  |           -            |  +1.8 -
+opening drive FADE              +1.4pp  +0.1bp n 158  |  -2.6pp  -3.5bp n 200  |  -8.7pp  -6.7bp n 151  |  +2.2pp  +0.5bp n 165  |           -            |  -0.9 -
+5m vs window disagree FOLLOW    -1.2pp  -1.3bp n 237  |  +0.6pp  -0.9bp n 244  |  +1.2pp  +0.0bp n 297  |  -1.5pp  -1.6bp n 283  |  +4.8pp  +2.8bp n  43  |  -0.1 -
+5m vs window disagree FADE      -5.9pp  -4.0bp n 237  |  +1.0pp  -1.1bp n 244  |  -1.3pp  -1.8bp n 297  |  +4.0pp  +2.0bp n 283  |  -0.8pp  -0.9bp n  43  |  -0.3 -
+color+VWAP FOLLOW               +3.6pp  +1.1bp n 684  |  +4.5pp  +1.1bp n 661  |  +4.7pp  +2.0bp n 723  |  +3.4pp  +1.5bp n 736  | +10.0pp  +5.8bp n 105  |  +4.4 STRONG
+color+VWAP FADE                 -2.0pp  -1.8bp n 684  |  -0.1pp  -1.8bp n 661  |  -3.7pp  -3.2bp n 723  |  +0.6pp  -0.2bp n 736  |  -3.4pp  -2.0bp n 105  |  -1.4 -
+color+SMA50 daily FOLLOW        +3.4pp  +1.2bp n 428  |  +2.7pp  +0.4bp n 457  |  +3.8pp  +1.5bp n 469  |  +7.0pp  +3.5bp n 465  | +12.4pp  +7.3bp n  68  |  +3.7 STRONG
+color+SMA50 daily FADE          -4.2pp  -3.2bp n 428  |  +2.0pp  -1.8bp n 457  |  -2.2pp  -3.2bp n 469  |  -2.6pp  -2.4bp n 465  |  -7.0pp  -4.4bp n  68  |  -1.6 -
+color+VWAP+EMA20 FOLLOW         +4.3pp  +1.7bp n 601  |  +4.9pp  +1.2bp n 604  |  +5.1pp  +2.2bp n 636  |  +2.6pp  +1.1bp n 658  |  +9.7pp  +5.5bp n  95  |  +4.2 STRONG
+color+VWAP+EMA20 FADE           -2.4pp  -2.0bp n 601  |  -0.4pp  -2.0bp n 604  |  -3.9pp  -3.4bp n 636  |  +0.7pp  -0.1bp n 658  |  -3.7pp  -2.4bp n  95  |  -1.5 -
+gap-and-go FOLLOW               +0.6pp  -0.3bp n 252  |  +6.6pp  +2.7bp n 233  |  +3.8pp  +1.8bp n 316  |  +2.0pp  +1.1bp n 304  | +11.3pp  +6.6bp n  51  |  +2.1 CANDIDATE
+gap-and-go FADE                 -1.4pp  -1.7bp n 252  |  -3.1pp  -4.1bp n 233  |  -5.2pp  -4.0bp n 316  |  +0.2pp  -0.2bp n 304  |  -7.5pp  -4.5bp n  51  |  -1.6 -
+gap filled FOLLOW               -0.7pp  -1.7bp n 104  | +12.5pp  +5.8bp n  81  |  +7.1pp  +3.3bp n 108  |  -3.7pp  -2.6bp n 120  |           -            |  +1.2 -
+gap filled FADE                 +3.2pp  +1.7bp n 104  |  -6.9pp  -5.5bp n  81  |  -7.4pp  -4.8bp n 108  |  +2.9pp  +1.5bp n 120  |           -            |  -0.6 -
+VWAP stretch >.30% FOLLOW       +4.4pp  +2.1bp n 258  |  +5.2pp  +2.4bp n 183  |  +4.9pp  +2.8bp n 322  |  +0.0pp  -0.1bp n 374  |  +5.9pp  +3.5bp n  51  |  +2.3 -
+VWAP stretch >.30% FADE         -1.7pp  -1.5bp n 258  |  +0.4pp  -1.0bp n 183  |  -5.1pp  -3.8bp n 322  |  +3.4pp  +1.9bp n 374  |  +0.0pp  -0.0bp n  51  |  -0.4 -
+high VIX FOLLOW                 +0.6pp  -0.0bp n 167  |  +6.2pp  +2.9bp n 175  |  -1.2pp  -1.0bp n 193  |  -0.3pp  -0.3bp n 193  |  +5.7pp  +3.4bp n  29  |  +0.7 -
+high VIX FADE                   -6.1pp  -4.0bp n 167  |  -2.0pp  -1.8bp n 175  |  +0.0pp  -0.1bp n 193  |  +4.0pp  +2.1bp n 193  | +12.6pp  +7.6bp n  29  |  -0.5 -
+low VIX FOLLOW                  +6.3pp  +2.0bp n 181  |  +7.4pp  +1.4bp n 175  |  +9.9pp  +4.6bp n 231  |  +7.0pp  +3.3bp n 214  |  +0.0pp  -0.0bp n  21  |  +4.4 STRONG
+low VIX FADE                    -1.0pp  -1.1bp n 181  |  -1.4pp  -2.5bp n 175  |  -5.1pp  -3.8bp n 231  |  -4.7pp  -3.5bp n 214  |  +8.3pp  +4.2bp n  21  |  -1.9 -
+always long                     +1.8pp  +0.4bp n 957  |  +3.8pp  +1.2bp n 999  |  +0.6pp  -0.1bp n 998  |  +5.3pp  +2.7bp n 999  |  +4.1pp  +2.4bp n 140  |  +3.7 STRONG
+coin flip                       +0.4pp  -0.7bp n 957  |  +3.3pp  -0.1bp n 999  |  +0.0pp  -0.9bp n 998  |  +1.6pp  +0.4bp n 999  |  +5.5pp  +2.9bp n 140  |  +1.6 -
+RS (Lucid 8) this check         +5.5pp  +2.3bp n 388  |  +3.9pp  +0.7bp n 373  |  +7.0pp  +3.2bp n 475  |  +5.0pp  +2.5bp n 506  |  +6.2pp  +3.5bp n  71  |  +4.6 STRONG
+null: 92/300 coin-flip rules pass -> ~17.5 false passes expected among 57
+
+=== B. 50K evaluation (INTRA, NQ 28,530, +0.20/-0.30): days to a pass | fees
+   2010-2013: RS live 11.3d $264 | 10:00 coin 12.4d $419 | 10:00 narrow range FADE 60.5d $266 | 10:00 wide range FOLLOW 50.7d $216 | 10:00 color+VWAP+EMA20 FOLLOW 15.8d $277 | 10:00 RS (Lucid 8) this check 21.5d $224 | 10:30 30m color FOLLOW  9.7d $283 | 10:30 |ret|>=0.15% FOLLOW 13.4d $305 | 10:30 |ret|>=0.30% FOLLOW 18.8d $312 | 10:30 |ret|>=0.50% FOLLOW 29.4d $237 | 10:30 vs VWAP FOLLOW 10.5d $269 | 10:30 CLV >.7/<.3 FOLLOW 12.2d $256 | 10:30 strong body FOLLOW 20.8d $218 | 10:30 high volume FOLLOW 36.9d $206 | 10:30 opening drive FOLLOW 56.7d $284 | 10:30 color+VWAP FOLLOW 12.4d $265 | 10:30 color+VWAP+EMA20 FOLLOW 17.1d $302 | 10:30 gap-and-go FOLLOW 27.2d $211 | 10:30 VWAP stretch >.30% FOLLOW 31.7d $242 | 11:00 30m color FOLLOW 10.3d $314 | 11:00 vs VWAP FOLLOW 10.8d $301 | 11:00 vs EMA50 5m FOLLOW  9.4d $281 | 11:00 vs SMA20 5m FOLLOW 10.2d $300 | 11:00 CLV >.7/<.3 FOLLOW 13.5d $300 | 11:00 beyond ON hi/lo FOLLOW 19.1d $271 | 11:00 beyond PDH/PDL FOLLOW 15.8d $242 | 11:00 strong body FOLLOW 19.8d $235 | 11:00 color+VWAP FOLLOW 13.0d $317 | 11:00 color+SMA50 daily FOLLOW 20.3d $287 | 11:00 color+VWAP+EMA20 FOLLOW 13.8d $308 | 11:00 gap-and-go FOLLOW 23.6d $268 | 11:00 low VIX FOLLOW 54.5d $438 | 11:00 always long 10.2d $316 | 11:00 RS (Lucid 8) this check 20.2d $282
+   2014-2017: RS live 11.6d $300 | 10:00 coin  7.9d $282 | 10:00 narrow range FADE 51.9d $248 | 10:00 wide range FOLLOW 44.4d $278 | 10:00 color+VWAP+EMA20 FOLLOW 13.6d $265 | 10:00 RS (Lucid 8) this check 24.1d $282 | 10:30 30m color FOLLOW  9.8d $318 | 10:30 |ret|>=0.15% FOLLOW 12.2d $299 | 10:30 |ret|>=0.30% FOLLOW 17.9d $263 | 10:30 |ret|>=0.50% FOLLOW 35.2d $213 | 10:30 vs VWAP FOLLOW 14.0d $357 | 10:30 CLV >.7/<.3 FOLLOW 13.5d $304 | 10:30 strong body FOLLOW 23.1d $292 | 10:30 high volume FOLLOW 43.6d $289 | 10:30 opening drive FOLLOW 46.1d $290 | 10:30 color+VWAP FOLLOW 14.4d $318 | 10:30 color+VWAP+EMA20 FOLLOW 15.4d $303 | 10:30 gap-and-go FOLLOW 25.3d $214 | 10:30 VWAP stretch >.30% FOLLOW 58.8d $245 | 11:00 30m color FOLLOW  8.4d $267 | 11:00 vs VWAP FOLLOW  9.1d $258 | 11:00 vs EMA50 5m FOLLOW  8.6d $277 | 11:00 vs SMA20 5m FOLLOW  9.2d $279 | 11:00 CLV >.7/<.3 FOLLOW 11.2d $251 | 11:00 beyond ON hi/lo FOLLOW 16.6d $253 | 11:00 beyond PDH/PDL FOLLOW 14.3d $266 | 11:00 strong body FOLLOW 20.3d $238 | 11:00 color+VWAP FOLLOW 10.4d $240 | 11:00 color+SMA50 daily FOLLOW 15.7d $257 | 11:00 color+VWAP+EMA20 FOLLOW 11.6d $250 | 11:00 gap-and-go FOLLOW 28.6d $218 | 11:00 low VIX FOLLOW 46.2d $175 | 11:00 always long  8.5d $316 | 11:00 RS (Lucid 8) this check 23.6d $328
+   2018-2021: RS live  9.7d $284 | 10:00 coin  8.7d $312 | 10:00 narrow range FADE 49.3d $318 | 10:00 wide range FOLLOW 44.6d $232 | 10:00 color+VWAP+EMA20 FOLLOW 14.8d $262 | 10:00 RS (Lucid 8) this check 18.1d $234 | 10:30 30m color FOLLOW  9.2d $295 | 10:30 |ret|>=0.15% FOLLOW 11.7d $297 | 10:30 |ret|>=0.30% FOLLOW 16.0d $271 | 10:30 |ret|>=0.50% FOLLOW 24.1d $240 | 10:30 vs VWAP FOLLOW  9.7d $301 | 10:30 CLV >.7/<.3 FOLLOW 12.0d $292 | 10:30 strong body FOLLOW 18.4d $211 | 10:30 high volume FOLLOW 42.7d $247 | 10:30 opening drive FOLLOW 43.8d $261 | 10:30 color+VWAP FOLLOW 11.8d $294 | 10:30 color+VWAP+EMA20 FOLLOW 15.4d $292 | 10:30 gap-and-go FOLLOW 20.5d $243 | 10:30 VWAP stretch >.30% FOLLOW 33.8d $236 | 11:00 30m color FOLLOW 10.1d $342 | 11:00 vs VWAP FOLLOW 11.2d $364 | 11:00 vs EMA50 5m FOLLOW  9.1d $322 | 11:00 vs SMA20 5m FOLLOW  9.9d $356 | 11:00 CLV >.7/<.3 FOLLOW 12.0d $289 | 11:00 beyond ON hi/lo FOLLOW 19.0d $275 | 11:00 beyond PDH/PDL FOLLOW 17.3d $296 | 11:00 strong body FOLLOW 20.6d $271 | 11:00 color+VWAP FOLLOW 12.5d $335 | 11:00 color+SMA50 daily FOLLOW 17.0d $254 | 11:00 color+VWAP+EMA20 FOLLOW 13.2d $297 | 11:00 gap-and-go FOLLOW 25.4d $270 | 11:00 low VIX FOLLOW 41.8d $237 | 11:00 always long  8.5d $320 | 11:00 RS (Lucid 8) this check 15.2d $253
+   2022-2025: RS live  7.9d $233 | 10:00 coin 10.4d $442 | 10:00 narrow range FADE 55.3d $260 | 10:00 wide range FOLLOW 66.0d $250 | 10:00 color+VWAP+EMA20 FOLLOW 14.8d $279 | 10:00 RS (Lucid 8) this check 13.9d $246 | 10:30 30m color FOLLOW  8.9d $282 | 10:30 |ret|>=0.15% FOLLOW 10.2d $275 | 10:30 |ret|>=0.30% FOLLOW 14.1d $299 | 10:30 |ret|>=0.50% FOLLOW 20.8d $285 | 10:30 vs VWAP FOLLOW 10.8d $325 | 10:30 CLV >.7/<.3 FOLLOW 12.4d $296 | 10:30 strong body FOLLOW 18.9d $264 | 10:30 high volume FOLLOW 84.1d $248 | 10:30 opening drive FOLLOW 45.4d $255 | 10:30 color+VWAP FOLLOW 11.2d $285 | 10:30 color+VWAP+EMA20 FOLLOW 13.0d $285 | 10:30 gap-and-go FOLLOW 22.6d $265 | 10:30 VWAP stretch >.30% FOLLOW 32.4d $302 | 11:00 30m color FOLLOW  8.8d $315 | 11:00 vs VWAP FOLLOW 11.3d $354 | 11:00 vs EMA50 5m FOLLOW  9.8d $369 | 11:00 vs SMA20 5m FOLLOW 10.2d $358 | 11:00 CLV >.7/<.3 FOLLOW 13.4d $381 | 11:00 beyond ON hi/lo FOLLOW 20.0d $336 | 11:00 beyond PDH/PDL FOLLOW 17.2d $320 | 11:00 strong body FOLLOW 22.1d $331 | 11:00 color+VWAP FOLLOW 13.7d $367 | 11:00 color+SMA50 daily FOLLOW 16.2d $287 | 11:00 color+VWAP+EMA20 FOLLOW 14.2d $351 | 11:00 gap-and-go FOLLOW 24.2d $302 | 11:00 low VIX FOLLOW 45.1d $274 | 11:00 always long  8.0d $295 | 11:00 RS (Lucid 8) this check 15.6d $311
