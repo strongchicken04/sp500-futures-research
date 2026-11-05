@@ -95,3 +95,4 @@ GS N VOL long = long low80: hit 51.0 +1.8bp t+1.2 n1744 L.5 16.9 L1 5.3 M1 11.5 
 GS N info = n 2604 oos 2604 mean -0.58bp sd 75bp ridge alpha 100000
 GS assets = GC,SI,ES,ZN,EU,JY,CL days 4288
 gold_session_inqc done in 2293s
+SESSION DONE
