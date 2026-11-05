@@ -1,0 +1,19 @@
+Random-walk null (20 synthetic 1999-2026 series, drift +7.5%/yr, same rules): BOTTOM % | mean 52w return %
+('Z200', 'T0') BOTTOM 19% 52w +6.1% n 254
+('Z200', 'T1') BOTTOM 32% 52w +6.8% n 856
+('Z200', 'T2') BOTTOM 32% 52w +7.4% n 395
+('Z200', 'T3') BOTTOM 34% 52w +6.6% n 782
+('Z200', 'T4') BOTTOM 28% 52w +6.7% n 550
+('Z200', 'T5') BOTTOM 42% 52w +6.5% n 609
+('Z50', 'T0') BOTTOM 22% 52w +7.6% n 628
+('Z50', 'T1') BOTTOM 34% 52w +7.3% n 1249
+('Z50', 'T2') BOTTOM 34% 52w +7.8% n 576
+('Z50', 'T3') BOTTOM 36% 52w +7.2% n 1138
+('Z50', 'T4') BOTTOM 28% 52w +7.5% n 774
+('Z50', 'T5') BOTTOM 43% 52w +7.1% n 883
+('ZDD', 'T0') BOTTOM 20% 52w +7.3% n 652
+('ZDD', 'T1') BOTTOM 34% 52w +7.5% n 1304
+('ZDD', 'T2') BOTTOM 34% 52w +7.6% n 593
+('ZDD', 'T3') BOTTOM 36% 52w +7.3% n 1193
+('ZDD', 'T4') BOTTOM 28% 52w +7.4% n 811
+('ZDD', 'T5') BOTTOM 43% 52w +7.0% n 923

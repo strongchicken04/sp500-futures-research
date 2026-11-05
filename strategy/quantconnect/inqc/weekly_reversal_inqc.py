@@ -30,6 +30,9 @@ import pandas as pd
 # after 13 / 26 / 52 weeks, BOTTOM = share of signals whose week low is not
 # broken by a weekly close in the next 26 weeks, worst drawdown from the entry
 # within 52 weeks; baseline: all weeks (unconditional 13 / 26 / 52-week return).
+# v2: Z50 / ZDD signals from week 52 (v1 started at week 200 for all zones and
+# missed 2000-02). BOTTOM is biased up for any trigger that waits for a bullish
+# candle (random-walk check in results/weekly_reversal_null.txt).
 # Verdict (fixed): a trigger "catches bottoms" only if BOTTOM and the 26- and
 # 52-week mean returns beat T0 of the same zone in BOTH assets.
 
@@ -71,7 +74,7 @@ def signals(w):
             sig = []
             last = -999
             prev_in = False
-            for i in range(200, n - 1):
+            for i in range(200 if z == "Z200" else 52, n - 1):     # v2: Z50 / ZDD from 1 year (2000-02 included)
                 if i - last < 13:
                     prev_in = zz[i]
                     continue
@@ -118,8 +121,8 @@ class WeeklyReversalInQC(QCAlgorithm):
             dates = [str(x)[:10] for x in w.index]
             sig, c, l = signals(w)
             n = len(c)
-            base = {kk: np.mean([c[i + kk] / c[i] - 1 for i in range(200, n - kk)]) * 100 for kk in (13, 26, 52)}
-            base_pos = {kk: np.mean([c[i + kk] > c[i] for i in range(200, n - kk)]) * 100 for kk in (13, 26, 52)}
+            base = {kk: np.mean([c[i + kk] / c[i] - 1 for i in range(52, n - kk)]) * 100 for kk in (13, 26, 52)}
+            base_pos = {kk: np.mean([c[i + kk] > c[i] for i in range(52, n - kk)]) * 100 for kk in (13, 26, 52)}
             self.set_runtime_statistic(f"WR {k} info", f"{dates[0]}..{dates[-1]} weeks {n}; all weeks 13/26/52w: "
                                        f"{base[13]:+.1f}/{base[26]:+.1f}/{base[52]:+.1f}% pos {base_pos[13]:.0f}/{base_pos[26]:.0f}/{base_pos[52]:.0f}%")
             for z in ZONES:
@@ -136,7 +139,7 @@ class WeeklyReversalInQC(QCAlgorithm):
                     cells.append(f"{t}:{len(rows)} b{np.mean(b) * 100:.0f} {m(26)[0]:+.0f}/{m(52)[0]:+.0f}% p{m(52)[1]:.0f} m{min(r[3] for r in rows) * 100:.0f}")
                 self.set_runtime_statistic(f"WR {k} {z} a", " | ".join(cells[:3]))
                 self.set_runtime_statistic(f"WR {k} {z} b", " | ".join(cells[3:]))
-            for z, t in (("Z50", "T2"), ("ZDD", "T1")):
+            for z, t in (("Z50", "T2"), ("Z50", "T5")):
                 rows = stats(sig[(z, t)], c, l, dates)
                 txt = " ".join(f"{dates[i][:7]} {('%+.0f' % (f[52] * 100)) if f[52] is not None else 'na'}%{'' if held else '!'}" for i, f, held, mae in rows)
                 for part in range(0, min(len(txt), 380), 190):
