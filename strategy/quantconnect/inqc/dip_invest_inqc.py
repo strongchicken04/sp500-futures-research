@@ -112,14 +112,14 @@ def ladder(c, roll):
 class DipInvestInQC(QCAlgorithm):
 
     def initialize(self):
-        self.set_start_date(2026, 1, 2)
-        self.set_end_date(2026, 1, 5)
+        self.set_start_date(2026, 10, 26)        # v2: history reaches the end date -> run to today
+        self.set_end_date(2026, 11, 5)
         self.set_cash(100000)
         self.syms = {k: self.add_equity(k, Resolution.DAILY).symbol for k in ("QQQ", "SPY")}
 
     def on_end_of_algorithm(self):
         for k, s in self.syms.items():
-            h = self.history(s, datetime(*START), datetime(2026, 12, 31), Resolution.DAILY)
+            h = self.history(s, datetime(*START), self.time, Resolution.DAILY)
             if h is None or len(h) < 600:
                 self.set_runtime_statistic(f"DI {k}", "no history")
                 continue
@@ -135,25 +135,27 @@ class DipInvestInQC(QCAlgorithm):
             bh = closes[-1] / closes[252]
             RH = rolling_high(closes)
             roll = closes[max(0, n - 252):].max()
-            self.set_runtime_statistic(f"DI {k} info", f"{dates[0]}..{dates[-1]} n{n} B&H x{bh:.2f} CAGR {(bh ** (1 / yrs) - 1) * 100:.1f}% "
-                                       f"now dd {(closes[-1] / roll - 1) * 100:.1f}% vs SMA200 {(closes[-1] / sma[-1] - 1) * 100:+.1f}%")
+            bhc = closes[252:] / closes[252]
+            bhdd = float(np.min(bhc / np.maximum.accumulate(bhc) - 1))
+            up = sma[-1] > sma[-21]
+            self.set_runtime_statistic(f"DI {k} info", f"{dates[0]}..{dates[-1]} B&H x{bh:.2f} CAGR {(bh ** (1 / yrs) - 1) * 100:.1f}% maxDD {bhdd * 100:.0f}% | "
+                                       f"now dd {(closes[-1] / roll - 1) * 100:.1f}% vs SMA200 {(closes[-1] / sma[-1] - 1) * 100:+.1f}% SMA200 {'up' if up else 'down'}")
             for d in DS:
                 cells = []
                 for filt in ("ANY", "UP"):
-                    for trig in ("NOW", "CONF"):
+                    for trig in ("NOW",):                 # v2: CONF ~ NOW in v1, dropped to fit the statistics limit
                         for ex in ("HIGH", "Y1", "HS"):
                             tr, eq, mdd, tim = run(closes, d, filt, trig, ex, sma, RH)
                             if not tr:
-                                cells.append(f"{filt[0]}{trig[0]}{ex[0]}:0")
+                                cells.append(f"{filt}-{ex}:0")
                                 continue
                             rr = [t[2] for t in tr]
                             cagr = (eq ** (1 / yrs) - 1) * 100
-                            cells.append(f"{filt[0]}{trig[0]}{ex[0]}:{len(tr)} w{np.mean(np.array(rr) > 0) * 100:.0f} "
+                            cells.append(f"{filt}-{ex}:{len(tr)} w{np.mean(np.array(rr) > 0) * 100:.0f} "
                                          f"{np.mean(rr) * 100:+.0f}% m{min(t[3] for t in tr) * 100:.0f} c{cagr:.1f} dd{mdd * 100:.0f} t{tim * 100:.0f}")
                 for part in range(0, len(cells), 3):
                     self.set_runtime_statistic(f"DI {k} D{int(d * 100)} {part // 3}", " | ".join(cells[part:part + 3]))
-            for lab, (d, filt, trig, ex) in (("main", (0.10, "UP", "CONF", "HIGH")), ("d20", (0.20, "ANY", "NOW", "HIGH")),
-                                             ("d15hs", (0.15, "ANY", "CONF", "HS"))):
+            for lab, (d, filt, trig, ex) in (("d10hs", (0.10, "ANY", "NOW", "HS")), ("d20", (0.20, "ANY", "NOW", "HIGH"))):
                 tr, eq, mdd, tim = run(closes, d, filt, trig, ex, sma, RH)
                 txt = " ".join(f"{dates[a][:7]}>{dates[b][:7]} {r * 100:+.0f}% m{m * 100:.0f}" for a, b, r, m in tr)
                 for part in range(0, len(txt), 190):
