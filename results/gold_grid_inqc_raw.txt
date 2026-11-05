@@ -61,3 +61,5 @@ GG ASIA 60m MART4 = 0.05 w82 k2 -23/d min-5321 1k2% k2 ev25%/181d/$353 | 0.10 w7
 GG ASIA 60m MART5 = 0.05 w82 k1 -12/d min-2660 1k1% no pass | 0.10 w74 k1 -17/d min-4040 1k1% k1 ev44%/192d/$206 | 0.20 w66 k1 -19/d min-4040 1k2% k1 ev36%/155d/$252 | 0.30 w62 k1 -21/d min-5647 1k2% k1 ev28%/147d/$326 |
 GG days = 2237 2018-2026
 gg_asia done in 701s
+### gg_full 7796dc2be6cc2c872bae4c9e93dbfb2f error: None
+gg_full done in 17s
