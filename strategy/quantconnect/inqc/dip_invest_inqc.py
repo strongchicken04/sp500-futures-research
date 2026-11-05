@@ -109,6 +109,38 @@ def ladder(c, roll):
     return out
 
 
+def overlay(c, roll, core, step=(0.9, 0.8, 0.7)):
+    """v3 (own idea after v2): CORE share always invested, the rest in cash, spent in
+    three equal tranches at -10 / -20 / -30% from the 252-day high; all tranches sold
+    back to cash when the close regains that high. Cash earns 0%. -> (multiple, CAGR, maxDD)."""
+    n = len(c)
+    cash = 1.0 - core
+    units_core = core / c[252]
+    units_dip = 0.0
+    tr = (1.0 - core) / 3.0
+    bought = 0
+    tgt = None
+    eqs = []
+    for i in range(252, n):
+        if tgt is None and c[i] <= roll[i] * step[0]:
+            tgt = roll[i]
+        if tgt is not None:
+            while bought < 3 and c[i] <= tgt * step[bought] and cash > 1e-12:
+                amt = min(tr if bought < 2 else cash, cash)
+                units_dip += amt / c[i]
+                cash -= amt
+                bought += 1
+            if c[i] >= tgt:
+                cash += units_dip * c[i]
+                units_dip, bought, tgt = 0.0, 0, None
+                tr = cash / 3.0
+        eqs.append(units_core * c[i] + units_dip * c[i] + cash)
+    e = np.array(eqs)
+    dd = float(np.min(e / np.maximum.accumulate(e) - 1))
+    yrs = (n - 252) / 252.0
+    return e[-1], (e[-1] ** (1 / yrs) - 1) * 100, dd * 100
+
+
 class DipInvestInQC(QCAlgorithm):
 
     def initialize(self):
@@ -160,6 +192,15 @@ class DipInvestInQC(QCAlgorithm):
                 txt = " ".join(f"{dates[a][:7]}>{dates[b][:7]} {r * 100:+.0f}% m{m * 100:.0f}" for a, b, r, m in tr)
                 for part in range(0, len(txt), 190):
                     self.set_runtime_statistic(f"DI {k} trades {lab} {part // 190}", txt[part:part + 190])
+            cells = []
+            for core in (1.0, 0.7, 0.5, 0.0):
+                m_, cg, dd = overlay(closes, RH, core)
+                cells.append(f"core{int(core * 100)} x{m_:.2f} c{cg:.1f} dd{dd:.0f}")
+            for core in (0.7, 0.5):
+                e = closes[252:] / closes[252] * core + (1 - core)
+                yrs2 = (n - 252) / 252.0
+                cells.append(f"static{int(core * 100)} c{(e[-1] ** (1 / yrs2) - 1) * 100:.1f} dd{float(np.min(e / np.maximum.accumulate(e) - 1)) * 100:.0f}")
+            self.set_runtime_statistic(f"DI {k} overlay", " | ".join(cells))
             lt = ladder(closes, RH)
             txt = " ".join(f"{dates[a][:7]}>{dates[b][:7]} {r * 100:+.0f}% m{m * 100:.0f} b{nb}" for a, b, r, m, nb in lt)
             for part in range(0, len(txt), 190):
