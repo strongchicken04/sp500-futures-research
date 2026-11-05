@@ -1,0 +1,17 @@
+### err None 24
+TM QQQ BH = CAGR 8.1% DD -83% Sh 0.42 in 100% tr/y 0.0 | 99-08 c-13.7 s-0.25 09-17 c21.4 s1.18 18-26 c20.4 s0.90
+TM QQQ DIPT = CAGR 7.0% DD -70% Sh 0.44 in 74% tr/y 6.2 | 99-08 c-8.7 s-0.28 09-17 c13.1 s0.87 18-26 c18.7 s0.94
+TM QQQ RSI2 = CAGR 4.1% DD -14% Sh 0.52 in 12% tr/y 7.9 | 99-08 c2.9 s0.37 09-17 c4.3 s0.57 18-26 c5.1 s0.63
+TM QQQ SMA = CAGR 7.3% DD -56% Sh 0.51 in 74% tr/y 3.5 | 99-08 c-5.0 s-0.21 09-17 c12.0 s0.88 18-26 c16.3 s0.95
+TM QQQ SMA+R = CAGR 9.1% DD -57% Sh 0.56 in 75% tr/y 7.4 | 99-08 c-4.0 s-0.11 09-17 c14.0 s0.90 18-26 c18.8 s0.97
+TM QQQ TSM = CAGR 10.7% DD -42% Sh 0.62 in 80% tr/y 0.3 | 99-08 c-1.2 s0.04 09-17 c16.1 s1.03 18-26 c18.3 s0.88
+TM QQQ VT = CAGR 8.0% DD -25% Sh 0.63 in 74% tr/y 5.5 | 99-08 c-1.6 s-0.08 09-17 c12.3 s0.87 18-26 c14.1 s0.96
+TM QQQ info = 1999-03-10..2026-08-07 days 6896
+TM SPY BH = CAGR 8.4% DD -55% Sh 0.52 in 100% tr/y 0.0 | 99-08 c-3.6 s-0.07 09-17 c15.2 s0.94 18-26 c14.9 s0.82
+TM SPY DIPT = CAGR 7.6% DD -26% Sh 0.65 in 74% tr/y 4.5 | 99-08 c0.9 s0.13 09-17 c10.5 s0.86 18-26 c11.9 s0.89
+TM SPY RSI2 = CAGR 4.0% DD -15% Sh 0.68 in 10% tr/y 7.6 | 99-08 c3.2 s0.66 09-17 c4.3 s0.69 18-26 c4.5 s0.70
+TM SPY SMA = CAGR 7.1% DD -23% Sh 0.65 in 74% tr/y 3.3 | 99-08 c0.6 s0.11 09-17 c10.1 s0.90 18-26 c10.9 s0.89
+TM SPY SMA+R = CAGR 8.9% DD -22% Sh 0.73 in 75% tr/y 6.9 | 99-08 c2.1 s0.24 09-17 c12.2 s0.96 18-26 c13.0 s0.92
+TM SPY TSM = CAGR 7.8% DD -34% Sh 0.61 in 77% tr/y 0.4 | 99-08 c3.2 s0.34 09-17 c10.4 s0.82 18-26 c10.0 s0.64
+TM SPY VT = CAGR 7.3% DD -21% Sh 0.61 in 74% tr/y 5.3 | 99-08 c0.3 s0.09 09-17 c11.1 s0.86 18-26 c10.9 s0.81
+TM SPY info = 1999-01-04..2026-08-07 days 6941
