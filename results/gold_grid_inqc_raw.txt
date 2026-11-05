@@ -323,3 +323,4 @@ GG US 60m MART4 a = 0.05 w85 -10/d m-1179 1k0 nopass | 0.10 w78 -9/d m-1179 1k0 
 GG US 60m MART4 b = 0.30 w66 -12/d m-1431 1k1 k2 51%/73d/$177 | 0.50 w62 -14/d m-2159 1k2 k2 46%/89d/$195 | RAIL w61 -6/d m-1179 1k0 k2 100%/152d/$90
 GG days = 1256 2010-2017
 gg_us_2010 done in 201s
+ALL DONE
