@@ -34,3 +34,4 @@ MN3 H4 |on| top20 -> RTH range ratio = 10-13 x1.44 14-17 x1.67 18-21 x1.86 22-26
 MN3 H5 Mon side10 => 16 = -1.29 -1.01 +11.24 +0.29 t+0.9 n768
 MN3 H5 other side10 => 16 = +2.64 +0.36 +0.81 -3.08 t+0.0 n3283
 midnight_open3_ES done in 284s
+ROUND3 DONE
