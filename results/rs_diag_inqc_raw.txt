@@ -4,3 +4,4 @@ RSD B = -5.3/320 -6.8/293 -2.7/405 -2.4/547 z-3.1
 RSD C = -3.9/319 -8.1/291 -3.9/399 -2.3/546 z-3.3
 RSD same side A=B = 1594/1594
 rs_diag_inqc done in 399s
+RSDIAG DONE
