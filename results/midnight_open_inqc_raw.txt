@@ -97,3 +97,4 @@ MN F5 1000 FOL 20/40 = -3.9 -0.9 +4.4 +3.3 pp z+1.9 n1796
 MN F6 asia1h = -> overnight -10.5 -3.4 -2.6 +1.1 t-1.1 | -> RTH +4.0 -2.6 -0.5 +5.5 t+1.1 n2108
 MN GC info = days 2108
 midnight_open_GC done in 248s
+ALL DONE
