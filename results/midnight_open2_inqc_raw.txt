@@ -19,3 +19,4 @@ MN2 G5 carry -> RTH = +0.7 +0.1 -8.2 -3.9 t-1.8 n3950
 MN2 G5 carry -> overnight = -1.7 +0.6 +1.4 -1.3 t-0.2 n3950
 MN2 info = days 4024 week rows 3934
 midnight_open2_inqc done in 389s
+ROUND2 DONE
