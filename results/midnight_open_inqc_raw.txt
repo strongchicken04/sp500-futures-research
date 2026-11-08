@@ -1,0 +1,15 @@
+  ERROR: 2010-03-04 16:00:00 Runtime Error: list index out of range
+### midnight_open_inqc 2a0fcc87c3b608d55c5be778ac548653 error: 2010-03-04 16:00:00 Runtime Error: list index out of range
+  at _compute
+    out[f&quot;f1_{ln}_{tk}_16&quot;] = s * (C[389] / p - 1) * 1e4
+                                   ~^^^^^
+ in main.py: line 133
+  at _finish
+    self.days.append(self._compute(rec))
+                     ^^^^^^^^^^^^^^^^^^
+ in main.py: line 110
+  at on_data
+    self._finish(t)
+ in main.py: line 100
+
+midnight_open_inqc done in 151s
