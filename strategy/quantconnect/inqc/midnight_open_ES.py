@@ -27,6 +27,7 @@ import math
 #      brackets +0.20/-0.30 and +0.20/-0.40 to 15:55: resolved win minus the
 #      random-walk rate (60.0 / 66.7%), by era, pooled z.
 #   F6 Asia first hour: sign(19:00 - O18) -> return 19:00 -> 09:30 and RTH.
+# v2: fewer than 390 RTH minutes on a day (missing minutes) - indices use the last bar.
 # A finding needs the same sign in all four eras and |t| >= 3 (many tests),
 # and must beat the placebo where one exists.
 
@@ -130,7 +131,7 @@ class MidnightOpenInQC(QCAlgorithm):
                 s = 1 if p > X else (-1 if p < X else 0)
                 if s == 0:
                     continue
-                out[f"f1_{ln}_{tk}_16"] = s * (C[389] / p - 1) * 1e4
+                out[f"f1_{ln}_{tk}_16"] = s * (C[-1] / p - 1) * 1e4
                 if idx[tk] < 149:
                     out[f"f1_{ln}_{tk}_12"] = s * (C[149] / p - 1) * 1e4
         # F3 magnet + F4 touch reaction
@@ -139,14 +140,14 @@ class MidnightOpenInQC(QCAlgorithm):
                 continue
             side = 1 if op > X else -1
             first = None
-            for i in range(0, 389):
+            for i in range(0, len(b)):
                 if L[i] <= X <= H[i]:
                     first = i
                     break
             out[f"t_{ln}"] = first is not None
             if first is not None and 5 <= first <= 330:
                 for k in (15, 30, 60):
-                    j = min(388, first + k)
+                    j = min(len(b) - 1, first + k)
                     out[f"r_{ln}_{k}"] = side * (C[j] / X - 1) * 1e4
         # F5 sprint brackets from 09:31 and 10:00 vs O18
         for tk in ("0931", "1000"):
@@ -158,7 +159,7 @@ class MidnightOpenInQC(QCAlgorithm):
             fu = {}
             for lvl in (20, 30, 40):
                 up = dn = None
-                for i in range(i0 + 1, 385):
+                for i in range(i0 + 1, min(385, len(b))):
                     if up is None and H[i] >= e * (1 + lvl / 1e4):
                         up = i
                     if dn is None and L[i] <= e * (1 - lvl / 1e4):
@@ -181,7 +182,7 @@ class MidnightOpenInQC(QCAlgorithm):
         if r["p19"] is not None:
             a = 1 if r["p19"] > o18 else -1
             out["a_on"] = a * (op / r["p19"] - 1) * 1e4
-            out["a_rth"] = a * (C[389] / op - 1) * 1e4
+            out["a_rth"] = a * (C[-1] / op - 1) * 1e4
         return out
 
     def on_end_of_algorithm(self):
