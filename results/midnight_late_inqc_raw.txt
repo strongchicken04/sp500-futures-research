@@ -1,0 +1,26 @@
+### midnight_late_inqc a96c61708a9df60b62f76a253621505b error: None
+ML NQ E15 AGREE sl0.0 = +0.61 +1.09 +4.74 +2.11 | +2.17bp t+3.0 win 51% net +1.73bp $+4,976/y@3 n2852
+ML NQ E15 AGREE sl0.3 = -0.46 +0.99 +2.19 +2.90 | +1.49bp t+2.6 win 47% net +1.05bp $+3,019/y@3 n2852
+ML NQ E15 AGREE sl0.5 = +0.07 +1.04 +2.79 +2.72 | +1.72bp t+2.8 win 50% net +1.28bp $+3,682/y@3 n2852
+ML NQ E15 ALL sl0.0 = +1.00 +0.36 +3.14 +2.25 | +1.73bp t+2.7 win 51% net +1.29bp $+5,203/y@3 n4012
+ML NQ E15 ALL sl0.3 = -0.53 +0.55 +0.94 +2.51 | +0.94bp t+2.0 win 47% net +0.50bp $+2,010/y@3 n4012
+ML NQ E15 ALL sl0.5 = -0.21 +0.48 +1.00 +2.61 | +1.04bp t+2.0 win 50% net +0.60bp $+2,429/y@3 n4012
+ML NQ E15 BIG sl0.0 = +2.11 +1.08 +5.67 +3.28 | +3.22bp t+3.2 win 52% net +2.78bp $+6,182/y@3 n2209
+ML NQ E15 BIG sl0.3 = -0.42 +1.24 +1.55 +3.88 | +1.78bp t+2.5 win 47% net +1.35bp $+2,994/y@3 n2209
+ML NQ E15 BIG sl0.5 = +0.73 +1.21 +1.74 +3.65 | +2.03bp t+2.6 win 50% net +1.59bp $+3,533/y@3 n2209
+ML NQ E15 BIG+AGREE sl0.0 = +1.10 +1.60 +5.54 +2.74 | +2.86bp t+2.8 win 53% net +2.42bp $+4,552/y@3 n1866
+ML NQ E15 BIG+AGREE sl0.3 = +0.02 +1.32 +2.26 +3.91 | +2.08bp t+2.8 win 48% net +1.65bp $+3,093/y@3 n1866
+ML NQ E15 BIG+AGREE sl0.5 = +0.89 +1.36 +3.10 +3.44 | +2.36bp t+2.8 win 51% net +1.93bp $+3,617/y@3 n1866
+ML NQ E1530 AGREE sl0.0 = +0.75 +1.29 +3.00 -0.47 | +1.07bp t+1.9 win 50% net +0.63bp $+1,801/y@3 n2847
+ML NQ E1530 AGREE sl0.3 = +0.23 +0.86 +1.74 +0.25 | +0.74bp t+1.7 win 48% net +0.30bp $+873/y@3 n2847
+ML NQ E1530 AGREE sl0.5 = +1.02 +1.26 +2.93 -0.26 | +1.17bp t+2.3 win 49% net +0.73bp $+2,096/y@3 n2847
+ML NQ E1530 ALL sl0.0 = +1.13 +0.87 +2.48 -0.98 | +0.81bp t+1.7 win 49% net +0.37bp $+1,500/y@3 n4009
+ML NQ E1530 ALL sl0.3 = +0.51 +0.75 +1.15 -0.40 | +0.47bp t+1.2 win 48% net +0.03bp $+123/y@3 n4009
+ML NQ E1530 ALL sl0.5 = +1.28 +1.02 +1.99 -0.81 | +0.81bp t+1.9 win 49% net +0.37bp $+1,504/y@3 n4009
+ML NQ E1530 BIG sl0.0 = +2.55 +0.90 +3.83 -0.97 | +1.45bp t+1.9 win 51% net +1.01bp $+2,308/y@3 n2276
+ML NQ E1530 BIG sl0.3 = +1.61 +0.99 +1.34 -0.01 | +0.91bp t+1.6 win 48% net +0.47bp $+1,071/y@3 n2276
+ML NQ E1530 BIG sl0.5 = +2.86 +1.30 +2.69 -0.41 | +1.48bp t+2.3 win 50% net +1.04bp $+2,392/y@3 n2276
+ML NQ E1530 BIG+AGREE sl0.0 = +1.59 +1.44 +3.01 -0.16 | +1.36bp t+1.8 win 51% net +0.92bp $+1,785/y@3 n1920
+ML NQ E1530 BIG+AGREE sl0.3 = +0.71 +0.86 +1.29 +0.67 | +0.87bp t+1.5 win 48% net +0.43bp $+837/y@3 n1920
+ML NQ E1530 BIG+AGREE sl0.5 = +2.00 +1.41 +2.79 +0.27 | +1.54bp t+2.3 win 50% net +1.10bp $+2,129/y@3 n1920
+midnight_late_inqc done in 233s
