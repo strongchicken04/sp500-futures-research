@@ -16,3 +16,21 @@ MN3 H5 Mon side10 => 16 = -0.49 -0.47 +19.05 +1.38 t+1.6 n763
 MN3 H5 other side10 => 16 = +4.33 +0.41 +4.31 +0.09 t+1.3 n3262
 MN3 NQ info = days 4025
 midnight_open3_inqc done in 238s
+### midnight_open3_ES b3c6300aebebda746c7b5dab37a18794 error: None
+MN3 ES info = days 4051
+MN3 H1 O18->10 => 15-16 = +1.15 -0.50 -1.19 -0.21 t-0.3 n4016
+MN3 H1 O18->10 => 15:30-16 = +1.62 -0.65 -0.69 -0.64 t-0.3 n4016
+MN3 H1 PDC->10 => 15-16 = +0.91 +0.08 -1.23 +0.91 t+0.3 n4006
+MN3 H1 PDC->10 => 15:30-16 (Gao) = +1.51 -0.44 -1.15 +0.06 t-0.0 n4006
+MN3 H2 O18->15 => last60 = +1.30 +0.81 +1.53 +1.92 t+2.4 n4031
+MN3 H2 O18->15:30 => last30 = +2.07 +0.65 +1.60 +0.05 t+2.2 n4022
+MN3 H2 open->15 => last60 (ctl) = +1.46 +0.63 +1.20 +0.84 t+1.7 n4010
+MN3 H2 open->15:30 => last30 (ctl) = +3.03 +0.73 +0.91 -0.51 t+2.0 n4013
+MN3 H3 Asia => London = -5.05 -1.33 +1.10 -1.24 t-2.4 n3950
+MN3 H3 Asia => RTH = +7.01 -0.07 +3.57 -3.28 t+1.2 n3950
+MN3 H3 London => RTH = +1.84 +3.25 +0.94 +1.16 t+1.4 n3969
+MN3 H4 |asia| top20 -> RTH range ratio = 10-13 x1.53 14-17 x1.56 18-21 x1.94 22-26 x1.50
+MN3 H4 |on| top20 -> RTH range ratio = 10-13 x1.44 14-17 x1.67 18-21 x1.86 22-26 x1.48
+MN3 H5 Mon side10 => 16 = -1.29 -1.01 +11.24 +0.29 t+0.9 n768
+MN3 H5 other side10 => 16 = +2.64 +0.36 +0.81 -3.08 t+0.0 n3283
+midnight_open3_ES done in 284s
