@@ -5,3 +5,11 @@ RSD C = -3.9/319 -8.1/291 -3.9/399 -2.3/546 z-3.3
 RSD same side A=B = 1594/1594
 rs_diag_inqc done in 399s
 RSDIAG DONE
+### rs_diag_inqc db8d32fa5060f2064a4dda157a53856d error: None
+RSD A = +6.9/320 +2.4/295 +6.5/400 +5.8/549 z+4.5
+RSD B = +6.9/320 +2.4/295 +6.5/400 +5.8/549 z+4.5
+RSD B against O18 = +8.3/82 +2.3/53 +9.0/87 +5.1/129 z+2.4
+RSD B agree O18 = +6.4/238 +2.4/242 +5.8/313 +6.0/420 z+3.8
+RSD C = +5.2/319 +3.0/292 +4.4/396 +5.7/548 z+3.8
+RSD same side A=B = 1594/1594
+rs_diag_inqc done in 405s
