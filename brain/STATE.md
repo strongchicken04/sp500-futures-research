@@ -1,7 +1,7 @@
 # Brain state
 
 heartbeat: 2026-11-04 (night shifts PAUSED by the owner 2026-11-04: trigger trig_01B4r87kDhBbXX4qsUwAEPse disabled; resume when the owner answers)
-last shift: 2026-11-04/05 night (owner asked; report brain/reports/2026-11-05.md: gold sessions + gold grid; trigger still paused)
+last shift: 2026-11-08/09 night (owner asked; report brain/reports/2026-11-09.md: Czech midnight open - nothing of its own; RS re-confirmed in-QC; trigger still paused)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-28/29 (report brain/reports/2026-10-29.md):
