@@ -24,3 +24,29 @@ ML NQ E1530 BIG+AGREE sl0.0 = +1.59 +1.44 +3.01 -0.16 | +1.36bp t+1.8 win 51% ne
 ML NQ E1530 BIG+AGREE sl0.3 = +0.71 +0.86 +1.29 +0.67 | +0.87bp t+1.5 win 48% net +0.43bp $+837/y@3 n1920
 ML NQ E1530 BIG+AGREE sl0.5 = +2.00 +1.41 +2.79 +0.27 | +1.54bp t+2.3 win 50% net +1.10bp $+2,129/y@3 n1920
 midnight_late_inqc done in 233s
+### midnight_late_ES 94cb8ef2eae489fa22ec905f97c6a9c5 error: None
+ML ES E15 AGREE sl0.0 = +2.35 +1.21 +1.75 +1.54 | +1.70bp t+2.6 win 49% net +0.97bp $+1,617/y@3 n2790
+ML ES E15 AGREE sl0.3 = +0.18 +1.14 +0.34 +1.77 | +0.91bp t+1.8 win 46% net +0.17bp $+287/y@3 n2790
+ML ES E15 AGREE sl0.5 = +1.35 +1.16 +0.93 +1.74 | +1.32bp t+2.3 win 48% net +0.58bp $+975/y@3 n2790
+ML ES E15 ALL sl0.0 = +1.45 +0.69 +1.09 +1.69 | +1.25bp t+2.2 win 49% net +0.51bp $+1,235/y@3 n4028
+ML ES E15 ALL sl0.3 = -0.34 +0.50 -0.19 +1.67 | +0.46bp t+1.1 win 46% net -0.27bp $-662/y@3 n4028
+ML ES E15 ALL sl0.5 = +0.21 +0.51 -0.12 +2.04 | +0.71bp t+1.5 win 48% net -0.02bp $-59/y@3 n4028
+ML ES E15 BIG sl0.0 = +3.94 +1.04 +1.14 +1.61 | +1.97bp t+1.9 win 49% net +1.23bp $+1,368/y@3 n1848
+ML ES E15 BIG sl0.3 = +0.64 +0.83 -1.25 +1.73 | +0.54bp t+0.8 win 44% net -0.20bp $-219/y@3 n1848
+ML ES E15 BIG sl0.5 = +2.85 +0.92 -1.40 +1.89 | +1.12bp t+1.4 win 47% net +0.38bp $+424/y@3 n1848
+ML ES E15 BIG+AGREE sl0.0 = +4.50 +0.76 +0.72 +2.28 | +2.15bp t+2.1 win 49% net +1.41bp $+1,320/y@3 n1560
+ML ES E15 BIG+AGREE sl0.3 = +0.80 +0.50 -1.11 +2.51 | +0.80bp t+1.1 win 44% net +0.07bp $+65/y@3 n1560
+ML ES E15 BIG+AGREE sl0.5 = +3.14 +0.64 -0.30 +2.29 | +1.54bp t+1.8 win 47% net +0.80bp $+750/y@3 n1560
+ML ES E1530 AGREE sl0.0 = +3.20 +0.62 +2.01 -0.57 | +1.20bp t+2.4 win 50% net +0.46bp $+766/y@3 n2774
+ML ES E1530 AGREE sl0.3 = +1.95 +0.22 +1.73 -0.13 | +0.87bp t+2.0 win 48% net +0.14bp $+231/y@3 n2774
+ML ES E1530 AGREE sl0.5 = +2.74 +0.53 +1.86 -0.61 | +1.02bp t+2.2 win 49% net +0.28bp $+473/y@3 n2774
+ML ES E1530 ALL sl0.0 = +2.17 +0.45 +1.02 -0.11 | +0.84bp t+1.9 win 49% net +0.10bp $+245/y@3 n4018
+ML ES E1530 ALL sl0.3 = +1.45 +0.20 +0.72 +0.17 | +0.62bp t+1.7 win 48% net -0.12bp $-288/y@3 n4018
+ML ES E1530 ALL sl0.5 = +2.10 +0.51 +0.89 -0.02 | +0.83bp t+2.2 win 49% net +0.10bp $+230/y@3 n4018
+ML ES E1530 BIG sl0.0 = +5.07 +1.51 +1.39 -0.25 | +1.80bp t+2.3 win 50% net +1.07bp $+1,229/y@3 n1919
+ML ES E1530 BIG sl0.3 = +2.95 +1.28 +0.51 -0.10 | +1.06bp t+1.7 win 46% net +0.32bp $+370/y@3 n1919
+ML ES E1530 BIG sl0.5 = +4.38 +1.63 +0.89 -0.11 | +1.57bp t+2.4 win 49% net +0.83bp $+959/y@3 n1919
+ML ES E1530 BIG+AGREE sl0.0 = +4.54 +2.09 +1.42 +0.04 | +1.86bp t+2.4 win 50% net +1.12bp $+1,092/y@3 n1625
+ML ES E1530 BIG+AGREE sl0.3 = +2.44 +1.28 +1.13 +0.45 | +1.25bp t+1.9 win 47% net +0.52bp $+504/y@3 n1625
+ML ES E1530 BIG+AGREE sl0.5 = +3.62 +1.83 +1.17 +0.07 | +1.53bp t+2.2 win 49% net +0.80bp $+779/y@3 n1625
+midnight_late_ES done in 244s
