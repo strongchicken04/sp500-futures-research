@@ -13,3 +13,4 @@ RSD B agree O18 = +6.4/238 +2.4/242 +5.8/313 +6.0/420 z+3.8
 RSD C = +5.2/319 +3.0/292 +4.4/396 +5.7/548 z+3.8
 RSD same side A=B = 1594/1594
 rs_diag_inqc done in 405s
+RSDIAG2 DONE
