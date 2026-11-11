@@ -39,9 +39,9 @@ END = (2026, 12, 31)
 WIN0 = "2020-08-10"
 PRICE = 28530.0
 TP_PT, SL_PT = 40.0, 75.0
-# v3 (owner 2026-11-11 "what if TP were $625"): TP 31.25 pt ($625 per NQ) and 53.5 pt ($625 net per
-# 6-MNQ position: (625 + 6 x 2.5) / 12 -> two winning days = the $1,250 target at exactly 50%).
-TPS = {"40": 40.0, "31": 31.25, "53": 53.5}
+# v4 (owner 2026-11-11: "test SL $1,000 and TP $625", per NQ like the original $800 / $1,500):
+# TP 31.25 pt / SL 50 pt vs the original 40 / 75; sizes 3-10 MNQ (a 50-pt stop fits up to 9 MNQ).
+TPS = {"40/75": (40.0, 75.0), "31/50": (31.25, 50.0)}
 KEYS = [ex + tk for ex in ("PTS", "PCT") for tk in TPS]
 MNQ_PV, MNQ_COST = 2.0, 2.5
 FEE = 60.0
@@ -131,8 +131,8 @@ class Vault25kInQC(QCAlgorithm):
             for ex in self.pos:
                 if self.pos[ex] is not None or self.ntoday[ex] >= 3:
                     continue
-                tpp = TPS[ex[3:]]
-                tpd, sld = (tpp, SL_PT) if ex.startswith("PTS") else (cc * tpp / PRICE, cc * SL_PT / PRICE)
+                tpp, slp = TPS[ex[3:]]
+                tpd, sld = (tpp, slp) if ex.startswith("PTS") else (cc * tpp / PRICE, cc * slp / PRICE)
                 scale = 1.0 if ex.startswith("PTS") else PRICE / cc
                 self.pos[ex] = {"e": cc, "tp": cc + tpd, "sl": cc - sld, "tpd": tpd * scale, "sld": sld * scale, "scale": scale}
                 self.ntoday[ex] += 1
@@ -194,11 +194,11 @@ class Vault25kInQC(QCAlgorithm):
         n_tr = {ex: sum(len(v) for v in self.days[ex].values()) for ex in self.days}
         self.set_runtime_statistic("V25 info", f"{cal[0]}..{cal[-1]} days {len(cal)} trades " + " ".join(f"{k} {v}" for k, v in n_tr.items()))
         # v2 output: the full speed / cost frontier (day stop dropped: it changed nothing in v1)
-        schemes = [f"FIX{n}" for n in (3, 4, 5, 6, 7, 8, 10)]
+        schemes = [f"FIX{n}" for n in (3, 4, 5, 6, 7, 8, 9, 10)]
         for ex in KEYS:
             seq = [self.days[ex].get(d, []) for d in cal]
             for sc in schemes:
-                if ex.startswith("PTS") and sc != "FIX6":
+                if ex.startswith("PTS") and sc not in ("FIX6", "FIX9"):
                     continue
                 cells = []
                 for maxt in (1, 2, 3):
