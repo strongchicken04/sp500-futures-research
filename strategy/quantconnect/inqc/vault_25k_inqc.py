@@ -27,6 +27,8 @@ import math
 #     win fits the room), size just to finish (+$20).
 #   Management: max trades a day 1 / 2 / 3; day stop after +$X profit (none /
 #     +$400 / +$600) - the consistency rule makes one huge day useless.
+# v2 output: per scheme and max trades / day: pass per attempt / mean trading days to a pass /
+#   fees / share of start days that pass within 250 days.
 # Output: per variant pass per attempt, mean trading days to a pass, mean
 #   evaluations bought, mean fees; ranked by fees, then days. Starts every
 #   trading day of the window with >= 120 days left; an attempt chain stops
@@ -186,35 +188,20 @@ class Vault25kInQC(QCAlgorithm):
         cal = sorted(set(self.cal))
         n_tr = {ex: sum(len(v) for v in self.days[ex].values()) for ex in self.days}
         self.set_runtime_statistic("V25 info", f"{cal[0]}..{cal[-1]} days {len(cal)} trades PTS {n_tr['PTS']} PCT {n_tr['PCT']}")
-        schemes = [f"FIX{n}" for n in (1, 2, 3, 4, 5, 6, 7, 8, 10)] + ["ROOM1", "ROOM2"]
+        # v2 output: the full speed / cost frontier (day stop dropped: it changed nothing in v1)
+        schemes = [(f"FIX{n}", False) for n in (1, 2, 3, 4, 5, 6, 7, 8, 10)] + [("ROOM2", False), ("ROOM2", True), ("ROOM1", True)]
         for ex in ("PTS", "PCT"):
             seq = [self.days[ex].get(d, []) for d in cal]
-            rows = []
-            for sc in schemes:
-                for fin in (False, True):
-                    if fin and sc.startswith("FIX"):
-                        continue
-                    for maxt in (1, 2, 3):
-                        for ds in (0, 400, 600):
-                            res = [self._attempt_chain(seq, s0, sc, fin, maxt, ds) for s0 in range(0, len(seq) - 120)]
-                            ok = [r for r in res if r[2]]
-                            if not res:
-                                continue
-                            evals = sum(r[1] for r in res) / len(res)
-                            passes = len(ok)
-                            ppa = passes / sum(r[1] for r in res) * 100
-                            dd = sum(r[0] for r in ok) / len(ok) if ok else 999
-                            fee = evals * FEE
-                            share = passes / len(res) * 100
-                            rows.append((fee if share > 50 else 1e9, dd, f"{sc}{'+FIN' if fin else ''} t{maxt} ds{ds}",
-                                         ppa, dd, evals, fee, share))
-            rows.sort()
-            for j, r in enumerate(rows[:12]):
-                self.set_runtime_statistic(f"V25 {ex} top{j:02d} {r[2]}", f"pass/att {r[3]:.0f}% {r[4]:.1f}d evals {r[5]:.2f} ${r[6]:.0f} chains passed {r[7]:.0f}%")
-            ref = {f"FIX1 t3 ds0", "FIX3 t3 ds0", "FIX10 t3 ds0", "ROOM1 t3 ds0", "ROOM1+FIN t3 ds0"}
-            for r in rows:
-                if r[2] in ref:
-                    self.set_runtime_statistic(f"V25 {ex} ref {r[2]}", f"pass/att {r[3]:.0f}% {r[4]:.1f}d evals {r[5]:.2f} ${r[6]:.0f} chains passed {r[7]:.0f}%")
+            for sc, fin in schemes:
+                cells = []
+                for maxt in (1, 2, 3):
+                    res = [self._attempt_chain(seq, s0, sc, fin, maxt, 0) for s0 in range(0, len(seq) - 120)]
+                    ok = [r for r in res if r[2]]
+                    evals = sum(r[1] for r in res) / len(res)
+                    ppa = len(ok) / sum(r[1] for r in res) * 100
+                    dd = sum(r[0] for r in ok) / len(ok) if ok else 999
+                    cells.append(f"t{maxt} {ppa:.0f}%/{dd:.0f}d/${evals * FEE:.0f}/{len(ok) / len(res) * 100:.0f}%")
+                self.set_runtime_statistic(f"V25 {ex} {sc}{'+FIN' if fin else ''}", " | ".join(cells))
             # per-trade stats of the signal in the window
             pts = [x[0] for v in self.days[ex].values() for x in v]
             if pts:
