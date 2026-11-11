@@ -1,0 +1,21 @@
+### vault break v1 597e9373968d7e065f19a9d70a194fac err None
+VB DRIFT K0.00 C1000 PCT = 249/y win 66.0% $+18/tr t+1.1 $+4,486/y maxDD $-52,958 worst day $-6,010 | +44 +2 -6 +30
+VB DRIFT K0.00 C1000 PTS = 245/y win 58.4% $+4/tr t+0.3 $+965/y maxDD $-41,810 worst day $-4,215 | -6 +0 +2 +17
+VB LONG K0.20 C0930 PCT = 297/y win 65.9% $+55/tr t+3.8 $+16,430/y maxDD $-28,458 worst day $-5,238 | +35 +65 +69 +53
+VB LONG K0.20 C0930 PTS = 185/y win 61.4% $+47/tr t+3.4 $+8,772/y maxDD $-20,695 worst day $-4,675 | -8 +7 +66 +74
+VB LONG K0.20 C1000 PCT = 280/y win 65.3% $+50/tr t+3.4 $+13,886/y maxDD $-45,989 worst day $-4,545 | +19 +82 +63 +40
+VB LONG K0.20 C1000 PTS = 174/y win 60.1% $+30/tr t+2.2 $+5,269/y maxDD $-15,035 worst day $-4,545 | -13 +3 +50 +47
+VB LONG K0.30 C0930 PCT = 246/y win 66.3% $+62/tr t+3.9 $+15,258/y maxDD $-45,647 worst day $-4,545 | +58 +78 +51 +63
+VB LONG K0.30 C0930 PTS = 154/y win 61.6% $+56/tr t+3.8 $+8,675/y maxDD $-18,520 worst day $-4,545 | -14 +8 +101 +76
+VB LONG K0.30 C1000 PCT = 231/y win 65.5% $+53/tr t+3.3 $+12,244/y maxDD $-37,153 worst day $-4,545 | +39 +93 +44 +45
+VB LONG K0.30 C1000 PCT eval = pass/att 32% 15 trading-day seq $286
+VB LONG K0.30 C1000 PCT years $ = 10:-1386 11:+26942 12:+15097 13:-3824 14:+19392 15:+16785 16:-723 17:+39080 18:-11158 19:-10036 20:+14022 21:+50901 22:+11685 23:+34116 24:-13065 25:+24309 26:-3991
+VB LONG K0.30 C1000 PTS = 145/y win 60.1% $+37/tr t+2.5 $+5,387/y maxDD $-15,200 worst day $-4,545 | -14 -2 +76 +51
+VB LONG K0.30 C1000 PTS eval = pass/att 37% 52 trading-day seq $243
+VB LONG K0.30 C1000 PTS years $ = 10:-2125 11:-1650 12:+125 13:-2065 14:-2505 15:+655 16:-4825 17:+5730 18:+5455 19:+445 20:+17470 21:+23790 22:+14100 23:+12530 24:-990 25:+27830 26:-2385
+VB LONG K0.40 C0930 PCT = 198/y win 66.3% $+61/tr t+3.5 $+12,034/y maxDD $-27,051 worst day $-4,545 | +45 +46 +55 +88
+VB LONG K0.40 C0930 PTS = 125/y win 62.3% $+69/tr t+4.2 $+8,595/y maxDD $-13,555 worst day $-4,545 | -11 -3 +82 +122
+VB LONG K0.40 C1000 PCT = 187/y win 65.3% $+51/tr t+2.9 $+9,630/y maxDD $-29,354 worst day $-4,545 | +35 +58 +48 +62
+VB LONG K0.40 C1000 PTS = 119/y win 60.9% $+48/tr t+2.9 $+5,650/y maxDD $-16,115 worst day $-4,545 | -14 -14 +69 +85
+VB SHORT K0.30 C1000 PCT = 208/y win 64.7% $+9/tr t+0.5 $+1,799/y maxDD $-47,280 worst day $-6,869 | -35 +40 +32 +1
+VB SHORT K0.30 C1000 PTS = 136/y win 56.1% $+14/tr t+0.8 $+1,942/y maxDD $-34,025 worst day $-6,035 | -14 -18 +64 +6
