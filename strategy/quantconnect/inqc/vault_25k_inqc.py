@@ -42,6 +42,9 @@ TP_PT, SL_PT = 40.0, 75.0
 # v4 (owner 2026-11-11: "test SL $1,000 and TP $625", per NQ like the original $800 / $1,500):
 # TP 31.25 pt / SL 50 pt vs the original 40 / 75; sizes 3-10 MNQ (a 50-pt stop fits up to 9 MNQ).
 TPS = {"40/75": (40.0, 75.0), "31/50": (31.25, 50.0)}
+# v5 (owner: "why 20 days if 1 loss = blow and 2 wins = pass?"): path diagnostics for PCT 40/75 6 MNQ
+# and PCT 31/50 9 MNQ, first trade of the day: share of days with a signal, wins needed, signal
+# days per passing / failed attempt, attempts per pass.
 KEYS = [ex + tk for ex in ("PTS", "PCT") for tk in TPS]
 MNQ_PV, MNQ_COST = 2.0, 2.5
 FEE = 60.0
@@ -194,21 +197,44 @@ class Vault25kInQC(QCAlgorithm):
         n_tr = {ex: sum(len(v) for v in self.days[ex].values()) for ex in self.days}
         self.set_runtime_statistic("V25 info", f"{cal[0]}..{cal[-1]} days {len(cal)} trades " + " ".join(f"{k} {v}" for k, v in n_tr.items()))
         # v2 output: the full speed / cost frontier (day stop dropped: it changed nothing in v1)
-        schemes = [f"FIX{n}" for n in (3, 4, 5, 6, 7, 8, 9, 10)]
-        for ex in KEYS:
+        for ex, n in (("PCT40/75", 6), ("PCT31/50", 9), ("PTS40/75", 6), ("PTS31/50", 9)):
             seq = [self.days[ex].get(d, []) for d in cal]
-            for sc in schemes:
-                if ex.startswith("PTS") and sc not in ("FIX6", "FIX9"):
-                    continue
-                cells = []
-                for maxt in (1, 2, 3):
-                    res = [self._attempt_chain(seq, s0, sc, False, maxt, 0) for s0 in range(0, len(seq) - 120)]
-                    ok = [r for r in res if r[2]]
-                    evals = sum(r[1] for r in res) / len(res)
-                    ppa = len(ok) / sum(r[1] for r in res) * 100
-                    dd = sum(r[0] for r in ok) / len(ok) if ok else 999
-                    cells.append(f"t{maxt} {ppa:.0f}%/{dd:.0f}d/${evals * FEE:.0f}")
-                self.set_runtime_statistic(f"V25 {ex} {sc}", " | ".join(cells))
+            sig_share = sum(1 for d in seq if d) / len(seq) * 100
+            first = [d[0] for d in seq if d]
+            win1 = sum(1 for x in first if x[0] > 0) / len(first) * 100
+            w_usd = first[0][2] * MNQ_PV * n - MNQ_COST * n
+            l_usd = first[0][1] * MNQ_PV * n + MNQ_COST * n
+            # walk every attempt (start each day) and record its length in days / signal days and outcome
+            att = []
+            for s0 in range(0, len(seq) - 120):
+                i, eq, peak, best, td, sd = s0, 0.0, 0.0, 0.0, 0, 0
+                out = None
+                while i < len(seq) and i - s0 < 250:
+                    day = seq[i]
+                    i += 1
+                    line = 100.0 if peak >= 1100.0 else peak - 1000.0
+                    if day:
+                        sd += 1
+                        r = eq + day[0][0] * MNQ_PV * n - MNQ_COST * n
+                        if r <= line:
+                            out = "bust"
+                            break
+                        best = max(best, r - eq)
+                        eq = r
+                        td += 1
+                        peak = max(peak, eq)
+                        if eq >= 1250.0 and best <= 0.5 * eq and td >= 2:
+                            out = "pass"
+                            break
+                if out:
+                    att.append((out, i - s0, sd))
+            ps = [a for a in att if a[0] == "pass"]
+            bs = [a for a in att if a[0] == "bust"]
+            self.set_runtime_statistic(f"V25D {ex} {n}MNQ",
+                f"days with a signal {sig_share:.0f}% | 1st-trade win {win1:.1f}% | win ${first[0][2] * MNQ_PV * n - MNQ_COST * n:.0f}"
+                f" | single attempt: pass {len(ps) / len(att) * 100:.0f}% bust {len(bs) / len(att) * 100:.0f}%"
+                f" | pass takes {sum(a[1] for a in ps) / len(ps):.1f} d ({sum(a[2] for a in ps) / len(ps):.1f} signal d)"
+                f" | bust takes {sum(a[1] for a in bs) / len(bs):.1f} d ({sum(a[2] for a in bs) / len(bs):.1f} signal d)")
             # per-trade stats of the signal in the window
             pts = [x[0] for v in self.days[ex].values() for x in v]
             if pts:
