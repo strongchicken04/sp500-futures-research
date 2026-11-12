@@ -13,3 +13,31 @@ err 2014-01-13 11:26:00 Runtime Error: &#039;&gt;&#039; not supported between in
        ^^^^^^^^^^^^
  in main.py: line 196
 
+### pullback exits v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+P DRIFT = 248/y win 55% gross +1.11pt -0.001R $-1/tr t-0.0 risk med 13.7pt | $ by era -103 +62 -21 +48
+P DRIFT 6y = +0.072R win 56% | E25 FIX1 41%/65d/$143 | FIX2 37%/29d/$161 | FIX4 29%/19d/$201
+P HOLD = 112/y win 26% gross -0.59pt -0.207R $-74/tr t-1.4 risk med 8.5pt | $ by era -107 -33 -88 -69
+P HOLD 6y = -0.092R win 27% | E25 RISK150 22%/134d/$179 | RISK300 15%/121d/$293 | RISK500 14%/112d/$384
+P LIT = 105/y win 77% gross +0.30pt -0.105R $-66/tr t-3.2 risk med 9.2pt | $ by era -108 -81 -76 -17
+P LIT 6y = +0.003R win 77% | E25 RISK150 7%/174d/$95 | RISK300 8%/130d/$173 | RISK500 22%/119d/$213
+P NOSTOP = 113/y win 53% gross +1.76pt -0.055R $-48/tr t-0.5 risk med 8.5pt | $ by era -294 -37 -228 +299
+P NOSTOP 6y = +0.362R win 57% | E25 FIX1 58%/93d/$102 | FIX2 42%/51d/$142 | FIX4 38%/34d/$159
+P R1 = 112/y win 51% gross -0.05pt -0.136R $-90/tr t-2.8 risk med 8.5pt | $ by era -173 -45 -117 -36
+P R1 6y = -0.013R win 52% | E25 RISK150 16%/138d/$159 | RISK300 24%/93d/$202 | RISK500 35%/44d/$169
+P R15 = 112/y win 41% gross -0.60pt -0.149R $-102/tr t-2.8 risk med 8.5pt | $ by era -138 -53 -136 -83
+P R15 6y = -0.026R win 43% | E25 RISK150 12%/133d/$173 | RISK300 39%/64d/$153 | RISK500 37%/37d/$161
+P R2 = 112/y win 37% gross -0.62pt -0.120R $-93/tr t-2.3 risk med 8.5pt | $ by era -85 -43 -165 -78
+P R2 6y = +0.006R win 38% | E25 RISK150 29%/119d/$148 | RISK300 38%/57d/$159 | RISK500 31%/46d/$194
+P T1 = 113/y win 51% gross -0.10pt -0.112R $-81/tr t-2.2 risk med 10.5pt | $ by era -193 -32 -40 -66
+P T1 6y = -0.005R win 52% | E25 RISK150 14%/148d/$146 | RISK300 26%/101d/$195 | RISK500 36%/49d/$167
+P T2 = 113/y win 39% gross -0.35pt -0.114R $-90/tr t-2.1 risk med 10.5pt | $ by era -158 -89 -55 -66
+P T2 6y = +0.022R win 40% | E25 RISK150 26%/118d/$159 | RISK300 35%/64d/$172 | RISK500 30%/50d/$201
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
