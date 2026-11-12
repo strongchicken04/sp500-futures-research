@@ -1,0 +1,32 @@
+### vwap_adx + onorb v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+S2 ADX14 VWMID max1 1455CT = 98/y win 77% +0.2pt -0.131R $-77/tr t-4.1 $-7,557/y DD $-149,609 | -143 -111 -46 -22
+S2 ADX14 VWMID max1 1555CT = 104/y win 77% +0.3pt -0.129R $-73/tr t-4.1 $-7,618/y DD $-153,872 | -136 -119 -46 -7
+S2 ADX14 VWMID max3 1455CT = 218/y win 77% +0.0pt -0.131R $-77/tr t-5.9 $-16,866/y DD $-302,728 | -148 -85 -57 -34
+S2 ADX14 VWMID max3 1555CT = 235/y win 77% +0.0pt -0.133R $-79/tr t-6.1 $-18,628/y DD $-332,165 | -138 -105 -62 -28
+S2 ADX14 VWRTH max1 1455CT = 111/y win 77% +0.3pt -0.107R $-66/tr t-3.4 $-7,375/y DD $-141,011 | -105 -77 -72 -21
+S2 ADX14 VWRTH max1 1555CT = 117/y win 77% +0.4pt -0.106R $-61/tr t-3.2 $-7,175/y DD $-140,696 | -108 -71 -68 -10
+S2 ADX14 VWRTH max3 1455CT = 251/y win 78% +0.3pt -0.114R $-61/tr t-5.3 $-15,186/y DD $-271,841 | -103 -87 -47 -19
+S2 ADX14 VWRTH max3 1555CT = 270/y win 78% +0.3pt -0.112R $-59/tr t-5.3 $-15,972/y DD $-293,740 | -108 -96 -41 -7
+S2 ADX7 VWMID max1 1455CT = 103/y win 72% +0.3pt -0.145R $-73/tr t-4.1 $-7,514/y DD $-155,230 | -153 -107 -55 +9
+S2 ADX7 VWMID max1 1555CT = 109/y win 72% +0.4pt -0.145R $-71/tr t-4.1 $-7,747/y DD $-164,832 | -157 -115 -49 +21
+S2 ADX7 VWMID max3 1455CT = 244/y win 74% +0.0pt -0.152R $-81/tr t-7.0 $-19,697/y DD $-358,911 | -168 -92 -52 -26
+S2 ADX7 VWMID max3 1555CT = 262/y win 73% +0.1pt -0.159R $-85/tr t-7.4 $-22,225/y DD $-403,727 | -173 -109 -59 -14
+S2 ADX7 VWRTH max1 1455CT = 116/y win 73% +0.4pt -0.141R $-71/tr t-4.5 $-8,256/y DD $-167,451 | -158 -85 -42 -14
+S2 ADX7 VWRTH max1 1555CT = 121/y win 72% +0.5pt -0.143R $-68/tr t-4.4 $-8,267/y DD $-169,917 | -159 -82 -44 -3
+S2 ADX7 VWRTH max3 1455CT = 281/y win 74% +0.3pt -0.149R $-72/tr t-7.7 $-20,093/y DD $-359,742 | -159 -95 -33 -13
+S2 ADX7 VWRTH max3 1555CT = 298/y win 74% +0.3pt -0.150R $-73/tr t-7.8 $-21,694/y DD $-386,782 | -162 -103 -35 -6
+S3 ON00CT ATRFULL MAIN = 97/y win 49% +8.8pt +0.101R $+300/tr t+3.6 $+28,979/y DD $-84,576 | -119 +193 +264 +750
+S3 ON00CT ATRRTH MAIN = 97/y win 46% +7.2pt +0.105R $+250/tr t+3.1 $+24,131/y DD $-78,124 | -83 +192 +222 +584
+S3 ON23CT ATRFULL MAIN = 97/y win 49% +8.5pt +0.102R $+301/tr t+3.6 $+29,076/y DD $-82,445 | -84 +192 +273 +716
+S3 ON23CT ATRFULL NOADX = 108/y win 48% +7.8pt +0.079R $+257/tr t+3.2 $+27,704/y DD $-110,232 | -41 +94 +216 +680
+S3 ON23CT ATRFULL NOBIAS = 229/y win 45% +3.7pt +0.028R $+75/tr t+1.4 $+17,171/y DD $-228,973 | -121 -24 +7 +378
+S3 ON23CT ATRRTH MAIN = 97/y win 46% +6.9pt +0.103R $+245/tr t+3.1 $+23,650/y DD $-76,233 | -51 +176 +227 +548
+Unrealized = $0.00
+Volume = $0.00
+err None
