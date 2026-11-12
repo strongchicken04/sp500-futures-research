@@ -189,7 +189,7 @@ class PBExits(QCAlgorithm):
         if m == 11 * 60 + 30 and not self.drift_done:
             self.drift_pending = True
             self.drift_done = True
-        if self.signal_done or m >= tex - 5 or self.vv <= 0:
+        if self.signal_done or m >= tex - 5 or self.vv <= 0 or self.orh is None:
             return
         vwap = self.pv / self.vv
         if not self.active:

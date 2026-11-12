@@ -1,0 +1,15 @@
+### pullback exits v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err 2014-01-13 11:26:00 Runtime Error: &#039;&gt;&#039; not supported between instances of &#039;float&#039; and &#039;NoneType&#039;
+  at on_data
+    if c &gt; self.orh:
+       ^^^^^^^^^^^^
+ in main.py: line 196
+
