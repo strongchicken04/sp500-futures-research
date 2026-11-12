@@ -1,0 +1,23 @@
+### onorb eval v2
+E25 a = FIX1 92%/88d/$65 | FIX2 61%/55d/$99 | FIX3 45%/55d/$132 | FIX4 39%/58d/$152
+E25 b = RISK250 89%/80d/$67 | RISK350 75%/70d/$80 | RISK450 55%/60d/$108 | RISK600 46%/53d/$132
+E50 a = FIX2 92%/99d/$98 | FIX3 62%/76d/$145 | FIX4 60%/59d/$150 | FIX6 46%/55d/$198
+E50 b = RISK500 81%/90d/$107 | RISK700 62%/68d/$145 | RISK900 52%/60d/$174 | RISK1200 42%/53d/$213
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+O BIASONLY = 171/y win 41% TP 7% SL 49% +0.016R $+97/tr t+1.3 DD $-183,235 | R by era -0.06 +0.04 -0.01 +0.08
+O LONGDRIFT = 249/y win 43% TP 5% SL 50% -0.004R $+22/tr t+0.4 DD $-381,283 | R by era -0.03 -0.09 +0.04 +0.05
+O MAIN = 97/y win 49% TP 5% SL 36% +0.102R $+301/tr t+3.6 DD $-82,445 | R by era -0.01 +0.11 +0.07 +0.21
+O MAIN SL pts by year = 20:73 21:68 22:106 23:68 24:86 25:125 26:139
+O MAIN last6y = 84/y win 54% TP 4% SL 35% +0.194R $+647/tr t+4.1 DD $-26,220 | R by era +0.00 +0.00 +0.10 +0.21 | mean SL 96pt
+O MAIN years R = 10:-6 11:+12 12:+0 13:-11 14:+7 15:+28 16:-8 17:+16 18:-3 19:-1 20:+20 21:+10 22:+27 23:+22 24:+35 25:+2 26:+16
+O MAIN-L = 56/y win 54% TP 3% SL 31% +0.109R $+316/tr t+3.3 DD $-30,502 | R by era +0.04 +0.11 +0.10 +0.18
+O MAIN-S = 41/y win 43% TP 9% SL 42% +0.091R $+280/tr t+1.9 DD $-74,591 | R by era -0.09 +0.10 +0.03 +0.25
+O info = cal 1484 days, MAIN recent trades 587
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
