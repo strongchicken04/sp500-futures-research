@@ -90,3 +90,8 @@ V25 PTS40/75 FIX6 = t1 51%/23d/$117 | t2 43%/27d/$139 | t3 33%/37d/$183
 V25 PTS40/75 FIX9 = t1 48%/12d/$126 | t2 30%/24d/$199 | t3 27%/32d/$223
 V25 PTS40/75 signal = 1263 trades win 65.6% mean +3.7 pt/contract
 V25 info = 2020-08-10..2026-08-13 days 1555 trades PTS40/75 1263 PTS31/50 1439 PCT40/75 1539 PCT31/50 1649
+### vault 25k v5 diagnostics d1e07476f630b3431f1c03e266c823b8 err None
+V25D PCT31/50 9MNQ = days with a signal 42% | 1st-trade win 66.6% | win $540 | single attempt: pass 46% bust 54% | pass takes 10.5 d (4.6 signal d) | bust takes 10.6 d (4.4 signal d)
+V25D PCT40/75 6MNQ = days with a signal 41% | 1st-trade win 69.6% | win $465 | single attempt: pass 61% bust 39% | pass takes 13.4 d (5.7 signal d) | bust takes 10.4 d (4.3 signal d)
+V25D PTS31/50 9MNQ = days with a signal 42% | 1st-trade win 64.2% | win $540 | single attempt: pass 51% bust 49% | pass takes 12.3 d (5.1 signal d) | bust takes 9.9 d (4.1 signal d)
+V25D PTS40/75 6MNQ = days with a signal 41% | 1st-trade win 65.6% | win $465 | single attempt: pass 45% bust 55% | pass takes 12.2 d (5.0 signal d) | bust takes 11.6 d (4.9 signal d)
