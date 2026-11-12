@@ -48,7 +48,11 @@ TPS = {"40/75": (40.0, 75.0), "52/83": (625 / 12.0, 1000 / 12.0), "53/83": (640 
 # v5 (owner: "why 20 days if 1 loss = blow and 2 wins = pass?"): path diagnostics for PCT 40/75 6 MNQ
 # and PCT 31/50 9 MNQ, first trade of the day: share of days with a signal, wins needed, signal
 # days per passing / failed attempt, attempts per pass.
-KEYS = [ex + tk for ex in ("PTS", "PCT") for tk in TPS]
+# v7 (owner 2026-11-12: "what if the 17:00 (Prague) candle already traded?" = the candle 09:30-10:00 CT,
+# closing 17:00 Prague / 10:00 CT): start C1000 (first entry candle opens 10:00 CT, as before) vs C0930
+# (the 09:30 CT candle also counts); TP 40 / SL 75 only.
+TPS = {"40/75": (40.0, 75.0)}
+KEYS = [ex + tk + "@" + st for ex in ("PTS", "PCT") for tk in TPS for st in ("C1000", "C0930")]
 MNQ_PV, MNQ_COST = 2.0, 2.5
 FEE = 60.0
 
@@ -131,13 +135,15 @@ class Vault25kInQC(QCAlgorithm):
         if len(self.ranges) < 15 or str(self.day) < WIN0:
             return
         atr = sum(self.ranges) / 15.0
-        if not (11 * 60 + 30 <= m <= 15 * 60):
+        if not (11 * 60 <= m <= 15 * 60):
             return
         if cc > self.mid + 0.30 * atr and cc > vwap:
             for ex in self.pos:
                 if self.pos[ex] is not None or self.ntoday[ex] >= 3:
                     continue
-                tpp, slp = TPS[ex[3:]]
+                if ex.endswith("@C1000") and m < 11 * 60 + 30:
+                    continue
+                tpp, slp = TPS[ex[3:].split("@")[0]]
                 tpd, sld = (tpp, slp) if ex.startswith("PTS") else (cc * tpp / PRICE, cc * slp / PRICE)
                 scale = 1.0 if ex.startswith("PTS") else PRICE / cc
                 self.pos[ex] = {"e": cc, "tp": cc + tpd, "sl": cc - sld, "tpd": tpd * scale, "sld": sld * scale, "scale": scale}
