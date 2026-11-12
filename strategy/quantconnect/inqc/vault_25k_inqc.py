@@ -55,6 +55,16 @@ TPS = {"40/75": (40.0, 75.0)}
 KEYS = [ex + tk + "@" + st for ex in ("PTS", "PCT") for tk in TPS for st in ("C1000", "C0930")]
 MNQ_PV, MNQ_COST = 2.0, 2.5
 FEE = 60.0
+# v8 (owner 2026-11-12, 25K FUNDED payout rules): max DD $1,000 (EOD trailing, locks at +$100 once an EOD
+# balance reaches +$1,100 - assumed as in the eval, and locked at +$100 after the first payout), no
+# consistency, no daily loss limit; a payout needs 5 winning days of >= $100 since the last payout and is
+# at most 50% of the profit balance and at most $1,000; the trader keeps 90%. Policies: ASAP (request as
+# soon as eligible with >= $250), P500 (request when >= $500 is available), P1000 (wait for the full
+# $1,000). Each funded account runs up to 250 trading days or until it breaches; starts every 5th day.
+# Output per signal / max trades a day / policy / size: mean net payouts per account in that year,
+# share of accounts with >= 1 payout, mean payouts count, breach rate within the year.
+FUND_SIZES = ("FIX3", "FIX4", "FIX6", "FIX8", "FIX10", "ROOM1")
+FUND_POL = {"ASAP": 250.0, "P500": 500.0, "P1000": 1000.0}
 
 
 class Vault25kInQC(QCAlgorithm):
@@ -197,6 +207,45 @@ class Vault25kInQC(QCAlgorithm):
                 return i - s0, evals, True
         return i - s0, evals, False
 
+    def _funded(self, seq, s0, scheme, maxt, minpay):
+        bal = peak = 0.0
+        locked = False
+        wd = 0
+        paid = 0.0
+        npay = 0
+        i = s0
+        while i < len(seq) and i - s0 < 250:
+            day = seq[i]
+            i += 1
+            line = 100.0 if locked else peak - 1000.0
+            run = bal
+            for k, (pts, sl, tp) in enumerate(day):
+                if k >= maxt:
+                    break
+                stop_usd = sl * MNQ_PV + MNQ_COST
+                if scheme.startswith("FIX"):
+                    n = int(scheme[3:])
+                else:
+                    n = int((run - line - 50.0) / stop_usd)
+                n = max(1, min(20, n))
+                run += pts * MNQ_PV * n - MNQ_COST * n
+                if run <= line:
+                    return paid, npay, True
+            if run - bal >= 100.0:
+                wd += 1
+            bal = run
+            peak = max(peak, bal)
+            if peak >= 1100.0:
+                locked = True
+            amt = min(0.5 * bal, 1000.0)
+            if wd >= 5 and amt >= minpay:
+                bal -= amt
+                paid += 0.9 * amt
+                npay += 1
+                wd = 0
+                locked = True
+        return paid, npay, False
+
     def on_end_of_algorithm(self):
         if any(v is not None for v in self.pos.values()):
             for ex in self.pos:
@@ -217,6 +266,18 @@ class Vault25kInQC(QCAlgorithm):
                 dd = sum(r[0] for r in ok) / len(ok) if ok else 999
                 cells.append(f"t{maxt} {ppa:.0f}%/{dd:.0f}d/${evals * FEE:.0f}")
             self.set_runtime_statistic(f"V25 {ex} FIX6", " | ".join(cells))
+        for ex in KEYS:
+            seq = [self.days[ex].get(d, []) for d in cal]
+            starts = range(0, max(1, len(seq) - 250), 5)
+            for maxt in (1, 3):
+                for pol, mp in FUND_POL.items():
+                    cells = []
+                    for sc in FUND_SIZES:
+                        res = [self._funded(seq, s0, sc, maxt, mp) for s0 in starts]
+                        nn = len(res)
+                        cells.append(f"{sc[:1]}{sc[-2:].lstrip('X').lstrip('M')} ${sum(r[0] for r in res) / nn:.0f} "
+                                     f"{sum(1 for r in res if r[1] > 0) / nn * 100:.0f}% {sum(r[1] for r in res) / nn:.1f}x b{sum(1 for r in res if r[2]) / nn * 100:.0f}")
+                    self.set_runtime_statistic(f"F {ex} t{maxt} {pol}", " | ".join(cells))
         for ex, n in [(k, 6) for k in KEYS]:
             seq = [self.days[ex].get(d, []) for d in cal]
             sig_share = sum(1 for d in seq if d) / len(seq) * 100
