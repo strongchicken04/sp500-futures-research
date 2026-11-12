@@ -41,7 +41,10 @@ PRICE = 28530.0
 TP_PT, SL_PT = 40.0, 75.0
 # v4 (owner 2026-11-11: "test SL $1,000 and TP $625", per NQ like the original $800 / $1,500):
 # TP 31.25 pt / SL 50 pt vs the original 40 / 75; sizes 3-10 MNQ (a 50-pt stop fits up to 9 MNQ).
-TPS = {"40/75": (40.0, 75.0), "31/50": (31.25, 50.0)}
+TPS = {"40/75": (40.0, 75.0), "52/83": (625 / 12.0, 1000 / 12.0), "53/83": (640 / 12.0, 1000 / 12.0)}
+# v6 (owner: "6 MNQ, aim for more points: fixed SL $1,000 / TP $625 per position"): 6 MNQ ->
+# TP 52.1 pt ($625 gross; 2 wins = $1,220 net, short of $1,250) and 53.3 pt ($640 gross = $625 net,
+# 2 wins = exactly the target at 50% consistency); SL 83.3 pt = $1,000 = the whole drawdown.
 # v5 (owner: "why 20 days if 1 loss = blow and 2 wins = pass?"): path diagnostics for PCT 40/75 6 MNQ
 # and PCT 31/50 9 MNQ, first trade of the day: share of days with a signal, wins needed, signal
 # days per passing / failed attempt, attempts per pass.
@@ -197,7 +200,18 @@ class Vault25kInQC(QCAlgorithm):
         n_tr = {ex: sum(len(v) for v in self.days[ex].values()) for ex in self.days}
         self.set_runtime_statistic("V25 info", f"{cal[0]}..{cal[-1]} days {len(cal)} trades " + " ".join(f"{k} {v}" for k, v in n_tr.items()))
         # v2 output: the full speed / cost frontier (day stop dropped: it changed nothing in v1)
-        for ex, n in (("PCT40/75", 6), ("PCT31/50", 9), ("PTS40/75", 6), ("PTS31/50", 9)):
+        for ex in KEYS:
+            seq = [self.days[ex].get(d, []) for d in cal]
+            cells = []
+            for maxt in (1, 2, 3):
+                res = [self._attempt_chain(seq, s0, "FIX6", False, maxt, 0) for s0 in range(0, len(seq) - 120)]
+                ok = [r for r in res if r[2]]
+                evals = sum(r[1] for r in res) / len(res)
+                ppa = len(ok) / sum(r[1] for r in res) * 100
+                dd = sum(r[0] for r in ok) / len(ok) if ok else 999
+                cells.append(f"t{maxt} {ppa:.0f}%/{dd:.0f}d/${evals * FEE:.0f}")
+            self.set_runtime_statistic(f"V25 {ex} FIX6", " | ".join(cells))
+        for ex, n in [(k, 6) for k in KEYS]:
             seq = [self.days[ex].get(d, []) for d in cal]
             sig_share = sum(1 for d in seq if d) / len(seq) * 100
             first = [d[0] for d in seq if d]
