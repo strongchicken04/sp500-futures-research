@@ -24,3 +24,33 @@ Return = 0.00 %
 Unrealized = $0.00
 Volume = $0.00
 err None
+### funded plans v2 (time to first payout)
+Equity = $1,000,000.00
+FP A-O1V5 = payouts 0:45% 1:27% 2:9% 3+:19% | kept $1,619/acct | life 81d alive 0% | chain $+2,791/y
+FP A-O1V6 = payouts 0:45% 1:28% 2:8% 3+:19% | kept $1,674/acct | life 81d alive 0% | chain $+2,981/y
+FP A-O2V5 = payouts 0:64% 1:9% 2:7% 3+:20% | kept $1,576/acct | life 49d alive 0% | chain $+4,015/y
+FP A-O2V6 = payouts 0:64% 1:11% 2:6% 3+:19% | kept $1,555/acct | life 46d alive 0% | chain $+4,670/y
+FP B-V5-P1000 = payouts 0:64% 1:11% 2:6% 3+:20% | kept $1,256/acct | life 58d alive 0% | chain $+2,104/y
+FP B-V5-P500 = payouts 0:51% 1:24% 2:5% 3+:19% | kept $1,187/acct | life 46d alive 0% | chain $+3,203/y
+FP B-V6-P1000 = payouts 0:62% 1:14% 2:6% 3+:18% | kept $1,459/acct | life 58d alive 1% | chain $+2,660/y
+FP B-V6-P500 = payouts 0:54% 1:16% 2:8% 3+:21% | kept $1,429/acct | life 53d alive 0% | chain $+3,821/y
+FP B-V6-P750 = payouts 0:58% 1:18% 2:6% 3+:18% | kept $1,361/acct | life 56d alive 1% | chain $+4,354/y
+FP C-P1000 = payouts 0:61% 1:9% 2:5% 3+:25% | kept $2,640/acct | life 103d alive 8% | chain $+5,999/y
+FP C-P500 = payouts 0:57% 1:16% 2:6% 3+:20% | kept $1,783/acct | life 74d alive 6% | chain $+5,936/y
+FP O1-P1000 = payouts 0:45% 1:7% 2:9% 3+:39% | kept $2,677/acct | life 156d alive 18% | chain $+3,793/y
+FP O1-P500 = payouts 0:39% 1:19% 2:5% 3+:37% | kept $1,698/acct | life 99d alive 10% | chain $+3,634/y
+FP O2-P1000 = payouts 0:64% 1:8% 2:3% 3+:25% | kept $2,745/acct | life 96d alive 12% | chain $+6,230/y
+FP O2-P500 = payouts 0:60% 1:13% 2:7% 3+:21% | kept $2,310/acct | life 79d alive 9% | chain $+6,267/y
+FP info = 2020-08-10..2026-08-14 1552 days, starts 478
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+T1 C-P1000 = first payout: mean 35 d median 26 d q25 18 q75 46 | within 60/90/120/180 d: 33%/37%/39%/39% of accounts | no-payout breach after 24 d
+T1 O1-P1000 = first payout: mean 60 d median 52 d q25 29 q75 87 | within 60/90/120/180 d: 31%/42%/51%/55% of accounts | no-payout breach after 41 d
+T1 O1-P500 = first payout: mean 39 d median 31 d q25 21 q75 48 | within 60/90/120/180 d: 52%/57%/59%/61% of accounts | no-payout breach after 35 d
+T1 O2-P1000 = first payout: mean 25 d median 23 d q25 16 q75 30 | within 60/90/120/180 d: 36%/36%/36%/36% of accounts | no-payout breach after 16 d
+Unrealized = $0.00
+Volume = $0.00
+err None
