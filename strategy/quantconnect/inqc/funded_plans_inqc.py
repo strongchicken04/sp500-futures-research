@@ -15,6 +15,9 @@ from collections import deque
 #   B-V6-P500 / P750 / P1000  Vault 6 MNQ while room >= $1,000, else ORB 1 MNQ (rescue)
 #   B-V5-P500 / P1000  Vault 5 MNQ while room >= $800, else ORB 1 MNQ
 #   C-P500 / C-P1000  ORB 2 MNQ while room >= $700, else ORB 1 MNQ
+# v2 (owner: how long to the first $1,000 payout with ORB 1 MNQ?): days to the first payout (mean, median,
+#   quartiles, share within 60 / 90 / 120 / 180 trading days) for O1 / O2 / C with P1000, and how long
+#   a breach takes when no payout came.
 # Per funded account (start every 3rd day, up to 500 trading days or data end): share with 0 / 1 / 2 / 3+
 #   payouts, mean $ kept, mean life, share still alive at the end; plus the chain (eval Vault 6 MNQ ->
 #   plan -> breach -> new eval) net $ per year.
@@ -271,6 +274,7 @@ class FundedPlans(QCAlgorithm):
         return None
 
     def _funded(self, seq, s0, plan, pmin, horizon):
+        self.first_pay = None
         bal = peak = paid = 0.0
         locked = False
         wd = npay = 0
@@ -292,6 +296,8 @@ class FundedPlans(QCAlgorithm):
                 locked = True
             amt = min(0.5 * bal, 1000.0)
             if wd >= 5 and amt >= pmin:
+                if npay == 0:
+                    self.first_pay = i - s0
                 bal -= amt
                 paid += 0.9 * amt
                 npay += 1
@@ -366,4 +372,21 @@ class FundedPlans(QCAlgorithm):
             self.set_runtime_statistic(f"FP {name}",
                 f"payouts 0:{p0:.0f}% 1:{p1:.0f}% 2:{p2:.0f}% 3+:{p3:.0f}% | kept ${sum(r[0] for r in res) / k:,.0f}/acct"
                 f" | life {sum(r[2] for r in res) / k:.0f}d alive {sum(1 for r in res if r[3]) / k * 100:.0f}% | chain ${ch:+,.0f}/y")
+        for name in ("O1-P1000", "O2-P1000", "C-P1000", "O1-P500"):
+            plan, pmin = PLANS[name]
+            fp, bust0 = [], []
+            for s0 in starts:
+                r = self._funded(seq, s0, plan, pmin, 500)
+                if self.first_pay is not None:
+                    fp.append(self.first_pay)
+                elif not r[3]:
+                    bust0.append(r[2])
+            fp.sort()
+            k = len(fp)
+            if k:
+                q = lambda x: fp[min(k - 1, int(x * k))]
+                self.set_runtime_statistic(f"T1 {name}",
+                    f"first payout: mean {sum(fp) / k:.0f} d median {q(0.5)} d q25 {q(0.25)} q75 {q(0.75)} | within 60/90/120/180 d: "
+                    + "/".join(f"{sum(1 for x in fp if x <= d) / len(starts) * 100:.0f}%" for d in (60, 90, 120, 180))
+                    + f" of accounts | no-payout breach after {sum(bust0) / max(1, len(bust0)):.0f} d")
         self.set_runtime_statistic("FP info", f"{cal[0]}..{cal[-1]} {len(cal)} days, starts {len(starts)}")
