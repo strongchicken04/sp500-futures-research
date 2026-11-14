@@ -1,0 +1,19 @@
+### multi account v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+MA O1 ALL5 = net $+18,963/y | month median $+69 below0 10% payout 33% | worst 3m $-785 (min $-1,800) | dry 9.7m (max 14) | >=3 breach 0.9/y
+MA O1 ONE = net $+3,793/y | month median $+14 below0 10% payout 33% | worst 3m $-157 (min $-360) | dry 9.7m (max 14) | >=3 breach 0.0/y
+MA O1 STAG10 = net $+18,459/y | month median $+211 below0 14% payout 39% | worst 3m $-590 (min $-1,440) | dry 9.4m (max 14) | >=3 breach 0.8/y
+MA O1 STAG21 = net $+17,831/y | month median $+333 below0 19% payout 41% | worst 3m $-511 (min $-1,440) | dry 9.3m (max 14) | >=3 breach 0.6/y
+MA O2 ALL5 = net $+31,151/y | month median $+3,037 below0 19% payout 55% | worst 3m $-757 (min $-1,800) | dry 7.7m (max 14) | >=3 breach 1.8/y
+MA O2 ONE = net $+6,230/y | month median $+607 below0 19% payout 55% | worst 3m $-151 (min $-360) | dry 7.7m (max 14) | >=3 breach 0.0/y
+MA O2 STAG10 = net $+30,139/y | month median $+2,821 below0 21% payout 58% | worst 3m $-769 (min $-1,620) | dry 7.4m (max 14) | >=3 breach 1.6/y
+MA O2 STAG21 = net $+29,358/y | month median $+2,646 below0 23% payout 58% | worst 3m $-796 (min $-1,500) | dry 7.4m (max 14) | >=3 breach 1.5/y
+MA info = 2020-08-10..2026-08-14 1552 days, starts 65
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
