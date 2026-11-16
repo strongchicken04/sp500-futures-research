@@ -18,6 +18,7 @@ indicator("Lucid 16 — Vault Break / ORB switch", overlay=true, max_labels_coun
 // Backtests: strategy/quantconnect/inqc/vault_break_inqc.py, onorb_v3_inqc.py;
 //   plan (brain/registry.md): eval Vault 6 MNQ, funded ORB 1-2 MNQ, full $1,000 payouts.
 // Intrabar order: if TP and SL are both inside one bar, the SL is assumed first.
+// v2 (owner 2026-11-16): status table removed; ADX of the current candle shown next to it.
 // =========================================================================
 
 mode = input.string("Vault Break", "Strategy", options = ["Vault Break", "ORB"])
@@ -194,19 +195,11 @@ plot(not na(ePx) ? sl : na, "Open trade SL", color = color.new(color.red, 0), st
 bgcolor(isV and tCT >= 10 * 60 and tCT < 14 * 60 + 30 ? color.new(color.blue, 94) : na, title = "Vault window 10:00-14:30 CT")
 bgcolor(not isV and inDay ? (bias == 1 ? color.new(color.green, 94) : bias == -1 ? color.new(color.red, 94) : color.new(color.gray, 95)) : na, title = "ORB day bias")
 
-// ------------------------------------------------------------------ table
-var table tb = table.new(position.top_right, 1, 4, border_width = 1, bgcolor = color.new(color.black, 30))
+// ------------------------------------------------------------------ ADX of the current candle
+// a label next to the last candle (green when >= 20) + the value in the status line / data window
+plot(adx, "ADX", color = adx >= 20 ? color.green : color.gray, display = display.status_line + display.data_window)
+var label adxLbl = na
 if barstate.islast
-    title = isV ? "LUCID 16 · VAULT BREAK" : "LUCID 16 · ORB"
-    info = isV ? "level " + str.tostring(level, format.mintick) + " | VWAP " + str.tostring(vwapMid, format.mintick) + " | ATR15 " + str.tostring(atr15, "#.#")
-               : "bias " + (bias == 1 ? "LONG only" : bias == -1 ? "SHORT only" : "none") + " | OR " + str.tostring(orL, format.mintick) + "-" + str.tostring(orH, format.mintick) + " | ADX " + str.tostring(adx, "#.#") + " | SL " + str.tostring(0.30 * atrMA, "#.#") + " pt"
-    st = not tfOk ? (isV ? "use a 30-MINUTE chart" : "use a 15-MINUTE chart")
-         : not na(ePx) ? (dir == 1 ? "LONG " : "SHORT ") + str.tostring(ePx, format.mintick) + " | TP " + str.tostring(tp, format.mintick) + " | SL " + str.tostring(sl, format.mintick)
-         : doneToday ? "done for today"
-         : isV ? "waiting for a 30m close above level + VWAP"
-         : bias == 0 ? "no trade today (middle third) or waiting for 08:30 CT"
-         : "waiting for a 15m close beyond the OR with ADX >= 20"
-    table.cell(tb, 0, 0, title, text_color = color.white, bgcolor = isV ? color.new(color.orange, 30) : color.new(color.teal, 30))
-    table.cell(tb, 0, 1, info, text_color = color.white)
-    table.cell(tb, 0, 2, st, text_color = color.white, bgcolor = not na(ePx) ? color.new(color.teal, 20) : color.new(color.gray, 50))
-    table.cell(tb, 0, 3, "history: " + str.tostring(nTr) + " trades, win " + (nTr > 0 ? str.tostring(nWin * 100.0 / nTr, "#") : "-") + "%, " + str.tostring(sumPts, "#") + " pt", text_color = color.white)
+    label.delete(adxLbl)
+    adxLbl := label.new(bar_index + 1, close, "ADX " + str.tostring(adx, "#.#"), style = label.style_label_left,
+                          color = adx >= 20 ? color.new(color.green, 10) : color.new(color.gray, 10), textcolor = color.white, size = size.normal)
