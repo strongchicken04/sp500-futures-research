@@ -51,8 +51,10 @@ TPS = {"40/75": (40.0, 75.0), "52/83": (625 / 12.0, 1000 / 12.0), "53/83": (640 
 # v7 (owner 2026-11-12: "what if the 17:00 (Prague) candle already traded?" = the candle 09:30-10:00 CT,
 # closing 17:00 Prague / 10:00 CT): start C1000 (first entry candle opens 10:00 CT, as before) vs C0930
 # (the 09:30 CT candle also counts); TP 40 / SL 75 only.
-TPS = {"40/75": (40.0, 75.0)}
-KEYS = [ex + tk + "@" + st for ex in ("PTS", "PCT") for tk in TPS for st in ("C1000", "C0930")]
+TPS = {"40/75": (40.0, 75.0), "47/75": (560.0 / 12.0, 75.0)}
+# v9 (owner 2026-11-17: "how much lower is the win rate with TP $560?" = $560 gross on 6 MNQ = 46.67 pt,
+# SL 75 pt unchanged): 40/75 vs 47/75, start C1000 only; funded section off (funded = ORB now).
+KEYS = [ex + tk + "@" + st for ex in ("PTS", "PCT") for tk in TPS for st in ("C1000",)]
 MNQ_PV, MNQ_COST = 2.0, 2.5
 FEE = 60.0
 # v8 (owner 2026-11-12, 25K FUNDED payout rules): max DD $1,000 (EOD trailing, locks at +$100 once an EOD
@@ -64,7 +66,7 @@ FEE = 60.0
 # Output per signal / max trades a day / policy / size: mean net payouts per account in that year,
 # share of accounts with >= 1 payout, mean payouts count, breach rate within the year.
 FUND_SIZES = ("FIX3", "FIX4", "FIX6", "FIX8", "FIX10", "ROOM1")
-FUND_POL = {"ASAP": 250.0, "P500": 500.0, "P1000": 1000.0}
+FUND_POL = {}
 
 
 class Vault25kInQC(QCAlgorithm):
