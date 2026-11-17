@@ -19,6 +19,7 @@ indicator("Lucid 16 — Vault Break / ORB switch", overlay=true, max_labels_coun
 //   plan (brain/registry.md): eval Vault 6 MNQ, funded ORB 1-2 MNQ, full $1,000 payouts.
 // Intrabar order: if TP and SL are both inside one bar, the SL is assumed first.
 // v2 (owner 2026-11-16): status table removed; ADX of the current candle shown next to it.
+// v3 (owner 2026-11-17): ORB - the third where NY opened lights up (top green, middle yellow, bottom red).
 // =========================================================================
 
 mode = input.string("Vault Break", "Strategy", options = ["Vault Break", "ORB"])
@@ -65,6 +66,7 @@ var float rL = na
 var float orH = na
 var float orL = na
 var int bias = 0
+var int zone = na          // third of the NY open: 1 top, 0 middle, -1 bottom
 if tCT == 23 * 60
     onH := high
     onL := low
@@ -73,6 +75,7 @@ if tCT == 23 * 60
     orH := na
     orL := na
     bias := 0
+    zone := na
 else if (tCT > 23 * 60 or tCT < 8 * 60 + 30) and not na(onH)
     onH := math.max(onH, high)
     onL := math.min(onL, low)
@@ -81,6 +84,7 @@ if tCT == 8 * 60 + 30 and not na(onH)
     rL := onL
     q = rH > rL ? (open - rL) / (rH - rL) : 0.5
     bias := q >= 2.0 / 3.0 ? 1 : q <= 1.0 / 3.0 ? -1 : 0
+    zone := bias
     orH := high
     orL := low
 
@@ -192,6 +196,13 @@ plot(not isV and inDay ? orH : na, "OR high", color = color.new(color.orange, 0)
 plot(not isV and inDay ? orL : na, "OR low", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
 plot(not na(ePx) ? tp : na, "Open trade TP", color = color.new(color.green, 0), style = plot.style_linebr)
 plot(not na(ePx) ? sl : na, "Open trade SL", color = color.new(color.red, 0), style = plot.style_linebr)
+// the third where NY opened lights up: top green, middle yellow, bottom red
+up3 = rL + (rH - rL) * 2.0 / 3.0
+lo3 = rL + (rH - rL) / 3.0
+showZ = not isV and inDay and not na(rH) and not na(zone)
+pZt = plot(showZ ? (zone == 1 ? rH : zone == 0 ? up3 : lo3) : na, "NY third top", color = color.new(color.white, 100), style = plot.style_linebr, editable = false)
+pZb = plot(showZ ? (zone == 1 ? up3 : zone == 0 ? lo3 : rL) : na, "NY third bottom", color = color.new(color.white, 100), style = plot.style_linebr, editable = false)
+fill(pZt, pZb, color = zone == 1 ? color.new(color.green, 70) : zone == 0 ? color.new(color.yellow, 70) : color.new(color.red, 70), title = "NY open third")
 bgcolor(isV and tCT >= 10 * 60 and tCT < 14 * 60 + 30 ? color.new(color.blue, 94) : na, title = "Vault window 10:00-14:30 CT")
 bgcolor(not isV and inDay ? (bias == 1 ? color.new(color.green, 94) : bias == -1 ? color.new(color.red, 94) : color.new(color.gray, 95)) : na, title = "ORB day bias")
 
