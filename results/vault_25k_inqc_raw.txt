@@ -185,3 +185,26 @@ V25D PTS40/75@C0930 6MNQ = days with a signal 43% | 1st-trade win 67.0% | win $4
 V25D PTS40/75@C1000 6MNQ = days with a signal 41% | 1st-trade win 65.6% | win $465 | single attempt: pass 45% bust 55% | pass takes 12.2 d (5.0 signal d) | bust takes 11.6 d (4.9 signal d)
 Volume = $0.00
 err None
+### vault 25k v9 TP 560
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+V25 PCT40/75@C1000 FIX6 = t1 60%/20d/$101 | t2 40%/25d/$151 | t3 31%/29d/$192
+V25 PCT40/75@C1000 signal = 1539 trades win 67.8% mean +4.6 pt/contract
+V25 PCT47/75@C1000 FIX6 = t1 53%/20d/$114 | t2 34%/28d/$178 | t3 28%/34d/$211
+V25 PCT47/75@C1000 signal = 1492 trades win 64.9% mean +4.9 pt/contract
+V25 PTS40/75@C1000 FIX6 = t1 52%/23d/$116 | t2 43%/27d/$139 | t3 33%/37d/$183
+V25 PTS40/75@C1000 signal = 1263 trades win 65.6% mean +3.7 pt/contract
+V25 PTS47/75@C1000 FIX6 = t1 52%/22d/$116 | t2 37%/29d/$160 | t3 33%/37d/$183
+V25 PTS47/75@C1000 signal = 1189 trades win 63.2% mean +3.6 pt/contract
+V25 info = 2020-08-10..2026-08-19 days 1559 trades PTS40/75@C1000 1263 PTS47/75@C1000 1189 PCT40/75@C1000 1539 PCT47/75@C1000 1492
+V25D PCT40/75@C1000 6MNQ = days with a signal 41% | 1st-trade win 69.6% | win $465 | single attempt: pass 62% bust 38% | pass takes 13.4 d (5.7 signal d) | bust takes 10.4 d (4.3 signal d)
+V25D PCT47/75@C1000 6MNQ = days with a signal 41% | 1st-trade win 65.4% | win $545 | single attempt: pass 55% bust 45% | pass takes 11.6 d (4.8 signal d) | bust takes 10.0 d (4.2 signal d)
+V25D PTS40/75@C1000 6MNQ = days with a signal 41% | 1st-trade win 65.6% | win $465 | single attempt: pass 45% bust 55% | pass takes 12.2 d (5.0 signal d) | bust takes 11.6 d (4.9 signal d)
+V25D PTS47/75@C1000 6MNQ = days with a signal 41% | 1st-trade win 62.5% | win $545 | single attempt: pass 47% bust 53% | pass takes 12.6 d (5.1 signal d) | bust takes 10.0 d (4.3 signal d)
+Volume = $0.00
+err None
