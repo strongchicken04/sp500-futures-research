@@ -20,6 +20,8 @@ indicator("Lucid 16 — Vault Break / ORB switch", overlay=true, max_labels_coun
 // Intrabar order: if TP and SL are both inside one bar, the SL is assumed first.
 // v2 (owner 2026-11-16): status table removed; ADX of the current candle shown next to it.
 // v3 (owner 2026-11-17): ORB - the third where NY opened lights up (top green, middle yellow, bottom red).
+// v4 (owner 2026-11-18): ORB - the overnight range and thirds are drawn live from 23:00 CT; the
+//   highlight only appears once the session opens (08:30 CT).
 // =========================================================================
 
 mode = input.string("Vault Break", "Strategy", options = ["Vault Break", "ORB"])
@@ -188,10 +190,14 @@ if not na(ePx)
 inDay = tCT >= 8 * 60 + 30 and tCT < 14 * 60 + 30
 plot(isV ? level : na, "Vault level", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
 plot(isV ? vwapMid : na, "VWAP (midnight CT)", color = color.new(color.blue, 0), linewidth = 2, style = plot.style_linebr)
-plot(not isV and inDay ? rH : na, "Overnight high", color = color.new(color.gray, 0), style = plot.style_linebr)
-plot(not isV and inDay ? rL : na, "Overnight low", color = color.new(color.gray, 0), style = plot.style_linebr)
-plot(not isV and inDay and not na(rH) ? rL + (rH - rL) * 2.0 / 3.0 : na, "Top third", color = color.new(color.green, 40), style = plot.style_linebr)
-plot(not isV and inDay and not na(rH) ? rL + (rH - rL) / 3.0 : na, "Bottom third", color = color.new(color.red, 40), style = plot.style_linebr)
+// overnight range + thirds: live while the range builds (23:00-08:30 CT), frozen 08:30-14:30 CT
+building = tCT >= 23 * 60 or tCT < 8 * 60 + 30
+float dH = isV ? na : building ? onH : inDay ? rH : na
+float dL = isV ? na : building ? onL : inDay ? rL : na
+plot(dH, "Overnight high", color = color.new(color.gray, 0), style = plot.style_linebr)
+plot(dL, "Overnight low", color = color.new(color.gray, 0), style = plot.style_linebr)
+plot(not na(dH) ? dL + (dH - dL) * 2.0 / 3.0 : na, "Top third", color = color.new(color.green, 40), style = plot.style_linebr)
+plot(not na(dH) ? dL + (dH - dL) / 3.0 : na, "Bottom third", color = color.new(color.red, 40), style = plot.style_linebr)
 plot(not isV and inDay ? orH : na, "OR high", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
 plot(not isV and inDay ? orL : na, "OR low", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
 plot(not na(ePx) ? tp : na, "Open trade TP", color = color.new(color.green, 0), style = plot.style_linebr)
