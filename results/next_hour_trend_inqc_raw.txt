@@ -1,0 +1,21 @@
+### next hour trend v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+NH ADX = det 47% | prec H1 16.3% H2 6.2% | next hour +0.020 ATRh cont 33% rev 32% | H2 era 6/6/6/6
+NH ER60 = det 18% | prec H1 15.8% H2 6.0% | next hour +0.030 ATRh cont 33% rev 32% | H2 era 5/7/5/6
+NH ERDAY = det 19% | prec H1 17.8% H2 5.5% | next hour +0.034 ATRh cont 34% rev 29% | H2 era 5/7/6/5
+NH MOM60 = det 18% | prec H1 15.6% H2 8.4% | next hour +0.025 ATRh cont 37% rev 35% | H2 era 7/9/8/10
+NH NA = det 29% | prec H1 17.9% H2 6.5% | next hour +0.035 ATRh cont 36% rev 30% | H2 era 6/7/7/6
+NH NA15 = det 17% | prec H1 17.6% H2 7.2% | next hour +0.037 ATRh cont 37% rev 31% | H2 era 6/8/9/7
+NH NA15+ER60 = det 4% | prec H1 16.4% H2 7.7% | next hour +0.077 ATRh cont 37% rev 30% | H2 era 6/8/7/9
+NH PREVH = det 10% | prec H1 15.0% H2 9.0% | next hour +0.027 ATRh cont 37% rev 37% | H2 era 7/10/9/10
+NH STAIR = det 16% | prec H1 15.8% H2 5.6% | next hour +0.016 ATRh cont 32% rev 32% | H2 era 6/6/5/5
+NH VWP60 = det 66% | prec H1 16.9% H2 5.3% | next hour +0.013 ATRh cont 33% rev 31% | H2 era 5/6/5/5
+NH base = decisions 41347 | H1 32% (one direction 16%) | H2 11% (one direction 5%)
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
