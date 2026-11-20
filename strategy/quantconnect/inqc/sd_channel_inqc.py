@@ -29,6 +29,11 @@ PRICE, PV, COST = 28530.0, 20.0, 15.0
 N = 100
 TFS = (1, 5, 15)
 RULES = ("MR2", "MR3", "MR2T", "BO2")
+# v2 (owner 2026-11-20: "fade from 2 sd, SL at 3 sd, TP 1:1 with the SL; then negative RR too"):
+# fade a close beyond +-2 sd, SL = the +-3 sd band at the signal, TP = entry + tpR x risk with
+# tpR = 1 / 0.75 / 0.5 / 0.33 / 0.25; "F" all signals, "FT" only with the regression slope.
+TPRS = (1.0, 0.75, 0.5, 0.33, 0.25)
+RULES = tuple(f"{a}{r:g}" for a in ("F", "FT") for r in TPRS)
 ERAS = ((2010, 2013), (2014, 2017), (2018, 2021), (2022, 2026))
 
 
@@ -138,6 +143,8 @@ class SDChannel(QCAlgorithm):
             if v.pending is not None and v.pos is None:
                 d, tp, sl = v.pending
                 v.pending = None
+                if tp < 0:
+                    tp = o + d * (-tp) * (o - sl) * d
                 if rth and m <= 15 * 60 + 50 and (tp - o) * d > 0 and (o - sl) * d > 0:
                     v.pos = {"d": d, "e": o, "tp": tp, "sl": sl, "risk": (o - sl) * d}
             p = v.pos
@@ -174,19 +181,15 @@ class SDChannel(QCAlgorithm):
                 v = self.vars[(r, tf)]
                 if v.pos is not None or v.pending is not None:
                     continue
-                k = 3.0 if r == "MR3" else 2.0
-                up = c > mm + k * sd and pc <= pm + k * psd
-                dn = c < mm - k * sd and pc >= pm - k * psd
+                up = c > mm + 2.0 * sd and pc <= pm + 2.0 * psd
+                dn = c < mm - 2.0 * sd and pc >= pm - 2.0 * psd
                 if not (up or dn):
                     continue
-                if r in ("MR2", "MR3", "MR2T"):
-                    d = -1 if up else 1
-                    if r == "MR2T" and not ((d == 1 and ch.slope > 0) or (d == -1 and ch.slope < 0)):
-                        continue
-                    v.pending = (d, mm, mm - d * (k + 1.0) * sd)
-                else:
-                    d = 1 if up else -1
-                    v.pending = (d, mm + d * 3.0 * sd, mm + d * 1.0 * sd)
+                d = -1 if up else 1
+                if r.startswith("FT") and not ((d == 1 and ch.slope > 0) or (d == -1 and ch.slope < 0)):
+                    continue
+                tpr = float(r[2:] if r.startswith("FT") else r[1:])
+                v.pending = (d, -tpr, mm - d * 3.0 * sd)
 
     def on_end_of_algorithm(self):
         for (r, tf), v in self.vars.items():
@@ -205,6 +208,6 @@ class SDChannel(QCAlgorithm):
                 cum += x
                 pk = max(pk, cum)
                 mdd = min(mdd, cum - pk)
-            self.set_runtime_statistic(f"SD {r} {tf}m",
+            self.set_runtime_statistic(f"SD2 {r} {tf}m",
                 f"{n / yrs:.0f}/y win {win:.0f}% {sum(x[0] for x in tr) / n:+.3f}R ${mu:+.0f}/tr t{mu / (sd / math.sqrt(n)):+.1f} "
                 f"${sum(usd) / yrs:+,.0f}/y DD ${mdd:,.0f} | R era {era}")
