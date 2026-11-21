@@ -1,6 +1,6 @@
 {
-  "name": "Trénink A / B",
-  "short_name": "Trénink",
+  "name": "Hanička fitko",
+  "short_name": "Hanička fitko",
   "description": "Odškrtávání sérií a zápis vah — s váhami z minulého tréninku.",
   "start_url": "./",
   "scope": "./",

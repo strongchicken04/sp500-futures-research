@@ -1,6 +1,6 @@
-# 💪 Trénink A / B
+# 💪 Hanička fitko
 
-Odškrtávání sérií a zápis vah — webová aplikace, která jde připnout na plochu
+Trénink A / B — odškrtávání sérií a zápis vah. Webová aplikace, která jde připnout na plochu
 telefonu a funguje offline. Všechno se ukládá jen v telefonu.
 
 **Adresa:** https://strongchicken04.github.io/zuzanky-denik/trenink/

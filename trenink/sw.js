@@ -1,5 +1,5 @@
 // Offline cache for the Trénink app. Bump CACHE when the files change.
-var CACHE = 'trenink-v1';
+var CACHE = 'trenink-v2';
 var ASSETS = [
   './',
   './index.html',
