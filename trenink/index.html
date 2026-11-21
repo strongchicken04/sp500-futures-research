@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Trénink</title>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111318">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Trénink">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+
+<style>
+  :root {
+    --bg:#f4f5f7; --card:#fff; --text:#15171c; --muted:#767b85; --faint:#aeb4bf;
+    --accent:#2f6fde; --done:#2fa96b; --line:#e4e6eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#111318; --card:#1b1e24; --text:#f1f3f6; --muted:#949aa6; --faint:#5e6572;
+      --accent:#5a92f5; --done:#3fbd7e; --line:#2a2e36;
+    }
+  }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { background:var(--bg); }
+  body {
+    margin:0; color:var(--text); font-size:16px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    overscroll-behavior-y:none;
+  }
+  .wrap { max-width:560px; margin:0 auto; padding:14px 16px 48px; }
+
+  header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin:6px 0 16px; }
+  h1 { font-size:26px; line-height:1.1; margin:0; letter-spacing:-0.5px; }
+  .sub { color:var(--muted); font-size:13.5px; margin-top:4px; }
+  .streak { background:var(--card); border:1px solid var(--line); border-radius:999px; padding:7px 12px; font-size:13px; color:var(--muted); white-space:nowrap; }
+
+  .tabs { display:flex; gap:8px; margin-bottom:14px; }
+  .tab {
+    flex:1; padding:12px 10px; border-radius:14px; background:var(--card); color:var(--text);
+    font-size:15.5px; font-weight:650; border:1px solid var(--line); cursor:pointer;
+    display:flex; flex-direction:column; gap:2px; align-items:center; font-family:inherit;
+  }
+  .tab.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .tab small { font-size:11.5px; font-weight:500; opacity:.75; }
+
+  .progress { height:8px; background:var(--line); border-radius:4px; overflow:hidden; margin-bottom:6px; }
+  .bar { height:100%; width:0; background:var(--done); border-radius:4px; transition:width .25s ease; }
+  .plabel { display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted); margin-bottom:14px; }
+
+  .ex { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:10px; transition:opacity .2s; }
+  .ex.done { opacity:.6; }
+  .ex.done .name { text-decoration:line-through; }
+  .top { display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:11px; }
+  .name { font-weight:650; font-size:16.5px; }
+  .reps { color:var(--muted); font-size:13.5px; white-space:nowrap; }
+  .sets { display:flex; gap:8px; flex-wrap:wrap; }
+  .set {
+    width:52px; height:52px; border-radius:14px; border:2px solid var(--line); background:transparent;
+    color:var(--muted); font-size:15px; font-weight:650; cursor:pointer; padding:0; font-family:inherit;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .set.on { background:var(--done); border-color:var(--done); color:#fff; }
+
+  .kg { display:flex; align-items:center; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line); }
+  .last { flex:1; font-size:13px; color:var(--muted); line-height:1.3; }
+  .last b { color:var(--text); font-size:14.5px; }
+  .last .ago { display:block; color:var(--faint); font-size:11.5px; }
+  .up { color:var(--done); font-weight:650; }
+  .step { width:40px; height:44px; border-radius:11px; border:1px solid var(--line); background:transparent; color:var(--text); font-size:20px; font-weight:600; cursor:pointer; padding:0; font-family:inherit; }
+  .kg input {
+    width:74px; height:44px; padding:0 6px; border-radius:11px; border:1.5px solid var(--line);
+    background:var(--bg); color:var(--text); font-size:17px; font-weight:650; text-align:center; font-family:inherit;
+  }
+  .kg input:focus { outline:none; border-color:var(--accent); }
+  .unit { font-size:13px; color:var(--muted); width:22px; }
+
+  .finish {
+    width:100%; margin-top:14px; padding:16px; border-radius:16px; border:none; font-family:inherit;
+    background:var(--accent); color:#fff; font-size:16.5px; font-weight:650; cursor:pointer;
+  }
+  .finish[disabled] { background:var(--line); color:var(--faint); cursor:default; }
+  .ghost {
+    width:100%; margin-top:8px; padding:12px; border-radius:14px; border:1px solid var(--line);
+    background:transparent; color:var(--muted); font-size:14px; cursor:pointer; font-family:inherit;
+  }
+
+  details.hist { margin-top:22px; }
+  details.hist summary { cursor:pointer; color:var(--muted); font-size:14px; list-style:none; padding:10px 0; }
+  details.hist summary::-webkit-details-marker { display:none; }
+  .hrow { display:flex; justify-content:space-between; gap:10px; padding:11px 14px; background:var(--card); border:1px solid var(--line); border-radius:12px; margin-bottom:8px; font-size:14px; }
+  .hrow span:last-child { color:var(--muted); white-space:nowrap; }
+
+  #toast {
+    position:fixed; left:50%; bottom:calc(28px + env(safe-area-inset-bottom)); transform:translate(-50%,16px);
+    background:var(--done); color:#fff; padding:13px 20px; border-radius:14px; font-weight:650; font-size:15px;
+    opacity:0; pointer-events:none; transition:opacity .22s, transform .22s; z-index:10; box-shadow:0 8px 24px #0003;
+  }
+  #toast.show { opacity:1; transform:translate(-50%,0); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Trénink</h1>
+      <div class="sub" id="sub">—</div>
+    </div>
+    <div class="streak" id="streak"></div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab" id="tabA" type="button">Trénink A<small id="tabAsub"></small></button>
+    <button class="tab" id="tabB" type="button">Trénink B<small id="tabBsub"></small></button>
+  </div>
+
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="plabel"><span id="plabel">—</span><span id="pcount"></span></div>
+
+  <div id="list"></div>
+
+  <button class="finish" id="finish" type="button">Ukončit trénink ✓</button>
+  <button class="ghost" id="clear" type="button">Vymazat odškrtnutí</button>
+
+  <details class="hist">
+    <summary id="histSummary">Historie tréninků</summary>
+    <div id="hist"></div>
+  </details>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ------------------------------------------------------------------
+     Workout plan. Every exercise has a STABLE id, so renaming or
+     reordering an exercise never loses its saved weights.
+  ------------------------------------------------------------------ */
+  var PLAN = {
+    A: [
+      { id:'warmup',   name:'Rozcvička – rotoped',     reps:'10 min',   sets:1, kg:false },
+      { id:'goblet',   name:'Goblet dřep',             reps:'3 × 4–5',  sets:3, kg:true  },
+      { id:'rdl',      name:'Rumunský mrtvý tah',      reps:'3 × 4–5',  sets:3, kg:true  },
+      { id:'hip',      name:'Hip thrust',              reps:'3 × 4–5',  sets:3, kg:true  },
+      { id:'extrot',   name:'Externí rotace s gumou',  reps:'3 × 15',   sets:3, kg:true  },
+      { id:'facepull', name:'Face pull',               reps:'3 × 10',   sets:3, kg:true  },
+      { id:'plank',    name:'Plank',                   reps:'3 × 30 s', sets:3, kg:false },
+      { id:'splank',   name:'Boční plank',             reps:'3 × 30 s', sets:3, kg:false }
+    ],
+    B: [
+      { id:'warmup',   name:'Rozcvička – rotoped',        reps:'10 min',   sets:1, kg:false },
+      { id:'bulgar',   name:'Bulharský dřep',             reps:'3 × 4–5',  sets:3, kg:true  },
+      { id:'nordic',   name:'Nordic hamstring',           reps:'3 × 5',    sets:3, kg:false },
+      { id:'clappush', name:'Výbušné kliky s tlesknutím', reps:'3 × 5',    sets:3, kg:false },
+      { id:'ytw',      name:'Y-T-W na lavici',            reps:'2 × 10',   sets:2, kg:true  },
+      { id:'plank',    name:'Plank',                      reps:'3 × 30 s', sets:3, kg:false },
+      { id:'splank',   name:'Boční plank',                reps:'3 × 30 s', sets:3, kg:false }
+    ]
+  };
+
+  var KEY = 'trenink-ab-v3';
+  var STEP = 2.5;
+
+  /* --------------------------- state ----------------------------
+     weights: { "A-goblet": { last, lastDate, today, todayDate } }
+     checks:  { "A-goblet-0": { date } }  — only the workout in progress
+     history: [{ date, day, done, total }] newest first
+  ---------------------------------------------------------------- */
+  var st = { day:'A', weights:{}, checks:{}, history:[] };
+
+  try {
+    var raw = JSON.parse(localStorage.getItem(KEY));
+    if (raw) {
+      st.day = raw.day === 'B' ? 'B' : 'A';
+      st.weights = raw.weights || {};
+      st.checks = raw.checks || {};
+      st.history = raw.history || [];
+    }
+  } catch (e) {}
+
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+
+  /* --------------------------- dates ----------------------------- */
+  function todayISO() {
+    var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  function czDate(iso) {
+    if (!iso) return '';
+    var p = iso.split('-');
+    return parseInt(p[2], 10) + '. ' + parseInt(p[1], 10) + '.';
+  }
+  function agoText(iso) {
+    if (!iso) return '';
+    var a = new Date(iso + 'T00:00:00'), b = new Date(todayISO() + 'T00:00:00');
+    var n = Math.round((b - a) / 86400000);
+    if (n <= 0) return 'dnes';
+    if (n === 1) return 'včera';
+    return 'před ' + n + ' dny';
+  }
+  function num(v) {
+    var n = parseFloat(String(v == null ? '' : v).replace(',', '.'));
+    return isFinite(n) ? n : null;
+  }
+
+  function weightOf(day, id) {
+    var k = day + '-' + id;
+    if (!st.weights[k]) st.weights[k] = { last:'', lastDate:'', today:'', todayDate:'' };
+    return st.weights[k];
+  }
+  function totalSets(day) {
+    return PLAN[day].reduce(function (s, ex) { return s + ex.sets; }, 0);
+  }
+  function doneCount(day) {
+    var n = 0;
+    Object.keys(st.checks).forEach(function (k) {
+      if (st.checks[k] && k.indexOf(day + '-') === 0) n++;
+    });
+    return n;
+  }
+
+  /** Today's weights of `day` become "minule". */
+  function promoteDay(day, dateISO) {
+    PLAN[day].forEach(function (ex) {
+      if (!ex.kg) return;
+      var w = st.weights[day + '-' + ex.id];
+      if (w && w.today) {
+        w.last = w.today;
+        w.lastDate = w.todayDate || dateISO;
+        w.today = '';
+        w.todayDate = '';
+      }
+    });
+  }
+
+  /* --- a workout left open from an earlier day closes itself --- */
+  (function rollOver() {
+    var t = todayISO(), changed = false;
+
+    // Weights typed on an earlier day are last session's weights now.
+    Object.keys(st.weights).forEach(function (k) {
+      var w = st.weights[k];
+      if (w.today && w.todayDate && w.todayDate !== t) {
+        w.last = w.today; w.lastDate = w.todayDate; w.today = ''; w.todayDate = '';
+        changed = true;
+      }
+    });
+
+    // Ticks from an earlier day are logged into the history and cleared.
+    var oldDate = null;
+    Object.keys(st.checks).forEach(function (k) {
+      var d = st.checks[k] && st.checks[k].date;
+      if (d && d !== t) oldDate = oldDate || d;
+    });
+    if (oldDate) {
+      ['A', 'B'].forEach(function (day) {
+        var n = doneCount(day);
+        if (n > 0) st.history.unshift({ date: oldDate, day: day, done: n, total: totalSets(day) });
+      });
+      st.checks = {};
+      st.history = st.history.slice(0, 20);
+      changed = true;
+    }
+    if (changed) save();
+  })();
+
+  /* -------------------------- rendering --------------------------- */
+  var listEl = document.getElementById('list');
+
+  function render() {
+    var day = st.day;
+    listEl.innerHTML = '';
+
+    PLAN[day].forEach(function (ex) {
+      var card = document.createElement('div');
+      card.className = 'ex';
+
+      var top = document.createElement('div');
+      top.className = 'top';
+      var nameEl = document.createElement('span');
+      nameEl.className = 'name';
+      nameEl.textContent = ex.name;
+      var repsEl = document.createElement('span');
+      repsEl.className = 'reps';
+      repsEl.textContent = ex.reps;
+      top.appendChild(nameEl);
+      top.appendChild(repsEl);
+      card.appendChild(top);
+
+      var sets = document.createElement('div');
+      sets.className = 'sets';
+      for (var i = 0; i < ex.sets; i++) {
+        (function (i) {
+          var key = day + '-' + ex.id + '-' + i;
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'set' + (st.checks[key] ? ' on' : '');
+          b.textContent = ex.sets === 1 ? '✓' : String(i + 1);
+          b.setAttribute('aria-label', ex.name + ' – série ' + (i + 1));
+          b.setAttribute('aria-pressed', st.checks[key] ? 'true' : 'false');
+          b.addEventListener('click', function () {
+            if (st.checks[key]) delete st.checks[key];
+            else st.checks[key] = { date: todayISO() };
+            b.classList.toggle('on');
+            b.setAttribute('aria-pressed', st.checks[key] ? 'true' : 'false');
+            if (navigator.vibrate) { try { navigator.vibrate(12); } catch (e) {} }
+            save(); markDone(card, ex); progress();
+          });
+          sets.appendChild(b);
+        })(i);
+      }
+      card.appendChild(sets);
+
+      if (ex.kg) card.appendChild(weightRow(day, ex));
+
+      markDone(card, ex);
+      listEl.appendChild(card);
+    });
+
+    document.getElementById('tabA').classList.toggle('on', day === 'A');
+    document.getElementById('tabB').classList.toggle('on', day === 'B');
+    progress();
+    paintHeader();
+  }
+
+  function weightRow(day, ex) {
+    var w = weightOf(day, ex.id);
+    var row = document.createElement('div');
+    row.className = 'kg';
+
+    var last = document.createElement('div');
+    last.className = 'last';
+
+    var minus = document.createElement('button');
+    minus.type = 'button'; minus.className = 'step'; minus.textContent = '−';
+    minus.setAttribute('aria-label', 'Ubrat ' + STEP + ' kg');
+
+    var input = document.createElement('input');
+    input.type = 'text'; input.inputMode = 'decimal';
+    input.placeholder = w.last || 'kg';
+    input.value = w.today || '';
+    input.setAttribute('aria-label', ex.name + ' – dnešní váha v kg');
+
+    var plus = document.createElement('button');
+    plus.type = 'button'; plus.className = 'step'; plus.textContent = '+';
+    plus.setAttribute('aria-label', 'Přidat ' + STEP + ' kg');
+
+    var unit = document.createElement('span');
+    unit.className = 'unit'; unit.textContent = 'kg';
+
+    function paintLast() {
+      var t = num(w.today), l = num(w.last);
+      last.innerHTML = '';
+      var line = document.createElement('div');
+      line.appendChild(document.createTextNode('Minule '));
+      var b = document.createElement('b');
+      b.textContent = w.last ? w.last + ' kg' : '–';
+      line.appendChild(b);
+      if (w.last && t !== null && l !== null && t > l) {
+        var up = document.createElement('span');
+        up.className = 'up';
+        up.textContent = ' ↑ +' + Math.round((t - l) * 10) / 10;
+        line.appendChild(up);
+      }
+      var ago = document.createElement('span');
+      ago.className = 'ago';
+      ago.textContent = w.last ? agoText(w.lastDate) : 'zapiš dnešní váhu';
+      last.appendChild(line);
+      last.appendChild(ago);
+    }
+
+    function store(v) {
+      w.today = v;
+      w.todayDate = v ? todayISO() : '';
+      save();
+      paintLast();
+    }
+    function bump(dir) {
+      var base = num(w.today);
+      if (base === null) base = num(w.last);
+      if (base === null) base = 0;
+      var next = Math.max(0, Math.round((base + dir * STEP) * 10) / 10);
+      input.value = String(next);
+      store(String(next));
+    }
+
+    minus.addEventListener('click', function () { bump(-1); });
+    plus.addEventListener('click', function () { bump(1); });
+    input.addEventListener('input', function () { store(input.value.trim()); });
+
+    paintLast();
+    row.appendChild(last);
+    row.appendChild(minus);
+    row.appendChild(input);
+    row.appendChild(plus);
+    row.appendChild(unit);
+    return row;
+  }
+
+  function markDone(card, ex) {
+    var all = true;
+    for (var i = 0; i < ex.sets; i++) {
+      if (!st.checks[st.day + '-' + ex.id + '-' + i]) { all = false; break; }
+    }
+    card.classList.toggle('done', all);
+  }
+
+  function progress() {
+    var day = st.day, total = totalSets(day), done = doneCount(day);
+    document.getElementById('bar').style.width = (total ? done / total * 100 : 0) + '%';
+    document.getElementById('pcount').textContent = done + ' / ' + total + ' sérií';
+    document.getElementById('plabel').textContent =
+      done === 0 ? 'Pusť se do toho 💪' : done >= total ? 'Všechno odškrtnuté! 🎉' : 'Jedeš…';
+    document.getElementById('finish').disabled = done === 0;
+  }
+
+  function paintHeader() {
+    var lastSession = st.history[0];
+    document.getElementById('sub').textContent = lastSession
+      ? 'Naposledy trénink ' + lastSession.day + ' · ' + agoText(lastSession.date)
+      : 'První trénink čeká 🙂';
+
+    var n = st.history.length;
+    document.getElementById('streak').textContent =
+      n === 0 ? 'zatím 0' : n + (n === 1 ? ' trénink' : n < 5 ? ' tréninky' : ' tréninků');
+
+    ['A', 'B'].forEach(function (d) {
+      var hit = null;
+      for (var i = 0; i < st.history.length; i++) {
+        if (st.history[i].day === d) { hit = st.history[i]; break; }
+      }
+      document.getElementById('tab' + d + 'sub').textContent = hit ? agoText(hit.date) : 'ještě nebyl';
+    });
+
+    var h = document.getElementById('hist');
+    h.innerHTML = '';
+    document.getElementById('histSummary').textContent =
+      'Historie tréninků' + (st.history.length ? ' (' + st.history.length + ')' : '');
+    if (!st.history.length) {
+      h.appendChild(histRow('Zatím žádný ukončený trénink', ''));
+    } else {
+      st.history.slice(0, 10).forEach(function (s) {
+        h.appendChild(histRow(czDate(s.date) + ' · Trénink ' + s.day, s.done + ' / ' + s.total + ' sérií'));
+      });
+    }
+  }
+
+  function histRow(left, right) {
+    var row = document.createElement('div');
+    row.className = 'hrow';
+    var a = document.createElement('span'); a.textContent = left;
+    var b = document.createElement('span'); b.textContent = right;
+    row.appendChild(a); row.appendChild(b);
+    return row;
+  }
+
+  /* ---------------------------- toast ----------------------------- */
+  var toastEl = document.getElementById('toast'), toastT;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 2300);
+  }
+
+  /* --------------------------- actions ---------------------------- */
+  ['A', 'B'].forEach(function (d) {
+    document.getElementById('tab' + d).addEventListener('click', function () {
+      st.day = d; save(); render();
+    });
+  });
+
+  document.getElementById('finish').addEventListener('click', function () {
+    var day = st.day, done = doneCount(day);
+    if (!done) return;
+    var date = todayISO();
+    promoteDay(day, date);
+    st.history.unshift({ date: date, day: day, done: done, total: totalSets(day) });
+    st.history = st.history.slice(0, 20);
+    Object.keys(st.checks).forEach(function (k) {
+      if (k.indexOf(day + '-') === 0) delete st.checks[k];
+    });
+    st.day = day === 'A' ? 'B' : 'A'; // next time the other one
+    save(); render();
+    if (navigator.vibrate) { try { navigator.vibrate([18, 50, 18]); } catch (e) {} }
+    toast('Hotovo! Váhy uložené 💪');
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    var day = st.day;
+    Object.keys(st.checks).forEach(function (k) {
+      if (k.indexOf(day + '-') === 0) delete st.checks[k];
+    });
+    save(); render();
+    toast('Odškrtnutí vymazáno');
+  });
+
+  render();
+
+  /* ------------------------ offline (PWA) ------------------------- */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+})();
+</script>
+</body>
+</html>
