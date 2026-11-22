@@ -1,0 +1,27 @@
+### na filters v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+NF ADX = 170/y win 39% $+206/tr t+3.4 $+35,079/y DD $-85,039 | L +336 S +81 | era +69 +149 +317 +273
+NF ADX lucid = 1MNQ eval 37%/95d funded $1,596 45% 198d | 2MNQ eval 33%/69d funded $1,104 31% 64d
+NF BASE = 231/y win 39% $+203/tr t+4.2 $+46,948/y DD $-88,411 | L +285 S +126 | era +97 +81 +329 +290
+NF BASE lucid = 1MNQ eval 54%/97d funded $2,018 56% 206d | 2MNQ eval 42%/62d funded $1,311 35% 65d
+NF ER = 188/y win 40% $+224/tr t+4.3 $+42,253/y DD $-95,925 | L +291 S +153 | era +51 +82 +414 +332
+NF ER lucid = 1MNQ eval 68%/92d funded $3,163 71% 265d | 2MNQ eval 46%/64d funded $2,257 42% 104d
+NF LATE11 = 188/y win 40% $+207/tr t+3.9 $+38,726/y DD $-67,575 | L +285 S +132 | era +47 +59 +353 +342
+NF LATE11 lucid = 1MNQ eval 51%/109d funded $1,936 63% 263d | 2MNQ eval 34%/73d funded $777 27% 56d
+NF NA15 = 121/y win 43% $+293/tr t+3.9 $+35,376/y DD $-81,146 | L +416 S +191 | era +65 +154 +523 +409
+NF NA15 lucid = 1MNQ eval 76%/105d funded $2,055 65% 277d | 2MNQ eval 60%/72d funded $1,499 47% 96d
+NF OVN = 105/y win 40% $+271/tr t+3.2 $+28,409/y DD $-53,513 | L +320 S +226 | era +155 +137 +368 +405
+NF OVN lucid = 1MNQ eval 36%/125d funded $1,381 48% 230d | 2MNQ eval 29%/102d funded $1,385 35% 133d
+NF RVOL = 95/y win 39% $+192/tr t+2.4 $+18,220/y DD $-55,503 | L +282 S +152 | era +119 +113 +344 +201
+NF RVOL lucid = 1MNQ eval 32%/134d funded $1,472 58% 267d | 2MNQ eval 27%/98d funded $762 36% 111d
+NF VWP = 168/y win 40% $+203/tr t+3.8 $+34,164/y DD $-71,802 | L +254 S +145 | era +94 +132 +365 +217
+NF VWP lucid = 1MNQ eval 35%/99d funded $878 33% 153d | 2MNQ eval 36%/78d funded $803 35% 59d
+NF ceiling (ex post) = T1 103/y $+1492/tr $+153,583/y | T2 67/y $+2292/tr $+153,016/y | nonT1 127/y $-840/tr $-106,967/y
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
