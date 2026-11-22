@@ -1,0 +1,20 @@
+### noise area v2
+E25 BASE = 1MNQ 54%/97d/$106 | 2MNQ 42%/62d/$137 | 3MNQ 33%/58d/$179
+E25 NX = 1MNQ 54%/97d/$106 | 2MNQ 42%/61d/$139 | 3MNQ 33%/58d/$179
+Equity = $1,000,000.00
+F25 BASE = 1MNQ $2,018 pay 56% life 206d | 2MNQ $1,311 pay 35% life 65d | 3MNQ $1,315 pay 32% life 48d
+F25 NX = 1MNQ $2,029 pay 56% life 207d | 2MNQ $1,304 pay 35% life 65d | 3MNQ $1,355 pay 32% life 49d
+Fees = -$0.00
+Holdings = $0.00
+N2 BASE = 231/y win 39% $+203/tr t+4.2 $+46,948/y DD $-88,411 | L +285 S +126 | era +97 +81 +329 +290 | worst/MNQ $-648
+N2 I15 = 322/y win 35% $+130/tr t+3.6 $+41,867/y DD $-77,622 | L +206 S +62 | era +70 +86 +183 +173 | worst/MNQ $-1,179
+N2 I60 = 171/y win 44% $+264/tr t+4.1 $+45,105/y DD $-97,667 | L +346 S +182 | era +72 +178 +369 +415 | worst/MNQ $-838
+N2 K075 = 296/y win 37% $+133/tr t+3.1 $+39,470/y DD $-105,243 | L +194 S +74 | era +15 +25 +314 +183 | worst/MNQ $-929
+N2 K125 = 183/y win 40% $+191/tr t+3.5 $+34,928/y DD $-87,565 | L +265 S +120 | era +51 +53 +387 +264 | worst/MNQ $-613
+N2 NX = 231/y win 39% $+201/tr t+4.1 $+46,320/y DD $-89,012 | L +283 S +122 | era +92 +79 +326 +289 | worst/MNQ $-648
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
