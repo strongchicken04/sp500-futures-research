@@ -21,8 +21,12 @@ import math
 START = (2010, 1, 1)
 END = (2026, 12, 31)
 PRICE, PV, COST = 28530.0, 20.0, 15.0
-SLS = (0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50)
-CONDS = ("BOTH", "OR", "BAND")
+# v2 (owner 2026-11-23: "isn't 20 bps too small? try other bands - this can't work as a filter"): OR break +
+# band, bands 20 / 30 / 40 / 50 / 75 / 100 bps and VWAP standard-deviation bands 1 / 1.5 / 2 sigma
+# (volume-weighted stdev of the typical price around the RTH VWAP); SL 0.20 / 0.30 / 0.40 / 0.50%,
+# TP = 0.625 x SL; Lucid 25K eval for SL 0.40%.
+SLS = (0.20, 0.30, 0.40, 0.50)
+CONDS = ("B20", "B30", "B40", "B50", "B75", "B100", "S1", "S1.5", "S2")
 ERAS = ((2010, 2013), (2014, 2017), (2018, 2021), (2022, 2026))
 RECENT = date(2020, 11, 20)
 
@@ -60,7 +64,7 @@ class VwapBandORB(QCAlgorithm):
         self._new()
 
     def _new(self):
-        self.pv = self.vv = 0.0
+        self.pv = self.vv = self.pvv = 0.0
         self.orh = self.orl = None
         self.bad = False
 
@@ -96,9 +100,12 @@ class VwapBandORB(QCAlgorithm):
                 if v.pos is not None:
                     self._book(v, c, t)
                 v.done = True
-        self.pv += (h + l + c) / 3.0 * vol
+        tp_ = (h + l + c) / 3.0
+        self.pv += tp_ * vol
+        self.pvv += tp_ * tp_ * vol
         self.vv += vol
         vw = self.pv / self.vv if self.vv > 0 else c
+        vsd = math.sqrt(max(0.0, self.pvv / self.vv - vw * vw)) if self.vv > 0 else 0.0
         if m <= 9 * 60 + 45:
             self.orh = h if self.orh is None else max(self.orh, h)
             self.orl = l if self.orl is None else min(self.orl, l)
@@ -121,10 +128,10 @@ class VwapBandORB(QCAlgorithm):
                 self._book(v, c, t)
         if self.bad or m % 5 != 0 or not (9 * 60 + 50 <= m <= 15 * 60) or self.orh is None:
             return
-        up_b, dn_b = vw * 1.002, vw * 0.998
-        sig = {"BOTH": 1 if (c > self.orh and c > up_b) else (-1 if (c < self.orl and c < dn_b) else 0),
-               "OR": 1 if c > self.orh else (-1 if c < self.orl else 0),
-               "BAND": 1 if c > up_b else (-1 if c < dn_b else 0)}
+        sig = {}
+        for cond in CONDS:
+            w = (vw * float(cond[1:]) / 10000.0) if cond.startswith("B") else float(cond[1:]) * vsd
+            sig[cond] = 1 if (c > self.orh and c > vw + w) else (-1 if (c < self.orl and c < vw - w) else 0)
         for (cond, slp), v in self.v.items():
             if v.done or v.pos is not None:
                 continue
@@ -191,13 +198,13 @@ class VwapBandORB(QCAlgorithm):
                 mdd = min(mdd, cum - pk)
             self.set_runtime_statistic(f"VB {cond} SL{slp:.2f}%",
                 f"{n / yrs:.0f}/y win {win:.0f}% {allst} ${sum(u) / yrs:+,.0f}/y DD ${mdd:,.0f} | IS10-19 {ins} | OOS20-26 {oos} | L {sum(lo) / max(1, len(lo)):+.0f} S {sum(sh) / max(1, len(sh)):+.0f} | era {era}")
-            if cond == "BOTH":
+            if slp == 0.40:
                 byd = {x[4]: (x[5], x[6]) for x in tr if x[4] >= RECENT}
                 seq = [byd.get(d) for d in sorted(set(self.cal))]
                 res = [self._eval(seq, s0) for s0 in range(0, max(1, len(seq) - 120))]
                 ok = [r for r in res if r[2]]
                 rec = [x for x in tr if x[4] >= RECENT]
                 nm = sorted(max(1, min(20, int(950.0 / (x[6] * 2.0 + 2.5)))) for x in rec)
-                self.set_runtime_statistic(f"VB25 BOTH SL{slp:.2f}%",
+                self.set_runtime_statistic(f"VB25 {cond} SL{slp:.2f}%",
                     (f"eval {len(ok) / sum(r[1] for r in res) * 100:.0f}%/{sum(r[0] for r in ok) / len(ok):.0f}d/${sum(r[1] for r in res) / len(res) * 60:.0f}" if ok else "eval 0%")
                     + f" | MNQ median {nm[len(nm) // 2] if nm else 0} | last6y win {sum(1 for x in rec if x[5] > 0) / max(1, len(rec)) * 100:.0f}% {len(rec) / 6:.0f}/y")
