@@ -22,15 +22,23 @@ indicator("Lucid 16 — Vault Break / ORB switch", overlay=true, max_labels_coun
 // v3 (owner 2026-11-17): ORB - the third where NY opened lights up (top green, middle yellow, bottom red).
 // v4 (owner 2026-11-18): ORB - the overnight range and thirds are drawn live from 23:00 CT; the
 //   highlight only appears once the session opens (08:30 CT).
+// v5 (owner 2026-11-23): third mode VWAP BAND ORB (use a 5-MINUTE chart) - VWAP from 08:30 CT (09:30 ET)
+//   with +-20 bps bands, OR 08:30-08:45 CT; a 5-min close above the OR high AND VWAP + 20 bps -> LONG,
+//   below the OR low AND VWAP - 20 bps -> SHORT, first signal of the day, TP = 0.625 x SL, SL = input %
+//   of price (default 0.40% = the best in-sample SL), flat 14:55 CT. BACKTEST: NO EDGE (win rate = the
+//   61.5% random-walk break-even; vwap_band_orb_inqc.py) - for viewing only.
 // =========================================================================
 
-mode = input.string("Vault Break", "Strategy", options = ["Vault Break", "ORB"])
+mode = input.string("Vault Break", "Strategy", options = ["Vault Break", "ORB", "VWAP Band ORB"])
+slPct = input.float(0.40, "VWAP Band ORB: SL % of price (TP = 0.625 x SL)", step = 0.05)
 isV = mode == "Vault Break"
+isO = mode == "ORB"
+isB = mode == "VWAP Band ORB"
 
 TZ = "America/Chicago"
 tCT = hour(time, TZ) * 60 + minute(time, TZ)        // bar OPEN time, CT minutes
 newDay = dayofmonth(time, TZ) != dayofmonth(time[1], TZ)
-tfOk = isV ? timeframe.period == "30" : timeframe.period == "15"
+tfOk = isV ? timeframe.period == "30" : isO ? timeframe.period == "15" : timeframe.period == "5"
 
 // ------------------------------------------------------------------ VAULT data
 var float[] ranges = array.new_float()
@@ -90,6 +98,25 @@ if tCT == 8 * 60 + 30 and not na(onH)
     orH := high
     orL := low
 
+// ------------------------------------------------------------------ VWAP BAND ORB data
+var float bpv = 0.0
+var float bvv = 0.0
+var float bOrH = na
+var float bOrL = na
+if tCT == 8 * 60 + 30
+    bpv := 0.0
+    bvv := 0.0
+    bOrH := high
+    bOrL := low
+else if tCT > 8 * 60 + 30 and tCT < 8 * 60 + 45 and not na(bOrH)
+    bOrH := math.max(bOrH, high)
+    bOrL := math.min(bOrL, low)
+bpv += hlc3 * volume
+bvv += volume
+bVwap = bvv > 0 ? bpv / bvv : close
+bUp = bVwap * 1.002
+bDn = bVwap * 0.998
+
 // ------------------------------------------------------------------ trade state
 var float ePx = na
 var float tp = na
@@ -105,7 +132,7 @@ var int nWin = 0
 var float sumPts = 0.0
 
 // a new trading day for the "one trade a day" rule
-if (isV and newDay) or (not isV and tCT == 23 * 60)
+if (isV and newDay) or (isO and tCT == 23 * 60) or (isB and tCT == 8 * 60 + 30)
     doneToday := false
 
 closeTrade(px, why) =>
@@ -134,7 +161,7 @@ if not na(ePx) and bar_index > eBar
             exitPx := math.min(tp, open)
             why := "TP"
     // the candle that closes at 14:30 CT: flat at its close
-    if na(exitPx) and ((isV and tCT == 14 * 60) or (not isV and tCT == 14 * 60 + 15))
+    if na(exitPx) and ((isV and tCT == 14 * 60) or (isO and tCT == 14 * 60 + 15) or (isB and tCT == 14 * 60 + 50))
         exitPx := close
         why := "14:30"
     if not na(exitPx)
@@ -158,6 +185,14 @@ if tfOk and na(ePx) and not doneToday and barstate.isconfirmed
             goDir := 1
             sld := 75.0
             tpd := 40.0
+    else if isB
+        if tCT >= 8 * 60 + 45 and tCT <= 13 * 60 + 55 and not na(bOrH)
+            if close > bOrH and close > bUp
+                goDir := 1
+            else if close < bOrL and close < bDn
+                goDir := -1
+            sld := close * slPct / 100.0
+            tpd := 0.625 * sld
     else
         if tCT >= 8 * 60 + 45 and tCT <= 14 * 60 and bias != 0 and not na(orH) and not na(atrMA) and adx >= 20
             if bias == 1 and close > orH
@@ -192,25 +227,31 @@ plot(isV ? level : na, "Vault level", color = color.new(color.orange, 0), linewi
 plot(isV ? vwapMid : na, "VWAP (midnight CT)", color = color.new(color.blue, 0), linewidth = 2, style = plot.style_linebr)
 // overnight range + thirds: live while the range builds (23:00-08:30 CT), frozen 08:30-14:30 CT
 building = tCT >= 23 * 60 or tCT < 8 * 60 + 30
-float dH = isV ? na : building ? onH : inDay ? rH : na
-float dL = isV ? na : building ? onL : inDay ? rL : na
+float dH = not isO ? na : building ? onH : inDay ? rH : na
+float dL = not isO ? na : building ? onL : inDay ? rL : na
 plot(dH, "Overnight high", color = color.new(color.gray, 0), style = plot.style_linebr)
 plot(dL, "Overnight low", color = color.new(color.gray, 0), style = plot.style_linebr)
 plot(not na(dH) ? dL + (dH - dL) * 2.0 / 3.0 : na, "Top third", color = color.new(color.green, 40), style = plot.style_linebr)
 plot(not na(dH) ? dL + (dH - dL) / 3.0 : na, "Bottom third", color = color.new(color.red, 40), style = plot.style_linebr)
-plot(not isV and inDay ? orH : na, "OR high", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
-plot(not isV and inDay ? orL : na, "OR low", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
+plot(isO and inDay ? orH : na, "OR high", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
+plot(isO and inDay ? orL : na, "OR low", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
+bDay = tCT >= 8 * 60 + 30 and tCT < 15 * 60
+plot(isB and bDay ? bVwap : na, "VWAP (08:30 CT)", color = color.new(color.blue, 0), linewidth = 2, style = plot.style_linebr)
+plot(isB and bDay ? bUp : na, "VWAP +20 bps", color = color.new(color.green, 20), style = plot.style_linebr)
+plot(isB and bDay ? bDn : na, "VWAP -20 bps", color = color.new(color.red, 20), style = plot.style_linebr)
+plot(isB and bDay and tCT >= 8 * 60 + 45 ? bOrH : na, "OR 08:30-08:45 high", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
+plot(isB and bDay and tCT >= 8 * 60 + 45 ? bOrL : na, "OR 08:30-08:45 low", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
 plot(not na(ePx) ? tp : na, "Open trade TP", color = color.new(color.green, 0), style = plot.style_linebr)
 plot(not na(ePx) ? sl : na, "Open trade SL", color = color.new(color.red, 0), style = plot.style_linebr)
 // the third where NY opened lights up: top green, middle yellow, bottom red
 up3 = rL + (rH - rL) * 2.0 / 3.0
 lo3 = rL + (rH - rL) / 3.0
-showZ = not isV and inDay and not na(rH) and not na(zone)
+showZ = isO and inDay and not na(rH) and not na(zone)
 pZt = plot(showZ ? (zone == 1 ? rH : zone == 0 ? up3 : lo3) : na, "NY third top", color = color.new(color.white, 100), style = plot.style_linebr, editable = false)
 pZb = plot(showZ ? (zone == 1 ? up3 : zone == 0 ? lo3 : rL) : na, "NY third bottom", color = color.new(color.white, 100), style = plot.style_linebr, editable = false)
 fill(pZt, pZb, color = zone == 1 ? color.new(color.green, 70) : zone == 0 ? color.new(color.yellow, 70) : color.new(color.red, 70), title = "NY open third")
 bgcolor(isV and tCT >= 10 * 60 and tCT < 14 * 60 + 30 ? color.new(color.blue, 94) : na, title = "Vault window 10:00-14:30 CT")
-bgcolor(not isV and inDay ? (bias == 1 ? color.new(color.green, 94) : bias == -1 ? color.new(color.red, 94) : color.new(color.gray, 95)) : na, title = "ORB day bias")
+bgcolor(isO and inDay ? (bias == 1 ? color.new(color.green, 94) : bias == -1 ? color.new(color.red, 94) : color.new(color.gray, 95)) : na, title = "ORB day bias")
 
 // ------------------------------------------------------------------ ADX of the current candle
 // a label next to the last candle (green when >= 20) + the value in the status line / data window
