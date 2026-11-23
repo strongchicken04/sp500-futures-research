@@ -1,0 +1,26 @@
+### portfolio mix v1
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+PM A 6040 = CAGR 10.0% DD -21% Sharpe 0.94 | 2022 -16% worst12m -18% | 3y med +30% worst +8% medDD -19%
+PM A GEM = CAGR 9.7% DD -34% Sharpe 0.65 | 2022 -18% worst12m -19% | 3y med +20% worst -1% medDD -22%
+PM A INVVOL = CAGR 11.0% DD -21% Sharpe 1.50 | 2022 -16% worst12m -19% | 3y med +29% worst +1% medDD -10%
+PM A PROP = CAGR 34.4% DD -67% Sharpe 0.92 | 2022 -55% worst12m -66% | 3y med +47% worst +25% medDD -29%
+PM A PROP-R = CAGR 24.5% DD -40% Sharpe 1.29 | 2022 -20% worst12m -38% | 3y med +58% worst +29% medDD -27%
+PM A SPY = CAGR 15.5% DD -34% Sharpe 0.89 | 2022 -18% worst12m -20% | 3y med +45% worst +12% medDD -24%
+PM A TREND = CAGR 22.1% DD -35% Sharpe 1.33 | 2022 -14% worst12m -34% | 3y med +57% worst +24% medDD -19%
+PM A info = 2016-02-01..2026-01-02 (9.9 y)
+PM B 6040 = CAGR 8.4% DD -32% Sharpe 0.79 | 2022 -16% 2008 -17% worst12m -27% | 3y med +29% worst -7% medDD -13%
+PM B GEM = CAGR 8.4% DD -34% Sharpe 0.59 | 2022 -18% 2008 +6% worst12m -19% | 3y med +24% worst -12% medDD -19%
+PM B INVVOL = CAGR 7.5% DD -17% Sharpe 1.13 | 2022 -11% 2008 +5% worst12m -15% | 3y med +19% worst -6% medDD -8%
+PM B PROP = CAGR 10.7% DD -38% Sharpe 0.76 | 2022 -16% 2008 -25% worst12m -33% | 3y med +37% worst -16% medDD -16%
+PM B PROP-R = CAGR 11.1% DD -40% Sharpe 0.79 | 2022 -15% 2008 -25% worst12m -35% | 3y med +36% worst -16% medDD -15%
+PM B SPY = CAGR 10.8% DD -55% Sharpe 0.63 | 2022 -18% 2008 -37% worst12m -47% | 3y med +40% worst -31% medDD -19%
+PM B TREND = CAGR 9.3% DD -18% Sharpe 0.88 | 2022 -14% 2008 -2% worst12m -15% | 3y med +28% worst +2% medDD -15%
+PM B info = 2006-01-03..2026-01-02 (20.0 y)
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
