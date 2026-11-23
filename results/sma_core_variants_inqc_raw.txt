@@ -1,0 +1,24 @@
+### sma core variants v1
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+SC ACWI BAND2 = CAGR 8.0% DD -20% | switches 2.6/y exits 21 whipsaw 15/21 | 2020:+11% 2022:-15% 2025:+18%
+SC ACWI BAND3 = CAGR 7.5% DD -23% | switches 2.2/y exits 18 whipsaw 12/18 | 2020:+9% 2022:-18% 2025:+18%
+SC ACWI BH = CAGR 12.1% DD -34% | switches 0.0/y exits 0 whipsaw 0/0 | 2020:+16% 2022:-18% 2025:+22%
+SC ACWI HALF = CAGR 10.0% DD -24% | switches 5.9/y exits 49 whipsaw 42/49 | 2020:+14% 2022:-15% 2025:+19%
+SC ACWI SMA = CAGR 7.5% DD -20% | switches 5.9/y exits 49 whipsaw 42/49 | 2020:+10% 2022:-12% 2025:+15% | cash2% CAGR 8.0%
+SC ACWI WEEKLY = CAGR 7.4% DD -24% | switches 2.8/y exits 23 whipsaw 21/23 | 2020:+6% 2022:-8% 2025:+19%
+SC ACWI info = 2009-04-08..2026-01-02 (16.7 y)
+SC SPY BAND2 = CAGR 7.5% DD -27% | switches 3.2/y exits 31 whipsaw 22/31 | 2008:-5% 2020:+3% 2022:-20% 2025:+8%
+SC SPY BAND3 = CAGR 7.8% DD -25% | switches 2.3/y exits 22 whipsaw 13/22 | 2008:-8% 2020:+8% 2022:-23% 2025:+4%
+SC SPY BH = CAGR 10.8% DD -55% | switches 0.0/y exits 0 whipsaw 0/0 | 2008:-37% 2020:+18% 2022:-18% 2025:+18%
+SC SPY HALF = CAGR 10.2% DD -36% | switches 5.8/y exits 57 whipsaw 47/57 | 2008:-19% 2020:+15% 2022:-16% 2025:+15%
+SC SPY SMA = CAGR 8.8% DD -20% | switches 5.8/y exits 57 whipsaw 47/57 | 2008:-1% 2020:+10% 2022:-15% 2025:+12% | cash2% CAGR 9.3%
+SC SPY WEEKLY = CAGR 8.5% DD -21% | switches 3.3/y exits 32 whipsaw 25/32 | 2008:-3% 2020:+14% 2022:-13% 2025:+11%
+SC SPY info = 2006-01-03..2026-01-02 (20.0 y)
+Unrealized = $0.00
+Volume = $0.00
+err None
