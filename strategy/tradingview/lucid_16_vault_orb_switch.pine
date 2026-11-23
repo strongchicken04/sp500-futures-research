@@ -27,9 +27,12 @@ indicator("Lucid 16 — Vault Break / ORB switch", overlay=true, max_labels_coun
 //   below the OR low AND VWAP - 20 bps -> SHORT, first signal of the day, TP = 0.625 x SL, SL = input %
 //   of price (default 0.40% = the best in-sample SL), flat 14:55 CT. BACKTEST: NO EDGE (win rate = the
 //   61.5% random-walk break-even; vwap_band_orb_inqc.py) - for viewing only.
+// v6 (owner 2026-11-23): VWAP Band ORB band width is an input, default 50 bps (the best band in v2:
+//   131 signals / yr, all eras positive, +$71 / trade at SL 0.40%, t 1.9 - still a weak edge).
 // =========================================================================
 
 mode = input.string("Vault Break", "Strategy", options = ["Vault Break", "ORB", "VWAP Band ORB"])
+bandBps = input.float(50.0, "VWAP Band ORB: band (bps from VWAP)", step = 5.0)
 slPct = input.float(0.40, "VWAP Band ORB: SL % of price (TP = 0.625 x SL)", step = 0.05)
 isV = mode == "Vault Break"
 isO = mode == "ORB"
@@ -114,8 +117,8 @@ else if tCT > 8 * 60 + 30 and tCT < 8 * 60 + 45 and not na(bOrH)
 bpv += hlc3 * volume
 bvv += volume
 bVwap = bvv > 0 ? bpv / bvv : close
-bUp = bVwap * 1.002
-bDn = bVwap * 0.998
+bUp = bVwap * (1 + bandBps / 10000.0)
+bDn = bVwap * (1 - bandBps / 10000.0)
 
 // ------------------------------------------------------------------ trade state
 var float ePx = na
@@ -237,8 +240,8 @@ plot(isO and inDay ? orH : na, "OR high", color = color.new(color.orange, 0), li
 plot(isO and inDay ? orL : na, "OR low", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
 bDay = tCT >= 8 * 60 + 30 and tCT < 15 * 60
 plot(isB and bDay ? bVwap : na, "VWAP (08:30 CT)", color = color.new(color.blue, 0), linewidth = 2, style = plot.style_linebr)
-plot(isB and bDay ? bUp : na, "VWAP +20 bps", color = color.new(color.green, 20), style = plot.style_linebr)
-plot(isB and bDay ? bDn : na, "VWAP -20 bps", color = color.new(color.red, 20), style = plot.style_linebr)
+plot(isB and bDay ? bUp : na, "VWAP + band", color = color.new(color.green, 20), style = plot.style_linebr)
+plot(isB and bDay ? bDn : na, "VWAP - band", color = color.new(color.red, 20), style = plot.style_linebr)
 plot(isB and bDay and tCT >= 8 * 60 + 45 ? bOrH : na, "OR 08:30-08:45 high", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
 plot(isB and bDay and tCT >= 8 * 60 + 45 ? bOrL : na, "OR 08:30-08:45 low", color = color.new(color.orange, 0), linewidth = 2, style = plot.style_linebr)
 plot(not na(ePx) ? tp : na, "Open trade TP", color = color.new(color.green, 0), style = plot.style_linebr)
