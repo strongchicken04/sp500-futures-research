@@ -1,0 +1,22 @@
+### momentum etf v1
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+ME M BH ACWI = CAGR 10.7% DD -34% Sharpe 0.70 | 2020:+16% 2022:-18% | worst3y -8%
+ME M BH MTUM = CAGR 14.6% DD -34% Sharpe 0.79 | 2020:+30% 2022:-18% | worst3y -6%
+ME M BH SPY = CAGR 14.1% DD -34% Sharpe 0.85 | 2020:+18% 2022:-18% | worst3y +1%
+ME M BH URTH = CAGR 11.1% DD -34% Sharpe 0.71 | 2020:+16% 2022:-18% | worst3y -8%
+ME M HALF ACWI = CAGR 9.4% DD -24% Sharpe 0.78 | 2020:+14% 2022:-15% | worst3y +2%
+ME M HALF MTUM = CAGR 12.3% DD -29% Sharpe 0.80 | 2020:+25% 2022:-14% | worst3y -8%
+ME M MTUM-ACWI/-SPY by year pp = 14:+9/+0 15:+11/+8 16:-3/-7 17:+12/+15 18:+7/+2 19:+1/-4 20:+14/+12 21:-5/-15 22:+0/-0 23:-13/-17 24:+15/+8 25:-0/+4
+ME M info = 2014-02-03..2026-01-02 (11.9 y)
+ME S BH SPY = CAGR 10.9% DD -55% Sharpe 0.65 | 2008:-37% 2020:+18% 2022:-18% | worst3y -43%
+ME S SEC3 = CAGR 11.4% DD -46% Sharpe 0.67 | 2008:-29% 2020:+14% 2022:+15% | worst3y -30%
+ME S SEC3F = CAGR 10.5% DD -31% Sharpe 0.71 | 2008:+7% 2020:-3% 2022:+7% | worst3y -13%
+ME S info = 2003-09-02..2026-01-02 (22.3 y)
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
