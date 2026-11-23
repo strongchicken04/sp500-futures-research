@@ -160,10 +160,10 @@ if not na(ePx) and bar_index > eBar
         else if low <= tp
             exitPx := math.min(tp, open)
             why := "TP"
-    // the candle that closes at 14:30 CT: flat at its close
+    // the candle that closes at 14:30 CT (VWAP Band ORB: 14:55 CT): flat at its close
     if na(exitPx) and ((isV and tCT == 14 * 60) or (isO and tCT == 14 * 60 + 15) or (isB and tCT == 14 * 60 + 50))
         exitPx := close
-        why := "14:30"
+        why := isB ? "14:55" : "14:30"
     if not na(exitPx)
         p = closeTrade(exitPx, why)
         nTr += 1
