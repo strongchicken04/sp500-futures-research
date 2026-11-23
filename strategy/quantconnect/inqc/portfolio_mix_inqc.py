@@ -25,6 +25,8 @@ import math
 #   leverage (R) or no leverage (N: the 15k simply joins the SMA200 core); BTC weight 4 / 8 / 12% (the rest of
 #   the 8% to the core); C2 = uninvested cash earns 2% a year (else 0%). Yearly rebalance.
 #   Plans: TD-R8 (= v1 TREND), TM-R8, TD-N8, TM-N8, TM-N4, TM-N12, TM-N8-C2, + SPY and PROP-R references.
+# v3 (owner 2026-11-23 "world or S&P?"): TD-N8 with the core on SPY vs ACWI (MSCI ACWI, from 2008), plus
+#   buy-and-hold SPY vs ACWI; runs C (with BTC, 2016-) and D (no BTC, from 2009-03 = ACWI SMA200 ready).
 # Run A: with BTC, from the first month start where all series and their SMA200 exist (~2016). Run B: no BTC
 #   (BTC weight added to the core / dropped from INVVOL), from 2006-01. Metrics: CAGR, max DD, Sharpe (rf 0),
 #   2022, 2008 (run B), worst 12 months; rolling 3-year windows (starts every 3 months): median / worst 3y
@@ -41,7 +43,7 @@ class PortfolioMix(QCAlgorithm):
         self.set_start_date(2026, 1, 2)
         self.set_end_date(2026, 1, 3)
         self.set_cash(100000)
-        self.eq = {t: self.add_equity(t, Resolution.DAILY).symbol for t in ("SPY", "EFA", "IEF", "GLD")}
+        self.eq = {t: self.add_equity(t, Resolution.DAILY).symbol for t in ("SPY", "EFA", "IEF", "GLD", "ACWI")}
         self.btc = self.add_crypto("BTCUSD", Resolution.DAILY, Market.COINBASE).symbol
 
     # ------------------------------------------------------------------ data
@@ -228,8 +230,8 @@ class PortfolioMix(QCAlgorithm):
         return vals
 
 
-    def _trend(self, dates, px, i0, i1, with_btc, check, lev, wbtc, cash_y):
-        spy, gld = px["SPY"], px["GLD"]
+    def _trend(self, dates, px, i0, i1, with_btc, check, lev, wbtc, cash_y, core_nm="SPY"):
+        spy, gld = px[core_nm], px["GLD"]
         btc = px.get("BTC")
         cost = 0.0002
         ms = set(i for i in range(i0, i1 + 1) if i == i0 or dates[i].month != dates[i - 1].month)
@@ -255,7 +257,7 @@ class PortfolioMix(QCAlgorithm):
                     e = S["rsi"]["e"]
                     S["rsi"]["V"] *= 1.0 + e * r + max(0.0, 1.0 - e) * cy - max(0.0, e - 1.0) * 0.03 / 252.0
             mstart = i in ms
-            for k, p, nm in (("core", spy, "SPY"), ("gold", gld, "GLD"), ("btc", btc, "BTC")):
+            for k, p, nm in (("core", spy, core_nm), ("gold", gld, "GLD"), ("btc", btc, "BTC")):
                 if w[k] <= 0:
                     continue
                 if check == "D" or mstart:
@@ -284,6 +286,11 @@ class PortfolioMix(QCAlgorithm):
         return vals
 
     def _run(self, dates, px, p, i0, i1, with_btc):
+        if p.startswith("BH-"):
+            a = p[3:]
+            return [px[a][i] / px[a][i0] for i in range(i0, i1 + 1)]
+        if p.startswith("TD-N8-"):
+            return self._trend(dates, px, i0, i1, with_btc, "D", False, 8.0, 0.0, p.split("-")[2])
         if p.startswith("T") and "-" in p:
             check = p[1]
             rest = p.split("-")[1]
@@ -318,10 +325,10 @@ class PortfolioMix(QCAlgorithm):
         raw = self._series()
         plans_a = ("SPY", "PROP-R", "TD-R8", "TM-R8", "TD-N8", "TM-N8", "TM-N4", "TM-N12", "TM-N8-C2")
         plans_b = ("SPY", "PROP-R", "TD-R8", "TM-R8", "TD-N8", "TM-N8", "TM-N8-C2")
-        for run, with_btc in (("A", True), ("B", False)):
-            assets = ["SPY", "EFA", "IEF", "GLD"] + (["BTC"] if with_btc else [])
+        for run, with_btc in (("C", True), ("D", False)):
+            assets = ["SPY", "EFA", "IEF", "GLD", "ACWI"] + (["BTC"] if with_btc else [])
             if with_btc and not raw["BTC"]:
-                self.set_runtime_statistic("PM A", "no BTC data")
+                self.set_runtime_statistic("PM C", "no BTC data")
                 continue
             dates, px = self._align(raw, assets)
             self.S200 = {}
@@ -335,17 +342,13 @@ class PortfolioMix(QCAlgorithm):
             for x in px["SPY"]:
                 cs.append(cs[-1] + x)
             self.S5 = [(cs[i + 1] - cs[max(0, i - 4)]) / (i + 1 - max(0, i - 4)) for i in range(len(px["SPY"]))]
-            # first month start with >= 260 days of history for every series
             i_first = 260
-            if not with_btc:
-                while dates[i_first].year < 2006:
-                    i_first += 1
             while i_first < len(dates) and dates[i_first].month == dates[i_first - 1].month:
                 i_first += 1
             i_end = len(dates) - 1
             self.set_runtime_statistic(f"PM {run} info", f"{dates[i_first]}..{dates[i_end]} ({(i_end - i_first) / 252:.1f} y)")
             starts = [i for i in range(i_first, i_end - 756) if dates[i].month != dates[i - 1].month and dates[i].month in (1, 4, 7, 10)]
-            for p in (plans_a if with_btc else plans_b):
+            for p in ("BH-SPY", "BH-ACWI", "TD-N8-SPY", "TD-N8-ACWI"):
                 vals = self._run(dates, px, p, i_first, i_end, with_btc)
                 cagr, mdd, sh, y22, y08, w12 = self._stats(dates, vals, i_first)
                 r3, d3 = [], []
