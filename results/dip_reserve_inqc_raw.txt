@@ -1,0 +1,31 @@
+### dip reserve v1
+DR ACWI BH = CAGR 12.08% DD -34% | reserve in 0% of days, 0.0 entries/y | vs BH +0.00%/y vs HOLD80 +2.25%/y
+DR ACWI DD10 = CAGR 10.10% DD -28% | reserve in 7% of days, 0.6 entries/y | vs BH -1.99%/y vs HOLD80 +0.27%/y
+DR ACWI DD5 = CAGR 10.79% DD -29% | reserve in 24% of days, 3.4 entries/y | vs BH -1.29%/y vs HOLD80 +0.96%/y
+DR ACWI HOLD80 = CAGR 9.83% DD -28% | reserve in 0% of days, 0.0 entries/y | vs BH -2.25%/y vs HOLD80 +0.00%/y
+DR ACWI RSI2 = CAGR 10.28% DD -28% | reserve in 12% of days, 8.0 entries/y | vs BH -1.80%/y vs HOLD80 +0.45%/y
+DR ACWI WAIT = CAGR 11.88% DD -34% | reserve in 100% of days, 0.1 entries/y | vs BH -0.20%/y vs HOLD80 +2.05%/y
+DR ACWI info = 2009-04-08..2026-01-02 (16.7 y)
+DR GLD BH = CAGR 10.61% DD -46% | reserve in 0% of days, 0.0 entries/y | vs BH +0.00%/y vs HOLD80 +1.93%/y
+DR GLD DD10 = CAGR 8.84% DD -38% | reserve in 19% of days, 1.9 entries/y | vs BH -1.77%/y vs HOLD80 +0.16%/y
+DR GLD DD5 = CAGR 8.99% DD -41% | reserve in 41% of days, 5.3 entries/y | vs BH -1.63%/y vs HOLD80 +0.30%/y
+DR GLD HOLD80 = CAGR 8.68% DD -38% | reserve in 0% of days, 0.0 entries/y | vs BH -1.93%/y vs HOLD80 +0.00%/y
+DR GLD RSI2 = CAGR 9.19% DD -38% | reserve in 11% of days, 6.7 entries/y | vs BH -1.42%/y vs HOLD80 +0.51%/y
+DR GLD WAIT = CAGR 10.60% DD -46% | reserve in 99% of days, 0.1 entries/y | vs BH -0.01%/y vs HOLD80 +1.92%/y
+DR GLD info = 2006-01-03..2026-01-02 (20.0 y)
+DR SPY BH = CAGR 10.84% DD -55% | reserve in 0% of days, 0.0 entries/y | vs BH +0.00%/y vs HOLD80 +1.94%/y
+DR SPY DD10 = CAGR 9.27% DD -47% | reserve in 7% of days, 0.5 entries/y | vs BH -1.57%/y vs HOLD80 +0.37%/y
+DR SPY DD5 = CAGR 9.66% DD -47% | reserve in 19% of days, 3.6 entries/y | vs BH -1.19%/y vs HOLD80 +0.75%/y
+DR SPY HOLD80 = CAGR 8.90% DD -47% | reserve in 0% of days, 0.0 entries/y | vs BH -1.94%/y vs HOLD80 +0.00%/y
+DR SPY RSI2 = CAGR 9.70% DD -46% | reserve in 11% of days, 7.9 entries/y | vs BH -1.14%/y vs HOLD80 +0.79%/y
+DR SPY WAIT = CAGR 10.85% DD -55% | reserve in 98% of days, 0.1 entries/y | vs BH +0.00%/y vs HOLD80 +1.94%/y
+DR SPY info = 2006-01-03..2026-01-02 (20.0 y)
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
