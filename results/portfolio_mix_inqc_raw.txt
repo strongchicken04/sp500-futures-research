@@ -24,3 +24,31 @@ Return = 0.00 %
 Unrealized = $0.00
 Volume = $0.00
 err None
+### portfolio mix v2 (practical TREND)
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+PM A PROP-R = CAGR 24.5% DD -40% Sharpe 1.29 | 2022 -20% worst12m -38% | 3y med +58% worst +29% medDD -27%
+PM A SPY = CAGR 15.5% DD -34% Sharpe 0.89 | 2022 -18% worst12m -20% | 3y med +45% worst +12% medDD -24%
+PM A TD-N8 = CAGR 21.8% DD -35% Sharpe 1.32 | 2022 -14% worst12m -34% | 3y med +54% worst +23% medDD -18%
+PM A TD-R8 = CAGR 22.1% DD -35% Sharpe 1.33 | 2022 -14% worst12m -34% | 3y med +57% worst +24% medDD -19%
+PM A TM-N12 = CAGR 24.0% DD -50% Sharpe 1.17 | 2022 -17% worst12m -43% | 3y med +56% worst +12% medDD -27%
+PM A TM-N4 = CAGR 14.1% DD -40% Sharpe 0.97 | 2022 -19% worst12m -28% | 3y med +28% worst +3% medDD -26%
+PM A TM-N8 = CAGR 19.3% DD -47% Sharpe 1.10 | 2022 -18% worst12m -38% | 3y med +38% worst +7% medDD -28%
+PM A TM-N8-C2 = CAGR 19.7% DD -46% Sharpe 1.12 | 2022 -17% worst12m -38% | 3y med +40% worst +9% medDD -28%
+PM A TM-R8 = CAGR 20.3% DD -44% Sharpe 1.17 | 2022 -17% worst12m -37% | 3y med +43% worst +12% medDD -26%
+PM A info = 2016-02-01..2026-01-02 (9.9 y)
+PM B PROP-R = CAGR 11.1% DD -40% Sharpe 0.79 | 2022 -15% 2008 -25% worst12m -35% | 3y med +36% worst -16% medDD -15%
+PM B SPY = CAGR 10.8% DD -55% Sharpe 0.63 | 2022 -18% 2008 -37% worst12m -47% | 3y med +40% worst -31% medDD -19%
+PM B TD-N8 = CAGR 8.9% DD -18% Sharpe 0.87 | 2022 -14% 2008 -2% worst12m -14% | 3y med +26% worst +2% medDD -15%
+PM B TD-R8 = CAGR 9.2% DD -18% Sharpe 0.88 | 2022 -14% 2008 -2% worst12m -15% | 3y med +28% worst +2% medDD -15%
+PM B TM-N8 = CAGR 8.3% DD -30% Sharpe 0.71 | 2022 -20% 2008 -0% worst12m -21% | 3y med +21% worst -6% medDD -14%
+PM B TM-N8-C2 = CAGR 8.7% DD -30% Sharpe 0.75 | 2022 -19% 2008 +1% worst12m -20% | 3y med +23% worst -5% medDD -14%
+PM B TM-R8 = CAGR 8.7% DD -27% Sharpe 0.77 | 2022 -19% 2008 -1% worst12m -20% | 3y med +22% worst -2% medDD -15%
+PM B info = 2006-01-03..2026-01-02 (20.0 y)
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None

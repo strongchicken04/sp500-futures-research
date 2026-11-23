@@ -20,6 +20,11 @@ import math
 #   INVVOL    SPY / GLD / IEF / BTC weighted by inverse 60-day volatility, rebalanced monthly
 #   GEM       Antonacci dual momentum, monthly: if SPY 12-month return > 0 hold the better of SPY / EFA
 #             (12-month return), else IEF
+# v2 (owner 2026-11-23 "so the recommendation is TREND? - run it"): practical TREND versions, FIXED BEFORE
+#   RESULTS: SMA200 check daily (D) or at month starts only (M); the 15k sleeve = SMA200 + RSI2 boost with
+#   leverage (R) or no leverage (N: the 15k simply joins the SMA200 core); BTC weight 4 / 8 / 12% (the rest of
+#   the 8% to the core); C2 = uninvested cash earns 2% a year (else 0%). Yearly rebalance.
+#   Plans: TD-R8 (= v1 TREND), TM-R8, TD-N8, TM-N8, TM-N4, TM-N12, TM-N8-C2, + SPY and PROP-R references.
 # Run A: with BTC, from the first month start where all series and their SMA200 exist (~2016). Run B: no BTC
 #   (BTC weight added to the core / dropped from INVVOL), from 2006-01. Metrics: CAGR, max DD, Sharpe (rf 0),
 #   2022, 2008 (run B), worst 12 months; rolling 3-year windows (starts every 3 months): median / worst 3y
@@ -222,6 +227,72 @@ class PortfolioMix(QCAlgorithm):
             vals.append(V / 1.0)
         return vals
 
+
+    def _trend(self, dates, px, i0, i1, with_btc, check, lev, wbtc, cash_y):
+        spy, gld = px["SPY"], px["GLD"]
+        btc = px.get("BTC")
+        cost = 0.0002
+        ms = set(i for i in range(i0, i1 + 1) if i == i0 or dates[i].month != dates[i - 1].month)
+        msl = sorted(ms)
+        wb = wbtc if with_btc else 0.0
+        w = {"core": 55.0 + (8.0 - wb) + (0.0 if lev else 15.0), "rsi": 15.0 if lev else 0.0, "gold": 12.0, "btc": wb}
+        tot = sum(w.values())
+        w = {k: v / tot for k, v in w.items()}
+        rsi = self._rsi2(spy)
+        S = {k: {"V": w[k], "e": 0.0} for k in w}
+        trade = False
+        cy = cash_y / 252.0
+        vals = []
+        for i in range(i0, i1 + 1):
+            if i > i0:
+                for k, p in (("core", spy), ("gold", gld), ("btc", btc)):
+                    if w[k] <= 0:
+                        continue
+                    r = p[i] / p[i - 1] - 1.0
+                    S[k]["V"] *= 1.0 + S[k]["e"] * r + (1.0 - S[k]["e"]) * cy
+                if w["rsi"] > 0:
+                    r = spy[i] / spy[i - 1] - 1.0
+                    e = S["rsi"]["e"]
+                    S["rsi"]["V"] *= 1.0 + e * r + max(0.0, 1.0 - e) * cy - max(0.0, e - 1.0) * 0.03 / 252.0
+            mstart = i in ms
+            for k, p, nm in (("core", spy, "SPY"), ("gold", gld, "GLD"), ("btc", btc, "BTC")):
+                if w[k] <= 0:
+                    continue
+                if check == "D" or mstart:
+                    ne = 1.0 if p[i] > self.S200[nm][i] else 0.0
+                    S[k]["V"] *= 1.0 - cost * abs(ne - S[k]["e"])
+                    S[k]["e"] = ne
+            if w["rsi"] > 0:
+                above = spy[i] > self.S200["SPY"][i]
+                if trade and spy[i] > self.S5[i]:
+                    trade = False
+                if not trade and above and rsi[i] < 10:
+                    trade = True
+                ne = (1.0 if above else 0.0) + (0.5 if trade else 0.0)
+                S["rsi"]["V"] *= 1.0 - cost * abs(ne - S["rsi"]["e"])
+                S["rsi"]["e"] = ne
+            V = sum(S[k]["V"] for k in w if w[k] > 0)
+            if mstart and msl.index(i) > 0 and msl.index(i) % 12 == 0:
+                for k in w:
+                    if w[k] > 0:
+                        S[k]["V"] = w[k] * V
+                V *= 1.0 - cost * 0.2
+                for k in w:
+                    if w[k] > 0:
+                        S[k]["V"] *= 1.0 - cost * 0.2
+            vals.append(V)
+        return vals
+
+    def _run(self, dates, px, p, i0, i1, with_btc):
+        if p.startswith("T") and "-" in p:
+            check = p[1]
+            rest = p.split("-")[1]
+            lev = rest[0] == "R"
+            wbtc = float(rest[1:])
+            cy = 0.02 if p.endswith("C2") else 0.0
+            return self._trend(dates, px, i0, i1, with_btc, check, lev, wbtc, cy)
+        return self._sim(dates, px, p, i0, i1, with_btc)
+
     def _stats(self, dates, vals, i0):
         n = len(vals)
         yrs = n / 252.0
@@ -245,7 +316,8 @@ class PortfolioMix(QCAlgorithm):
 
     def on_end_of_algorithm(self):
         raw = self._series()
-        plans = ("SPY", "6040", "PROP", "PROP-R", "TREND", "INVVOL", "GEM")
+        plans_a = ("SPY", "PROP-R", "TD-R8", "TM-R8", "TD-N8", "TM-N8", "TM-N4", "TM-N12", "TM-N8-C2")
+        plans_b = ("SPY", "PROP-R", "TD-R8", "TM-R8", "TD-N8", "TM-N8", "TM-N8-C2")
         for run, with_btc in (("A", True), ("B", False)):
             assets = ["SPY", "EFA", "IEF", "GLD"] + (["BTC"] if with_btc else [])
             if with_btc and not raw["BTC"]:
@@ -273,12 +345,12 @@ class PortfolioMix(QCAlgorithm):
             i_end = len(dates) - 1
             self.set_runtime_statistic(f"PM {run} info", f"{dates[i_first]}..{dates[i_end]} ({(i_end - i_first) / 252:.1f} y)")
             starts = [i for i in range(i_first, i_end - 756) if dates[i].month != dates[i - 1].month and dates[i].month in (1, 4, 7, 10)]
-            for p in plans:
-                vals = self._sim(dates, px, p, i_first, i_end, with_btc)
+            for p in (plans_a if with_btc else plans_b):
+                vals = self._run(dates, px, p, i_first, i_end, with_btc)
                 cagr, mdd, sh, y22, y08, w12 = self._stats(dates, vals, i_first)
                 r3, d3 = [], []
                 for s0 in starts:
-                    v3 = self._sim(dates, px, p, s0, s0 + 756, with_btc)
+                    v3 = self._run(dates, px, p, s0, s0 + 756, with_btc)
                     r3.append(v3[-1] / v3[0] - 1)
                     pk, md = v3[0], 0.0
                     for v in v3:
