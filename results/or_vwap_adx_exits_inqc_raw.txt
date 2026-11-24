@@ -1,0 +1,26 @@
+### or vwap adx exits v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+VX ETH HOLD = 167/y win 21% gross -2.32pt R(NQ) -0.078 $/MNQ -7.15 t-1.5 | L -7.07 S -7.22 | era -4.3 -10.5 -21.9 +5.6 | eval25 10%/91d
+VX ETH LIT = 165/y win 72% gross -0.73pt R(NQ) -0.051 $/MNQ -3.95 t-2.3 | L -4.89 S -3.09 | era -1.7 -5.0 -7.0 -2.4 | eval25 12%/105d
+VX ETH NOSTOP = 167/y win 48% gross -9.67pt R(NQ) -0.546 $/MNQ -21.84 t-2.7 | L -22.66 S -21.08 | era -10.4 -37.2 -65.7 +18.1 | eval25 31%/29d
+VX ETH R1 = 167/y win 49% gross -1.71pt R(NQ) -0.061 $/MNQ -5.91 t-2.2 | L -9.50 S -2.60 | era -5.7 -3.6 -14.0 -1.4 | eval25 23%/72d
+VX ETH R15 = 167/y win 39% gross -2.57pt R(NQ) -0.078 $/MNQ -7.64 t-2.4 | L -10.75 S -4.78 | era -7.0 -5.6 -17.9 -1.4 | eval25 28%/46d
+VX ETH R2 = 167/y win 33% gross -4.00pt R(NQ) -0.085 $/MNQ -10.50 t-3.1 | L -12.18 S -8.94 | era -9.3 -8.6 -20.5 -4.9 | eval25 26%/47d
+VX ETH T1 = 167/y win 49% gross -2.24pt R(NQ) -0.063 $/MNQ -6.99 t-2.9 | L -12.31 S -2.07 | era -7.6 -0.7 -16.2 -4.2 | eval25 29%/61d
+VX ETH T2 = 167/y win 33% gross -4.37pt R(NQ) -0.096 $/MNQ -11.24 t-3.7 | L -12.95 S -9.66 | era -12.0 -9.9 -22.4 -2.4 | eval25 23%/51d
+VX RTH HOLD = 194/y win 19% gross -1.21pt R(NQ) -0.100 $/MNQ -4.93 t-1.3 | L -2.19 S -7.69 | era -1.3 -4.5 -14.2 -0.4 | eval25 7%/92d
+VX RTH LIT = 192/y win 68% gross -0.42pt R(NQ) -0.046 $/MNQ -3.35 t-2.5 | L -2.81 S -3.89 | era -1.6 -2.5 -9.5 -0.3 | eval25 15%/117d
+VX RTH NOSTOP = 194/y win 49% gross -3.49pt R(NQ) -0.087 $/MNQ -9.47 t-1.2 | L -1.95 S -17.07 | era -18.1 -21.2 -29.1 +24.2 | eval25 33%/21d
+VX RTH R1 = 194/y win 49% gross -1.45pt R(NQ) -0.063 $/MNQ -5.39 t-2.6 | L -6.53 S -4.25 | era -5.6 -1.8 -13.5 -1.4 | eval25 29%/50d
+VX RTH R15 = 194/y win 39% gross -2.57pt R(NQ) -0.078 $/MNQ -7.65 t-3.2 | L -8.31 S -6.98 | era -4.4 -4.8 -17.1 -4.7 | eval25 27%/50d
+VX RTH R2 = 194/y win 33% gross -2.52pt R(NQ) -0.075 $/MNQ -7.54 t-2.9 | L -7.17 S -7.92 | era -2.4 -7.2 -20.3 -1.3 | eval25 30%/37d
+VX RTH T1 = 194/y win 49% gross -1.39pt R(NQ) -0.058 $/MNQ -5.28 t-2.6 | L -6.72 S -3.82 | era -6.0 -1.4 -13.2 -1.3 | eval25 30%/66d
+VX RTH T2 = 194/y win 34% gross -1.89pt R(NQ) -0.052 $/MNQ -6.27 t-2.5 | L -6.97 S -5.56 | era -5.6 -9.4 -15.0 +3.1 | eval25 36%/30d
+Volume = $0.00
+err None
