@@ -1,0 +1,175 @@
+EXTREME UPSIDE MOVES IN US EQUITIES - STAGE 1: DATA FEASIBILITY AUDIT
+=====================================================================
+Date: 2026-11-24
+Environment: QuantConnect cloud (LEAN), all checks executed INSIDE QC; only aggregates (counts, coverage
+shares, field / class names) were returned. Security-level data is not exported (QC terms of service).
+Scripts:  strategy/quantconnect/inqc/xup_stage1_audit_inqc.py   (universe, survivorship, fields, PIT, intraday)
+          strategy/quantconnect/inqc/xup_stage1b_audit_inqc.py  (float behaviour, security types, data classes)
+          strategy/quantconnect/inqc/xup_stage1c_audit_inqc.py  (FINRA short-interest universe delivery)
+          strategy/quantconnect/inqc/xup_stage1d_audit_inqc.py  (FINRA short-interest value-change timing)
+Raw outputs: results/xup_stage1*_audit_inqc_raw.txt
+Documentation read: QC dataset pages for FINRA OTC Transparency, FINRA Reg SHO, US Equities Short
+Availability, Morningstar US Fundamental Data, US Equity Security Master (fetched 2026-11-24).
+
+STATUS: Stage 1 complete. No predictive test has been run yet. Nothing below is a research finding about
+extreme moves; it only states what can and cannot be tested, and how.
+
+
+1. BOTTOM LINE
+--------------
+* Survivorship: the QC US equity universe is point-in-time and includes later-bankrupt / delisted /
+  acquired companies (10 of 10 known cases present before their exit; 62% of the 2008 universe no longer
+  exists in 2026; 24,127 distinct securities seen 2006-2026). PASS.
+* Price / volume (daily and minute, incl. pre-market and after-hours): available 2006-2026 for listed
+  common stocks. PASS.
+* Market capitalisation: point-in-time (checked across the AAPL 4:1 split and the GE 1:8 reverse split).
+  PASS, with the caveat in 4.2.
+* Shares outstanding and FLOAT fields: EXIST, but they are RESTATED FOR LATER SPLITS (not point-in-time
+  with respect to raw prices). Usable only after a documented correction (section 4.3). Float exists only
+  from 2010 (23% coverage in Jan 2010, 84-94% from 2011). Float hypotheses can therefore be tested only on
+  2011-2026, and only with a derived ("corrected") float -> PARTIAL RESEARCH, labelled as such.
+* Short interest: QC has FINRA short interest only from 2018-01 (the dataset page says 2017; the first
+  record delivered is 2018-01-11). Publication-vs-settlement timing: see section 5 (Stage 1d). Short-interest
+  hypotheses can be tested only on 2018-2026 -> PARTIAL RESEARCH. No short interest before 2018 exists in QC.
+* Trading halts: no halt dataset in QC. Not testable directly (a proxy is possible, labelled as a proxy).
+* News / catalysts: Benzinga news class exists in QC (coverage dates to be confirmed in Stage 2); FDA /
+  offerings / dilution only via news text or SEC filings -> optional, later stage.
+* The project will NOT be downgraded to an easier question because of these gaps. The core hypotheses that
+  are fully testable (market cap, RVOL, volatility, gaps, momentum, price level, liquidity, corporate actions)
+  will be tested on 2006-2026; float and short interest will be tested on their own sub-periods and reported
+  as PARTIAL tests of the main hypothesis, never as confirmation of it.
+
+
+2. DATA AVAILABILITY MATRIX
+---------------------------
+Variable | Available | History in QC | Coverage | Point-in-time | Source | Known limitations
+---------|-----------|---------------|----------|---------------|--------|------------------
+Universe membership (all listed US equities) | YES | 1998- (audited 2006-2026) | 6,700 (2006) - 10,700 (2026) securities a day passed to the universe; ~50% carry fundamentals (the rest: ETFs etc.) | YES (daily, includes delisted) | QC US Equity Security Master + coarse universe (AlgoSeek prices) | Security Master excludes OTC-only stocks; OTCM-listed names with fundamentals appear (249-649 a year) and will be classified separately
+Security type (common / preferred / CEF) | YES | 2006- | 99% of fundamental names are common (ST00000001); 28-33 preferred; 74-115 closed-end funds | current classification | Morningstar SecurityReference | ADR flag (is_depositary_receipt) is always False; Morningstar US fundamentals exclude ADRs per docs, so ADRs are effectively out of the fundamental universe
+Delisting date / reason | YES | | | NO - current snapshot | Morningstar SecurityReference | must NOT be used as a predictor (look-ahead); usable only for diagnostics
+ShareClassStatus (A/D) | YES | | | NO - current status | Morningstar | look-ahead field; excluded from predictors
+Daily OHLCV | YES | 1998- | all universe names | YES (raw + adjusted via factor files) | AlgoSeek / QC | daily high used for max-upside labels; adjusted series for returns
+Minute OHLCV incl. pre-market / after-hours | YES | 1998- | listed equities | YES | AlgoSeek / QC | AMC 2021-01-27: 960 bars, 330 pre-market, 240 after-hours; heavy to process for the whole universe -> used for selected tests only
+Splits / reverse splits / dividends / delistings / symbol changes | YES | 1998- | | YES (events at midnight ET) | QC Security Master | GE 1:8 reverse split 2021-08-02 present; dividends: special vs regular not distinguishable; mergers only as symbol / delisting events
+Market capitalisation | YES | 2006- | 91-98% of fundamental names | YES (AAPL / GE checks) | Morningstar CompanyProfile.MarketCap | fill-forwarded; Morningstar feed migration on 2026-09-23 restated history (about 1/3 of overlapping values differ per QC docs)
+Shares outstanding | YES | 2006- | 95-99% | NO - restated for later splits | Morningstar CompanyProfile.SharesOutstanding | e.g. AAPL shows post-split 17.1B shares on 2020-08-04 (split on 2020-08-31); PIT shares must be derived as MarketCap / raw price
+Float | YES (partial) | 2010- (23% Jan 2010, 84-94% 2011-2026) | 3,390-5,563 names a year | PARTIAL - time-varying, but restated for later splits | Morningstar CompanyProfile.Float | none before 2010; changes coincide with shares-outstanding updates in 97% of stocks; float / shares-outstanding median 0.77-0.83, p10 ~0.4; definition and update lag of Morningstar float not documented in QC
+Short interest | YES (partial) | 2018-01-11 - | 9,000-18,000 symbols per daily snapshot | timing: see section 5 | FINRA via QC (FINRAShortInterest) | none before 2018; fields include days_to_cover, change, average_daily_volume; % of float must be computed with the corrected float
+Short sale volume (Reg SHO, off-exchange) | YES | 2018-08 - | 22,073 symbols | daily | FINRA via QC | short VOLUME, not short interest; optional secondary variable
+Borrow availability / fee | YES | 2018-01 - | 10,500 symbols | daily | QC / IB, Axos | optional secondary variable
+Fundamental filing dates | YES | 1998- | | approx. | Morningstar FileDate | for old data the file date is approximated as period end + 45 days; values "as originally reported"
+News | YES (to verify) | to verify | to verify | publication timestamps | BenzingaNews class in QC | coverage start and density to be checked in Stage 2
+SEC filing text metrics | YES | to verify | | | Brain Company Filing Language Metrics | text metrics only, not offering / dilution events
+Earnings call metrics | YES | to verify | | | Brain | optional
+Trading halts | NO | - | - | - | - | would need Nasdaq / NYSE halt history (external); in QC only a proxy (missing minute bars inside RTH)
+Bid-ask spread | NO (daily) | - | - | - | - | quotes would need tick / quote data; spread will be proxied (e.g. high-low estimators) and labelled as a proxy
+Insider transactions | NO in this audit | - | - | - | - | not found among loaded classes; external (SEC Form 4) if needed
+Sector / industry | YES | | | current classification | Morningstar AssetClassification | classification may be current, not historical; use with care
+
+
+3. HISTORICAL UNIVERSE AND SURVIVORSHIP
+---------------------------------------
+3.1 Universe size on the first trading day of each January (QC Fundamental universe):
+    2006: 6,703 (3,390 with fundamentals)   2010: 6,666 (3,600)   2015: 7,366 (4,128)
+    2020: 8,188 (4,355)   2022: 9,774 (5,532)   2024: 9,585 (5,267)   2026: 10,712 (4,981)
+    Exchanges among fundamental names (2026): Nasdaq 2,830, NYSE 1,672, OTCM 249, NYSE American 225, Arca 4.
+    Price < $1: 2-10% of names (10% in Jan 2009); $1-5: 10-21%.
+    Market cap < $10M: 0-6% of fundamental names (6% in 2024-2026); $10-50M: 5-15%; $50-300M: 19-28%.
+3.2 Survivorship test - known later-delisted names present BEFORE their exit:
+    LEH (bankrupt 2008), WM (failed 2008), BSC (acquired 2008), CIT (bankrupt 2009), RSH (bankrupt 2015),
+    SHLD (bankrupt 2018), HTZ (bankrupt 2020), BBBY (bankrupt 2023), SIVB (failed 2023), FRC (failed 2023):
+    10 / 10 present.
+    4,365 of the 7,004 securities in the Jan 2008 universe (62%) are absent from the Nov 2026 universe.
+    24,127 distinct securities appeared in the universe 2006-2026.
+    -> The universe is not built from today's survivors. Delisting returns: QC liquidates a position at the
+       delisting; the last traded price is used. The delisting price handling (e.g. a final -100% for a
+       bankruptcy without a last trade) must be checked in Stage 2 for label construction.
+3.3 Planned research universe (to be validated on random dates in Stage 2):
+    has fundamental data AND security type = common stock (ST00000001) AND not a closed-end fund AND primary
+    share; exchanges Nasdaq / NYSE / NYSE American as the main universe; OTCM separately classified (not mixed);
+    ETFs / ETNs / preferreds / warrants / rights / units excluded by the type filter (they carry no common-stock
+    fundamentals). SPACs: Morningstar does not flag SPACs explicitly; they will be identified heuristically
+    (e.g. ~$10 price, near-zero volatility) and reported separately; ADRs are not in the fundamental universe.
+
+
+4. POINT-IN-TIME ISSUES FOUND (AND HOW THEY WILL BE HANDLED)
+------------------------------------------------------------
+4.1 Prices: raw prices are used for the reference price and for share-count-based variables; split- and
+    dividend-adjusted prices for returns. Reverse splits are corporate-action events in QC (verified for GE),
+    so a reverse split does not create a fake +700% move in adjusted data. The labelling code will use adjusted
+    highs relative to the adjusted reference close and will flag any event day that coincides with a split
+    event for manual-rule exclusion.
+4.2 Market cap: Morningstar MarketCap equals raw price x point-in-time shares (AAPL 2020-08-04: price 435.8,
+    MC 1,863B -> 4.28B shares = the pre-split count; GE 2021-07-01: price 13.5, MC 118.2B -> 8.76B shares =
+    the pre-reverse-split count). It is fill-forwarded (monthly share counts). It will be used as is, measured
+    at the prediction close of the previous day.
+4.3 Shares outstanding and float are restated for later splits:
+    AAPL 2020-08-04 (before the 4:1 split): SharesOutstanding 17,103M, Float 17,093M (post-split numbers).
+    GE 2021-07-01 (before the 1:8 reverse split): SharesOutstanding 1,098M, Float 1,091M (post-split numbers).
+    Correction used in the study (documented, labelled "derived PIT float"):
+        PIT shares        = MarketCap / raw price
+        PIT float         = Float x (PIT shares / SharesOutstanding)
+    i.e. the float / shares-outstanding RATIO from Morningstar is assumed to be point-in-time, and the share
+    count is re-based to the split state of that date. Validation planned in Stage 2: the corrected float must
+    jump only on genuine issuance / buyback / float-change dates, not on split dates.
+    Caveat: Morningstar's float definition and update lag are not documented in QC. Float values change in
+    lock-step with share-count updates (97% of stocks), so the float may lag real changes (e.g. lock-up
+    expiries, offerings) by up to one Morningstar update cycle. This is a limitation of the float tests.
+4.4 Fundamentals timing: Morningstar values are fill-forwarded and keyed to a file date (approximated as period
+    end + 45 days for old filings). All fundamentals will be lagged one trading day beyond the QC delivery date.
+4.5 Look-ahead fields excluded from predictors: DelistingDate, DelistingReason, ShareClassStatus, IPO flags
+    that reflect the current state, current sector classification (sector kept only as a descriptive split).
+4.6 Morningstar feed migration (2026-09-23): QC replaced the whole fundamental history with the new
+    Morningstar Equity Data Feeds; ~1/3 of overlapping values changed. All runs of this project use the
+    current (post-migration) data consistently; results are not comparable with pre-migration backtests.
+
+
+5. SHORT INTEREST TIMING (STAGE 1c / 1d)
+----------------------------------------
+Stage 1c: the FINRA short-interest universe is delivered every calendar day from 2018-01-11 as a forward-
+filled snapshot of 9,000-18,000 symbols (p10 9,243 / p50 14,066 / p90 17,896 records). Delivery dates are
+uniform over the month, so they do not reveal the publication date. Record time = the previous day.
+Stage 1d (value-change timing): <<STAGE 1d RESULT>>
+Rule that will be applied regardless of the result: short interest for settlement date S is treated as
+available only from FINRA's publication date (settlement + 8 business days, FINRA's standard dissemination
+schedule) + 1 trading day. If QC already stamps the data at publication, this adds a conservative one-day lag;
+if QC stamps it at settlement, this removes the look-ahead.
+
+
+6. WHAT IS MISSING AND EXTERNAL OPTIONS
+---------------------------------------
+* Float before 2010 and an exact, documented float history: CRSP (shares outstanding only, no float),
+  Compustat (shares, some float items), FactSet / Bloomberg / S&P Capital IQ (historical float, paid).
+* Short interest before 2018: Compustat Supplemental Short Interest (NYSE/AMEX from the 1970s, Nasdaq from
+  2003; via WRDS), Nasdaq Data Link / exchange files, ORTEX / S3 (paid, from ~2010s).
+* Trading halts: Nasdaq Trader and NYSE publish halt / LULD histories (coverage to verify).
+* Spreads: TAQ / quote data (paid) for true spreads; otherwise high-low spread estimators (proxy).
+* Corporate catalysts (FDA, offerings, contracts): news (Benzinga in QC, to verify) or SEC EDGAR filings
+  (S-1 / S-3 / 424B for offerings; 8-K items) - external parsing would be needed for EDGAR.
+Note on the QC terms: QC flagged data exports earlier in this project. External data cannot be merged
+security-by-security with QC data outside QC; anything external would have to be uploaded into QC as a
+custom data source and the analysis kept inside QC.
+
+
+7. CONSEQUENCES FOR THE RESEARCH DESIGN (PROPOSED FOR STAGE 2+)
+---------------------------------------------------------------
+Block A - FULL TEST, 2006-2026: market cap (PIT), RVOL (daily; intraday where feasible), ATR / price and
+          realised volatility, gaps, momentum (1-20 days, distance from highs, streaks), price level, dollar
+          volume / liquidity, corporate-action flags, market regime. Chronological split: train 2006-2016,
+          validation 2017-2020, untouched test 2021-2026, with purge / embargo of 20 sessions at each boundary.
+Block B - PARTIAL TEST, 2011-2026: derived PIT float, float turnover, volume / float. Split: train 2011-2017,
+          validation 2018-2020, test 2021-2026. Reported as a partial test of the low-float hypothesis.
+Block C - PARTIAL TEST, 2018-2026: short interest % of (derived) float, days to cover, change in SI, with the
+          publication-lag rule of section 5. Split: train 2018-2021, test 2022-2026 (no separate validation;
+          stated as a limitation). Reported as a partial test of the short-interest hypothesis.
+Block D - OPTIONAL: news / catalyst flags if Benzinga coverage proves adequate.
+Event labels (all blocks): max(adjusted high over the next 5 / 10 / 20 sessions) / reference close - 1 >= 50 /
+100 / 200%, plus close-based versions; reference = the close of the prediction day (prediction made after the
+close, entry no earlier than the next open). Event clustering: a new event for the same stock only after the
+previous window ends (non-overlapping by stock), and inference with stock-level clustering / block bootstrap.
+Compute: everything runs inside QC (daily universe ~4,000-5,500 common stocks with fundamentals); predictors
+and labels are built in-QC and models (logistic, regularised logistic, random forest / gradient boosting via
+scikit-learn in QC) are fit in-QC; only aggregate statistics leave QC.
+
+Next step: Stage 2 - build and validate the research universe on random dates (type filters, exchange mix,
+delisting-return handling, SPAC heuristic, derived-float validation across split dates).
