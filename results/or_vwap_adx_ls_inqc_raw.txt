@@ -1,0 +1,22 @@
+### or vwap adx ls v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+VA ETH max1 ADX = 165/y win 72% gross -0.73pt risk med 36.9pt | R net NQ -0.051 MNQ -0.072 | $/MNQ -3.95 t-2.3
+VA ETH max1 ADX split = L -4.89 (79/y) S -3.09 (86/y) | $/MNQ era -1.7 -5.0 -7.0 -2.4 | last6y -2.97
+VA ETH max1 NOADX = 174/y win 48% gross -0.80pt risk med 21.9pt | R net NQ -0.127 MNQ -0.170 | $/MNQ -4.11 t-3.4
+VA ETH max1 NOADX split = L -2.63 (85/y) S -5.51 (90/y) | $/MNQ era -3.9 -5.0 -2.6 -4.8 | last6y -4.54
+VA ETH max3 ADX = 401/y win 73% gross -0.37pt risk med 35.8pt | R net NQ -0.037 MNQ -0.058 | $/MNQ -3.25 t-3.5
+VA ETH max3 ADX split = L -3.13 (191/y) S -3.35 (210/y) | $/MNQ era -1.9 -3.7 -5.7 -1.9 | last6y -2.35
+VA RTH max1 ADX = 192/y win 68% gross -0.42pt risk med 31.5pt | R net NQ -0.046 MNQ -0.071 | $/MNQ -3.35 t-2.5
+VA RTH max1 ADX split = L -2.81 (96/y) S -3.89 (96/y) | $/MNQ era -1.6 -2.5 -9.5 -0.3 | last6y +0.06
+VA RTH max1 NOADX = 200/y win 42% gross -0.31pt risk med 17.7pt | R net NQ -0.128 MNQ -0.180 | $/MNQ -3.12 t-2.9
+VA RTH max1 NOADX split = L -2.76 (101/y) S -3.49 (99/y) | $/MNQ era -5.5 -1.6 -4.0 -1.7 | last6y -1.40
+VA RTH max3 ADX = 483/y win 72% gross -0.33pt risk med 33.5pt | R net NQ -0.024 MNQ -0.047 | $/MNQ -3.17 t-4.2
+VA RTH max3 ADX split = L -2.74 (237/y) S -3.58 (246/y) | $/MNQ era -1.0 -3.8 -6.0 -2.1 | last6y -1.72
+Volume = $0.00
+err None
