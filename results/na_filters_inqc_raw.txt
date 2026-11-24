@@ -25,3 +25,27 @@ Return = 0.00 %
 Unrealized = $0.00
 Volume = $0.00
 err None
+### na filters v2 (ER robustness)
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+NF BASE = 231/y win 39% $+203/tr t+4.2 $+46,948/y DD $-88,411 | S +126 | IS $+153 t+2.8 OOS $+279 t+3.1 | era +97 +81 +329 +290
+NF BASE lucid = 1MNQ eval 54%/97d funded $2,015 56% 206d | 2MNQ eval 42%/62d funded $1,312 35% 65d
+NF ER50 = 211/y win 39% $+202/tr t+4.0 $+42,547/y DD $-88,471 | S +116 | IS $+144 t+2.5 OOS $+287 t+3.1 | era +69 +80 +349 +287
+NF ER50 lucid = 1MNQ eval 59%/99d funded $1,849 57% 204d | 2MNQ eval 41%/69d funded $1,411 36% 76d
+NF ER60 = 188/y win 40% $+224/tr t+4.3 $+42,253/y DD $-95,925 | S +153 | IS $+137 t+2.2 OOS $+354 t+3.9 | era +51 +82 +414 +332
+NF ER60 lucid = 1MNQ eval 68%/92d funded $3,156 71% 264d | 2MNQ eval 46%/64d funded $2,254 42% 104d
+NF ER60+NA15 = 112/y win 44% $+307/tr t+4.0 $+34,476/y DD $-81,464 | S +219 | IS $+202 t+2.2 OOS $+464 t+3.4 | era +8 +160 +621 +426
+NF ER60+NA15 lucid = 1MNQ eval 66%/100d funded $1,885 58% 235d | 2MNQ eval 55%/66d funded $1,800 46% 107d
+NF ER70 = 157/y win 41% $+230/tr t+4.0 $+36,132/y DD $-87,265 | S +114 | IS $+141 t+2.1 OOS $+363 t+3.6 | era +12 +141 +428 +320
+NF ER70 lucid = 1MNQ eval 58%/91d funded $2,499 69% 286d | 2MNQ eval 40%/60d funded $1,076 38% 71d
+NF ER80 = 115/y win 42% $+275/tr t+3.9 $+31,522/y DD $-68,306 | S +195 | IS $+239 t+2.8 OOS $+326 t+2.7 | era +114 +141 +471 +351
+NF ER80 lucid = 1MNQ eval 49%/113d funded $1,713 55% 229d | 2MNQ eval 43%/87d funded $1,666 46% 101d
+NF NA15 = 121/y win 43% $+293/tr t+3.9 $+35,376/y DD $-81,146 | S +191 | IS $+218 t+2.5 OOS $+406 t+3.1 | era +65 +154 +523 +409
+NF NA15 lucid = 1MNQ eval 76%/105d funded $2,051 65% 277d | 2MNQ eval 60%/72d funded $1,498 47% 96d
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None
