@@ -1,0 +1,17 @@
+### orb tp grid v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+TPG 0.5R = TP hit 60% SL 23% time 17% | win 66% +0.010R $+60/tr t+1.2 | R era -0.04 -0.01 -0.00 +0.08 | last6y TP 63% win 69% +0.066R
+TPG 0.625R = TP hit 53% SL 26% time 22% | win 62% +0.017R $+67/tr t+1.2 | R era -0.05 +0.00 -0.00 +0.09 | last6y TP 55% win 65% +0.077R
+TPG 0.75R = TP hit 46% SL 28% time 26% | win 59% +0.033R $+106/tr t+1.8 | R era -0.03 +0.02 +0.01 +0.11 | last6y TP 49% win 63% +0.096R
+TPG 1.5R = TP hit 21% SL 32% time 47% | win 52% +0.065R $+176/tr t+2.4 | R era -0.01 +0.06 +0.01 +0.17 | last6y TP 20% win 57% +0.150R
+TPG 1R = TP hit 35% SL 30% time 35% | win 55% +0.041R $+130/tr t+1.9 | R era -0.03 +0.03 +0.01 +0.13 | last6y TP 37% win 59% +0.114R
+TPG 2R = TP hit 12% SL 33% time 55% | win 50% +0.076R $+202/tr t+2.6 | R era -0.01 +0.09 +0.02 +0.17 | last6y TP 11% win 55% +0.160R
+TPG 3R = TP hit 4% SL 34% time 62% | win 50% +0.091R $+245/tr t+2.9 | R era +0.02 +0.08 +0.03 +0.20 | last6y TP 4% win 55% +0.178R
+Unrealized = $0.00
+Volume = $0.00
+err None
