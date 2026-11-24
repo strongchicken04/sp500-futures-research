@@ -29,19 +29,26 @@ indicator("Lucid 16 — Vault Break / ORB switch", overlay=true, max_labels_coun
 //   61.5% random-walk break-even; vwap_band_orb_inqc.py) - for viewing only.
 // v6 (owner 2026-11-23): VWAP Band ORB band width is an input, default 50 bps (the best band in v2:
 //   131 signals / yr, all eras positive, +$71 / trade at SL 0.40%, t 1.9 - still a weak edge).
+// v7 (owner 2026-11-24): daily SMA line (default 300, works on any chart timeframe - e.g. weekly ETF charts)
+//   with a label of the distance in %; new mode "SMA only (investing)" hides all trading signals.
+//   Investing plan: hold while the DAILY close is above the SMA (slow_trend_lines_inqc.py: SMA300 slightly
+//   better than SMA200 on SPY / ACWI / GLD / BTC, fewer exits).
 // =========================================================================
 
-mode = input.string("Vault Break", "Strategy", options = ["Vault Break", "ORB", "VWAP Band ORB"])
+mode = input.string("Vault Break", "Strategy", options = ["Vault Break", "ORB", "VWAP Band ORB", "SMA only (investing)"])
+showSma = input.bool(true, "Show daily SMA (investing rule)")
+smaLen = input.int(300, "Daily SMA length", minval = 2)
 bandBps = input.float(50.0, "VWAP Band ORB: band (bps from VWAP)", step = 5.0)
 slPct = input.float(0.40, "VWAP Band ORB: SL % of price (TP = 0.625 x SL)", step = 0.05)
 isV = mode == "Vault Break"
 isO = mode == "ORB"
 isB = mode == "VWAP Band ORB"
+isS = mode == "SMA only (investing)"
 
 TZ = "America/Chicago"
 tCT = hour(time, TZ) * 60 + minute(time, TZ)        // bar OPEN time, CT minutes
 newDay = dayofmonth(time, TZ) != dayofmonth(time[1], TZ)
-tfOk = isV ? timeframe.period == "30" : isO ? timeframe.period == "15" : timeframe.period == "5"
+tfOk = isS ? false : isV ? timeframe.period == "30" : isO ? timeframe.period == "15" : timeframe.period == "5"
 
 // ------------------------------------------------------------------ VAULT data
 var float[] ranges = array.new_float()
@@ -258,9 +265,20 @@ bgcolor(isO and inDay ? (bias == 1 ? color.new(color.green, 94) : bias == -1 ? c
 
 // ------------------------------------------------------------------ ADX of the current candle
 // a label next to the last candle (green when >= 20) + the value in the status line / data window
-plot(adx, "ADX", color = adx >= 20 ? color.green : color.gray, display = display.status_line + display.data_window)
+plot(isS ? na : adx, "ADX", color = adx >= 20 ? color.green : color.gray, display = display.status_line + display.data_window)
 var label adxLbl = na
-if barstate.islast
+if barstate.islast and not isS
     label.delete(adxLbl)
     adxLbl := label.new(bar_index + 1, close, "ADX " + str.tostring(adx, "#.#"), style = label.style_label_left,
                           color = adx >= 20 ? color.new(color.green, 10) : color.new(color.gray, 10), textcolor = color.white, size = size.normal)
+
+// ------------------------------------------------------------------ daily SMA (investing rule)
+smaD = request.security(syminfo.tickerid, "D", ta.sma(close, smaLen))
+plot(showSma ? smaD : na, "Daily SMA", color = color.new(color.fuchsia, 0), linewidth = 2)
+var label smaLbl = na
+if barstate.islast and showSma and not na(smaD)
+    label.delete(smaLbl)
+    dPct = (close / smaD - 1) * 100
+    smaLbl := label.new(bar_index + 1, smaD, "SMA" + str.tostring(smaLen) + " " + (dPct >= 0 ? "+" : "") + str.tostring(dPct, "#.0") + " %",
+                          style = label.style_label_left, color = dPct >= 0 ? color.new(color.green, 10) : color.new(color.red, 10),
+                          textcolor = color.white, size = size.normal)
