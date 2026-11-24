@@ -1,0 +1,35 @@
+### vault regime v1
+Equity = $1,000,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+VR L K0.30 DN20 = 37/y win 69.8% $+103/tr t+2.5 | era +139 +118 +84 +80 | last6y +123/tr n233
+VR L K0.30 DN200 = 21/y win 70.0% $+110/tr t+1.8 | era +238 +60 -45 +138 | last6y +138/tr n128
+VR L K0.30 DN50 = 32/y win 69.0% $+89/tr t+2.0 | era +119 +176 +50 +34 | last6y +80/tr n207
+VR L K0.30 all = 103/y win 67.9% $+93/tr t+3.8 | era +154 +58 +100 +62 | last6y +102/tr n609
+VR L K0.30 not DN20 = 66/y win 66.8% $+87/tr t+2.9 | era +162 +25 +108 +51 | last6y +88/tr n376
+VR L K0.30 not DN200 = 87/y win 67.5% $+89/tr t+3.4 | era +143 +58 +118 +36 | last6y +92/tr n481
+VR L K0.30 not DN50 = 71/y win 67.4% $+94/tr t+3.3 | era +169 +7 +119 +78 | last6y +113/tr n402
+VR S K0.20 DN20 = 36/y win 68.2% $+56/tr t+1.3 | era +83 -51 +116 +77 | last6y +88/tr n234
+VR S K0.20 DN200 = 26/y win 65.6% $-5/tr t-0.1 | era +206 -233 -20 +23 | last6y +23/tr n154
+VR S K0.20 DN50 = 31/y win 66.4% $+17/tr t+0.3 | era +46 -217 +23 +126 | last6y +122/tr n209
+VR S K0.20 all = 103/y win 66.0% $+32/tr t+1.2 | era +6 -25 +48 +86 | last6y +70/tr n630
+VR S K0.30 DN20 = 30/y win 66.9% $+43/tr t+0.9 | era -18 +64 +78 +47 | last6y +61/tr n203
+VR S K0.30 DN200 = 22/y win 63.5% $-28/tr t-0.4 | era +88 -169 -201 +35 | last6y +35/tr n133
+VR S K0.30 DN50 = 26/y win 63.3% $-28/tr t-0.5 | era -56 -51 -67 +21 | last6y +15/tr n184
+VR S K0.30 all = 86/y win 65.0% $+17/tr t+0.6 | era +8 -22 -11 +76 | last6y +49/tr n543
+VR S K0.40 DN20 = 26/y win 65.9% $+12/tr t+0.2 | era -10 -43 +89 +17 | last6y +19/tr n173
+VR S K0.40 DN200 = 19/y win 62.4% $-74/tr t-1.0 | era -277 -82 +95 -70 | last6y -70/tr n113
+VR S K0.40 DN50 = 22/y win 63.4% $-51/tr t-0.9 | era -107 -161 -9 +12 | last6y -11/tr n155
+VR S K0.40 all = 72/y win 64.3% $-2/tr t-0.1 | era -42 -62 +66 +24 | last6y +22/tr n455
+VR info = days 1490 last6y, DN50 share 32%
+VR25 L = all: 60%/19d/$99 | DN50 starts: 61%/18d/$99
+VR25 LS20 = all: 58%/22d/$104 | DN50 starts: 51%/25d/$117
+VR25 LS200 = all: 55%/21d/$108 | DN50 starts: 54%/21d/$112
+VR25 LS50 = all: 59%/22d/$101 | DN50 starts: 53%/26d/$114
+VR25 S50 = all: 60%/91d/$98 | DN50 starts: 53%/82d/$110
+Volume = $0.00
+err None
