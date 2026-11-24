@@ -26,7 +26,9 @@ PRICE, PV, COST = 28530.0, 20.0, 15.0
 ERAS = ((2010, 2013), (2014, 2017), (2018, 2021), (2022, 2026))
 RECENT = date(2020, 11, 20)
 MARKS = set(range(10 * 60, 15 * 60 + 31, 30))
-VARS = ("BASE", "ER", "NA15", "RVOL", "OVN", "VWP", "ADX", "LATE11")
+# v2 (owner 2026-11-24: "try the Noise Area" - robustness of the ER filter before using it on the funded account):
+# ER thresholds 50 / 60 / 70 / 80th pct, ER60 + 1.5x band, 1.5x band, base; in-sample 2010-19 vs 2020-26.
+VARS = ("BASE", "ER50", "ER60", "ER70", "ER80", "ER60+NA15", "NA15")
 
 
 def era_of(y):
@@ -236,9 +238,12 @@ class NAFilters(QCAlgorithm):
             if d == 0:
                 continue
             ok = True
-            if k == "ER":
+            if k.startswith("ER"):
                 eh = self.erh[m]
-                ok = len(eh) == 60 and er >= sorted(eh)[int(0.6 * 60)]
+                q = int(k[2:4]) / 100.0
+                ok = len(eh) == 60 and er >= sorted(eh)[int(q * 60)]
+                if ok and k.endswith("+NA15"):
+                    ok = (d == 1 and c > max(self.O, self.prevC) * (1 + 1.5 * s)) or (d == -1 and c < min(self.O, self.prevC) * (1 - 1.5 * s))
             elif k == "NA15":
                 ok = (d == 1 and c > max(self.O, self.prevC) * (1 + 1.5 * s)) or (d == -1 and c < min(self.O, self.prevC) * (1 - 1.5 * s))
             elif k == "RVOL":
@@ -341,9 +346,17 @@ class NAFilters(QCAlgorithm):
             lo = [x[0] for x in tr if x[1] == 1]
             sh = [x[0] for x in tr if x[1] == -1]
             era = " ".join(f"{sum(x[0] for x in tr if x[2] == i) / max(1, sum(1 for x in tr if x[2] == i)):+.0f}" for i in range(len(ERAS)))
+            def tt(sub):
+                if len(sub) < 10:
+                    return "n<10"
+                mm = sum(sub) / len(sub)
+                ss = math.sqrt(sum((x - mm) ** 2 for x in sub) / (len(sub) - 1))
+                return f"${mm:+.0f} t{mm / (ss / math.sqrt(len(sub))):+.1f}"
+            ins = tt([x[0] for x in tr if x[3] <= 2019])
+            oos = tt([x[0] for x in tr if x[3] >= 2020])
             self.set_runtime_statistic(f"NF {k}",
                 f"{n / yrs:.0f}/y win {sum(1 for x in u if x > 0) / n * 100:.0f}% ${mu:+.0f}/tr t{mu / (sd / math.sqrt(n)):+.1f} ${sum(u) / yrs:+,.0f}/y DD ${mdd:,.0f}"
-                f" | L {sum(lo) / max(1, len(lo)):+.0f} S {sum(sh) / max(1, len(sh)):+.0f} | era {era}")
+                f" | S {sum(sh) / max(1, len(sh)):+.0f} | IS {ins} OOS {oos} | era {era}")
             seq = self._days(tr)
             cells = []
             for nm in (1, 2):
@@ -354,10 +367,3 @@ class NAFilters(QCAlgorithm):
                 kk = len(fr)
                 cells.append(f"{nm}MNQ eval {ev} funded ${sum(r[0] for r in fr) / kk:,.0f} {sum(1 for r in fr if r[1] > 0) / kk * 100:.0f}% {sum(r[2] for r in fr) / kk:.0f}d")
             self.set_runtime_statistic(f"NF {k} lucid", " | ".join(cells))
-            if k == "BASE":
-                yrs_ = yrs
-                parts = []
-                for lab, sel in (("T1", lambda dt: dt[0]), ("T2", lambda dt: dt[1]), ("nonT1", lambda dt: not dt[0])):
-                    sub = [x[0] for x in tr if x[4] in self.daytype and sel(self.daytype[x[4]])]
-                    parts.append(f"{lab} {len(sub) / yrs_:.0f}/y ${sum(sub) / max(1, len(sub)):+.0f}/tr ${sum(sub) / yrs_:+,.0f}/y")
-                self.set_runtime_statistic("NF ceiling (ex post)", " | ".join(parts))
