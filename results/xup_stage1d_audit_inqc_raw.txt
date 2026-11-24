@@ -1,0 +1,15 @@
+### xup stage1d audit v1
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+SI change day-of-month % = 1:2 2:2 3:2 4:2 5:2 6:2 7:2 8:2 9:2 10:2 11:10 12:5 13:10 14:2 15:2 16:2 17:2 18:2 19:2 20:2 21:2 22:2 23:2 24:2 25:3 26:10 27:5 28:10 29:2 30:2 31:1
+SI change weekday = Tu:39279 We:40472 Th:63985 Fr:37133 Sa:38742 | total changes 219611 symbols 600
+SI date fields = end_time=2018-01-11 00:00:00 | time=2018-01-10 00:00:00
+SI props = average_daily_volume, change, data, days_to_cover, end_time, normalize, previous_short_interest, price, protobuf_serialize, scale, short_interest, should_cache_to_security, symbol, time, underlyi
+SI value fields = average_daily_volume, change, days_to_cover, previous_short_interest, price, short_interest, value
+Unrealized = $0.00
+Volume = $0.00
+err None

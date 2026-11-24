@@ -29,8 +29,10 @@ extreme moves; it only states what can and cannot be tested, and how.
   from 2010 (23% coverage in Jan 2010, 84-94% from 2011). Float hypotheses can therefore be tested only on
   2011-2026, and only with a derived ("corrected") float -> PARTIAL RESEARCH, labelled as such.
 * Short interest: QC has FINRA short interest only from 2018-01 (the dataset page says 2017; the first
-  record delivered is 2018-01-11). Publication-vs-settlement timing: see section 5 (Stage 1d). Short-interest
-  hypotheses can be tested only on 2018-2026 -> PARTIAL RESEARCH. No short interest before 2018 exists in QC.
+  record delivered is 2018-01-11). Values change on the FINRA publication schedule (around the 11th-13th
+  and 26th-28th), i.e. publication-stamped, not settlement-stamped (section 5); an extra 1-day lag is applied
+  anyway. Short-interest hypotheses can be tested only on 2018-2026 -> PARTIAL RESEARCH. No short interest
+  before 2018 exists in QC.
 * Trading halts: no halt dataset in QC. Not testable directly (a proxy is possible, labelled as a proxy).
 * News / catalysts: Benzinga news class exists in QC (coverage dates to be confirmed in Stage 2); FDA /
   offerings / dilution only via news text or SEC filings -> optional, later stage.
@@ -54,7 +56,7 @@ Splits / reverse splits / dividends / delistings / symbol changes | YES | 1998- 
 Market capitalisation | YES | 2006- | 91-98% of fundamental names | YES (AAPL / GE checks) | Morningstar CompanyProfile.MarketCap | fill-forwarded; Morningstar feed migration on 2026-09-23 restated history (about 1/3 of overlapping values differ per QC docs)
 Shares outstanding | YES | 2006- | 95-99% | NO - restated for later splits | Morningstar CompanyProfile.SharesOutstanding | e.g. AAPL shows post-split 17.1B shares on 2020-08-04 (split on 2020-08-31); PIT shares must be derived as MarketCap / raw price
 Float | YES (partial) | 2010- (23% Jan 2010, 84-94% 2011-2026) | 3,390-5,563 names a year | PARTIAL - time-varying, but restated for later splits | Morningstar CompanyProfile.Float | none before 2010; changes coincide with shares-outstanding updates in 97% of stocks; float / shares-outstanding median 0.77-0.83, p10 ~0.4; definition and update lag of Morningstar float not documented in QC
-Short interest | YES (partial) | 2018-01-11 - | 9,000-18,000 symbols per daily snapshot | timing: see section 5 | FINRA via QC (FINRAShortInterest) | none before 2018; fields include days_to_cover, change, average_daily_volume; % of float must be computed with the corrected float
+Short interest | YES (partial) | 2018-01-11 - | 9,000-18,000 symbols per daily snapshot | YES - publication-stamped (value changes on the 11th-13th / 26th-28th) | FINRA via QC (FINRAShortInterest) | none before 2018; fields include days_to_cover, change, average_daily_volume; % of float must be computed with the corrected float
 Short sale volume (Reg SHO, off-exchange) | YES | 2018-08 - | 22,073 symbols | daily | FINRA via QC | short VOLUME, not short interest; optional secondary variable
 Borrow availability / fee | YES | 2018-01 - | 10,500 symbols | daily | QC / IB, Axos | optional secondary variable
 Fundamental filing dates | YES | 1998- | | approx. | Morningstar FileDate | for old data the file date is approximated as period end + 45 days; values "as originally reported"
@@ -129,7 +131,13 @@ Sector / industry | YES | | | current classification | Morningstar AssetClassifi
 Stage 1c: the FINRA short-interest universe is delivered every calendar day from 2018-01-11 as a forward-
 filled snapshot of 9,000-18,000 symbols (p10 9,243 / p50 14,066 / p90 17,896 records). Delivery dates are
 uniform over the month, so they do not reveal the publication date. Record time = the previous day.
-Stage 1d (value-change timing): <<STAGE 1d RESULT>>
+Stage 1d (value-change timing, 600 symbols, 2018-2026): data fields = short_interest, previous_short_interest,
+change, days_to_cover, average_daily_volume, price. The dates on which the short-interest values change cluster
+on the 11th-13th (25% of all changes) and the 26th-28th (25%) of each month; every other day of the month
+carries only ~2% (the daily-changing 'price' field). FINRA settlement dates are mid-month and month-end; FINRA
+disseminates ~8 business days later (around the 9th-12th and the 24th-27th). The observed change days match
+the PUBLICATION schedule (0-2 days after it), not the settlement dates.
+-> QC delivers FINRA short interest publication-stamped. No look-ahead from settlement dating was found.
 Rule that will be applied regardless of the result: short interest for settlement date S is treated as
 available only from FINRA's publication date (settlement + 8 business days, FINRA's standard dissemination
 schedule) + 1 trading day. If QC already stamps the data at publication, this adds a conservative one-day lag;
