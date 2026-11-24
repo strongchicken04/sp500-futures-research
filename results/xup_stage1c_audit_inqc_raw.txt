@@ -1,0 +1,15 @@
+### xup stage1c audit v1
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+SI day-of-month histogram = 1:73 2:73 3:73 4:74 5:73 6:74 7:75 8:73 9:73 10:73 11:75 12:74 13:75 14:75 15:73 16:74 17:74 18:75 19:74 20:75 21:75 22:73 23:74 24:74 25:75 26:74 27:74 28:74 29:67 30:68 31:44
+SI delivery days = 2250 dates 2018-01-11..2026-08-26
+SI example times = algo 2018-01-11 rec time 2018-01-10 00:00:00 end 2018-01-11 00:00:00 | algo 2018-01-12 rec time 2018-01-11 00:00:00 end 2018-01-12 00:00:00 | algo 2018-01-13 rec time 2018-01-12 00:00:00 end 2018
+SI fields = add, add_range, average_daily_volume, change, clone, data, data_time_zone, data_type, days_to_cover, default_resolution, deserialize_message, end_time, equals, filtered_contracts, finalize, get_A
+SI records per delivery = p10 9243 p50 14066 p90 17896
+Unrealized = $0.00
+Volume = $0.00
+err None
