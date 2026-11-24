@@ -36,7 +36,7 @@ indicator("Lucid 16 — Vault Break / ORB switch", overlay=true, max_labels_coun
 // =========================================================================
 
 mode = input.string("Vault Break", "Strategy", options = ["Vault Break", "ORB", "VWAP Band ORB", "SMA only (investing)"])
-showSma = input.bool(true, "Show daily SMA (investing rule)")
+showSma = input.bool(false, "Show daily SMA also in the trading modes")
 smaLen = input.int(300, "Daily SMA length", minval = 2)
 bandBps = input.float(50.0, "VWAP Band ORB: band (bps from VWAP)", step = 5.0)
 slPct = input.float(0.40, "VWAP Band ORB: SL % of price (TP = 0.625 x SL)", step = 0.05)
@@ -274,9 +274,10 @@ if barstate.islast and not isS
 
 // ------------------------------------------------------------------ daily SMA (investing rule)
 smaD = request.security(syminfo.tickerid, "D", ta.sma(close, smaLen))
-plot(showSma ? smaD : na, "Daily SMA", color = color.new(color.fuchsia, 0), linewidth = 2)
+smaOn = isS or showSma
+plot(smaOn ? smaD : na, "Daily SMA", color = color.new(color.fuchsia, 0), linewidth = 2)
 var label smaLbl = na
-if barstate.islast and showSma and not na(smaD)
+if barstate.islast and smaOn and not na(smaD)
     label.delete(smaLbl)
     dPct = (close / smaD - 1) * 100
     smaLbl := label.new(bar_index + 1, smaD, "SMA" + str.tostring(smaLen) + " " + (dPct >= 0 ? "+" : "") + str.tostring(dPct, "#.0") + " %",
