@@ -1,0 +1,465 @@
+EXTREME UPSIDE MOVES IN US EQUITIES - STAGE 3: PREDICTIVE RESEARCH - FINAL REPORT
+=================================================================================
+Date: 2026-11-25. Data: 2006-02-01 .. 2026-08-27 (QuantConnect / LEAN, AlgoSeek daily bars, Morningstar, FINRA SI).
+
+Every security-level calculation ran INSIDE QuantConnect. Only aggregates were returned: counts, rates, model
+metrics, deciles and bootstrap CIs. No security-level data was exported.
+
+Primary endpoint: Family A, h = 10, +100 %.
+  - Definition: max adjusted HIGH(t+1..t+10) / adjusted OPEN(t+1) - 1 >= 100 %, predicted at the close of t.
+
+Reproducibility (all committed on branch claude/strategy-replication-backtest-yppz7e):
+  Protocol, pre-registered, with Amendments 1-4    research/extreme_upside/stage3/protocol.md
+  Feature audit (deliverable 1)                     research/extreme_upside/stage3/feature_audit.md
+  Univariate review                                 research/extreme_upside/stage3/univariate_review.md
+  QC code
+    - main panel                                    strategy/quantconnect/inqc/xup_s3_panel_inqc.py
+    - constants                                     xup_s3_const.py
+    - modes                                         xup_s3_modes_ab.py (AUDIT, BASE), _u.py (UNIV + test replication),
+                                                    _m.py (MODEL, TEST), _r.py (ROBUST)
+    - imported classification data                  xup_ic_0..4.py
+  Runner                                            strategy/quantconnect/run_s3.sh MODE label
+  Raw outputs                                       results/xup_s3_{audit,base,univ,model,test,robust}_raw.txt
+
+Order of work, as required:
+  A audit -> B baselines -> C univariate (2006-2020 only) -> D review -> E freeze (Amendments 2 and 3, committed
+  before TEST) -> F MODEL (validation 2017-2020) -> G TEST once (2021-2025; 2026 YTD separate) -> H this report.
+  The commit freezing the specification (1249e43) precedes the TEST run, and the TEST output was committed
+  unchanged (ff1081f). The ROBUST run (Amendment 4) re-uses the frozen models without any selection.
+
+Runs that were wrong or repeated (kept in the raw files):
+  - BASE v1 ran QC's template algorithm because main.py exceeded 32k characters. It was invalid and replaced by
+    v2 after splitting the code into modules.
+  - Smoke run of MODEL on a 1/10 sample (output outside results/). It exposed an empty "top 1 % within day" on
+    days with < 100 securities. Fixed to ceil(k * n_day) before the full MODEL run; documented in Amendment 2.
+  - No data-integrity defect was found that required stopping (section A).
+
+
+------------------------------------------------------------------------------------------------------------------
+0. ANSWER TO THE CENTRAL QUESTION (short)
+------------------------------------------------------------------------------------------------------------------
+Can pre-event information identify stocks with a meaningfully higher probability of +50/100/200 % over 5/10/20
+sessions, and does it survive genuinely out-of-sample? YES for ranking, with three strong qualifications.
+
+The ranking survives out-of-sample:
+  - Primary target, frozen models, untouched test 2021-2025: base rate 0.580 % (9,300 events in 1.60 M
+    security-days).
+  - The top 1 % of each day by the best pre-selected model (full-A random forest) has an event rate of 7.74 %
+    [6.83, 8.53], i.e. 13x the base. The top 10 % captures 68 % of all events. PR-AUC is 0.0596 [0.0540, 0.0667]
+    against 0.0037 unconditional; ROC-AUC is 0.915.
+  - 2026 YTD (separate): base 0.913 %, top 1 % 10.7 %, PR-AUC 0.081.
+  - All 27 targets show the same pattern (secondary endpoints, section 6.3).
+
+Qualification 1 - the signal is mostly one dimension:
+  - It is "cheap, volatile, illiquid micro-cap". Low price, high ATR / realised volatility, low dollar volume, low
+    market cap and low float are BH-significant, have the expected sign, are block-consistent and replicate in
+    2021-2025. But they are largely the same thing.
+  - A volume-only logistic model reaches test P@1% 7.02 % (vs 7.74 % for RF) and PR-AUC 0.0460.
+  - The pre-registered rule for "multivariate value beyond simple baselines" (Amendment 2) requires the test
+    PR-AUC CI to lie above the best baseline's CI. RF scored [0.0540, 0.0667] against volume LR's
+    [0.0413, 0.0550]. The CIs overlap by 0.001, so the rule is NOT met: INCONCLUSIVE.
+
+Qualification 2 - several hypotheses failed or reversed:
+  - Interactions (H10), fundamentals, short interest and float add nothing measurable beyond price / volume
+    features.
+  - The momentum (H7) and short-interest (H3) hypotheses are contradicted or unsupported; see section 10.
+
+Qualification 3 - predictive is not tradable:
+  - Among the top 1 % of model scores in the test period, the median price is $0.66 and 62 % are below $1.
+  - 27 % trade under $100k per day.
+  - Only 29 % of the Family-A events are confirmed by the close at t+10 (Family B), and only 53 % by any close in
+    the window (B-max). Almost half the excursions exist only as an intraday high.
+  - Nothing in this report is a trading result. A trading simulation (spread, slippage, halts, liquidity, sizing)
+    is a separate later stage.
+
+
+------------------------------------------------------------------------------------------------------------------
+A. PANEL AND DELIVERABLE 1 - FEATURE AVAILABILITY AND LEAKAGE AUDIT
+------------------------------------------------------------------------------------------------------------------
+Panel:
+  - Fixed-hash sample of securities: md5(QC security id) mod 5 = 0, about 20 %. 2,986 sampled, 2,947 with data.
+  - Every eligible security-day is included: 6,022,604 rows. The same sample is used in every run; there is no
+    selection on outcomes.
+  - Eligibility: real bar, raw close > 0, >= 20 prior sessions in the segment.
+  - Fill-forward is off. Segments split at gaps > 10 market sessions.
+  - Panel build takes about 12 minutes per run in QC.
+
+Feature audit (52 features):
+  - The full table is in feature_audit.md: source, timestamp, window, missing treatment and look-ahead risk.
+  - Empirical leakage unit test: 22 (security, t) pairs, each recomputed from data truncated at t. Maximum
+    difference 0, with 0 NaN mismatches.
+  - Labels are the only quantities that use data after t.
+
+Coverage on A rows:
+  - Price / volume features: 98.5-100 %.
+  - Market cap 68.4 %, float 51.7 %, short interest 30-44 %. These define B, C and D. Missing values are never
+    silently dropped: they are a separate bin in the univariate tests, and median imputation plus a missing
+    indicator in the models.
+  - Invalid labels (incomplete window: segment end, delisting, data end): 0.29 % at h = 5, 0.59 % at h = 10,
+    1.17 % at h = 20. They are kept in the denominators and excluded from label statistics. In 2026 YTD the
+    share is 6.6 % because of the data end.
+  - SI join: 1,029 of 1,038 sampled A securities alive in mid-2019 have SI records.
+
+Data-quality notes (limitations, not stop conditions):
+  - In 2006-2014, 22-29 % of A rows have a missing session in the previous 20 days. This is mostly no-trade days
+    of illiquid stocks in the old data, not real halts. In 2020+ the share is 1 %.
+  - The B-universe 2006-09 p90 event return is 3,011 %, suggesting bad prints in old penny-stock data. Labels and
+    features use the same bars, and Stage 2 label checks passed.
+
+
+------------------------------------------------------------------------------------------------------------------
+B. DELIVERABLE 2 - BASELINE EVENT RATES (results/xup_s3_base_raw.txt, BASE v2)
+------------------------------------------------------------------------------------------------------------------
+Denominators reconcile exactly with AUDIT.
+
+Primary target, all years:
+  universe   secs   eligible rows   valid labels   events   rate     securities with event   episodes
+  A          2947   6,022,604       5,987,283      24,371   0.407%   1,159                   4,207
+  A-strict   1991   4,633,914       4,611,493      16,207   0.351%     760                   2,768
+  A-exADR    2825   5,668,086       5,634,083      23,349   0.414%   1,102                   4,023
+  A-fund     2947   5,922,938       5,888,910      24,359   0.414%   1,158                   4,204
+  B          1785   3,914,180       3,895,619      13,046   0.335%     634                   2,239
+  C (2011+)  1603   3,001,427       2,985,011      10,384   0.348%     481                   1,734
+  D (2018+)  1856   2,120,890       2,103,714      10,499   0.499%     561                   1,781
+  Event returns, A: median 151 %, p90 448 %. Price strata of A events: <$1 41 %, $1-5 43 %, >$5 16 %.
+
+Primary rate by block, A (events / eligible rows):
+  2006-09  0.452 %  (5,247 / 1.16 M)
+  2010-14  0.155 %  (2,103 / 1.36 M)
+  2015-19  0.258 %  (3,596 / 1.40 M)
+  2020-22  0.509 %  (4,779 / 0.94 M)
+  2023-25  0.732 %  (6,921 / 0.95 M)
+  2026 YTD 0.913 %  (1,725 / 0.19 M)
+  -> The base rate varies 6-fold over time. This matters for calibration (section 7).
+
+Price strata, A, primary rate:
+  - <$1: 2.1-5.7 % across blocks.
+  - $1-5: 0.45-2.4 %.
+  - >$5: 0.03-0.16 %.
+Dollar volume, A, primary rate:
+  - <$100k: 0.5-2.5 %.
+  - >$10M: 0.02-0.22 %.
+
+All 27 targets, all years, A (rate %, events):
+  A5:  +50 0.634 (38,062)    +100 0.178 (10,705)   +200 0.057 (3,423)
+  A10: +50 1.444 (86,441)    +100 0.407 (24,371)   +200 0.132 (7,923)
+  A20: +50 3.155 (187,821)   +100 0.907 (53,997)   +200 0.290 (17,272)
+  B5:  +50 0.229 (13,774)    +100 0.058 (3,474)    +200 0.019 (1,116)
+  B10: +50 0.520 (31,145)    +100 0.129 (7,753)    +200 0.040 (2,394)
+  B20: +50 1.194 (71,051)    +100 0.292 (17,369)   +200 0.084 (4,997)
+  M5:  +50 0.318 (19,109)    +100 0.080 (4,827)    +200 0.025 (1,505)    (M = B-max, reported separately)
+  M10: +50 0.835 (49,979)    +100 0.209 (12,536)   +200 0.064 (3,811)
+  M20: +50 2.081 (123,842)   +100 0.525 (31,232)   +200 0.152 (9,060)
+  Per-block tables for all 27 targets and per-universe tables are in the raw file.
+
+Overlap and episode convention (brief item 8):
+  - Labels are defined on every security-day, so consecutive days before one move are all positive. On average
+    one A primary episode contains 5.8 positive security-days (24,371 / 4,207).
+  - Episode rule: an episode starts at the first positive day t of a security. Positive days of that security in
+    the next h sessions are merged into it. The next episode can only start >= h sessions after the previous
+    start.
+  - Consequences:
+    a. Security-day rates overstate the number of independent moves about 6-fold. Episodes count moves.
+    b. Rows are strongly dependent, so every CI in this report uses a cluster bootstrap by security. Naive
+       p-values are never used.
+    c. Training rows were purged / embargoed: 60 calendar days (about 41 sessions >= h + 20) before every period
+       boundary, so no label window crosses into validation or test.
+
+
+------------------------------------------------------------------------------------------------------------------
+C. DELIVERABLES 3 AND 4 - UNIVARIATE HYPOTHESES AND MULTIPLE-TESTING-ADJUSTED RESULTS
+------------------------------------------------------------------------------------------------------------------
+Method:
+  - Monthly cross-sectional deciles within the universe; missing values form an 11th bin.
+  - Top vs bottom decile: absolute difference, RR and OR.
+  - CIs: 200 Poisson cluster-bootstrap resamples by security; AUC CI: 60.
+  - Monotonicity: logit slope on decile with bootstrap CI, plus Spearman rho.
+  - p: two-sided bootstrap p of log RR (floor 0.005). Benjamini-Hochberg over the 18 primary tests.
+  - Development years 2006-2020 only. 2021-2025 replication uses the same code and was run once, inside TEST.
+
+Results, primary endpoint (dev = 2006-2020; test = 2021-2025):
+  H    variable [univ]   exp  dev RR [CI]            q      dev AUC  blocks 06-09/10-14/15-19/2020   test RR [CI]            test AUC
+  H1   lmcap [B]          -   0.01 [0.00,0.01]       0.006  0.135    0.02/0.00/0.00/0.00             0.00 [0.00,0.00]        0.142
+  H1s  lds [B]            -   0.08 [0.05,0.15]       0.006  0.335    0.25/0.00/0.00/0.17             0.17 [0.07,0.31]        0.314
+  H2   rvol20 [A]         +   0.94 [0.84,1.01]       0.169  0.483    1.16/1.00/0.76/0.81             0.87 [0.77,0.98]        0.469
+  H2s  rvol5 [A]          +   0.97 [0.91,1.02]       0.286  0.485    1.08/0.95/0.87/0.91             0.88 [0.81,0.96]        0.473
+  H3   si_ds [D]          +   0.76 [0.41,1.37]       0.320  0.462    -/-/1.04/0.66                   0.83 [0.52,1.23]        0.435
+  H3s  dtc [D]            +   0.21 [0.12,0.31]       0.006  0.319    -/-/0.21/0.21                   0.16 [0.12,0.22]        0.275
+  H4   lfloat [C]         -   0.04 [0.02,0.09]       0.006  0.294    -/0.00/0.02/0.11                0.11 [0.04,0.27]        0.291
+  H4s  float_ds [C]       -   0.45 [0.19,0.84]       0.036  0.410    -/0.18/0.51/0.49                0.66 [0.41,0.98]        0.453
+  H5   atr_p [A]          +   48.9 [34.3,77.0]       0.006  0.871    29.8/70.7/100.0/55.0            104.8 [60.4,277.2]      0.890
+  H5s  rv20 [A]           +   61.7 [39.9,105.1]      0.006  0.850    34.6/164.5/111.1/71.8           100.4 [56.6,260.9]      0.857
+  H6   gap [A]           +/-  1.39 [1.30,1.48]       0.006  0.540    1.35/1.38/1.44/1.37             1.01 [0.95,1.07]        0.503
+  H6s  intraday [A]      +/-  0.69 [0.65,0.72]       0.006  0.452    0.65/0.74/0.68/0.74             0.85 [0.80,0.92]        0.467
+  H7   r20 [A]            +   0.49 [0.44,0.56]       0.006  0.392    0.40/0.53/0.49/0.68             0.56 [0.48,0.65]        0.402
+  H7s  r5 [A]             +   0.67 [0.61,0.72]       0.006  0.441    0.56/0.75/0.64/0.94             0.81 [0.74,0.90]        0.459
+  H8   lpx [A]            -   0.01 [0.00,0.02]       0.006  0.119    0.02/0.01/0.00/0.00             0.01 [0.00,0.02]        0.134
+  H8s  lpx_prev [A]       -   0.01 [0.00,0.02]       0.006  0.119    same                            0.01 [0.00,0.02]        0.134
+  H9   ldv [A]           +/-  0.03 [0.02,0.05]       0.006  0.242    0.03/0.01/0.02/0.10             0.09 [0.05,0.14]        0.274
+  H9s  rdv20 [A]         +/-  0.77 [0.69,0.83]       0.006  0.452    0.88/0.89/0.64/0.68             0.79 [0.70,0.89]        0.448
+  (AUC < 0.5 means events have LOWER values.)
+
+Sample sizes:
+  - Dev: A 4.19 M valid rows / 13,346 events; B 2.61 M / 5,395; C 1.75 M / 3,243; D 0.72 M / 3,196, of which
+    145k rows / 1,126 events have no si_ds.
+  - Test: A 1.60 M / 9,300; B 1.15 M / 6,495; C 1.10 M / 6,010; D 1.25 M / 6,185.
+
+Decile shapes:
+  - Per-decile rates, rows and positives for dev are in univariate_review.md and the raw file. Test deciles are
+    in results/xup_s3_test_raw.txt ("R ... deciles").
+  - U-shapes appear in both periods for rvol5/20, gap, intraday, r5/r20, rdv20 and si_ds; both extremes are
+    elevated. Example, test rvol20: d1 1.24 %, d5 0.32 %, d10 1.09 %. Example, test r20: d1 2.19 %, d10 1.22 %,
+    middle about 0.2 %.
+  - The pre-registered contrast is top vs bottom, and it is kept. The U-shape is a descriptive finding only;
+    testing it would be a new hypothesis.
+
+Multiple testing:
+  - Primary family: 15 of 18 BH-significant at q < 0.05 in dev. Not significant: rvol20, rvol5, si_ds.
+  - Secondary family, descriptive: 383 of 468 tests (18 variables x 26 other targets) at q < 0.05. Signs agree
+    across families A, B and B-max for H1, H4, H5, H7, H8 and H9.
+  - Significance alone is NOT treated as support; see the evidence rule in section 10.
+
+H10 (combinations):
+  - Descriptive dev quintile tables:
+      - low price x high rvol20: 1.73 %;
+      - losers x either rvol extreme: about 1.0 %;
+      - high ATR x low price: 1.97 % (n 500k, 9,853 events).
+  - The joint cells are below the additive-logit expectation (sub-additive), i.e. the variables overlap.
+  - Formal test, validation PR-AUC full-A GBM minus full-A additive LR: +0.0002 [-0.0056, +0.0060] -> no evidence
+    of exploitable interactions.
+  - Test (descriptive): GBM 0.0565 [0.0517, 0.0624] vs LR 0.0549 [0.0505, 0.0612].
+
+
+------------------------------------------------------------------------------------------------------------------
+D. DELIVERABLES 5 AND 6 - MODEL COMPARISON (validation) AND OUT-OF-SAMPLE METRICS (test)
+------------------------------------------------------------------------------------------------------------------
+Setup:
+  - Models: LR (C = 1e4), L2-LR (C chosen on validation = 0.1), RF (200 trees, leaf 200), HistGBM (trees chosen
+    on the time-ordered internal holdout).
+  - Training rows: all positives plus 10 % of negatives, weighted x10. Evaluation always uses every row.
+  - Metrics: PR-AUC (primary); precision / recall at the top 1/5/10 % within each day; Brier; ROC-AUC; event
+    counts. 60 cluster-bootstrap resamples (Amendment 2).
+  - Universe A. Validation 2017-2020: 1.109 M rows, 4,755 events, base 0.428 %. Test 2021-2025: 1.604 M rows,
+    9,300 events, base 0.580 %.
+
+                         VALIDATION 2017-2020                              TEST 2021-2025 (frozen, run once)
+  specification          PR-AUC [CI]              P@1%    R@10  AUC        PR-AUC [CI]              P@1% [CI]              R@10  AUC    Brier e-3
+  unconditional          0.0034 [0.0028,0.0040]   0.40%    5%   0.500      0.0037 [0.0034,0.0041]   0.16%                    2%  0.500  5.770
+  price LR               0.0478 [0.0404,0.0562]   7.55%   68%   0.907      0.0376 [0.0346,0.0424]   6.25% [5.29,7.66]       53%  0.869  5.660
+  momentum LR            0.0475 [0.0407,0.0523]   7.25%   65%   0.906      0.0430 [0.0387,0.0490]   6.29% [5.59,7.20]       59%  0.875  5.698
+  volume LR              0.0557 [0.0466,0.0639]   7.54%   67%   0.901      0.0460 [0.0413,0.0550]   7.02% [6.05,8.25]       54%  0.863  5.650
+  price+momentum LR      0.0652 [0.0571,0.0726]   8.79%   75%   0.932      0.0502 [0.0462,0.0559]   7.05% [6.30,7.97]       65%  0.904  5.632
+  price+volume LR        0.0558 [0.0468,0.0651]   7.73%   68%   0.907      0.0440 [0.0399,0.0508]   7.10% [6.05,8.31]       55%  0.871  5.650
+  price+volatility LR    0.0637 [0.0555,0.0695]   8.35%   75%   0.934      0.0526 [0.0483,0.0579]   7.06% [6.16,7.99]       66%  0.910  5.628
+  full-A LR              0.0704 [0.0616,0.0771]   8.79%   76%   0.934      0.0549 [0.0505,0.0612]   7.25% [6.49,8.34]       67%  0.910  5.608
+  full-A L2              0.0707 [0.0618,0.0774]   8.86%   76%   0.934      0.0549 [0.0505,0.0612]   7.25% [6.50,8.34]       67%  0.910  5.608
+  full-A RF  (best, pre)  0.0722 [0.0638,0.0786]   9.22%   76%   0.937      0.0596 [0.0540,0.0667]   7.74% [6.83,8.53]       68%  0.915  5.577
+  full-A GBM             0.0706 [0.0611,0.0785]   8.15%   74%   0.934      0.0565 [0.0517,0.0624]   7.54% [6.78,8.39]       67%  0.915  6.114
+  Top-1 % event counts in test: RF 1,296 of 16,749 flagged rows; volume LR 1,176; unconditional 26.
+
+Reading the table:
+  - Every model beats the unconditional rate by a wide margin, in validation, in test and in 2026 YTD. The
+    ranking signal is real and out-of-sample.
+  - Test PR-AUC is about 17 % lower than validation for the full models (0.072 -> 0.060). Lift over base falls
+    from 17x to 10x, partly because the base rate rose.
+  - Pre-registered evidence rule (model beats the best baseline by non-overlapping CIs): full-A RF test
+    [0.0540, 0.0667] vs volume LR [0.0413, 0.0550]. The CIs overlap by 0.0010 -> NOT met; INCONCLUSIVE. Relative
+    to price-only LR and momentum-only LR, the full models are clearly better.
+  - The four model classes are statistically indistinguishable in both periods. Interactions add nothing
+    measurable (H10).
+
+2026 YTD, separate, never used for selection (n 189,013, 1,725 events, base 0.913 %; 6.6 % labels invalid):
+  - full-A LR / L2: PR-AUC 0.0834 [0.0683, 0.0997], P@1% 10.74 % (215 / 2,002), R@10 73 %, AUC 0.918.
+  - full-A RF: 0.0813 [0.0648, 0.0946], P@1% 10.69 %.
+  - full-A GBM: 0.0797, P@1% 9.49 %.
+  - Baselines: volume LR 0.0621, momentum LR 0.0653, price LR 0.0540. Price+volatility LR 0.0753.
+
+Permutation importance of the full-A GBM (test, PR-AUC drop):
+  lpx_prev 0.065, atr_p 0.043, rv20 0.024, dhi60 0.022, lpx 0.014, dhi20 0.011, dlo60 0.010, lvol 0.009,
+  rdv20 0.008, r20 0.008.
+  - Price and volatility dominate. Validation shows the same top group: rv20, dhi60, atr_p, lpx.
+  - Correlated features share credit, so the ranking within this group is unstable.
+
+6.3 Secondary endpoints (full-A GBM, same features, A; descriptive):
+  target      VALIDATION: base   PR-AUC (lift)    P@1%      TEST: base   PR-AUC (lift)    P@1% (events)    AUC
+  A5/+50      0.67 %             0.105 (15.6x)    11.6 %    0.85 %       0.082 (9.7x)     12.0 % (2,016)   0.909
+  A10/+50     1.53 %             0.167 (10.9x)    19.6 %    1.93 %       0.134 (6.9x)     19.4 % (3,250)   0.892
+  A20/+200    0.31 %             0.047 (14.9x)     5.9 %    0.42 %       0.038 (9.1x)      4.8 % (802)     0.916
+  B10/+100    0.13 %             0.018 (13.2x)     2.5 %    0.19 %       0.014 (7.2x)      1.8 % (301)     0.896
+  M10/+100    0.22 %             0.035 (16.1x)     4.5 %    0.31 %       0.026 (8.4x)      3.5 % (592)     0.907
+  -> The close-based targets are much rarer, and their precision is low: 1.8 % of top-1 % rows reach a +100 %
+     CLOSE at t+10.
+
+
+------------------------------------------------------------------------------------------------------------------
+E. DELIVERABLE 7 - CALIBRATION (predicted % / observed % by decile of predicted probability)
+------------------------------------------------------------------------------------------------------------------
+Validation:
+  - full-A LR, top two deciles: 0.27 / 0.55 and 1.78 / 3.43. The top decile under-predicts by about 2x, because
+    training-period rates (2006-2016) were lower.
+  - full-A GBM, top decile: 2.29 / 3.40.
+
+Test:
+  - full-A LR, deciles 7-10: 0.11 / 0.14, 0.24 / 0.45, 0.58 / 1.19, 3.11 / 3.88.
+  - full-A GBM, top decile: 4.74 / 4.05.
+  - B / C / D GBMs over-predict the top decile in test: 6.7-7.7 % predicted vs 3.4-3.8 % observed.
+  - Brier scores are close to the unconditional Brier (5.58-6.11 e-3 vs 5.77 e-3). On rare events the Brier
+    score is dominated by the base rate.
+
+Conclusion:
+  - Rankings are stable, but probability LEVELS are not: the base rate moves 6-fold between eras.
+  - Any use of these scores as probabilities needs era recalibration, which was not done here: no recalibration
+    was pre-registered.
+
+
+------------------------------------------------------------------------------------------------------------------
+F. DELIVERABLE 8 - ROBUSTNESS ACROSS A, A-STRICT, A-EX-ADR AND A-FUND
+------------------------------------------------------------------------------------------------------------------
+Baselines (section B):
+  - Rates: A 0.407 %, A-ex-ADR 0.414 %, A-fund 0.414 %, A-strict 0.351 %.
+  - A-strict removes the unresolved-class securities. It is lower in 2006-2019 and almost equal from 2020:
+    2023-25 A 0.732 % vs A-strict 0.720 %.
+
+ROBUST run (Amendment 4: frozen models evaluated on 2021-2025 inside each universe and sub-period; univariate
+RR in each sensitivity universe): see section F.1 below.
+
+F.1 [ROBUST_PLACEHOLDER]
+
+
+------------------------------------------------------------------------------------------------------------------
+G. DELIVERABLE 9 - SEPARATE B, C AND D RESULTS
+------------------------------------------------------------------------------------------------------------------
+                                         VALIDATION                      TEST 2021-2025
+  spec                                   PR-AUC [CI]         base        PR-AUC [CI]              P@1% (events/rows)    base     AUC
+  B  mcap+price+volume LR                0.0565 [.045,.075]  0.321%      0.0490 [0.0419,0.0551]   6.76% (812/12,003)    0.563%   0.888
+  B  full-A GBM                          0.0545 [.047,.067]              0.0515 [0.0456,0.0565]   6.69% (803/12,003)             0.915
+  B  full + fundamentals GBM             0.0528 [.043,.065]              0.0517 [0.0459,0.0573]   6.39% (767/12,003)             0.916
+  C  full-A(+fund) GBM (2011+)           0.0423 [.031,.053]  0.306%      0.0480 [0.0414,0.0530]   6.07% (707/11,656)    0.545%   0.915
+  C  + float GBM                         0.0403 [.031,.051]              0.0471 [0.0413,0.0520]   6.71% (782/11,656)             0.913
+  D  full-A GBM (SI era)                 0.0626 [.052,.077]  0.781%      0.0464 [0.0390,0.0545]   6.61% (869/13,150)    0.496%   0.910
+  D  + short interest GBM                0.0632 [.053,.081]              0.0487 [0.0416,0.0556]   6.30% (829/13,150)             0.914
+  - Fundamentals (B), float (C) and short interest (D) add nothing beyond the price / volume features, in
+    validation or test. Differences are at most 0.002 PR-AUC with overlapping CIs.
+  - Limitations:
+    - D was trained only on 2018-01..2019 and validated on 2020.
+    - The GBM picked the minimum of 25 trees in C and D during MODEL.
+    - Float is a stale, definition-dependent Morningstar ratio (Stage 2 section 4.2).
+  - Univariately, low market cap (H1), low float (H4) and LOW days-to-cover all replicate. In the models these
+    add no information beyond price and dollar volume.
+
+
+------------------------------------------------------------------------------------------------------------------
+H. TRADABILITY (brief item 9) - top 1 % of daily full-A GBM scores, test 2021-2025
+------------------------------------------------------------------------------------------------------------------
+  - Flagged security-days: 16,749. Primary events: 1,263 (7.5 %).
+  - Raw price at prediction time: median $0.66. Below $1: 62 %; $1-5: 31 %; above $5: about 7 %.
+  - Dollar volume on day t: median $397k; 27 % below $100k.
+  - Missing-session (halt proxy) flag in the previous 20 sessions: 0 % of flagged rows. Zero-volume days are
+    rare in 2021+ (coverage table).
+  - Close confirmation of the Family-A events:
+      - B (close at t+10 >= +100 %): 29 %;
+      - B-max (any close in the window >= +100 %): 53 %.
+    So 47 % of the events reach +100 % only at an intraday high and never close there inside 10 sessions.
+  - Events with an excursion above +200 %: 38 %.
+  - Deviation from protocol section 7: the item "intraday high > 2x close" is reported through the B-max
+    confirmation share and the >200 % share, not as a separate ratio.
+
+Interpretation:
+  - The predictable set is sub-$1, thin, and often reverses intraday.
+  - The entry reference (open of t+1) for such stocks carries wide spreads, and gaps / halts are common.
+  - Family-A precision of 7.5 % means 92.5 % of flagged days do not reach +100 %. Their outcome distribution
+    (likely negative drift for distressed micro-caps) was NOT studied here.
+  - No profitability claim is made or implied.
+
+
+------------------------------------------------------------------------------------------------------------------
+10. CONCLUSION - WHICH HYPOTHESES HAVE EVIDENCE (deliverable 10)
+------------------------------------------------------------------------------------------------------------------
+Evidence rule (protocol section 5), all four required:
+  (1) BH-significant;
+  (2) expected sign, or a meaningful two-sided effect;
+  (3) consistent in >= 4 of 5 blocks (4 dev blocks + test; fewer where the data start later);
+  (4) replicates in the untouched 2021-2025 test.
+
+EVIDENCE - all four criteria met. NOT five independent discoveries: they measure overlapping aspects of one
+"cheap / volatile / illiquid micro-cap" dimension (sub-additive in H10).
+  H8 low price (lpx) [A]
+     - Effect: top vs bottom decile RR 0.01 [0.00, 0.02], i.e. a 2.12 % vs 0.023 % rate.
+     - n: 4.19 M rows, 13,346 events.
+     - OOS 2021-25: RR 0.01 [0.00, 0.02], 3.06 % vs 0.02 % (1.60 M rows, 9,300 events).
+     - Blocks: 4 / 4.
+     - Robustness: [see F.1].
+     - Limitations: partly mechanical (tick size and discreteness at sub-$1 prices; possible bad-tick highs).
+  H5 high volatility (atr_p; rv20 as secondary) [A]
+     - Effect: RR 48.9 [34.3, 77.0], 2.09 % vs 0.043 %.
+     - OOS: RR 104.8 [60.4, 277.2], 3.46 % vs 0.03 %.
+     - Blocks: 4 / 4. AUC 0.871 dev, 0.890 test.
+     - Limitations: volatility is partly the price effect; this is the largest single predictor.
+  H9 low dollar volume (ldv; two-sided) [A]
+     - Effect: RR 0.03 [0.02, 0.05].
+     - OOS: 0.09 [0.05, 0.14].
+     - Blocks: 4 / 4.
+     - Limitations: collinear with price; the test decile shape peaks in d2 (1.51 %) rather than d1.
+  H1 low market cap (lmcap) [B]
+     - Effect: RR 0.01 [0.00, 0.01].
+     - n: 2.61 M rows, 5,395 events.
+     - OOS: RR 0.00 [0.00, 0.00], 3.21 % vs 0.00 % (1.15 M rows, 6,495 events).
+     - Blocks: 4 / 4.
+     - Limitations: B requires a Morningstar snapshot; adds nothing in the models.
+  H4 low float (lfloat) [C, 2011+]
+     - Effect: RR 0.04 [0.02, 0.09].
+     - n: 1.75 M rows, 3,243 events.
+     - OOS: RR 0.11 [0.04, 0.27] (1.10 M rows, 6,010 events).
+     - Blocks: 3 / 3 available + test.
+     - Limitations: float is a stale ratio times PIT shares; collinear with market cap; adds nothing in the
+       models. float_ds (H4s) is weaker: dev RR 0.45, q 0.036; test 0.66 [0.41, 0.98].
+
+NO EVIDENCE / CONTRADICTED:
+  H2 relative volume (+)
+     - Not significant in dev (RR 0.94 [0.84, 1.01], q 0.17).
+     - Test RR 0.87 [0.77, 0.98] is in the OPPOSITE direction.
+     - Both volume extremes are elevated (U-shape); the "high relative volume -> more events" hypothesis is not
+       supported.
+  H3 short interest (+)
+     - si_ds is not significant in dev (0.76 [0.41, 1.37]) or test (0.83 [0.52, 1.23]).
+     - The secondary variable days-to-cover replicates in the OPPOSITE direction: low dtc -> more events, RR 0.21
+       dev / 0.16 test. This most likely reflects liquidity, not squeezes.
+     - The squeeze hypothesis is not supported.
+  H7 momentum (+)
+     - Contradicted: extreme 20-day LOSERS have the highest rate. RR top/bottom 0.49 dev, 0.56 test, consistent
+       in every block; r5 is the same.
+     - Both tails are elevated. The positive-momentum hypothesis as stated is rejected for this target.
+  H6 gap / intraday (two-sided)
+     - gap: dev RR 1.39 [1.30, 1.48], consistent in 4 blocks, but test RR 1.01 [0.95, 1.07] -> FAILED
+       replication of the top-vs-bottom contrast. The test shape is symmetric (d1 1.56 %, d10 1.58 %, middle
+       0.2-0.4 %).
+     - intraday replicates (0.69 dev, 0.85 test), but the effect is small and also U-shaped.
+     - Status: a directional gap effect is NOT supported. "Large absolute gaps / intraday moves of either sign"
+       is a descriptive pattern, not a tested hypothesis.
+  H10 interactions
+     - No evidence: GBM minus additive LR on validation +0.0002 [-0.0056, +0.0060].
+
+INCONCLUSIVE:
+  - Multivariate value beyond simple baselines: test PR-AUC of the pre-selected full-A RF vs the best
+    single-group baseline (volume LR) overlaps by 0.001. Clearly better than price-only and momentum-only.
+  - Fundamentals, short interest and float as incremental predictors in B, C and D: differences are within the CI
+    in both periods. This does not show they are useless; it shows no measurable increment in these samples.
+
+Overall answer:
+  - Information available at the close of t ranks stocks for +50/100/200 % excursions far better than chance.
+  - This survives an untouched five-year test and 2026 YTD, across all 27 targets.
+  - The information is essentially "how cheap, volatile and illiquid the stock already is". Simple price / volume
+    models capture most of it.
+  - Almost half of the primary-target events are intraday-high-only excursions in sub-$1 stocks. That is a
+    statement about predictability, not about an exploitable strategy.
+
+Known limitations (global):
+  - 20 % fixed-hash security sample. The universe classification has an unresolved category (Stage 2, option A).
+    The weekly universe pass misses securities that lived < 1 week.
+  - Old-era data sparsity (miss20 22-29 % before 2015) and probable bad prints in 2006-09 penny stocks.
+  - Model CIs use 60 resamples (2026 YTD: 30), so the CI tails are approximate. The evidence rule is
+    conservative (non-overlap); a paired difference test was not pre-registered and was not run.
+  - No recalibration. GBM tree count hit the grid minimum in C and D. D has only two years of training data.
+  - The univariate test-period p-values were not separately BH-adjusted. All replicated effects have p at the
+    bootstrap floor (0.005), which survives any BH adjustment over 18 tests.
+  - Family A uses intraday highs; no execution, spread, halt or slippage modelling (by design: a later stage).
