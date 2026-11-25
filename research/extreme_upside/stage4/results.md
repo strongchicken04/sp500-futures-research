@@ -289,9 +289,16 @@ The **RF** top-1 % profile, recomputed in S4AUDIT with the same formula:
   | Controls (mostly ≥ $5) | 0.09 / 0.17 / 0.44 % | |
 
 - **Spreads by price on signal entry days:** < $1 1.10 % (n 101), $1–5 0.87 % (14), ≥ $5 0.82 % (5).
-- **Flagged as unverified:** v1 minute dollar-volume figures (inconsistent with daily bars) and the "high
-  outside regular hours" share (89 % even on controls, which suggests a session-mask / time-zone problem).
-  S4EXEC v2 re-checks them with diagnostics.
+- **S4EXEC v2 verification:**
+  - Time stamps are New York local: control bars are concentrated in hours 9–15. The session mask is correct.
+  - Minute regular-session / daily-bar dollar volume of the same day: median 1.06 (signal days), 1.04 (move
+    days), 1.00 (controls). Minute data are consistent with the daily panel.
+  - The v1 concern was unfounded except for the first-30-minute dollar volume. That figure is implausibly small
+    relative to the full session (1–7 %), is unexplained, and is not used.
+- **Thin highs:** on move days a median of only 6 regular-session minutes trade within 5 % of the day's high
+  (signal entry days 73, controls 302).
+- **Extended hours:** some extended-hours print exceeds the regular-session high by > 0.1 % on 88 % of signal
+  entry days, 89 % of controls and 41 % of move days. These are thin prints.
 
 ## 12. Calibration and ranking stability (S4CALIB v2; v1 ended in QC without any output and is kept as INVALID)
 **Calibration on test rows** (pred / obs = Σ predicted / Σ observed):

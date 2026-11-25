@@ -21,3 +21,32 @@ X3 CONTROL entry day t+1 $1-5: n 8 quotes 8 spread med 1.42% first30 2.19% $vol 
 X3 CONTROL entry day t+1 >=$5: n 52 quotes 46 spread med 0.12% first30 0.26% $vol reg med 128952k minutes med 380
 CHECK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
 Algorithm Id:(ddb48bb601d4f3f826629b6c5990e0d6) completed in 1436.34 seconds at 59k data points per second. Processing total of 84,487,217 data points.
+### xup s4 S4EXEC v2 | project 38061541 backtest fdac282b5628cda230a2d4ef2825726c | VALID
+P0 panel = mode S4EXEC | sample securities 2986 with data 2947 | rows 6028644 | build 11 min
+S4 CHECK = OK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+X0 samples = RF top-1% test signals 16709, E3 test move days 1387, control rows 1449534; hash samples 120 / 120 / 60; minute history with extended hours, RAW
+X1 CONTROL entry day t+1 = done 60/60 | minute trades 54 premarket bars 54 quotes 54 | reg minutes with trades 126/379/390 | $vol reg 6.23e+04/1.29e+05/3.19e+05k first30 633/2.24e+03/6.82e+03k
+X1 MOVE day (E3) = done 120/120 | minute trades 107 premarket bars 107 quotes 107 | reg minutes with trades 346/386/390 | $vol reg 6.3e+04/1.43e+05/2.72e+05k first30 1.2e+03/9.57e+03/4.39e+04k
+X1 SIGNAL entry day t+1 = done 120/120 | minute trades 105 premarket bars 105 quotes 105 | reg minutes with trades 241/327/378 | $vol reg 3.53e+03/2.55e+04/8.56e+04k first30 120/296/969k
+X2 CONTROL entry day t+1 = spread med (quote minutes) p25/50/75 0.0928/0.167/0.435% first30 0.155/0.39/1.43% | share min spread>5% med 0% | high outside reg hours 89% | minutes >=95% of high med 302 | vol share at >=90% of hi
+X2 MOVE day (E3) = spread med (quote minutes) p25/50/75 0.377/0.776/1.52% first30 0.487/0.873/2.84% | share min spread>5% med 0% | high outside reg hours 41% | minutes >=95% of high med 6 | vol share at >=90% of high 
+X2 SIGNAL entry day t+1 = spread med (quote minutes) p25/50/75 0.598/1.06/1.93% first30 0.897/1.66/3.15% | share min spread>5% med 0% | high outside reg hours 88% | minutes >=95% of high med 73 | vol share at >=90% of high m
+X4 errors = none | runtime 10.0 min
+err None
+--- LOG ---
+X5 SIGNAL entry day t+1: tz-aware share 0.00 | minute-bar count by hour of day (NY if tz-aware): 4:1890 5:1517 6:1550 7:2066 8:2818 9:4299 10:5087 11:4778 12:4568 13:4482 14:4448 15:4877 16:2733 17:2198 18:1742 19:1805 20:51
+X6 SIGNAL entry day t+1: minute regular-session $vol / daily-bar $vol of the same day p25/50/75 0.997/1.06/1.08 | all minutes / daily 1.03/1.09/1.19
+X3 SIGNAL entry day t+1 <$1: n 101 quotes 90 spread med 1.10% first30 1.71% $vol reg med 25523k minutes med 323
+X3 SIGNAL entry day t+1 $1-5: n 14 quotes 11 spread med 0.87% first30 1.40% $vol reg med 348542k minutes med 366
+X3 SIGNAL entry day t+1 >=$5: n 5 quotes 4 spread med 0.82% first30 1.04% $vol reg med nank minutes med 387
+X5 MOVE day (E3): tz-aware share 0.00 | minute-bar count by hour of day (NY if tz-aware): 4:2386 5:2196 6:2319 7:3324 8:4021 9:5140 10:5777 11:5867 12:5902 13:5855 14:5907 15:6044 16:5213 17:4589 18:3995 19:4004 20:86
+X6 MOVE day (E3): minute regular-session $vol / daily-bar $vol of the same day p25/50/75 0.972/1.04/1.14 | all minutes / daily 1.03/1.12/1.38
+X3 MOVE day (E3) <$1: n 23 quotes 23 spread med 0.73% first30 0.79% $vol reg med 73970k minutes med 386
+X3 MOVE day (E3) $1-5: n 62 quotes 55 spread med 0.72% first30 0.84% $vol reg med 145764k minutes med 389
+X3 MOVE day (E3) >=$5: n 35 quotes 29 spread med 1.00% first30 1.53% $vol reg med 566897k minutes med 377
+X5 CONTROL entry day t+1: tz-aware share 0.00 | minute-bar count by hour of day (NY if tz-aware): 4:298 5:197 6:147 7:286 8:460 9:1593 10:2353 11:2326 12:2311 13:2268 14:2289 15:2405 16:443 17:174 18:158 19:121 20:4
+X6 CONTROL entry day t+1: minute regular-session $vol / daily-bar $vol of the same day p25/50/75 0.996/1/1.01 | all minutes / daily 1/1.01/1.03
+X3 CONTROL entry day t+1 $1-5: n 8 quotes 8 spread med 1.42% first30 2.19% $vol reg med nank minutes med 180
+X3 CONTROL entry day t+1 >=$5: n 52 quotes 46 spread med 0.12% first30 0.26% $vol reg med 128952k minutes med 380
+CHECK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(fdac282b5628cda230a2d4ef2825726c) completed in 1279.25 seconds at 66k data points per second. Processing total of 84,487,217 data points.

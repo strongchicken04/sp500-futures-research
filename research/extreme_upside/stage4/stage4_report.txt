@@ -283,7 +283,7 @@ Execution data (hash samples; aggregates only):
       signal entry day  1.06% (p25-p75 0.60-1.93%); first 30 minutes 1.66%
       move day          0.78%
       controls          0.17%
-  - [S4EXEC v2 verification of the session mask and minute dollar volume: see section 13.]
+  - S4EXEC v2 verified the session mask (New York time) and minute vs daily dollar volume; see section 13.
 
 
 ==================================================================================================================
@@ -420,7 +420,41 @@ Confounder (must be resolved before any confirmatory claim):
 ==================================================================================================================
 13. EXECUTION-DATA VERIFICATION (S4EXEC v2)
 ==================================================================================================================
-[EXEC2_PLACEHOLDER]
+S4EXEC v2: same hash samples as v1, with diagnostics added. The v1 numbers are reproduced exactly.
+
+Verified:
+  - Time stamps are New York local (not time-zone-aware objects).
+  - The control sample's minute bars are concentrated in hours 9-15 (regular session), with thin bars from
+    04:00 to 20:00. So the regular-session mask is correct.
+  - Minute-bar regular-session dollar volume / daily-bar dollar volume of the same day:
+      signal entry days  median 1.06 (p25-p75 1.00-1.08)
+      move days          1.04
+      controls           1.00
+    Minute data are consistent with the daily panel.
+
+Results:
+  - Coverage: minute trades, pre-market bars and minute quotes for 105/120 signal entry days, 107/120 move days
+    and 54/60 controls (88-90%).
+  - Median quoted spread (median of per-day medians):
+      signal entry day  1.06% (p25-p75 0.60-1.93%); first 30 minutes 1.66% (0.90-3.15%)
+      move day          0.78%; first 30 minutes 0.87%
+      controls          0.17%
+      by price on signal entry days: <$1 1.10% (n 101), $1-5 0.87% (14), >=$5 0.82% (5)
+  - Thin highs on move days: a median of only 6 regular-session minutes trade within 5% of the day's high, vs 73
+    on signal entry days and 302 on controls. Daily highs on move days are thin, which matches the large
+    high-close gap in section 7.
+  - Extended hours: on 88% of signal entry days, 89% of controls and 41% of move days, some extended-hours
+    minute printed more than 0.1% above the regular-session high. Extended-hours prints are thin; the
+    threshold is small.
+
+Not used:
+  - First-30-minute dollar volume relative to the full regular session (median ratio 1-7%) is implausibly small,
+    even for controls. It is unexplained (possibly auction handling in minute bars) and is not used.
+  - The volume-share-at-high figure was cut by QC's statistic length limit.
+
+Conclusion: a cost model for a later simulation is feasible from QC minute quotes for about 90% of cases.
+Quoted spreads around 1-2% at the open make the cost of trading these names material relative to the 3.5-5%
+top-1% event precision.
 
 
 ==================================================================================================================
@@ -465,7 +499,8 @@ RUN LIST (all in results/; verdict from the automatic run validation):
   S4OUTC   v1         38061541          7a4934ad8cb20ac849166fbea093db7a  VALID
   S4ROBUST v1         38061541          b4cd240c9b233d094515767640513c82  VALID
   S4CONC   v1         38061541          4dff88079363e2295bbaa735a224c4e4  VALID
-[RUNLIST_TAIL]
+  S4XSEG   v1         38061541          fc56f09257c720517c7a80b4248a0049  VALID  (exploratory)
+  S4EXEC   v2         38061541          fdac282b5628cda230a2d4ef2825726c  VALID  (diagnostics)
 
 Key configuration:
   - Scored rows: 2020-11-02 .. 2026-08-27 (universe A).
