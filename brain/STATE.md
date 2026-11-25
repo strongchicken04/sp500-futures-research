@@ -1,7 +1,7 @@
 # Brain state
 
 heartbeat: 2026-11-04 (night shifts PAUSED by the owner 2026-11-04: trigger trig_01B4r87kDhBbXX4qsUwAEPse disabled; resume when the owner answers)
-last shift: 2026-11-25 (extreme-upside Stage 3 COMPLETE: ranking survives OOS 2021-25 but is the cheap / volatile / illiquid dimension, multivariate gain over volume-only inconclusive, not tradable as such; report research/extreme_upside/stage3/stage3_report.txt; next: owner decides on a trading-simulation stage; trigger still paused)
+last shift: 2026-11-26 (extreme-upside Stage 4 COMPLETE: decision C - further research, no trading simulation yet; ranking is a persistent volatility state, not timing; selected stocks drift down; report research/extreme_upside/stage4/stage4_report.txt; next: owner decides on a timing study in liquid segments; trigger still paused)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-28/29 (report brain/reports/2026-10-29.md):
