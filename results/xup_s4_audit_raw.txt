@@ -1,0 +1,22 @@
+### xup s4 S4AUDIT v1 | project 39980657 backtest 3e3c1ffb12f11cd3082a0b99c049ce7c | VALID
+A0 episodes = E1 all years (Stage 3 BASE: 4207 episodes / 1159 securities): 4207 / 1159
+A0 test rows = 2021-2025 A eligible rows 1610869 | valid primary labels 1604540 | invalid 6329 | positives 9300 | base 0.580%
+A1 GBM S3-rank = PR-AUC 0.0565 0.0517-0.0624 | P@1 7.54% (1263/16749) P@5 5.13% (4147/80800) P@10 3.89% (6271/161006) | R@1/5/10 13.6/44.6/67.4% | n 1604540 pos 9300 AUC 0.9149
+A1 LR S3-rank = PR-AUC 0.0549 0.0505-0.0612 | P@1 7.25% (1214/16749) P@5 5.23% (4229/80800) P@10 3.85% (6204/161006) | R@1/5/10 13.1/45.5/66.7% | n 1604540 pos 9300 AUC 0.9095
+A1 MOM S3-rank = PR-AUC 0.0430 0.0387-0.0490 | P@1 6.29% (1054/16749) P@5 4.51% (3647/80800) P@10 3.41% (5498/161006) | R@1/5/10 11.3/39.2/59.1% | n 1604540 pos 9300 AUC 0.8751
+A1 PRICE S3-rank = PR-AUC 0.0376 0.0346-0.0424 | P@1 6.25% (1047/16749) P@5 4.18% (3377/80800) P@10 3.07% (4945/161006) | R@1/5/10 11.3/36.3/53.2% | n 1604540 pos 9300 AUC 0.8693
+A1 RF S3-rank = PR-AUC 0.0596 0.0540-0.0667 | P@1 7.74% (1296/16749) P@5 5.31% (4293/80800) P@10 3.96% (6370/161006) | R@1/5/10 13.9/46.2/68.5% | n 1604540 pos 9300 AUC 0.9152
+A1 VOL S3-rank = PR-AUC 0.0460 0.0413-0.0550 | P@1 7.02% (1176/16749) P@5 4.18% (3376/80800) P@10 3.10% (4995/161006) | R@1/5/10 12.6/36.3/53.7% | n 1604540 pos 9300 AUC 0.8628
+A2 S3 tradability formula GBM = rows 16749 events 1263 | px med 0.66 <$1 62% 1-5 31% | $vol med 397k <100k 27% | miss20 0% | conf B 29% Bmax 53% | ret>200% 38%
+A2 S3 tradability formula RF = rows 16749 events 1296 | px med 0.46 <$1 78% 1-5 19% | $vol med 470k <100k 21% | miss20 0% | conf B 29% Bmax 50% | ret>200% 35%
+A2 S3 tradability formula VOL = rows 16749 events 1176 | px med 0.23 <$1 97% 1-5 3% | $vol med 210k <100k 33% | miss20 0% | conf B 25% Bmax 42% | ret>200% 35%
+A3 RF S4-rank = top1: sel 16787 valid 16286 pos 1262 P 7.75% | top5: sel 81145 valid 80227 pos 4273 P 5.33% | top10: sel 161648 valid 160366 pos 6356 P 3.96%
+A3 VOL S4-rank = top1: sel 16787 valid 16451 pos 1161 P 7.06% | top5: sel 81145 valid 80291 pos 3364 P 4.19% | top10: sel 161648 valid 160498 pos 4991 P 3.11%
+A3 invalid rows in ranking = test rows with invalid primary label 6329 (0.39%) on 1253 days; S4-rank includes them, S3-rank does not
+A4 refit determinism = volume LR refit max |score diff| 0; RF uses random_state 7, n_jobs 1 (deterministic); TEST v1 vs ROBUST v1 point estimates identical
+P0 panel = mode S4AUDIT | sample securities 2986 with data 2947 | rows 6022604 | build 13 min
+S4 CHECK = OK rows 6022604 (S3 6022604) primary events 24371 (S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+err None
+--- LOG ---
+A5 rows 6022604 (S3 6022604) primary events 24371 (S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(3e3c1ffb12f11cd3082a0b99c049ce7c) completed in 1726.70 seconds at 49k data points per second. Processing total of 84,102,925 data points.
