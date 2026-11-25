@@ -8,6 +8,7 @@ from datetime import date as _date, timedelta
 # Securities are captured from the Fundamental universe on a date BEFORE their event (so the point-in-time symbol
 # is used, not today's owner of the ticker), kept subscribed (RAW normalisation), and every Split / Dividend /
 # Delisting / SymbolChanged event that LEAN emits in on_data is recorded with its timestamp.
+# v2: history fill_forward=False; window anchored on the delisting event when no bar was recorded.
 #   DL  LEH WM CIT RSH SHLD HTZ BBBY SIVB FRC: company name, last bar date, last raw close and adjusted close,
 #       gap before the last bar, LEAN delisting events (warning / delisted, timestamp, price), Morningstar
 #       delisting_date / delisting_reason (current snapshot, look-ahead field - used here only for validation)
@@ -42,6 +43,7 @@ class XupS2DelistCorp(QCAlgorithm):
         self.splits = {}     # ticker -> list of (date, factor, ref)
         self.divs = {}       # ticker -> list of (date, dist, ref)
         self.lastbar = {}    # ticker -> (date, close, prev date)
+        self.dlt = {}        # ticker -> last delisting event time
         self.dr = {}
         self.dr_years = set()
         self.err = []
@@ -102,6 +104,7 @@ class XupS2DelistCorp(QCAlgorithm):
             dl = kv.value
             tk = self._tk(kv.key)
             if tk:
+                self.dlt[tk] = dl.time
                 self.events.setdefault(tk, []).append(f"D{int(dl.type)}@{dl.time.strftime('%y%m%d-%H%M')} px{float(dl.price):.4g}")
         for kv in data.symbol_changed_events:
             ev = kv.value
@@ -115,13 +118,13 @@ class XupS2DelistCorp(QCAlgorithm):
                 self.lastbar[tk] = (kv.value.end_time, float(kv.value.close), prev[0] if prev else None)
 
     def _hist(self, s, a, b, mode):
-        h = self.history(s, a, b, Resolution.DAILY, data_normalization_mode=mode)
+        h = self.history(s, a, b, Resolution.DAILY, fill_forward=False, data_normalization_mode=mode)
         if h is None or h.empty:
             return []
         out = []
         for ix, r in h.iterrows():
             t = ix[1] if isinstance(ix, tuple) else ix
-            out.append((t, float(r["open"]), float(r["high"]), float(r["close"]), float(r["volume"])))
+            out.append((t, float(r["open"]), float(r["high"]), float(r["close"]), float(r["volume"]) if "volume" in r else 0.0))
         return out
 
     def on_end_of_algorithm(self):
@@ -134,7 +137,7 @@ class XupS2DelistCorp(QCAlgorithm):
             inf = self.info[tk]
             try:
                 lb = self.lastbar.get(tk)
-                end = lb[0] if lb else datetime(2024, 12, 31)
+                end = lb[0] if lb else self.dlt.get(tk, datetime(2024, 12, 31))
                 raw = self._hist(s, end - timedelta(days=45), end + timedelta(days=400), DataNormalizationMode.RAW)
                 adj = self._hist(s, end - timedelta(days=45), end + timedelta(days=400), DataNormalizationMode.ADJUSTED)
                 lr = raw[-1] if raw else None

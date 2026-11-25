@@ -7,6 +7,7 @@ from numpy.lib.stride_tricks import sliding_window_view as _swv
 # endregion
 #
 # EXTREME-UPSIDE RESEARCH - STAGE 2 VALIDATION 5: EVENT-LABEL CONSTRUCTION (owner 2026-11-24). Aggregates only.
+# v2: history with fill_forward=False (v1 filled halted / delisted sessions forward -> fake flat bars).
 # Timing: the prediction is made at the close of session t; entry no earlier than the open of t+1.
 # Window = sessions t+1 .. t+h of the security (h = 5 / 10 / 20), thresholds +50% / +100% / +200%.
 #   Family A (max excursion): max adjusted HIGH over the window / adjusted OPEN(t+1) - 1
@@ -29,7 +30,7 @@ CAPTURE = {"GME": _date(2020, 12, 1), "AMC": _date(2020, 12, 1), "MULN": _date(2
 MAJOR = ("NAS", "NYS", "NYSE", "ASE", "AMEX")
 HS = (5, 10, 20)
 TH = (0.5, 1.0, 2.0)
-SAMPLE_MOD = 13   # ~1/13 of ~16k core securities -> ~1,200
+SAMPLE_MOD = 9    # fixed hash; v1 (mod 13, history fill-forward ON) gave 586 securities
 
 
 class XupS2Labels(QCAlgorithm):
@@ -86,7 +87,7 @@ class XupS2Labels(QCAlgorithm):
 
     # ---------- helpers ----------
     def _frame(self, syms, mode):
-        h = self.history(syms, datetime(2006, 1, 1), datetime(2026, 11, 21), Resolution.DAILY, data_normalization_mode=mode)
+        h = self.history(syms, datetime(2006, 1, 1), datetime(2026, 11, 21), Resolution.DAILY, fill_forward=False, data_normalization_mode=mode)
         out = {}
         if h is None or h.empty:
             return out
@@ -138,7 +139,7 @@ class XupS2Labels(QCAlgorithm):
             return "GME not captured"
         out = []
         for d0 in (_date(2021, 1, 27), _date(2021, 1, 28), _date(2021, 2, 1)):
-            h = self.history(s, datetime(d0.year, d0.month, d0.day, 9, 30), datetime(d0.year, d0.month, d0.day, 16, 0), Resolution.MINUTE)
+            h = self.history(s, datetime(d0.year, d0.month, d0.day, 9, 30), datetime(d0.year, d0.month, d0.day, 16, 0), Resolution.MINUTE, fill_forward=False)
             n = 0 if h is None or h.empty else len(h)
             out.append(f"{d0.strftime('%m%d')} RTH bars {n}/390")
         return " | ".join(out)

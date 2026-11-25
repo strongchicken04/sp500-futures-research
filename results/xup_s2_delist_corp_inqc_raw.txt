@@ -1,0 +1,33 @@
+### xup s2 delist_corp v1
+CA AAPL = n1 2020-08-31 f0.25 ref499.2 pre499.2 | ret raw -74% adj +3.4% | 10d maxC raw -73% adj +8% maxH adj +11% | bar 0831-1600
+CA AMC = n1 2023-08-24 f10 ref1.96 pre1.96 | ret raw +633% adj -26.7% | 10d maxC raw +633% adj -27% maxH adj -15% | bar 0824-1600
+CA AMZN = n1 2022-06-06 f0.05 ref2447 pre2447 | ret raw -95% adj +2.0% | 10d maxC raw -95% adj +2% maxH adj +5% | bar 0606-1600
+CA COST special div = divs 18 big 2 | 2020-12-01 div 10.00 ref 391.8 (2.6%) raw -1.1% adj +1.5% || 2023-12-27 div 15.00 ref 674.6 (2.2%) raw -1.2% adj +1.1%
+CA GE = n3 2021-08-02 f8 ref12.95 pre12.95 | ret raw +677% adj -2.9% | 10d maxC raw +723% adj +3% maxH adj +4% | bar 0802-1600 || 2023-01-04 f0.7806 ref84.98 pre84.98 | ret raw -17% adj +5.8% | 10d maxC raw
+CA GOOGL = n1 2022-07-18 f0.05 ref2236 pre2236 | ret raw -95% adj -2.5% | 10d maxC raw -95% adj +4% maxH adj +4% | bar 0718-1600
+CA MULN = error 'volume'
+CA NKLA = n1 2024-06-25 f30 ref0.3507 pre0.3507 | ret raw +2572% adj -10.9% | 10d maxC raw +2891% adj -0% maxH adj +13% | bar 0625-1600
+CA NVDA = n2 2021-07-20 f0.25 ref751.2 pre751.2 | ret raw -75% adj -0.9% | 10d maxC raw -74% adj +5% maxH adj +6% | bar 0720-1600 || 2024-06-10 f0.1 ref1209 pre1209 | ret raw -90% adj +0.7% | 10d maxC raw -89
+CA SNDL = n1 2022-07-26 f10 ref0.2974 pre0.2974 | ret raw +667% adj -23.3% | 10d maxC raw +845% adj -6% maxH adj -2% | bar 0726-1600
+CA TSLA = n2 2020-08-31 f0.2 ref2213 pre2213 | ret raw -77% adj +12.6% | 10d maxC raw -77% adj +13% maxH adj +14% | bar 0831-1600 || 2022-08-25 f0.3333 ref891.3 pre891.3 | ret raw -67% adj -0.3% | 10d maxC ra
+CA event log GE = S0@210730-0000 f8 ref13.29 S1@210802-0000 f8 ref12.95 S0@230103-0000 f0.7806 ref83.79 S1@230104-0000 f0.7806 ref84.98 S0@240401-0000 f0.7981 ref175.5 S1@240402-0000 f0.7981 ref175.4
+CA event log MULN = S0@230503-0000 f25 ref0.081 S1@230504-0000 f25 ref0.0639 S0@230810-0000 f9 ref0.1098 S1@230811-0000 f9 ref0.113 S0@231220-0000 f100 ref0.0906 S1@231221-0000 f100 ref0.08 S0@240916-0000 f100 ref0.132
+DL BBBY = None | last 2023-05-02 raw 0.075 adj 0.075 gap 1d vol5 182.3M | MS dd 0001-01-01 rsn None | ev D0@230502-0000 px0.103 D1@230503-0000 px0.0751
+DL CIT = None | last - raw 0.000 adj 0.000 gap -1d vol5 -0.0M | MS dd 0001-01-01 rsn None | ev D0@091102-0000 px0.71 D1@091103-0000 px0.25
+DL FRC = First Republic Ban | last 2023-05-01 raw 1.820 adj 1.820 gap 3d vol5 110.1M | MS dd 0001-01-01 rsn None | ev D0@230502-0000 px1.82 D1@230503-0000 px1.82
+DL HTZ = None | last - raw 0.000 adj 0.000 gap -1d vol5 -0.0M | MS dd 0001-01-01 rsn None | ev D0@201029-0000 px1.8 D1@201030-0000 px1.79
+DL LEH = None | last 2008-09-17 raw 0.140 adj 0.140 gap 1d vol5 284.9M | MS dd 0001-01-01 rsn None | ev D0@080917-0000 px0.19 D1@080918-0000 px0.14
+DL RSH = None | last 2015-02-02 raw 0.240 adj 0.240 gap 3d vol5 2.7M | MS dd 0001-01-01 rsn None | ev D0@150202-0000 px0.28 D1@150203-0000 px0.24
+DL SHLD = None | last - raw 0.000 adj 0.000 gap -1d vol5 -0.0M | MS dd 0001-01-01 rsn None | ev D0@181023-0000 px0.42 D1@181024-0000 px0.37
+DL SIVB = SVB Financial Grou | last 2023-03-09 raw 106.040 adj 106.040 gap 1d vol5 7.0M | MS dd 2025-06-03 rsn Other even | ev D0@230327-0000 px106 D1@230328-0000 px106
+DL WM = None | last - raw 0.000 adj 0.000 gap -1d vol5 -0.0M | MS dd 0001-01-01 rsn None | ev D0@080926-0000 px1.77 D1@080927-0000 px0.16
+DR reasons (Jan snapshots) = None:46257 Other events:19795 Acquired:2733 Privatization:2655 Consolidation or Exchange:404 Dissolution of Company:192 Assimilation:175 Junk:18
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None

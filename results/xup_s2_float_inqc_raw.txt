@@ -1,0 +1,21 @@
+### xup s2 float v1
+Equity = $100,000.00
+FA DS vs SO*sf (n, within5%, within20%, off>1.5x) = 2011: 3459 88% 94% 4% | 2013: 3576 88% 94% 4% | 2016: 4077 90% 95% 3% | 2019: 4129 92% 96% 3% | 2021: 4437 90% 96% 3% | 2023: 5338 90% 95% 4% | 2025: 4918 90% 95% 4% | 2026: 4897 90% 95% 3%
+FP point-in-time = file_date in future 0.00% of 3638746 | SO change minus latest file_date days p10 7 p50 60 p90 99 | <0 0.0% <=7 11%
+FS detected / mcap continuity = fwd 910 rev 2440 | mcap within 5% across ex-date 43% of 3134
+FS fwd split DS lag = n 909 | 0:83% 1-2:1% 3-5:0% 6-30:1% none30:15%
+FS rev split DS lag = n 2427 | 0:82% 1-2:2% 3-5:0% 6-30:0% none30:15%
+FS revlow split DS lag = n 2052 | 0:85% 1-2:1% 3-5:0% 6-30:0% none30:13%
+FT float age = 2016: n 3784 age p50 0d p90 70d | 2024: n 4758 age p50 0d p90 92d
+FT staleness = weekly obs 3319342 | float changes 458841 with SO change 96% | SO changes 446281 that change Float/SO ratio 22% | days between float changes p25 28 p50 41 p90 91
+FX AAPL = 2012-01-04 DS 929M SOsf 932M FLpit 929M px 411.23 | 2016-01-05 DS 5575M SOsf 5544M FLpit 5572M px 105.35 | 2020-01-03 DS 4443M SOsf 4384M FLpit 4441M px 300.35 | 2024-01-03 DS 15553M SOsf 15462M FLp
+FX AMC = 2020-06-02 DS 104M SOsf 2086M FLpit 4M px 5.31 | 2021-01-05 DS 216M SOsf 4487M FLpit 16M px 2.01 | 2021-07-01 DS 548M SOsf 10267M FLpit 55M px 56.68 | 2022-07-01 DS 563M SOsf 10336M FLpit 56M px 13.
+FX GME = 2020-06-02 DS 65M SOsf 59M FLpit 22M px 4.13 | 2021-07-01 DS 74M SOsf 68M FLpit 44M px 214.14 | 2022-06-01 DS 76M SOsf 69M FLpit 67M px 124.74 | 2022-08-02 DS 305M SOsf 276M FLpit 268M px 34.78
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None

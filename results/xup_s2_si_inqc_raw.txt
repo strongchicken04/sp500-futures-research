@@ -1,0 +1,21 @@
+### xup s2 si v1
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+SI AAPL 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI AMC 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI BBBY 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI GME 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI TSLA 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI changes = 1 changes, 4002 symbols | previous_short_interest == prior value 36.8% | multi-change cycles 0.0%
+SI gaps / stale = delivery gaps >4d 1 (p50 211d) | unchanged >50d runs 57970 | si<=0 0.00% | deliveries 2251 last 2026-08-27
+SI n = trading days publication->usable = 
+SI record times = algo 2018-01-11 t 2018-01-10 00:00:00 end 2018-01-11 00:00:00 | algo 2018-01-11 t 2018-01-10 00:00:00 end 2018-01-11 00:00:00 | algo 2018-01-11 t 2018-01-10 00:00:00 end 2018-01-11 00:00:00
+SI rule 2021 settle / publish = settle  | publish 
+SI signed distance to nearest publication = 
+Unrealized = $0.00
+Volume = $0.00
+err None
