@@ -1,0 +1,476 @@
+EXTREME UPSIDE MOVES IN US EQUITIES - STAGE 4: EVENT-LEVEL VALIDATION, SIGNAL DEDUPLICATION, TRADABILITY & ROBUSTNESS
+==================================================================================================================
+Date: 2026-11-25/26. Data: QuantConnect / LEAN (AlgoSeek daily + minute bars, Morningstar, FINRA SI),
+2006-02-01 .. 2026-08-27.
+
+Every security-level calculation ran inside QuantConnect. Only aggregates left QC: counts, rates, quantiles,
+metrics and bootstrap CIs. No ticker, identifier, individual prediction or event history was exported.
+
+Frozen Stage 3 specification: commit 1249e43; TEST output ff1081f. The Stage 4 protocol was pre-registered in
+commit 3fa2c5f, before any Stage 4 result. Amendments 1-2 changed no criterion.
+
+Detailed documents (research/extreme_upside/stage4/):
+  protocol.md                 pre-registered protocol + Amendments 1-2
+  event_definitions.md        E1 / E2 / E3 / E4
+  event_level_methodology.md  association, capture, deduplication, lead time, C4/C5
+  tradability_methodology.md  strata, filters, outcomes, execution audit
+  statistical_methodology.md  bootstrap schemes, paired comparisons, calibration
+  data_availability_audit.md  what QC has and does not have
+  results.md                  every result table, with counts and denominators
+  limitations.md              limitations and deviations
+  stage5_decision.md          criteria C1-C9 and the decision
+
+Code:
+  strategy/quantconnect/inqc/xup_s4_core.py and xup_s4_modes_a..e.py  (attached to the unchanged Stage 3 panel)
+  strategy/quantconnect/run_s4.sh MODE label   (validates every run: mode line, panel check, no error)
+  strategy/quantconnect/s4_collect.py
+Raw outputs: results/xup_s4_{audit,events,eval,lead,exec,trad,filt,boot,calib,outc,robust,conc,xseg,diag}_raw.txt
+
+
+==================================================================================================================
+0. EXECUTIVE SUMMARY
+==================================================================================================================
+DECISION: C - FURTHER RESEARCH REQUIRED. A trading simulation (Stage 5) is NOT justified now.
+(Pre-registered criteria: C1-C3 and C6, C8, C9 pass; C4 and C5 fail; C7 is flagged.)
+
+1. Reproduction and discrepancy.
+   - Stage 3 is reproduced exactly (RF PR-AUC 0.0596, P@1% 7.74% = 1,296/16,749).
+   - The 1,296 vs 1,263 discrepancy is a model mix-up. 1,263/16,749 is the full-A GBM, because the Stage 3
+     tradability routine was coded on GBM. Same rows, different model.
+   - RF's own top-1% profile is even cheaper than the Stage 3 report said: median $0.46, 78% below $1.
+
+2. Data revision.
+   - QC revised its historical daily data mid-run. The identical code now builds 6,028,644 rows / 24,426 events
+     instead of 6,022,604 / 24,371.
+   - The run check caught it. It was diagnosed (not project-related) and documented.
+   - It moves the Stage 3 metrics by <= 0.0005 PR-AUC.
+
+3. Events.
+   - Test events 2021-25: 1,539 distinct (E1), 511 securities, about 6 positive days per event.
+   - RF top 1% / 5% / 10% captures 28.8% / 62.8% / 79.5% of events. But only 17% / 12.5% / 9.4% of signals
+     belong to an event: about 31 unrelated signals per captured event at the top 1%.
+
+4. Timing (confirmatory test failed).
+   - The signal appears before onset in 57% of events, but the same stock was flagged 31-40 sessions earlier
+     in 50% of events.
+   - Ratio 1.14 (needed >= 1.5); the difference of +7.2 pp is real but small.
+   - The window profile is flat: 1-2 sessions before onset 47%, 21-40 sessions before 56% (top 5%).
+   - The model identifies a persistent stock state, not the timing of the move.
+
+5. Deduplication.
+   - Removes 84-88% of signals (one per 10 sessions) at a capture cost of 2-3 pp.
+   - Does not improve precision (-0.8 pp at 5%), so conclusions are unchanged.
+
+6. Tradability.
+   - In the full universe, 78% of RF top-1% picks are below $1.
+   - After filtering to liquid stocks and re-ranking, the ranking survives:
+       px >= $1 and $vol >= $500k: lift 21.5x (validation 22.7x), 457 events, 76% captured at top 5%.
+       px >= $5 and $vol >= $1M:   lift 41x.
+   - Absolute top-1% precision is only 3.5-5.3%.
+   - Minute quote data exist (about 88% of sampled days). Median quoted spread on the entry day after a signal
+     is about 1.1% (first 30 minutes about 1.7%).
+
+7. Downside (flagged).
+   - The selected stocks fall on average from the next open: RF top 1% median close -4.1% / -7.1% / -12.4% at
+     t+5 / t+10 / t+20; 63% are negative at t+10.
+   - 8% lose half their value within 20 sessions; 14% touch a -50% low.
+   - Even in the liquid segment, a -50% close at t+10 (3.8%) is more common than a +100% close (3.1%).
+
+8. RF vs the simple volume model (paired tests).
+   - RF is better in overall ranking (PR-AUC +0.0139 [0.0080, 0.0195], p < 0.001, robust to date clustering),
+     at top 5-10% and in event capture (+12 pp at 5%).
+   - At the very top 1% the two are statistically indistinguishable (+0.6 pp [-0.6, 1.7]).
+   - The advantage comes from stocks >= $1. It holds in 2021-22, 2023-25 and 2026 YTD, in all market regimes,
+     and after date clustering.
+
+9. Robustness.
+   - All conclusions are unchanged in A-strict, A-ex-ADR, A-fund and B.
+   - The same holds for close-confirmed events (B, B-max), for E2 and E3, and when incomplete labels are counted
+     as negatives.
+
+
+==================================================================================================================
+1. REPRODUCIBILITY AUDIT AND DISCREPANCY (Stage 4A)
+==================================================================================================================
+Confirmed from the repository:
+  - Stage 3 protocol and Amendments 1-4; freeze commit 1249e43; test commit ff1081f.
+  - SPECS in xup_s3_modes_m.py: LR C=1e4; L2 C=0.1; RF 200 trees, leaf 200, sqrt features, max_samples 0.5,
+    seed 7; HistGBM lr 0.05, 31 leaves, l2 0.1, trees chosen on a time-ordered 10% holdout.
+  - Training rows: all positives + 10% of negatives, weighted x10.
+  - Splits: train 2006-02 .. 2020-12-31 minus 60 days; test 2021-2025; 2026 YTD separate.
+  - Fixed-hash 20% sample: md5(security id) mod 5.
+  - Labels: max adjusted HIGH(t+1..t+10) / adjusted OPEN(t+1) - 1 >= 100%, within a segment; incomplete -> -1.
+  - Top-k: ceil(k * n_day) per day among valid-label rows.
+  - Bootstrap: Poisson by security, 60 resamples.
+  - The scores were reproduced by refitting the frozen specification (deterministic: identical twice).
+
+S4AUDIT v1 (pre-revision data; project 39980657, backtest 3e3c1ffb...):
+                      Stage 3 TEST v1          S4AUDIT v1
+  RF PR-AUC           0.0596                   0.0596 [0.0540-0.0667]
+  RF P@1/5/10%        7.74 / 5.31 / 3.96%      7.74% (1,296/16,749) 5.31% (4,293/80,800) 3.96% (6,370/161,006)
+  RF R@10%            68%                      68.5%
+  Volume LR           0.0460, P@1 7.02%        0.0460, 7.02% (1,176/16,749)
+  Base / positives / rows   0.580% / 9,300 / 1.604M   0.580% / 9,300 / 1,604,540
+  GBM, full-A LR, price LR, momentum LR: all identical to TEST v1.
+
+Discrepancy table:
+  Metric          Source                          Definition                   Num/den        Canonical
+  RF top-1%       Stage 3 report sec. D,          P@1%, S3-rank, full-A RF     1,296/16,749   1,296 (7.74%) = RF
+                  TEST v1 "T fullA RF"
+  "top-1%"        Stage 3 report sec. H,          _tradability() is coded on   1,263/16,749   1,263 (7.54%) = GBM
+  (tradability)   TEST v1 "T tradability          res["fullA GBM"]
+                  top1% fullA GBM"
+  Explanation: same day-rank procedure and same 16,749 rows (ceil(1% * n_day)), different model.
+  Consequence: the Stage 3 profile ($0.66 median, 62% < $1, 27% < $100k, confirmation 29% / 53%) is GBM's.
+  RF (same formula): median $0.46, 78% < $1, 19% at $1-5, median $vol $470k, 21% < $100k, confirmation
+  29% / 50%.
+
+Data revision (Amendment 1):
+  - Detection: from about 16:15 UTC on 2026-11-25 every build gives 6,028,644 rows / 24,426 events (was
+    6,022,604 / 24,371).
+  - Diagnosis: S4DIAG in two different QC projects gave identical per-year fingerprints. QC data points
+    processed rose from 84,102,925 to 84,115,119, so this is a QC data revision.
+  - Where: +987 rows in 2006-09, +1,258 in 2010-14, +2,742 in 2015-19, +652 in 2020-22, +565 in 2023-25,
+    -164 in 2026.
+  - Impact (S4AUDIT v2, revised data): RF PR-AUC 0.0601, P@1% 7.73% (1,295/16,752); volume LR 0.0461 / 7.13%;
+    base 0.583%, 9,367 positives.
+  - All further Stage 4 numbers use the revised panel; every run checks the exact counts.
+
+
+==================================================================================================================
+2. EVENT CONSTRUCTION (Stage 4B; S4EVENTS v2)
+==================================================================================================================
+Definitions (sessions = the security's bars inside a segment, h = 10):
+  E1  Stage 3 _episodes exactly: new episode when the security changes or 10+ rows after the episode start.
+  E2  Merged forward windows: a positive day extends the window to t+10; a new event only after the window
+      expires.
+  E3  Price-path excursions: HIGH(tau) >= 2 x min OPEN(tau-9 .. tau); clustered with a 10-session gap; timed
+      at the move day.
+  E4  E1 / E2 on the B10/+100 and B-max10/+100 labels (separate populations).
+
+                    events(all)  securities  pos-days   days/event  dur med/p90  incompl  test 2021-25
+  E1 A10/+100       4,215        1,159       24,426     5.8 (6)     7 / 10       112      1,539 (511 securities)
+  E2 A10/+100       3,744        1,159       24,426     6.5 (7)     8 / 11       105      1,342
+  E3 path           3,883        1,172       15,753 x   4.1 (2)     3 / 10       184      1,387
+  E1 B10/+100       1,851          827        7,758     4.2 (3)     4 / 9         37        713
+  E1 B-max10/+100   2,324          922       12,551     5.4 (5)     6 / 10        55        865
+  (x = excursion days for E3)
+
+- E1 splits chained moves: 20.9% of E1 episodes would be merged by E2.
+- 98.2% of E3 move days lie inside an E1 span.
+- Close confirmation of E1 events: B 45%, B-max 57%.
+- Test E1 events by onset price:
+    <$0.10  0.10-0.49  0.50-0.99  1-2.99  3-4.99  5-9.99  >=10
+    31      305        240        513     172     165     113
+- Test E1 events by onset dollar volume:
+    <100k  100-500k  500k-1M  1-5M  5-10M  >10M
+    523    405       136      235   61     179
+- Median maximum return of a test event: +154%.
+
+Over / under-counting:
+  - E1 over-counts slow chained moves.
+  - E2 merges separate moves less than 10 quiet sessions apart.
+  - E3 can be triggered by a single extreme high.
+  - Results are therefore reported for all definitions.
+
+
+==================================================================================================================
+3. EVENT-LEVEL RESULTS (S4EVAL v2; 1,539 test E1 events; frozen models; Stage 4 daily ranking)
+==================================================================================================================
+                capture  pre-onset  in-event only  none    signals  associated  false/captured  repeats/captured
+  RF 1%         28.8%    22.2%      6.7%           71.2%   16,789   17.2%       31.3            5.5
+  RF 5%         62.8%    55.4%      7.4%           37.2%   81,210   12.5%       73.5            9.5
+  RF 10%        79.5%    73.6%      6.0%           20.5%   161,756   9.4%      119.7           11.4
+  Volume LR 1%  22.0%    18.9%      3.1%           78.0%   16,789   16.5%       41.3            7.2
+  Volume LR 5%  50.8%    45.8%      5.0%           49.2%   81,210   10.3%       93.2            9.7
+  GBM 1% / 5%   40.2 / 67.6% capture, 31.2 / 59.1% pre-onset
+  Full-A LR 1% / 5%    30.8 / 61.7%
+  Momentum LR 1% / 5%  30.0 / 58.4%
+  Price LR 1% / 5%     15.5 / 41.8%
+
+- Event security bootstrap CIs:
+    RF 1%  capture [25.7, 32.0], pre [19.3, 25.0], event precision [15.2, 19.2]
+    RF 5%  capture [59.4, 65.9]
+- Other definitions, RF 5%: E2 capture 60.9%, pre 51.5%; E3 capture 76.4%, pre-move 60.2%.
+- Event ranking (max daily percentile in onset-10..-1 vs the same security 31-40 sessions earlier):
+    RF        median 0.961 vs 0.949, AUC 0.546
+    Volume LR AUC 0.512
+    E3, RF    AUC 0.586
+  Scores barely rise before events.
+
+The three capabilities, reported separately:
+  (a) Prediction before the first positive-label day: 22% of events at RF top 1%, 55% at 5%.
+  (b) Detection while the event is underway, with no earlier signal: 6.7% / 7.4%.
+  (c) Repeated signals: 14.6% of RF top-1% signals repeat an already flagged event, and 168 securities produced
+      >= 2 signals without any event.
+
+
+==================================================================================================================
+4. LEAD TIME AND THE CONFIRMATORY TEST (Stage 4C; S4LEAD v1)
+==================================================================================================================
+Share of events with >= 1 signal in the window before onset:
+                       1-2    3-5    6-10   11-20  21-40  before(1-40)  in-event only  none
+  A E1 RF 1%           16.1%  15.5%  16.2%  20.7%  22.6%  34.0%          4.4%          61.6%
+  A E1 RF 5%           47.0%  47.3%  50.7%  52.9%  56.0%  65.8%          4.7%          29.4%
+  A E1 RF 10%          67.9%  67.6%  69.1%  72.4%  77.0%  82.6%          3.3%          14.1%
+  A E1 volume LR 5%    38.7%  40.3%  42.2%  47.1%  50.6%  57.3%          3.1%          39.6%
+  A E3 (move day) 5%   51.3%  49.3%  50.1%  52.7%  56.5%  68.4%         11.8%          19.8%
+  B E1 RF 5%           41.5%  42.1%  44.2%  48.1%  50.7%  61.0%          3.8%          35.2%
+  B-max E1 RF 5%       44.0%  44.0%  46.2%  49.7%  52.0%  62.8%          4.9%          32.4%
+
+C4 / C5 (RF top 5%; pre-onset 1-10 vs same-security placebo 31-40; paired bootstrap 2,000):
+  E1  57.0% vs 49.8%   +7.2 pp [4.8, 9.6]    ratio 1.14  -> FAIL (needs >= 1.5)
+  E2  53.1% vs 47.9%   +5.2 pp [2.6, 7.8]    ratio 1.11  -> FAIL
+  E3  61.2% vs 48.5%  +12.7 pp [9.9, 15.4]   ratio 1.26  -> FAIL
+  Exploratory variants: top 1% E1 22.8 vs 15.7% (ratio 1.45); E3 clean events 20.8 vs 12.0% (1.73).
+
+Lead vs magnitude (RF 5%, E1):
+  pre-signal    n 853  median max return 160%  B / B-max confirmation 41 / 54%  adverse -10%  price $0.77
+  in-event only n 114  median max return 193%  B / B-max confirmation 65 / 78%  adverse -14%  price $1.79
+  no signal     n 572  median max return 140%  B / B-max confirmation 52 / 60%  adverse  -6%  price $3.16
+  Spearman(lead, max return) +0.055; Spearman(lead, B-max confirmation) -0.028.
+  Earlier signals are NOT associated with larger, better-confirmed or more tradable moves.
+
+
+==================================================================================================================
+5. DEDUPLICATION (S4EVAL v2, E1; deployable rules use past data only)
+==================================================================================================================
+  RF 1%:  N0  16,789 signals  capture 28.8%  pre 22.2%  precision 17.2%
+          C10  2,641          26.6%          17.8%      16.6%
+          C20  1,786          21.5%          12.3%      17.0%
+          CW   1,316          15.9%           8.6%      16.7%
+          CE (retrospective oracle) 2,763   28.4%   20.5%   15.5%
+  RF 5%:  N0  81,210  62.8%  55.4%  12.5%
+          C10  9,998  60.3%  47.4%  11.7%
+          CW   2,874  17.1%   8.5%   8.5%
+
+- Paired, RF 5% C10 minus N0: capture -2.5 pp [-3.3, -1.8]; event precision -0.8 pp [-1.2, -0.5].
+- C10 signals per year (RF 1%, 20% sample): 513 / 543 / 562 / 510 / 513.
+- Deduplication shortens the list 6-8x without improving its quality. Conclusions unchanged.
+
+
+==================================================================================================================
+6. TRADABILITY (Stage 4D; S4TRAD v1, S4FILT v1, S4EXEC v1)
+==================================================================================================================
+Global RF selection by price stratum (test):
+  stratum      base     P@1%    top-1% rows  capture 1/5/10%
+  <$0.10       16.1%    17.5%     680        94 / 100 / 100%
+  0.10-0.49     5.3%     8.4%   8,207        65 /  95 / 100%
+  0.50-0.99     3.1%     6.4%   3,815        34 /  82 /  95%
+  1-2.99        1.7%     5.9%   2,604        17 /  57 /  82%
+  3-4.99        0.9%     7.0%     344        13 /  40 /  59%
+  5-9.99        0.42%    4.8%     334        12 /  39 /  54%
+  >=10          0.06%    6.1%     277         6 /  19 /  44%
+- 78% of the global top 1% is below $1, where lift is only 1.1-2.1x.
+- The volume LR makes 0 top-1% selections in the px >= $5 & $vol >= $100k cell (RF: 611).
+- Volatility deciles 1-7 contain almost no events: the signal lives in the top 2 volatility deciles.
+
+Liquidity filters, re-ranked inside the filter (validation 2017-20 with the MODEL-split RF / test 2021-25):
+                         rows kept  events  base    P@1%   lift valid / test  capture 1/5%  median top-1% price / $vol
+  none                   100%       1,539   0.58%   7.8%   21.2 / 13.3        29 / 63%      $0.43 / $0.5M
+  S0 px>=1 $vol>=100k    81%          700   0.31%   5.3%   22.0 / 17.2        38 / 72%      $1.86 / $1.1M
+  S1 px>=1 $vol>=500k    69%          457   0.23%   4.9%   22.7 / 21.5        43 / 76%      $2.04 / $2.7M
+  S2 px>=5 $vol>=1M      57%          177   0.10%   4.1%   22.6 / 41.2        60 / 81%      $9.30 / $8.5M
+  px>=5 $vol>=5M         44%          120   0.08%   3.5%   26.2 / 45.4        66 / 84%      $10.8 / $28M
+- C6 PASS for S0, S1 and S2.
+- Removing illiquid names leaves a meaningful, strongly ranked subset. Absolute precision stays at 3.5-5.3%, and
+  event precision in S1 is 12%.
+
+Execution data (hash samples; aggregates only):
+  - Minute trade bars, pre-market bars and minute quote bars exist for 105/120 signal entry days, 107/120 move
+    days and 54/60 controls.
+  - Median quoted spread:
+      signal entry day  1.06% (p25-p75 0.60-1.93%); first 30 minutes 1.66%
+      move day          0.78%
+      controls          0.17%
+  - [S4EXEC v2 verification of the session mask and minute dollar volume: see section 13.]
+
+
+==================================================================================================================
+7. DOWNSIDE AND OUTCOME DISTRIBUTIONS (Stage 4G; S4OUTC v1; daily bars, relative to adjusted OPEN(t+1))
+==================================================================================================================
+                     median close t+5/t+10/t+20   c10<0  c20<=-50%  low20<=-50%  +100% high/close  incomplete20 (seg-end)
+  unconditional      -0.0 / -0.1 / -0.1%          50%    0.7%       1.2%         0.6 / 0.3%        0.8%
+  RF top 1%          -4.1 / -7.1 / -12.4%         63%    8.0%      13.9%         7.8 / 3.9%        5.3%
+  RF top 5%          -3.1 / -5.4 /  -9.4%         62%    5.1%       8.9%         5.4 / 2.8%
+  volume LR top 1%   -2.6 / -4.6 /  -8.3%         62%    5.3%       9.3%         7.1 / 3.0%
+  price LR top 1%    -2.4 / -4.3 /  -8.1%         61%    4.7%       8.3%         6.1 / 2.8%
+  RF top 1% in S1    -5.2 / -8.5 / -14.2%         65%    8.9%      14.2%         4.9 / 3.1%
+
+- RF top-1% failures (n 14,997): median c10 -8.7%; c20 p5/p25/p50 -57.5 / -30.6 / -14.1%.
+- RF top-1% successes (n 1,264): median c10 +56.9%, c20 +27.1%; only 29% hold a +100% close at t+10.
+- The median gap between the 10-day maximum high and the maximum close is 9 pp (2 pp unconditionally): the
+  high-close asymmetry is strong.
+- C7 FLAG: in S1, close(t+10) <= -50% in 3.82% of selections vs a +100% close in 3.06%.
+- Limitation: delisting recovery and realised liquidation values cannot be established from QC data. Incomplete
+  windows are counted, not valued.
+
+
+==================================================================================================================
+8. STATISTICAL UNCERTAINTY (Stage 4E; S4BOOT v1; 2,000 security-cluster + 1,000 security x date resamples)
+==================================================================================================================
+Paired differences (same rows):
+                        dPR-AUC [CI] p                 two-way CI        dP@1%            dP@5%            dP@10%
+  RF - volume LR        +0.0139 [0.0080,0.0195] .0005  [0.0069,0.0201]   +0.60 [-0.56,1.72] +1.13 [0.72,1.51] +0.83
+  full-A LR - volume    +0.0084 [0.0024,0.0135] .009   [0.0011,0.0146]   +0.08 [-1.06,1.15] +1.03             +0.75
+  GBM - volume LR       +0.0109 [0.0045,0.0165] .001   [0.0033,0.0172]   +0.51 [-0.68,1.61] +1.03             +0.76
+  RF - price LR         +0.0223 [0.0166,0.0281]                          +1.63 [0.33,2.84]  +1.13             +0.88
+  RF - momentum LR      +0.0171 [0.0123,0.0223]                          +1.43 [0.42,2.39]  +0.83             +0.54
+
+Event level, RF - volume LR:
+  capture   +6.8 pp [4.2, 9.4] at 1%; +12.0 pp [9.3, 14.7] at 5%
+  pre-onset +9.6 pp [6.8, 12.3] at 5%
+GBM - volume LR, capture at 1%: +18.2 pp [15.3, 21.1].
+
+Period stability:
+             base    RF PR-AUC  volume PR-AUC  dPR-AUC [CI]              RF P@1%   RF capture 5%
+  2021-22    0.36%   0.0472     0.0332         +0.0140 [0.0036, 0.0271]  5.6%      69%
+  2023-25    0.74%   0.0649     0.0516         +0.0133 [0.0064, 0.0199]  9.2%      61%
+  2026 YTD   0.91%   0.0809     0.0616         +0.0193 [0.0040, 0.0320]  10.3%     64%
+  (dPR-AUC CIs use 300 resamples per period.)
+
+
+==================================================================================================================
+9. UNIVERSE AND LABEL ROBUSTNESS (Stage 4H; S4ROBUST v1)
+==================================================================================================================
+RF re-ranked inside each universe:
+              A-events  capture 1% / 5%  pre / placebo at 5%  B-events cap/pre/placebo  B-max cap/pre/placebo  S1 lift
+  A           1,539     28.8 / 62.8%     55.4 / 49.8%         55.4 / 49.9 / 45.2%       59.5 / 51.7 / 46.6%    21.5
+  A-strict    1,300     29.3 / 62.7%     55.3 / 50.8%         55.0 / 48.8 / 45.5%       59.1 / 50.8 / 47.1%    22.6
+  A-ex-ADR    1,469     28.5 / 63.1%     55.9 / 49.3%         55.4 / 50.2 / 44.8%       59.2 / 51.9 / 46.1%    21.4
+  A-fund      1,537     28.8 / 62.7%     55.2 / 49.5%         55.3 / 50.0 / 44.8%       59.4 / 51.7 / 46.3%    21.4
+  B           1,080     31.3 / 62.9%     56.1 / 50.2%         53.7 / 48.4 / 43.9%       58.4 / 50.8 / 45.6%    23.0
+
+- Incomplete labels: P@1% is 7.77% excluding them vs 7.53% counting them as negatives.
+- Conclusions do not depend on unresolved securities, ADRs, the fund-like flag, incomplete labels or the event
+  family.
+- The test period contains no old (2006-09) penny-stock data.
+
+
+==================================================================================================================
+10. CALIBRATION AND RANKING STABILITY (Stage 4F; S4CALIB v2)
+==================================================================================================================
+Calibration:
+  RF   Brier 5.613e-3, log loss 0.0274, ECE10 0.103 pp, predicted / observed 0.84; top-1% bin 8.86% vs 8.81%.
+  GBM  over-confident at the top: 18.3% predicted vs 8.6% observed.
+
+Drift:
+  - Predicted / observed by year 0.60-1.33, following the base rate (monthly correlation +0.73).
+  - The level drifts while the ranking is stable.
+  - A frozen Platt / isotonic recalibration fitted on 2017-20 fixes most of the level error on 2021-25
+    (ECE 0.172 -> 0.103 / 0.066 pp). It cannot follow later shifts, and it does not change the ranking.
+
+Ranking stability:
+  - Spearman RF-volume LR 0.78, RF-GBM 0.93.
+  - 82.7% of RF top-1% selections were also selected the previous session.
+  - Security-level RF percentile 2021-22 vs 2023-25: Spearman 0.91.
+  - The RF advantage is not driven by a few securities (excluding the top 5%: +0.0132). It comes from stocks
+    >= $1 (+0.024) far more than from stocks below $1 (+0.0045).
+
+
+==================================================================================================================
+11. PORTFOLIO CONCENTRATION AND REGIMES (Stage 4I; S4CONC v1)
+==================================================================================================================
+- RF top 1%: 13 selections per day in the 20% sample (about 65 in the full universe).
+- Events by security: the top 10% of securities produce 66% of events but 87% of RF top-1% selections.
+- Date concentration is moderate:
+    top 5% of days hold 14.2% of positive rows
+    daily onsets variance / mean 1.53
+    ICC 0.0025
+- Regimes (SPY volatility, IWM return, breadth; 2006-20 cut-offs): RF AP > volume LR AP in all 9 regime cells;
+  base rate 0.48-0.71%.
+- Calendar control: RF better than volume LR on 65.5% of days. Date-cluster bootstrap dPR-AUC [0.0117, 0.0163].
+
+
+==================================================================================================================
+12. EXPLORATORY: PRE-EVENT VS PLACEBO INSIDE THE TRADABLE SEGMENTS (S4XSEG; Amendment 2; not confirmatory)
+==================================================================================================================
+[XSEG_PLACEHOLDER]
+
+
+==================================================================================================================
+13. EXECUTION-DATA VERIFICATION (S4EXEC v2)
+==================================================================================================================
+[EXEC2_PLACEHOLDER]
+
+
+==================================================================================================================
+14. TESTS COMPLETED / NOT COMPLETED, DEVIATIONS, LIMITATIONS
+==================================================================================================================
+Completed: every section of the brief (4A-4J) was run in QC and its output checked (see the run list below).
+
+Not completed / limited:
+  - Exact intraday execution reconstruction for all signals.
+      Minute data were audited on hash samples only (300 items). A full minute-level simulation is a Stage 5
+      task.
+  - Official trading halts: not available in QC. The proxy is missing sessions.
+  - Delisting recovery values: not available. Incomplete windows are counted separately.
+  - The per-period PR-AUC CIs use 300 resamples (run time). All primary paired comparisons use 2,000.
+
+Deviations:
+  - Amendment 1: QC data revision; the canonical panel was re-based. Exact Stage 3 reproduction rests on
+    S4AUDIT v1.
+  - Amendment 2: one exploratory analysis (S4XSEG) and an EXEC re-run with diagnostics were added after results.
+    Neither can change the decision.
+  - QC limits forced reuse of one project after the daily 50-project creation limit. The DIAG runs show the
+    project has no effect.
+
+Full list of limitations: limitations.md.
+
+RUN LIST (all in results/; verdict from the automatic run validation):
+  S4AUDIT  v1         project 39980657  3e3c1ffb12f11cd3082a0b99c049ce7c  VALID  (pre-revision panel)
+  S4EVENTS v1         38061541          0e6cc7e0be91614d66ed1e0c1413d2c1  INVALID (revised panel before Amendment 1)
+  S4EVAL   v1-orphan  38061541          4aef7c55d2bb6ce82d102a2b7425e5e2  INVALID (same reason; identical to v2)
+  S4DIAG   p39980657  39980657          caff8b4f5112e091b1261a104cf305f8  diagnostic (check fails by design)
+  S4DIAG   p38061541  38061541          4df3d37687ccdc060009a67bb89d2993  diagnostic
+  S4AUDIT  v2         38061541          7dfeebd2238bd24f4c4e381a672585cd  VALID
+  S4EVENTS v2         38061541          c4c8c31994aebf7bcbe2a39949ed8be7  VALID
+  S4EVAL   v2         38061541          2b7c21dccaf997c874d35704c5f712f9  VALID
+  S4LEAD   v1         38061541          03cf0ecb9adc5410ac561bdaf0b4faef  VALID
+  S4EXEC   v1         38061541          ddb48bb601d4f3f826629b6c5990e0d6  VALID
+  S4TRAD   v1         38061541          781422a1a9c45736b160947d08afe499  VALID
+  S4FILT   v1         38061541          1cbd76f47d0242bab5e79152c5aed399  VALID
+  S4BOOT   v1         38061541          f3ba6e0d14dc863eaf17546320b2ab48  VALID
+  S4CALIB  v1         38061541          4ad3ac203449dc88704b396179b68dfa  INVALID (QC ended without output)
+  S4CALIB  v2         38061541          aff85f9d4bcc60bba6b1687d8a0cceaa  VALID
+  S4OUTC   v1         38061541          7a4934ad8cb20ac849166fbea093db7a  VALID
+  S4ROBUST v1         38061541          b4cd240c9b233d094515767640513c82  VALID
+  S4CONC   v1         38061541          4dff88079363e2295bbaa735a224c4e4  VALID
+[RUNLIST_TAIL]
+
+Key configuration:
+  - Scored rows: 2020-11-02 .. 2026-08-27 (universe A).
+  - Test events: onset 2021-2025.
+  - Association window: onset-10 .. last. Placebo window: onset-40 .. onset-31.
+  - Bootstrap seeds: 11 / 12 / 13 / 21 / 31 / 404 / 505.
+  - RF random_state 7, n_jobs 1.
+  - Panel check: 6,028,644 rows / 24,426 events.
+
+
+==================================================================================================================
+15. STAGE 5 DECISION
+==================================================================================================================
+  C1 reproduction        PASS  (exact, S4AUDIT v1)
+  C2 discrepancy         PASS  (1,296 = RF; 1,263 = GBM)
+  C3 event level         PASS
+  C4 pre-event signal    FAIL  (ratio 1.14 < 1.5; difference +7.2 pp [4.8, 9.6])
+  C5 robust definitions  FAIL  (E2 1.11, E3 1.26)
+  C6 tradable segment    PASS  (S1 lift 22.7x / 21.5x, 457 events, capture 76%)
+  C7 downside            FLAG  (S1: -50% closes 3.8% > +100% closes 3.1%; median t+10 -8.5%)
+  C8 uncertainty         PASS  (2,000 + 1,000 resamples, paired)
+  C9 integrity           PASS  (QC data revision detected, diagnosed, disclosed; effect <= 0.0005)
+
+=> DECISION C: FURTHER RESEARCH REQUIRED. A trading simulation is not justified on this evidence.
+
+Interpretation: the model reliably finds stocks that are in a chronic extreme-volatility state. It does not
+show WHEN they will move. Those stocks, including liquid ones, lose money on average from the next open.
+Family-A excursions are often unheld intraday highs.
+
+What a next research stage should test, pre-registered and before any simulation:
+  (1) a timing target, e.g. a move within 1-3 sessions conditional on the high-volatility state, judged against
+      the within-security placebo;
+  (2) a capturable target, e.g. close or VWAP excursion with an adverse-move limit;
+  (3) the work restricted to S1 / S2-type liquid stocks, where quote data allow a cost model;
+  (4) Stage 5 only if (1)-(3) pass.
+
+This report makes no profitability claim. A predictive ranking is not a trading strategy.

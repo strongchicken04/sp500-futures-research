@@ -182,7 +182,7 @@ The **RF** top-1 % profile, recomputed in S4AUDIT with the same formula:
   rate is already 3–16 %, so lift there is small (1.1–2.1×).
 - **Above $5:** precision is 5–6 % against 0.06–0.42 % base rates, but the global ranking puts almost no
   selections there.
-- **Volume LR above $5:** it selects nothing (0 top-1 % rows).
+- **Volume LR above $5:** it makes 0 top-1 % selections in the px ≥ $5 & $vol ≥ $100k cell (RF: 611).
 - **Volatility:** ATR / rv20 deciles 1–7 (2006–20 cut-offs) contain almost no events and no selections. The
   signal lives in the top 2 volatility deciles.
 
