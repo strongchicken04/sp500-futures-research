@@ -1,0 +1,419 @@
+EXTREME UPSIDE MOVES IN US EQUITIES - STAGE 2: RESEARCH-DATA VALIDATION
+=====================================================================
+Date: 2026-11-25
+Environment: QuantConnect cloud (LEAN). Every check below was executed INSIDE QuantConnect; only aggregates
+(counts, shares, medians, a few summary numbers per named security and a few ticker examples for classification)
+were returned. No security-level data was exported.
+No predictive modelling, feature selection, threshold optimisation or event-probability testing was done.
+Event counts below are descriptive counts used only to validate filters and label construction.
+
+Scripts (strategy/quantconnect/inqc/)            Raw outputs (results/)
+  xup_s2_universe_inqc.py    (V1  universe, attrition, representativeness, event attrition)   xup_s2_universe_inqc_raw.txt
+  xup_s2_universe_b_inqc.py  (V1b composition of the excluded groups)                          xup_s2_universe_b_inqc_raw.txt
+  xup_s2_universe_c_inqc.py  (V1c primary-share mis-flags, stocks without fundamentals)         xup_s2_universe_c_inqc_raw.txt
+  xup_s2_delist_corp_inqc.py (V2  delistings, corporate actions; v2 = fill-forward off)         xup_s2_delist_corp_inqc_raw.txt
+  xup_s2_float_inqc.py       (V3  derived point-in-time float)                                  xup_s2_float_inqc_raw.txt
+  xup_s2_si_inqc.py          (V4  short-interest timestamps; v2 = calendar fixed)               xup_s2_si_inqc_raw.txt
+  xup_s2_si_b_inqc.py        (V4b off-cycle short-interest changes)                             xup_s2_si_b_inqc_raw.txt
+  xup_s2_labels_inqc.py      (V5  event labels; v2 = history fill-forward off)                  xup_s2_labels_inqc_raw.txt
+Runs that were wrong and repeated (kept in the raw files as v1, superseded by v2):
+  * V4 v1: the FINRA rule calendar was built in initialize(), where QC clips history to the start date.
+  * V5 v1 / V2 v1: history() filled missing sessions forward by default, so halted and delisted days looked
+    like flat bars. All numbers below come from the v2 runs, which have fill-forward switched off.
+
+STATUS: see section 10. Short version: universe, delistings, corporate actions, labels and short-interest timing
+are validated, with defined treatments. The derived float is NOT validated as a reliable variable and stays an
+uncertain derived variable. Two universe problems found here change the Stage 1 universe definition (section 1).
+
+
+0. CORRECTIONS TO STAGE 1
+-------------------------
+* Stage 1 said ADRs are absent from the Morningstar fundamental universe. WRONG. BABA, TSM, BIDU and TM are
+  present with fundamentals. They are not flagged by is_depositary_receipt (always False) but fail is_primary_share.
+* Stage 1 proposed "is_primary_share = True" as a filter. That filter is UNRELIABLE (section 1.3).
+* Stage 1 applied an extra 1-day lag to short interest "anyway". REMOVED. QC's timestamp is already at least
+  1 trading day after FINRA publication (section 5). The brief forbids an undocumented second delay.
+* Data end: QC daily equity prices and FINRA short interest in this environment end on 2026-08-27 (last bar /
+  last delivery). Research period: 2006-01-01 .. 2026-08-27.
+
+
+1. UNIVERSE VALIDATION (V1, V1b, V1c)
+-------------------------------------
+1.1 Random dates (3 per block, fixed seed 2026; selector date = first universe date on/after the draw).
+Attrition is sequential; each column is the count left after the filter.
+
+date        all    traded fund  common notCEF primary majorEx notSPAC(B) | C float | D SI  | vol20 med K / noFund
+2006-09-06  6720   6720   3435  3407   3322   2873    2815    2814       |       1 |   -   | 1.8% / 1.6%
+2007-10-19  6821   6821   3534  3504   3415   2933    2873    2870       |       2 |   -   | 2.0% / 1.7%
+2008-10-28  6748   6745   3556  3525   3437   2932    2869    2866       |       3 |   -   | 6.5% / 7.1%
+2012-11-14  6720   6714   3684  3651   3545   2978    2908    2907       |    2813 |   -   | 2.1% / 1.2%
+2013-08-20  6923   6922   3820  3787   3674   3073    2994    2994       |    2910 |   -   | 1.7% / 1.1%
+2014-10-28  7211   7207   4067  4033   3918   3269    3170    3169       |    3061 |   -   | 2.1% / 1.4%
+2015-07-30  7368   7358   4156  4122   4008   3320    3215    3213       |    3107 |   -   | 1.8% / 1.3%
+2016-04-02  7404   7396   4197  4162   4047   3368    3256    3256       |    3162 |   -   | 2.1% / 1.2%
+2018-05-15  7724   7723   4241  4202   4092   3418    3284    3279       |    3187 |  3253 | 1.9% / 0.8%
+2022-05-11  9902   9859   5617  5574   5488   4796    4422    4150       |    3963 |  4121 | 3.3% / 1.7%
+2022-06-22  9928   9874   5656  5613   5526   4833    4444    4164       |    3967 |  4144 | 3.4% / 1.9%
+2022-10-04  9983   9926   5686  5643   5556   4878    4465    4173       |    3966 |  4147 | 3.0% / 1.7%
+2023-01-06  9806   9746   5553  5511   5424   4761    4332    4126       |    3917 |  4107 | 2.6% / 1.1%
+2024-05-07  9627   9589   5210  5168   5091   4502    4158    4138       |    4045 |  4110 | 2.5% / 0.9%
+2026-06-11 11150  11087   4952  4909   4843   4395    4343    4180       |    4120 |  4148 | 3.2% / 1.0%
+(The random draw for 2020-22 landed in 2022 three times. That is kept as drawn, not re-drawn.)
+
+Filter by filter:
+* traded (price > 0 and volume > 0): removes 0-60 a day.
+* has fundamentals: removes 45-55%: ETFs, ETNs, CEFs, warrants, units, rights, OTC ADRs, and some common
+  stocks (1.5).
+* common type (ST00000001): removes 30-45 (preferred, BDC-type and partnership shares, e.g. AEG, ARCC, BP, CHSCP).
+* closed-end fund (Morningstar sub-type): removes 85-115. Most listed CEFs (PDI, ADX, GOF, UTF) have no
+  fundamentals at all, so they are already gone.
+* primary share: removes 450-700. See 1.3: this filter is partly wrong.
+* exchange Nasdaq / NYSE / NYSE American: removes 55-380. These are OTCM names with fundamentals (and ~1 Arca).
+* SPAC heuristic (name contains "Acquisition" and raw price 9.0-10.8): removes 0-5 before 2020 and 160-290
+  in 2022-2026. Morningstar industry code of the flagged names: 0 (none) 1,046, 10350010 (shell companies) 197.
+* C (float > 0): 0-3 names before 2010. 93-97% of B from 2012.
+* D (FINRA short-interest record that day): 99% of B from 2018.
+* ADR flag: 0 on every date. is_primary_share None: 0 on every date.
+
+1.2 What the excluded groups are (V1b snapshots 2010-06, 2018-06, 2024-06; ticker patterns on random dates)
+* No fundamentals, 5-letter ticker ending W / U / R (warrants, units, rights): 1 (2010), 119 (2018), 44 (2024).
+* No fundamentals, 5-letter Y / F (OTC ADRs, foreign ordinaries, e.g. AKZOY, DANKY): 0-9.
+* No fundamentals, <= 4 letters: 2,958 / 3,207 / 4,280. ETFs and ETNs (SPY, QQQ, IWM, GLD, TQQQ, VXX, TVIX,
+  single-stock levered ETFs AAPU / AAPD) and CEFs, but ALSO common stocks: AA (2010), ARNC (2018), HWM (2024),
+  AXAS, ABK. These are legacy share lines of renamed or reorganised companies, where Morningstar is linked to a
+  different security id.
+* No fundamentals, other (preferred-style suffixes, e.g. ACGLO, AGNCN, BANFP): 31-121.
+* Non-primary, company country not USA (cross-listed Canadian / foreign ordinaries and ADRs: ABX, AEM, AG,
+  AGI, AEZS, BABA, TSM, BIDU, TM): 180-306.
+* Non-primary, company country USA: 280-422 (1.3).
+* Fundamental common primary on OTCM: 64-335.
+
+1.3 Primary-share filter: mis-flags (V1b, V1c)
+is_primary_share = False is set for genuine secondary classes (BRK.B, GOOG), but also for many ordinary
+single-class US stocks: ACM (AECOM), ACI (Albertsons), ACXM, ADS, ACOR, AXDX, ORGN, RAMP.
+V1c checks whether a non-primary US security has a primary share class of the same company on the same day:
+  [PENDING V1c - filled in below when the run finishes]
+Treatment for Stage 3 (decided here, before any predictive test):
+  keep a fundamental common security when is_primary_share = True, OR when company country = USA and no other
+  share class of the same company_id is primary that day; where a company still has several classes, keep the
+  class with the highest 20-day median dollar volume. Foreign non-primary lines (ADRs, cross-listings) are
+  excluded from the main universe and kept as a separate robustness group.
+
+1.4 Fundamental-coverage lag and selection bias from requiring fundamentals
+* Of 17,271 securities first seen after 2006-02, 6,007 got fundamentals and 11,264 never did.
+* For all 6,007 the flag was True from the first day (lag 0 in 100% of cases, in every block).
+* So has_fundamental_data behaves as a static per-security attribute. An onboarding lag cannot be measured, and
+  coverage may have been assigned retroactively. This is a possible small look-ahead in the coverage flag: a
+  company covered later counts as covered from its first day. It is not testable inside QC and is recorded as a
+  limitation.
+* Event attrition: close-based adjusted episodes (non-overlapping), 2006-2026, by the first filter each
+  security fails:
+    group                                   +50%/5d   +100%/10d   +200%/20d
+    core (B)                                 18,656      6,195       2,293
+    no fundamentals (all)                    23,866      8,486       3,068
+      of which W/U/R derivative-like          8,168      3,245          -
+      of which <= 4 letters (ETF/CEF/stock)  14,917      4,944          -
+    non-primary (foreign + US)                2,366        724         235
+      of which foreign                          803        239          -
+      of which US                             1,564        485          -
+    OTCM / other exchange                     2,828      1,057         395
+    non-common type, CEF, SPAC                 <100        <30         <5
+* Requiring fundamentals removes as many extreme events as it keeps. Warrants, units and rights (correctly
+  excluded: they are not equity) explain about 40% of that loss. The <= 4-letter group carries 4,944 episodes
+  of +100%/10d, versus 6,195 in the core. How many of these are common stocks:
+  [PENDING V1c manual classification of 48 hash-drawn tickers]
+* Over time, core +100%/10d episodes by block: 2006-09 757, 2010-14 358, 2015-19 694, 2020-22 1,408,
+  2023-26 2,982. The event base is concentrated in 2020-2026.
+
+1.5 Universes and what each can answer
+A  broad price/volume: every traded security (6.7k-11.1k a day). Contains ETFs and ETNs, which cannot be
+   separated from stocks without fundamentals, plus warrants, units and rights. Not usable as is. A-stock (A minus
+   the W/U/R/Y/F ticker groups) is the survivorship-complete robustness universe for price/volume hypotheses, with
+   ETF contamination stated.
+B  fundamental core (corrected as in 1.3): 2.8k (2006) - 4.2k (2026). Main universe for market cap, price,
+   liquidity, volatility, gaps and momentum hypotheses, 2006-2026.
+C  B with float: 2011-2026 only (no float before 2010, 23% in Jan 2010). Float hypotheses are PARTIAL and use
+   an uncertain variable (section 4).
+D  B with short interest: 2018-01 - 2026-08 only, 99% of B. Short-interest hypotheses are PARTIAL
+   (8.6 years, one market regime family).
+
+
+2. DELISTINGS / BANKRUPTCIES (V2)
+---------------------------------
+Each security was captured from the universe BEFORE its exit (point-in-time identity, not today's ticker owner),
+kept subscribed, and LEAN's own Delisting events were recorded.
+name  | last valid session | last raw = adj close | LEAN delisting events (warning / delisted, price)    | economic outcome
+LEH   | 2008-09-17         | 0.14                 | W 09-17 0.19 / D 09-18 0.14                          | equity wiped out
+WM    | (history n/a*)     | -                    | W 09-26 1.77 / D 09-27 0.16                          | equity ~wiped out
+CIT   | (history n/a*)     | -                    | W 2009-11-02 0.71 / D 11-03 0.25                     | old equity cancelled
+RSH   | 2015-02-02         | 0.24                 | W 02-02 0.28 / D 02-03 0.24                          | equity wiped out
+SHLD  | (history n/a*)     | -                    | W 2018-10-23 0.42 / D 10-24 0.37                     | equity ~wiped out
+HTZ   | (history n/a*)     | -                    | W 2020-10-29 1.80 / D 10-30 1.79                     | equity SURVIVED (2021 plan paid shareholders)
+BBBY  | 2023-05-02         | 0.075                | W 05-02 0.103 / D 05-03 0.0751                       | equity cancelled
+SIVB  | 2023-03-09         | 106.04               | W 2023-03-27 106 / D 03-28 106                       | equity ~worthless (halted 03-10, never reopened)
+FRC   | 2023-05-01         | 1.82                 | W 05-02 1.82 / D 05-03 1.82                          | equity wiped out
+* For WM, CIT, SHLD and HTZ, history() by the captured Symbol returns nothing. The ticker was reused or the
+  company relisted under a new security id (WM is now Waste Management; CIT and HTZ relisted). The delisting
+  events still carry the last exchange price.
+* Raw and adjusted last closes are identical: no dividend or split adjustment remains at the exit.
+* Morningstar delisting_date is empty (0001-01-01) for 8 of the 9 names; SIVB shows 2025-06-03 "Other events".
+  The Morningstar delisting fields are useless for these cases, besides being look-ahead. Reason distribution in
+  January snapshots: none 46,257, Other events 19,795, Acquired 2,733, Privatization 2,655, Consolidation or
+  Exchange 404, Dissolution 192, Assimilation 175, Junk 18.
+* QC data stops at the exchange delisting. OTC continuation lines (LEHMQ, WAMUQ, BBBYQ, SIVBQ) are not present.
+* Economic loss:
+  - For 7 of the 9, the last exchange price is already 0.07-1.82, so a "last price" treatment misses at most that
+    residual. Correct direction, small error.
+  - SIVB is the failure case. The last bar is 106.04 on 2023-03-09 and the delisting event repeats 106. A
+    "last price" treatment books ~0% loss for a stock that was worth ~0.
+  - HTZ is the opposite case: assuming -100% would be wrong, because shareholders recovered value.
+* Forward labels beyond the last valid date:
+  - BBBY 2023-04-14 has 14 sessions left.
+  - SIVB 2023-03-03 has 4 sessions left.
+  - The v1 run with fill-forward ON produced fake flat bars at 106 until 03-27, and a fake close-based -63% for
+    SIVB. Labels must never be computed on filled-forward bars.
+
+Defensible treatment (fixed before testing):
+* Upside labels are computed only on real sessions (fill-forward OFF).
+* A window that runs past the last valid session is INCOMPLETE. Family A (max excursion) is evaluated on the
+  available sessions and flagged. For family B (close-based), the window is dropped from the main count;
+  sensitivity variants use the last price, last x 0.7 (Shumway-type performance-delisting return) and zero.
+* A series is split into separate segments at any gap longer than 10 market sessions. No window crosses a
+  segment boundary (see 6.3: ticker reuse splices companies).
+Do the alternatives change event counts? Sample of 801 securities, 298 delisted before the data end:
+  +100%/10d: complete-window family-A starts 7,192; extra events from incomplete windows (A on available
+  sessions) 25 (+0.3%); family-B events added by last-price delisting value 1, by last x 0.7 0, by zero 0.
+  +50%/5d: 11,118; +30 (+0.3%); 7 / 0 / 0.  +200%/20d: 5,340; +40 (+0.7%); 0 / 0 / 0.
+  -> For UPSIDE labels the delisting assumption changes event counts by less than 1%. It matters for
+     close-based returns and any downside or return analysis, where SIVB-type cases dominate.
+
+
+3. CORPORATE ACTIONS (V2)
+-------------------------
+For each split, LEAN emits a warning event at 00:00 on the session before the ex-date, then the split event at
+00:00 on the ex-date, i.e. before that session's open. The reference price is the last raw close. Daily bars are
+stamped at 16:00 of their own session.
+name   ex-date     factor  raw close-to-close  adj close-to-close  10d max close raw / adj   (raw = artificial)
+AAPL   2020-08-31  4:1      -74%                +3.4%                -73% / +8%
+TSLA   2020-08-31  5:1      -77%               +12.6%                -77% / +13%
+TSLA   2022-08-25  3:1      -67%                -0.3%
+NVDA   2021-07-20  4:1      -75%                -0.9%                -74% / +5%
+NVDA   2024-06-10  10:1     -90%                +0.7%
+AMZN   2022-06-06  20:1     -95%                +2.0%                -95% / +2%
+GOOGL  2022-07-18  20:1     -95%                -2.5%                -95% / +4%
+GE     2021-08-02  1:8     +677%                -2.9%               +723% / +3%
+GE     2023-01-04  spin-off GEHC as factor 0.7806: raw -17%, adj +5.8%; GE Vernova 2024-04-02 factor 0.7981
+MULN   2023-05-04  1:25   +2200%                -8.0%              +2247% / -6%   (then 1:9, 1:100, 1:100)
+SNDL   2022-07-26  1:10    +667%               -23.3%               +845% / -6%
+AMC    2023-08-24  1:10    +633%               -26.7% (real APE-conversion-day fall)
+NKLA   2024-06-25  1:30   +2572%               -10.9%              +2891% / -0%
+COST   2020-12-01  $10.00 special dividend (2.6%): raw -1.1%, adj +1.5%
+COST   2023-12-27  $15.00 special dividend (2.2%): raw -1.2%, adj +1.1%
+* On raw prices every reverse split is a fake +600% to +2,900% "event". In the V5 sample, 1,599 of 8,781
+  raw +100%/10d events (18%) and 3,375 of 8,708 raw +200%/20d events (39%) are artificial (raw yes, adjusted
+  no). Adjusted-only events not on raw: 10 and 7.
+* Spin-offs are carried as split factors (GE 2023, 2024), so the adjusted series has no artificial drop.
+* Dividend adjustment hardly matters for these thresholds: total-return-adjusted vs split-only-adjusted
+  family-A events differ in 10 of 7,192 cases (+100%/10d) and 3 of 5,340 (+200%/20d).
+* Hazard: adjusted LEVELS can be absurd. After four reverse splits, MULN's adjusted close for 2023-05-03 is
+  5.4e15. Ratios stay exact (the label equals raw where no split falls in the window), but adjusted levels must
+  never be used as features.
+* With the open(t+1) reference, a split exactly at t+1 creates no fake event even on raw data (MULN example:
+  raw = adjusted +14%). A close(t) reference on raw prices would.
+
+ONE CONVENTION (fixed):
+* Returns, labels, highs and gaps: QC ADJUSTED (split + dividend + spin-off factor). Ratios only, never levels.
+* Price levels and tradability (price < $1, $1-5, dollar volume): RAW, as of t.
+* Corporate-action features: from LEAN Split and Dividend events, usable from the ex-date (warning event on t-1).
+
+
+4. DERIVED POINT-IN-TIME FLOAT (V3)
+-----------------------------------
+DS = MarketCap / raw price (PIT share count). Derived PIT float = Float x DS / SO. Universe: fundamental common
+stocks, 2011-01 .. 2026-08.
+
+4.1 PIT share count DS: VALIDATED
+* Agreement with the independent estimate SO x factor-file split factor (January snapshots):
+  2011 88% within 5%, 94% within 20%, 4% off by more than 1.5x; 2016 90/95/3; 2021 90/96/3; 2026 90/95/3.
+* Splits detected from factor-file ex-dates: 909 forward, 2,427 reverse (2,052 reverse splits below $1). DS jumps
+  by the split ratio ON THE EX-DATE in 83% (forward), 82% (reverse) and 85% (low-priced reverse) of cases. Lag of
+  1-30 days: 1-3%. Not within 30 days: 13-15%. In those cases market cap or SO is out of sync and the derived float
+  is wrong by up to the split ratio. This is detectable in real time from the DS jump and can be flagged.
+* Issuance and buybacks are captured: AMC DS 104M (2020-06) -> 216M (2021-01) -> 548M (2021-07) -> 563M
+  (2022-07); GME 65M -> 74M -> 76M -> 305M after the 4:1 split; AAPL 929M (2012) -> 5,575M (2016, after 7:1)
+  -> 4,443M (2020) -> 15,553M (2024, after 4:1). These match the known share counts.
+* PIT discipline: earning_reports.file_date is never in the future (0.00% of 3.64M weekly observations). SO
+  changes come 7-99 days after the latest filing (p10 / p90), never before it.
+
+4.2 The float ratio (Float / SO): NOT VALIDATED, uncertain
+* Staleness: 96% of float changes happen in weeks with an SO change, but only 22% of SO changes change the
+  Float / SO ratio. The float is mostly the SO times a ratio that is updated about once in five share updates.
+  Days between float changes: p25 28, p50 41, p90 91.
+* Inconsistent bases:
+  - AMC: derived float 4M (2020-06), 16M, 55M (2021-07) against DS 104-548M (4-10%). This is implausible.
+    SO x split factor is also off 20x for AMC, so Float and SO were restated on different bases around the
+    2023 1:10 split and APE conversion.
+  - GME: 22M of 65M (2020-06) and 44M of 74M (2021-07). Morningstar's float excludes large holders. That is a
+    definitional difference from the "float" used in squeeze narratives, not necessarily an error.
+* The age-of-float snapshot (p50 0 days on 2016-01-04 and 2024-01-02) is dominated by a mass refresh in early
+  January and is inconclusive.
+DECISION: PIT shares (DS) is a validated variable from 2006. Derived float is an UNCERTAIN DERIVED VARIABLE, used
+only in Universe C, flagged (ratio age, post-split DS mismatch, float / DS < 0.1 implausible), and reported as
+partial evidence. A float-based result cannot confirm the main hypothesis.
+
+
+5. SHORT-INTEREST TIMESTAMPS (V4, V4b)
+--------------------------------------
+* FINRA rule: settlement on the 15th (or the previous settlement day) and at month end; reports due 2 business
+  days later; publication 7 business days after settlement (FINRA Short Interest Reporting page, 2026 schedule
+  example: Jan 15 settlement -> Jan 27 publication). The rule calendar was rebuilt from NYSE sessions.
+  www.finra.org is blocked from this environment, so the archived 2021 table could not be fetched. Tolerance:
+  +-1 day around DTC holidays on which NYSE trades.
+* QC record: time = day D 00:00, end_time = D+1 00:00, delivered to the algorithm at D+1 00:00 (usable in the
+  session of the first trading day >= end_time date). There is no settlement-date field.
+* Main cycle changes vs rule publication (usable session minus publication, in trading days):
+    2021 (GME / AMC / AAPL / TSLA / BBBY, identical): rule 01-12 01-27 02-09 02-24 03-09 03-24 04-12 04-26
+                                                     QC   01-13 01-28 02-11 02-25 03-11 03-26 04-13 04-28
+                                                     -> +1 +1 +2 +1 +2 +2 +1 +2
+    2018 Q1: rule 01-24 02-09 02-27 03-09 03-26 / QC 01-25 02-13 02-28 03-13 03-28 -> +1 +2 +1 +2 +2
+    2022 Q1: rule 01-11 01-26 02-09 02-25 03-09 03-24 / QC 01-13 01-27 02-11 02-26(Sat -> Mon 02-28) -> +2 +1 +2 +1
+  Over all value changes, n = 1 for 19.3% and n = 2 for 29.7%. The rest are off-cycle changes (below).
+* VERDICT on "publication + 1 trading day": QC's timestamp is never earlier than publication + 1 trading day for
+  cycle changes. It is +1 or +2. Use the QC end_time as the availability time and add NO extra delay.
+  Stage 1's extra 1-day lag is removed.
+* Off-cycle changes: about 45% of value changes fall on other days, spread evenly (-5..+11 trading days).
+  previous_short_interest equals the prior value in only 36.8% of changes.
+  [PENDING V4b: duplicates / flip-backs / concentration]
+* Staleness / forward fill: the universe is a daily forward-filled snapshot. 22.4% of symbol-days carry a value
+  unchanged for more than 35 days (21.5% more than 70 days, i.e. at least 2 missed cycles). si <= 0: 0.00%. One
+  symbol had a 211-day delivery gap. Treatment: value age = days since the last change; age > 35 days -> missing,
+  not forward-filled.
+* Missing: 99% of B has a record on the sampled dates (2018-2026).
+
+
+6. EVENT LABELS (V5 v2)
+-----------------------
+Timing: prediction at the close of session t; entry no earlier than the open of t+1; window = the security's
+sessions t+1 .. t+h.
+  Family A (max excursion): max adjusted HIGH(t+1..t+h) / adjusted OPEN(t+1) - 1
+  Family B (close-based):   adjusted CLOSE(t+h) / adjusted OPEN(t+1) - 1    (B-max: max close in the window)
+
+6.1 Hand-checkable examples (adjusted; Y = event)
+GME 2021-01-12: close_t 4.53, open_t+1 4.59 (+1% gap) | 5d A +125% Y, B +94% Y | 10d A +1781% Y, B +1620% Y |
+                20d A +2291% Y, B +153% (not +200%) | raw = adjusted (no split in the window)
+GME 2021-01-22: open_t+1 gap +48% (not capturable) | 5d A +403% Y, B +239% Y | 10d A +403% Y, B -34% |
+                20d A +403% Y, B -52%  -> a family-A event without a family-B event
+AMC 2021-05-21: 5d A +199% Y, B +113% Y | 10d A +491% Y, B +348% Y | 20d A +491% Y, B +354% Y
+MULN 2023-05-03 (1:25 reverse split at t+1): adjusted A +14%, raw +14% -> no fake event with the open(t+1)
+                reference; adjusted level 5.4e15 (see 3)
+BBBY 2022-08-08: 10d A +156% Y, B -21% | 20d A +156% (below 200%)
+BBBY 2023-04-14 (Chapter 11 on 04-23, last exchange session 05-02): 5d A +133% Y, B +22% | 10d A +133% Y,
+                B -55% | 20d: A +4679% / B +4192% = FAKE. history() for the old BBBY Symbol continues with the
+                NEW BBBY (Beyond Inc. took the ticker in 2025; last bar 2026-08-14). Two companies spliced across a
+                gap of more than two years.
+SIVB 2023-03-03: 4 sessions left; 5/10/20d family A +1%, family B undefined (INCOMPLETE); v1 with fill-forward
+                showed a fake -63%
+GME halts (minute bars inside RTH): 2021-01-27 378/390, 01-28 314/390, 02-01 386/390. Missing RTH minutes
+                work as a halt proxy (only with fill-forward OFF).
+
+6.2 Sample statistics (801 core securities drawn by a fixed hash from every security in the core universe on
+any month 2006-2026, all t; 1.95M complete 5-day windows)
+horizon/thr  A starts  A episodes  B     B-max  A-not-B  A close(t)-ref  windows w/ missing session  w/ zero-vol day
++50%/5d      11,118    3,688       4,010  5,526  7,108    12,187 (+10%)   255                       349
++50%/10d     26,007    4,887       9,497 15,024 16,510    27,206 (+5%)    830                       778
++100%/10d     7,192    1,218       2,362  3,723  4,830     7,625 (+6%)    387                       288
++100%/20d    16,567    1,584       5,611  9,756 10,956    17,069 (+3%)  1,042                       705
++200%/20d     5,340      469       1,675  2,806  3,665     5,552 (+4%)    627                       259
+* Overlap: +100%/10d starts / episodes = 5.9. Consecutive t share one move. Stage 3 must use non-overlapping
+  episodes or cluster-robust inference, and a purged walk-forward with an embargo of at least h sessions.
+* Family A vs B: 67% of +100%/10d max-excursion events do not hold to the window end. The two families are
+  different targets and must be reported separately; the brief's two families are justified.
+* The close(t) reference adds 3-10% events from the overnight gap that cannot be traded. Rejected; open(t+1)
+  is the reference.
+* Raw price at t for +100%/10d events: below $1 2,513 (35%), $1-5 3,351 (47%), $5+ 1,328 (18%). The event base is
+  dominated by sub-$5 stocks. Tradability (spread, borrow, halts) must be carried as variables, and all results
+  must also be shown for $1+ and $5+.
+* Incomplete windows: +100%/10d 8,010 (2,980 on delisted securities). Only 25 family-A events on available
+  sessions.
+
+6.3 Label-integrity rules (fixed)
+1. fill_forward = False for every history request.
+2. Segment a series at gaps longer than 10 market sessions. No window crosses a segment boundary. Windows with
+   1-10 missing sessions (halts, suspensions) are flagged, not dropped.
+3. Labels on ADJUSTED ratios; open(t+1) reference; A and B both kept.
+4. Incomplete windows flagged; A on available sessions as a sensitivity only; B dropped in the main count.
+5. Zero-volume days inside a window are flagged (4% of +100%/10d events).
+
+
+7. REPRESENTATIVENESS OF THE FINAL UNIVERSE (V1, quarterly grid)
+---------------------------------------------------------------
+Final universe (B, before the 1.3 correction) as a share of all traded securities:
+  count 41-43% in every block; dollar volume 50% (2006-09), 52%, 54%, 58%, 60% (2023-26).
+Price mix (% of names; A = all traded, B = final):
+  2006-09  A <$1 4 / 1-5 15 / 5-20 41 / >20 40     B 2 / 13 / 39 / 45
+  2015-19  A 3 / 11 / 31 / 55                      B 2 / 13 / 31 / 54
+  2023-26  A 5 / 13 / 25 / 57                      B 7 / 21 / 28 / 44  (B holds more small low-priced listings)
+Dollar-volume mix: B has fewer illiquid names than A (<$100k a day: 9-14% vs 17-21%; >$10M: 33-43% vs 23-30%).
+Exchange mix (fundamental names vs B): Nasdaq 48-54% vs 57-63%, NYSE 33-41% vs 34-40%, NYSE American 4-5% vs 3-4%,
+  OTCM 4-9% vs 0 (excluded by design).
+Market cap (fundamental names vs B), 2023-26: <$50M 16% vs 16%, $50-300M 21% vs 20%, $0.3-2B 26% vs 27%,
+  >$2B 34% vs 36%. B is not tilted toward large caps.
+Type: B is 100% common stock by construction.
+Period: B grows from 2.8k to 4.2k names (SPAC-era listings 2021-22).
+Conclusion: B is representative of exchange-listed fundamental common stocks by size and exchange. It is NOT
+representative of everything that trades. The extreme-event base outside B (warrants, units, rights, OTC, ADRs,
+and stocks without fundamentals) is as large as inside it (1.4). Every Stage 3 result must say it applies to
+exchange-listed common stocks with Morningstar coverage.
+
+
+8. LIMITATIONS (stated openly)
+------------------------------
+* Data end 2026-08-27 in this environment.
+* has_fundamental_data looks static per security. The coverage onboarding lag cannot be measured, and coverage
+  may be assigned retroactively.
+* Stocks without fundamentals (legacy lines of renamed companies) cannot be classified inside QC without
+  fundamentals. ETFs and ETNs have no flag. Universe A is therefore contaminated.
+* is_primary_share is unreliable for US single-class stocks. The corrected rule (1.3) is a heuristic.
+* Morningstar migrated feeds on 2026-09-23 and restated history (QC documentation). The point-in-time checks
+  (file_date never in the future, DS on split ex-dates) passed on the current data, but the restatement itself
+  cannot be audited.
+* Derived float: not validated (section 4.2).
+* FINRA 2021 official calendar not fetched (site blocked). The rule calendar has +-1 day tolerance. Off-cycle
+  short-interest changes are only partly explained (V4b).
+* OTC continuation prices after exchange delisting are not in QC. SIVB-type halted exits have no market price.
+* Ticker reuse splices companies in history() (BBBY). Handled by gap segmentation, but splices with short gaps
+  would not be caught. The rate is unknown; 387 of 7,192 +100%/10d windows contain a missing session.
+* Trading halts: a minute-bar proxy only. There is no official halt history in QC.
+* SPACs: name/price heuristic plus Morningstar code 10350010. There is no explicit SPAC flag.
+
+
+9. DATASET ARCHITECTURE FOR STAGE 3 (all built and evaluated inside QC; only aggregates leave)
+---------------------------------------------------------------------------------------------
+Table 1  security_day (PIT, from the Fundamental universe at t)
+         sid, ticker, segment_id (gap > 10 sessions -> new segment), has_fund, security_type, cef_flag,
+         is_primary_share, company_id, company_country, exchange_id, spac_flag (name/price heuristic, code
+         10350010), universe flags A / A-stock / B (rule 1.3) / C / D, raw close, raw volume, dollar volume.
+         EXCLUDED as predictors: delisting_date, delisting_reason, share_class_status.
+Table 2  prices_day   raw OHLCV and adjusted OHLC ratios (fill_forward = False), session index, missing-session
+         and zero-volume flags, minute-bar halt proxy (selected tests only).
+Table 3  corp_actions split (warning t-1, ex-date, factor, reference price), dividend (amount / reference),
+         spin-off factor, LEAN delisting (warning / delisted, price), symbol change; usable from the event time.
+Table 4  fundamentals_pit  market_cap, DS = market_cap / raw price, SO, Float, float_ratio = Float / SO,
+         ratio_age, ds_split_mismatch flag, derived_float = float_ratio x DS (C only, uncertain), file_date.
+Table 5  short_interest_pit  value usable from the QC end_time (no extra delay), age_days (> 35 -> missing),
+         SI / DS, SI / derived_float (C and D only), days_to_cover, change; off-cycle-change flag (V4b).
+Table 6  labels  for each (sid, t): A and B for h = 5 / 10 / 20 and thr = 50 / 100 / 200%; reference raw open(t+1)
+         for tradability; complete flag, n_sessions_available, delisted_in_window, missing_sessions,
+         zero_volume_days; episode_id (non-overlapping); sensitivity B values under the delisting assumptions.
+Splits   walk-forward by calendar year: train on years < Y, test on Y, embargo of h sessions at the boundary;
+         blocks 2006-09 / 2010-14 / 2015-19 / 2020-22 / 2023-26 reported separately; B main; A-stock and the
+         foreign non-primary group as robustness; C (2011-) and D (2018-) as partial sub-studies; price strata
+         < $1 / $1-5 / $5+.
+Execution: features and labels are computed inside the QC algorithm per run (or cached in QC Object Store,
+         which stays inside QC). Output = aggregate statistics only (event counts, rates by decile, test
+         statistics with multiple-testing correction).
+
+
+10. STAGE 2 STATUS
+------------------
+[filled in after V1c and V4b]
