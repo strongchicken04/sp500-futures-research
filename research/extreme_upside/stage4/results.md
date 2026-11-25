@@ -296,8 +296,45 @@ The **RF** top-1 % profile, recomputed in S4AUDIT with the same formula:
 ## 12. Calibration and ranking stability (S4CALIB)
 [pending: v1 ended without output (QC), re-run as v2]
 
-## 13. Concentration and regimes (S4CONC)
-[pending]
+## 13. Concentration and regimes (S4CONC v1; test 2021–25)
+**Selections and dates:**
+- 1,255 test days; eligible rows per day p10 / p50 / p90 = 1,220 / 1,270 / 1,370.
+- RF top-1 % selections: 13 per day (max 14) in the 20 % sample, i.e. about 65 per day in the full universe.
+- Date concentration of positives: 3.4 % of positive rows fall on the top 1 % of days, 14.2 % on the top 5 %.
+- Daily E1 onsets: mean 1.23, variance / mean 1.53; 11 days above mean + 3 sd.
+- Daily event rate: variance is 4.2× the binomial variance; intraclass correlation 0.0025.
+- Common-date shocks exist but are small relative to cross-sectional variation.
+
+**Security concentration** (of 1,832 securities with test rows, 511 had ≥ 1 event):
+
+| Share from | Top 1 % of securities | Top 5 % | Top 10 % |
+|---|---|---|---|
+| Events | 12.9 % | 43.5 % | 65.8 % |
+| RF top-1 % selections | 22.9 % | 64.3 % | **86.9 %** |
+
+The selection is much more concentrated than the events: a small set of permanently flagged securities.
+
+**Regimes** (past-only variables, tercile cut-offs from 2006–2020):
+
+| Regime variable | Tercile | Rows | Base | RF AP | RF P@1 % | Volume LR AP | Volume LR P@1 % |
+|---|---|---|---|---|---|---|---|
+| SPY 20-day vol | T1 (low) | 341k | 0.69 % | 0.0762 | 9.2 % | 0.0498 | 7.9 % |
+| | T2 | 744k | 0.60 % | 0.0576 | 7.5 % | 0.0499 | 7.3 % |
+| | T3 (high) | 520k | 0.49 % | 0.0568 | 7.2 % | 0.0408 | 6.3 % |
+| IWM 20-day return | T1 | 634k | 0.48 % | 0.0647 | 7.9 % | 0.0447 | 6.3 % |
+| | T2 | 438k | 0.59 % | 0.0594 | 7.7 % | 0.0492 | 7.0 % |
+| | T3 | 534k | 0.70 % | 0.0604 | 7.6 % | 0.0481 | 8.2 % |
+| Panel median r20 | T1 | 671k | 0.50 % | 0.0625 | 7.8 % | 0.0451 | 6.6 % |
+| | T2 | 513k | 0.59 % | 0.0612 | 7.9 % | 0.0507 | 7.2 % |
+| | T3 | 421k | 0.71 % | 0.0600 | 7.4 % | 0.0462 | 7.9 % |
+
+- Regimes change the base rate moderately (0.48–0.71 %). They do not remove the RF ranking advantage: RF AP is
+  above volume LR in all nine cells.
+
+**Calendar control:**
+- Mean per-day AP (1,207 days with ≥ 1 positive): RF 0.1059 vs volume LR 0.0896; RF better on 65.5 % of days.
+- Pooled ΔPR-AUC +0.0139, date-cluster bootstrap [0.0117, 0.0163], p 0.001.
+- **The RF advantage is not a calendar-concentration artefact.**
 
 ## 14. Exploratory: pre-event vs placebo inside S0 / S1 / S2 (S4XSEG)
 [pending]
