@@ -3,6 +3,8 @@ from AlgorithmImports import *
 from datetime import date as _date, datetime as _dt, timedelta
 from collections import deque
 import hashlib, random, re
+import numpy as np
+from itertools import islice
 from xup_ic_0 import DATA as _d0
 from xup_ic_1 import DATA as _d1
 from xup_ic_2 import DATA as _d2
@@ -28,6 +30,8 @@ from xup_ic_3 import DATA as _d3
 #   6 UNRESOLVED      no reliable evidence (kept in A, flagged; A-strict excludes it)
 # A (broad price/volume, main) = COMMON + COMMON_SECONDARY + COMMON_NOFUND + ADR_FOREIGN + UNRESOLVED;
 # B = securities with Morningstar fundamentals of common type.
+# v2: + point-in-time fund-likeness flag (trailing 120 sessions: idiosyncratic vol vs SPY, share of |r| > 8%),
+# calibrated on labelled securities (max fund recall with <= 2% of common stocks flagged) and applied to UNRESOLVED.
 # Outputs: class counts, coverage by year / exchange, event-universe size (+50%/5d, +100%/10d, +200%/20d
 # close-based adjusted episodes) A vs B, survivorship of the classification (dead vs alive securities),
 # random-date class counts and ticker samples for manual inspection, conflicts with Morningstar.
@@ -88,6 +92,10 @@ class XupS2InstrClass(QCAlgorithm):
         self.rdates = sorted(_date(a, 1, 1) + timedelta(days=rng.randint(0, (min(_date(b, 12, 31), _date(2026, 8, 1)) - _date(a, 1, 1)).days)) for a, b in BLK)
         self.rpend = list(self.rdates)
         self.rsets = {}
+        self.eps = []
+        self.feat = {}
+        self.qdone = set()
+        self.spy_sid = None
 
     def _g(self, fn, default=None):
         try:
@@ -164,22 +172,19 @@ class XupS2InstrClass(QCAlgorithm):
                 rs.append(sid)
             h = self.hist.get(sid)
             if h is None:
-                h = deque(maxlen=21)
+                h = deque(maxlen=121)
                 self.hist[sid] = h
             h.append((adj, vol))
             n = len(h)
             if n < 6:
                 continue
-            hl = None
             for k, (hz, mult) in enumerate(LAB):
                 if n < hz + 1:
                     break
                 st = h[-1 - hz]
                 if st[0] <= 0 or st[1] <= 0:
                     continue
-                if hl is None:
-                    hl = [r[0] for r in h]
-                if max(hl[-hz:]) < mult * st[0]:
+                if max(r[0] for r in islice(reversed(h), hz)) < mult * st[0]:
                     continue
                 lk = (k, sid)
                 si = self.day - hz
@@ -191,7 +196,46 @@ class XupS2InstrClass(QCAlgorithm):
                     e[k] += 1
                     if k == 1:
                         e[3][b] = e[3].get(b, 0) + 1
+                        self.eps.append((sid, d))
+            if tk == "SPY":
+                self.spy_sid = sid
+        if d.month in (1, 4, 7, 10) and ("q", mkey) not in self.qdone:
+            self.qdone.add(("q", mkey))
+            self._features(d)
         return []
+
+    def _features(self, d):
+        # trailing-120-session fund-likeness features (point-in-time): daily vol, corr with SPY, idiosyncratic vol
+        # (residual of a SPY beta), share of |daily return| > 8%
+        for sid in [k for k, v in self.last.items() if (d - v).days > 40 and k in self.hist]:
+            del self.hist[sid]
+        sh = self.hist.get(self.spy_sid) if self.spy_sid else None
+        if sh is None or len(sh) < 121:
+            return
+        spy = np.array([r[0] for r in sh], dtype=float)
+        ids, rows = [], []
+        for sid, h in self.hist.items():
+            if len(h) < 121 or self.last.get(sid) != d or sid == self.spy_sid:
+                continue
+            p = [r[0] for r in h]
+            if min(p) <= 0:
+                continue
+            ids.append(sid)
+            rows.append(p)
+        if not rows:
+            return
+        P = np.log(np.array(rows, dtype=float))
+        R = np.diff(P, axis=1)
+        rs = np.diff(np.log(spy))
+        rc = rs - rs.mean()
+        Rc = R - R.mean(axis=1, keepdims=True)
+        vol = R.std(axis=1)
+        cov = (Rc * rc).mean(axis=1)
+        beta = cov / max(rc.var(), 1e-12)
+        corr = cov / np.maximum(vol * rs.std(), 1e-12)
+        idio = (R - beta[:, None] * rs).std(axis=1)
+        jump = (np.abs(R) > 0.08).mean(axis=1)
+        self.feat[d] = (ids, np.stack([vol, corr, idio, jump], axis=1).astype(np.float32))
 
     # ---------------- classification ----------------
     def _rule(self, tk):
@@ -339,6 +383,57 @@ class XupS2InstrClass(QCAlgorithm):
                 v[2] += 1
         for dead in (False, True):
             S(f"V no-fund {'DEAD' if dead else 'ALIVE'} resolved/fund share by first block", " | ".join(f"{BLK[fb][0]}: n {sv.get((dead, fb), [0, 0, 0])[0]} res {100.0 * sv.get((dead, fb), [0, 1, 0])[1] / max(1, sv.get((dead, fb), [1])[0]):.0f}% fund {100.0 * sv.get((dead, fb), [0, 0, 0])[2] / max(1, sv.get((dead, fb), [1])[0]):.0f}%" for fb in range(5))[:198])
+        # ---- point-in-time fund-likeness flag: calibrate on labelled securities, apply to UNRESOLVED ----
+        FUND = ("ETF", "ETN", "CEF")
+        COMM = ("COMMON", "COMMON_NOFUND", "COMMON_SECONDARY")
+        grid = [(a, b) for a in (0.004, 0.006, 0.008, 0.010, 0.012, 0.015, 0.020) for b in (0.0, 0.009, 0.017, 0.025)]
+        cnt = {g: [0, 0, 0, 0] for g in grid}   # fund flagged, fund total, common flagged, common total
+        for d, (ids, F) in self.feat.items():
+            lab = np.array([1 if cls[s] in FUND else (0 if cls[s] in COMM else -1) for s in ids])
+            for g in grid:
+                fl = (F[:, 2] < g[0]) & (F[:, 3] <= g[1])
+                c = cnt[g]
+                c[0] += int(np.sum(fl & (lab == 1)))
+                c[1] += int(np.sum(lab == 1))
+                c[2] += int(np.sum(fl & (lab == 0)))
+                c[3] += int(np.sum(lab == 0))
+        ok = [(g, c[0] / max(1, c[1]), c[2] / max(1, c[3])) for g, c in cnt.items() if c[2] / max(1, c[3]) <= 0.02]
+        if ok:
+            best = max(ok, key=lambda t: t[1])
+            g, rec, fpr = best
+            # flag rate among UNRESOLVED by block, estimated fund share = (flag - fpr) / (recall - fpr)
+            fb = {}
+            flagged_last = {}
+            for d, (ids, F) in sorted(self.feat.items()):
+                fl = (F[:, 2] < g[0]) & (F[:, 3] <= g[1])
+                bi = next(i for i, (a0, z0) in enumerate(BLK) if a0 <= d.year <= z0)
+                for s, f in zip(ids, fl):
+                    flagged_last.setdefault(s, []).append((d, bool(f)))
+                    if cls[s] == "UNRESOLVED":
+                        v = fb.setdefault(bi, [0, 0])
+                        v[0] += int(f)
+                        v[1] += 1
+            S("F1 fund-like rule (labelled, pooled quarters)", f"idio vol < {g[0]:.3f} and jump share <= {g[1]:.3f}: fund recall {rec * 100:.0f}% | common flagged {fpr * 100:.1f}% | labelled fund obs {cnt[g][1]} common obs {cnt[g][3]}")
+            S("F2 UNRESOLVED flagged fund-like by block (est. fund share)", " | ".join(f"{BLK[bi][0]}: {100.0 * v[0] / max(1, v[1]):.0f}% (~{100.0 * max(0.0, (v[0] / max(1, v[1]) - fpr) / max(1e-6, rec - fpr)):.0f}%)" for bi, v in sorted(fb.items()))[:198])
+            # episodes of UNRESOLVED securities: state of the flag at the last evaluation before the episode start
+            import bisect as _b
+            ne, nf = 0, 0
+            for s, d in self.eps:
+                if cls.get(s) != "UNRESOLVED":
+                    continue
+                ne += 1
+                lst = flagged_last.get(s, [])
+                j = _b.bisect_right([x[0] for x in lst], d) - 1
+                if j >= 0 and lst[j][1]:
+                    nf += 1
+            S("F3 UNRESOLVED +100/10 episodes in fund-like state", f"{nf} of {ne}")
+            share = {s: sum(1 for _, f in v if f) / len(v) for s, v in flagged_last.items() if cls.get(s) == "UNRESOLVED" and len(v) >= 2}
+            fl_s = sorted([s for s, v in share.items() if v >= 0.75], key=lambda s: hashlib.md5(s.encode()).hexdigest())[:14]
+            nf_s = sorted([s for s, v in share.items() if v == 0], key=lambda s: hashlib.md5(s.encode()).hexdigest())[:14]
+            S("F4 UNRESOLVED mostly fund-like (sample)", f"n {sum(1 for v in share.values() if v >= 0.75)} of {len(share)}: " + " ".join(f"{self.span[s][-1][0]}{str(self.first[s].year)[2:]}" for s in fl_s))
+            S("F5 UNRESOLVED never fund-like (sample)", f"n {sum(1 for v in share.values() if v == 0)}: " + " ".join(f"{self.span[s][-1][0]}{str(self.first[s].year)[2:]}" for s in nf_s))
+        else:
+            S("F1 fund-like rule", "no rule with common false-flag <= 2%")
         # random dates: counts and samples
         for d in sorted(self.rsets):
             ids = self.rsets[d]
