@@ -9,6 +9,7 @@ from xup_ic_0 import DATA as _d0
 from xup_ic_1 import DATA as _d1
 from xup_ic_2 import DATA as _d2
 from xup_ic_3 import DATA as _d3
+from xup_ic_4 import DATA as _d4
 # endregion
 #
 # EXTREME-UPSIDE RESEARCH - STAGE 2, OPTION A (owner decision 2026-11-25): HISTORICAL INSTRUMENT CLASSIFICATION
@@ -25,6 +26,7 @@ from xup_ic_3 import DATA as _d3
 #                     ADR_FOREIGN (non-primary, company country not USA) / CEF (sub-type) / PREF_OTHER (type not
 #                     common); OTCM and SPAC kept as flags
 #   3 SEC-SC ETF      a ticker span of the security overlaps an ETF effective range
+#   3b N-CEN (v3)     a ticker span overlaps an N-CEN ETF / UIT / CEF / CEF-preferred / CEF-debt range (2018-)
 #   4 current list    the security holds the ticker on/after 2025-06-01
 #   5 ticker rules    5-letter Nasdaq suffix W / R / U / N-O-P-M / Y / F / A-B, NYSE-style .WS .U .R .RT
 #   6 UNRESOLVED      no reliable evidence (kept in A, flagged; A-strict excludes it)
@@ -54,10 +56,11 @@ class XupS2InstrClass(QCAlgorithm):
         self.universe_settings.resolution = Resolution.DAILY
         self.err = []
         self.sec_etf = {}
+        self.ncen = {}
         self.cur = {}
         self.nrows = 0
         try:
-            for ln in (_d0 + "\n" + _d1 + "\n" + _d2 + "\n" + _d3).split("\n"):
+            for ln in "\n".join((_d0, _d1, _d2, _d3, _d4)).split("\n"):
                 p = ln.split(" ")
                 if len(p) < 4:
                     continue
@@ -67,6 +70,13 @@ class XupS2InstrClass(QCAlgorithm):
                     rng = (_date(int(p[1]), 1, 1), _date(int(p[2]), 12, 31))
                     for tk in tks:
                         self.sec_etf.setdefault(tk, []).append(rng)
+                elif p[0] == "K":
+                    if len(p) < 5:
+                        continue
+                    rng = (_date(int(p[1]), 1, 1), _date(int(p[2]), 12, 31), p[3])
+                    for tk in p[4].split(","):
+                        self.ncen.setdefault(tk, []).append(rng)
+                    self.nrows += len(p[4].split(",")) - len(tks)
                 else:
                     typ, ex = p[1], p[2]
                     for tk in tks:
@@ -266,6 +276,14 @@ class XupS2InstrClass(QCAlgorithm):
             for st, en in self.sec_etf.get(t, []):
                 if a <= en and z >= st:
                     return "ETF", "sec"
+        hits = set()
+        for t, a, z in spans:
+            for st, en, ty in self.ncen.get(t, []):
+                if a <= en and z >= st:
+                    hits.add(ty)
+        for ty in ("ETF", "CEF", "PREFERRED", "DEBT", "WARRANT"):
+            if ty in hits:
+                return ty, "ncen"
         if self.last[sid] >= _date(2025, 6, 1):
             t = spans[-1][0]
             if t in self.cur:
@@ -295,7 +313,7 @@ class XupS2InstrClass(QCAlgorithm):
             if src[sid] != "ms" and src[sid] != "test":
                 nof[c] = nof.get(c, 0) + 1
         nfund = sum(1 for s in cls if src[s] == "ms")
-        S("C0 import", f"rows {self.nrows} SEC-ETF tickers {len(self.sec_etf)} current tickers {len(self.cur)} | securities seen {len(cls)} with fundamentals {nfund} without {len(cls) - nfund}")
+        S("C0 import", f"rows {self.nrows} SEC-ETF tickers {len(self.sec_etf)} N-CEN tickers {len(self.ncen)} current tickers {len(self.cur)} | securities seen {len(cls)} with fundamentals {nfund} without {len(cls) - nfund}")
         S("C1 all securities by class", " ".join(f"{c} {tot.get(c, 0)}" for c in allc)[:198])
         S("C2 no-fundamental by class", " ".join(f"{c} {nof.get(c, 0)}" for c in allc if nof.get(c, 0))[:198])
         sc = {}
@@ -311,6 +329,8 @@ class XupS2InstrClass(QCAlgorithm):
                 ext = None
                 if any(a <= en and z >= st for st, en in self.sec_etf.get(t, [])):
                     ext = "ETF"
+                elif any(a <= en and z >= st for st, en, ty in self.ncen.get(t, [])):
+                    ext = [ty for st, en, ty in self.ncen.get(t, []) if a <= en and z >= st][0]
                 elif self.last[sid] >= _date(2025, 6, 1) and t == self.span[sid][-1][0] and t in self.cur and self.cur[t][0] in ("ETF", "ETN", "CEF", "PREFERRED", "DEBT", "WARRANT", "UNIT", "RIGHT"):
                     ext = self.cur[t][0]
                 if ext:

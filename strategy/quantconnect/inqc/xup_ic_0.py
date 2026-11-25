@@ -1,5 +1,5 @@
-# Imported instrument classification part 0/4 (plain text). E y1 y2 tickers = SEC '40-Act ETF
-# tickers effective y1..y2; C type exchange tickers = current Nasdaq Trader / SEC type. See
+# Imported instrument classification part 1/5 (plain text). E = SEC series/class ETF tickers,
+# K = SEC Form N-CEN tickers by type, C = current Nasdaq Trader / SEC types. Built by
 # research/extreme_upside/instrument_class/build_instrument_class.py
 DATA = """
 E 2009 2010 CRO,DSC,DSG,DSV,ECHS,EGYP,ELG,ELV,EMG,EMV,EPLD,ERUS,EXB,FIO,FMAX,FYD,FYO,GKA,GKB,GKC,GKD,GKE,IGW,IRO,MZG,MZN,MZO,ROB,SEA,STH,UEM,VPAX,VPBX,VPCX

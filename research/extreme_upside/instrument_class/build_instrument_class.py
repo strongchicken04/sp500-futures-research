@@ -80,6 +80,8 @@ def classify_name(name, etf_flag, test):
         return "WARRANT"
     if re.search(r"\bRIGHTS?\b", n):
         return "RIGHT"
+    if re.search(r"PREFERRED|PREFERENCE", n) and re.search(r"\bUNITS?\b|SHARES|SECURITIES", n):
+        return "PREFERRED"
     if re.search(r"\bUNITS?\b", n) and not re.search(r"COMMON UNITS|LIMITED PARTNERSHIP|DEPOSITARY UNIT|REPRESENTING", n):
         return "UNIT"
     if re.search(r"AMERICAN DEPOSIT[AO]RY|\bADS\b|\bADR\b", n):
@@ -90,11 +92,80 @@ def classify_name(name, etf_flag, test):
         return "PREFERRED"
     if re.search(r"\bFUND\b|\bFUND,|MUNICIPAL|CLOSED[- ]END|BOND TRUST|INCOME TRUST|OPPORTUNITIES TRUST|STRATEGIC INCOME", n) and not re.search(r"REIT|REALTY|BANCORP|ROYALTY", n):
         return "CEF"
-    if re.search(r"\bTRUST\b|\bTR\b", n) and re.search(r"^(BLACKROCK|NUVEEN|EATON VANCE|PIMCO|ABRDN|ABERDEEN|COHEN & STEERS|CALAMOS|GABELLI|DOUBLELINE|TEMPLETON|WESTERN ASSET|INVESCO|MFS|PUTNAM|ALLIANCEBERNSTEIN|KAYNE|TORTOISE|CLEARBRIDGE|VIRTUS|FLAHERTY|JOHN HANCOCK|DWS|NEUBERGER|BLACKSTONE|APOLLO|ADAMS|GENERAL AMERICAN|ROYCE|LIBERTY ALL|TRI-CONTINENTAL|SPECIAL OPPORTUNITIES|HIGHLAND|ALLSPRING|WELLS FARGO|MORGAN STANLEY|BNY|DREYFUS|FEDERATED|PIONEER|AMERICAN STRATEGIC|SALOMON|LMP|PGIM|THE CHINA|THE INDIA|MEXICO|KOREA|ASA GOLD)", n):
+    if re.search(r"\bTRUST\b|\bTR\b|SHARES OF BENEFICIAL|\bOPP|DIVIDEND|INCOME|MUNI|BUY-?WRITE|COMMON SHARES", n) and re.search(r"^(BLACKROCK|NUVEEN|EATON VANCE|PIMCO|ABRDN|ABERDEEN|COHEN & STEERS|CALAMOS|GABELLI|DOUBLELINE|TEMPLETON|WESTERN ASSET|INVESCO|MFS|PUTNAM|ALLIANCEBERNSTEIN|KAYNE|TORTOISE|CLEARBRIDGE|VIRTUS|FLAHERTY|JOHN HANCOCK|DWS|NEUBERGER|BLACKSTONE|APOLLO|ADAMS|GENERAL AMERICAN|ROYCE|LIBERTY ALL|TRI-CONTINENTAL|SPECIAL OPPORTUNITIES|HIGHLAND|ALLSPRING|WELLS FARGO|MORGAN STANLEY|BNY|DREYFUS|FEDERATED|PIONEER|AMERICAN STRATEGIC|SALOMON|LMP|PGIM|THE CHINA|THE INDIA|MEXICO|KOREA|ASA GOLD)", n):
         return "CEF"
     if re.search(r"COMMON|ORDINARY SHARE|CLASS [A-Z]\b|SHARES|COMMON UNITS|LIMITED PARTNERSHIP|DEPOSITARY UNIT|ROYALTY|STOCK|\bINC\b|\bCORP|\bLTD\b|\bPLC\b|\bASA\b|N\.V\.|S\.A\.|L\.P\.|HOLDINGS|GROUP|LIMITED|COMPANY", n):
         return "COMMON"
     return "OTHER"
+
+
+MON = {m: i + 1 for i, m in enumerate(["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"])}
+
+
+def fetch_ncen(cache):
+    """S4 SEC Form N-CEN data sets (2018q3-), https://www.sec.gov/data-research/sec-markets-data/form-n-cen-data-sets:
+    SECURITY_EXCHANGE (ETF / UIT tickers, e.g. SPY, QQQ, DIA as S-6 UITs) and SECURITY_RELATED_ITEM (closed-end
+    fund common / preferred / debt tickers, N-2), each with the report period end date. Extracted to ncen_rows.tsv."""
+    import zipfile, io
+    outp = os.path.join(cache, "ncen_rows.tsv")
+    if os.path.exists(outp):
+        return outp
+    page = urllib.request.urlopen(urllib.request.Request("https://www.sec.gov/data-research/sec-markets-data/form-n-cen-data-sets", headers=UA), timeout=60).read().decode()
+    paths = sorted(set(re.findall(r'href="(/files/dera/data/form-n-cen-data-sets/[^"]+\.zip)"', page)))
+    with open(outp, "w") as out:
+        for pth in paths:
+            zp = os.path.join(cache, os.path.basename(pth))
+            fetch("https://www.sec.gov" + pth, zp)
+            z = zipfile.ZipFile(zp)
+
+            def rd(f):
+                r = csv.reader(io.TextIOWrapper(z.open(f), encoding="utf-8", errors="replace"), delimiter="\t")
+                return next(r), r
+            h, r = rd("SUBMISSION.tsv"); sub = {x[h.index("ACCESSION_NUMBER")]: x[h.index("REPORT_ENDING_PERIOD")] for x in r if len(x) > h.index("REPORT_ENDING_PERIOD")}
+            h, r = rd("REGISTRANT.tsv"); typ = {x[h.index("ACCESSION_NUMBER")]: x[h.index("INVESTMENT_COMPANY_TYPE")] for x in r if len(x) > h.index("INVESTMENT_COMPANY_TYPE")}
+            h, r = rd("SECURITY_EXCHANGE.tsv")
+            for x in r:
+                if len(x) >= 3:
+                    a = x[0].split("_")[0]
+                    out.write("\t".join(["SE", x[2].strip().upper(), x[1], sub.get(a, ""), typ.get(a, ""), "", ""]) + "\n")
+            if "SECURITY_RELATED_ITEM.tsv" in z.namelist():
+                h, r = rd("SECURITY_RELATED_ITEM.tsv")
+                for x in r:
+                    if len(x) >= 7:
+                        a = x[0].split("_")[0]
+                        out.write("\t".join(["SR", x[6].strip().upper(), x[5], sub.get(a, ""), typ.get(a, ""), x[2][:30], x[3][:60]]) + "\n")
+            os.remove(zp)
+    return outp
+
+
+def ncen_rows(cache):
+    import datetime as _dt
+    agg = {}
+    for ln in open(fetch_ncen(cache)):
+        p = ln.rstrip("\n").split("\t")
+        if len(p) < 7:
+            continue
+        kind, tk, ex, per, ictype, desc = p[0], p[1], p[2], p[3], p[4], p[5]
+        if not re.fullmatch(r"[A-Z]{1,5}(\.[A-Z]{1,3})?", tk) or tk in BAD or (len(tk) == 5 and tk.endswith("X")):
+            continue
+        m = re.fullmatch(r"(\d\d)-([A-Z]{3})-(\d{4})", per)
+        if not m:
+            continue
+        d = _dt.date(int(m.group(3)), MON[m.group(2)], int(m.group(1)))
+        if kind == "SE":
+            t = "ETF"
+        else:
+            dl = desc.lower()
+            t = "PREFERRED" if "preferred" in dl else "DEBT" if ("bond" in dl or "convertible" in dl) else "WARRANT" if "warrant" in dl else "CEF"
+        k = (t, tk)
+        a, b = agg.get(k, (d, d))
+        agg[k] = (min(a, d), max(b, d))
+    rows = []
+    for (t, tk), (a, b) in agg.items():
+        st = a - _dt.timedelta(days=400)
+        en = b + _dt.timedelta(days=120)
+        rows.append((t, tk, st.isoformat(), en.isoformat(), "", "NCEN", "", ""))
+    return rows
 
 
 def main():
@@ -113,6 +184,9 @@ def main():
         tick_by_series[ser].add(t)
         rows.append(("ETF", t, f"{min(ys) - 1}-01-01", f"{max(ys)}-12-31", "", "SEC-SC", ser, names[(ser, t)][:60]))
     changes = sum(1 for s, ts in tick_by_series.items() if len(ts) > 1)
+    nc = ncen_rows(CACHE)
+    rows += nc
+    print("N-CEN rows", len(nc), dict(collections.Counter(r[0] for r in nc)))
     # S2 + S3 current
     cte = json.load(open(fetch("https://www.sec.gov/files/company_tickers_exchange.json", os.path.join(CACHE, "cte.json"))))
     sec_name = {r[2].upper(): (r[1], str(r[0]), r[3]) for r in cte["data"]}
@@ -156,32 +230,47 @@ if __name__ == "__main__":
     main()
 
 
-def write_module(psv_path, py_path):
-    """Compact, compressed copy of the classification for import into a QC project file (Object Store reads
-    are not permitted for this account). Format before compression: one line per row
-      E|ticker|y1|y2        SEC-SC ETF ticker effective years (y1 = first file year - 1)
-      C|ticker|type|exch|src current-source type"""
-    import zlib, base64
-    lines = []
+def write_qc_parts(psv_path, out_dir, limit=29000):
+    """Plain-text project files for QC (no compression / encoding allowed; 32k characters per file):
+      E y1 y2 T1,T2,...        SEC series/class ETF tickers effective y1..y2
+      K y1 y2 TYPE T1,T2,...   N-CEN tickers (ETF incl. UITs, CEF, PREFERRED, DEBT) effective y1..y2
+      C TYPE EXCH T1,T2,...    current type (Nasdaq Trader; SECCTE = SEC company tickers for ETF/ETN/CEF only)"""
+    E, K, C = collections.defaultdict(set), collections.defaultdict(set), collections.defaultdict(set)
     for ln in open(psv_path).read().split("\n")[1:]:
         p = ln.split("|")
         if len(p) < 8:
             continue
         if p[5] == "SEC-SC":
-            lines.append(f"E|{p[1]}|{p[2][:4]}|{p[3][:4]}")
-        else:
-            lines.append(f"C|{p[1]}|{p[0]}|{p[4]}|{p[5][:3]}")
-    blob = base64.b64encode(zlib.compress("\n".join(lines).encode(), 9)).decode()
-    with open(py_path, "w") as f:
-        f.write("# Imported instrument classification (SEC series/class 2010-2026, SEC company tickers, Nasdaq Trader\n")
-        f.write("# symbol directories). Built by research/extreme_upside/instrument_class/build_instrument_class.py\n")
-        f.write("import zlib, base64\n")
-        f.write("DATA = (\n")
-        for i in range(0, len(blob), 100):
-            f.write(f"    \"{blob[i:i + 100]}\"\n")
-        f.write(")\n\n\ndef rows():\n    return zlib.decompress(base64.b64decode(DATA)).decode().split(\"\\n\")\n")
-    return len(lines), len(blob)
+            E[(p[2][:4], p[3][:4])].add(p[1])
+        elif p[5] == "NCEN":
+            K[(p[2][:4], p[3][:4], p[0])].add(p[1])
+        elif p[5] == "NASDAQTRADER":
+            C[(p[0], p[4] or "-")].add(p[1])
+        elif p[0] in ("ETF", "ETN", "CEF"):
+            C[(p[0], "SECCTE")].add(p[1])
+    lines = [("E %s %s" % k, v) for k, v in sorted(E.items())] + [("K %s %s %s" % k, v) for k, v in sorted(K.items())] + [("C %s %s" % k, v) for k, v in sorted(C.items())]
+    out, files, buf = [], [], []
+    for head, toks in lines:
+        cur = []
+        for t in sorted(toks):
+            if len(head) + 1 + len(",".join(cur + [t])) > 1900:
+                out.append(head + " " + ",".join(cur)); cur = []
+            cur.append(t)
+        if cur:
+            out.append(head + " " + ",".join(cur))
+    for l in out:
+        if sum(len(x) + 1 for x in buf) + len(l) > limit:
+            files.append(buf); buf = []
+        buf.append(l)
+    files.append(buf)
+    for i, b in enumerate(files):
+        with open(os.path.join(out_dir, f"xup_ic_{i}.py"), "w") as f:
+            f.write(f"# Imported instrument classification part {i + 1}/{len(files)} (plain text). E = SEC series/class ETF tickers,\n"
+                    "# K = SEC Form N-CEN tickers by type, C = current Nasdaq Trader / SEC types. Built by\n"
+                    "# research/extreme_upside/instrument_class/build_instrument_class.py\n")
+            f.write('DATA = """\n' + "\n".join(b) + '\n"""\n')
+    return len(files)
 
 
 if __name__ == "__main__" and len(sys.argv) > 3:
-    print("module rows / bytes", write_module(OUT, sys.argv[3]))
+    print("QC project files", write_qc_parts(OUT, sys.argv[3]))
