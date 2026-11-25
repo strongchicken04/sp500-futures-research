@@ -19,6 +19,10 @@ SCORE_START = _o(2020, 11, 2)
 T0, T1 = _o(2021, 1, 1), _o(2025, 12, 31)
 Y0, Y1 = _o(2026, 1, 1), DATA_END.toordinal()
 V0, V1, VSCORE = _o(2017, 1, 1), _o(2020, 12, 31), _o(2016, 11, 1)
+# Canonical panel for Stage 4 (protocol Amendment 1): QC revised its historical daily data on 2026-11-25 between
+# ~15:45 and ~16:15 UTC. Stage 3 (and S4AUDIT v1) used 6,022,604 rows / 24,371 primary events; every build since
+# then gives 6,028,644 / 24,426 with the identical code. Stage 4 analyses use the revised panel.
+EXP_ROWS, EXP_POS = 6028644, 24426
 MN = ["fullA RF", "volume LR", "price LR", "momentum LR", "fullA LR", "fullA GBM"]
 SHORT = {"fullA RF": "RF", "volume LR": "VOL", "price LR": "PRICE", "momentum LR": "MOM", "fullA LR": "LR", "fullA GBM": "GBM"}
 PX_EDGES = [0.10, 0.50, 1.0, 3.0, 5.0, 10.0]
@@ -155,9 +159,9 @@ class S4Core:
         valmis = int((np.abs(a[fin] - b[fin]) > 1e-6 * np.maximum(1, np.abs(b[fin]))).sum())
         dup = int((~chg[1:] & (self.D[1:] <= self.D[:-1])).sum())
         prim = self.L[:, PRIMARY]
-        self.s4_check = (f"rows {n} (S3 6022604) primary events {int((prim == 1).sum())} (S3 24371) | mh10 vs R mismatches: nan {nanmis} value {valmis}"
+        self.s4_check = (f"rows {n} (S4 canon {EXP_ROWS}; S3 6022604) primary events {int((prim == 1).sum())} (canon {EXP_POS}; S3 24371) | mh10 vs R mismatches: nan {nanmis} value {valmis}"
                          f" | non-increasing dates within segment {dup} | segments {len(starts)} | s4 extension errors {sum(1 for e in self.err if e.startswith('s4x'))}")
-        self.s4_ok = (n == 6022604 and int((prim == 1).sum()) == 24371 and nanmis == 0 and valmis == 0 and dup == 0)
+        self.s4_ok = (n == EXP_ROWS and int((prim == 1).sum()) == EXP_POS and nanmis == 0 and valmis == 0 and dup == 0)
         self.s4_ready = True
         self.set_runtime_statistic("S4 CHECK", ("OK " if self.s4_ok else "FAILED ") + self.s4_check[:185])
         return self.s4_check

@@ -187,3 +187,28 @@ universes or results.
 
 ## Amendments
 (none yet)
+
+### Amendment 1 (2026-11-25, ~17:45 UTC) — QC historical-data revision; canonical Stage 4 panel
+- **Observation.** With identical code and the identical fixed-hash sample, every QC build of the panel up to
+  ~15:45 UTC gave 6,022,604 rows and 24,371 primary events: all Stage 3 runs and S4AUDIT v1. Every build after
+  ~16:15 UTC gives 6,028,644 rows and 24,426 primary events: S4EVENTS v1, S4EVAL v1, and S4DIAG in two
+  different QC projects.
+- **Cause: a QC data revision, not the project.** The two DIAG runs in different projects are identical, and
+  the number of QC data points processed changed (84,102,925 → 84,115,119). The additional 6,040 rows are
+  spread over all years: +987 in 2006–09, +1,258 in 2010–14, +2,742 in 2015–19, +652 in 2020–22, +565 in
+  2023–25 and −164 in 2026.
+  - Same 2,947 securities, same 3,541 segments, SPY calendar unchanged.
+- **Why the old project was reused at all:** QC's limit of 50 new projects per day. The project has no effect on
+  the result.
+- **Consequences:**
+  1. C1 (exact reproduction of Stage 3) is assessed on S4AUDIT v1, which was built before the revision and
+     reproduced TEST v1 exactly.
+  2. All further Stage 4 analyses use the revised panel. The integrity check now requires 6,028,644 rows and
+     24,426 primary events (plus `mh10 == R` and date order). A further revision during Stage 4 will therefore
+     invalidate runs instead of passing silently.
+  3. S4AUDIT v2 re-runs the audit on the revised panel, to quantify how much the revision moves the Stage 3
+     test metrics. The Stage 3 results themselves are not changed.
+  4. Runs labelled INVALID before this amendment are kept in the raw files: S4EVENTS v1, S4EVAL v1-orphan and
+     both S4DIAG runs. The S4EVAL v1-orphan output, on the revised data, was seen before this amendment. The
+     amendment changes no analysis definition, threshold or criterion; it only fixes the data base and the
+     check constants.
