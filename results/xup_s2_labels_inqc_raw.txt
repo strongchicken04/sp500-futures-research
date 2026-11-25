@@ -33,3 +33,38 @@ SM sample = securities 586 of 586 sampled | delisted before data end 245 | windo
 Unrealized = $0.00
 Volume = $0.00
 err None
+### xup s2 labels v2
+EX halt proxy GME = 0127 RTH bars 378/390 | 0128 RTH bars 314/390 | 0201 RTH bars 386/390
+EX0 GME 2021-01-12 = c_t 4.53 o_t+1 4.59 gap +1% | 5d A +125%Y B +94%Y | 10d A +1781%Y B +1620%Y | 20d A +2291%Y B +153%n | RAW 10d A +1781% | last 2026-08-27
+EX1 GME 2021-01-22 = c_t 14.77 o_t+1 21.82 gap +48% | 5d A +403%Y B +239%Y | 10d A +403%Y B -34%n | 20d A +403%Y B -52%n | RAW 10d A +403% | last 2026-08-27
+EX2 AMC 2021-05-21 = c_t 106.55 o_t+1 108.31 gap +2% | 5d A +199%Y B +113%Y | 10d A +491%Y B +348%Y | 20d A +491%Y B +354%Y | RAW 10d A +491% | last 2026-08-27
+EX3 MULN 2023-05-03 = c_t 5391562500000000.00 o_t+1 4961250000000000.00 gap -8% | 5d A +14%n B -5%n | 10d A +14%n B -16%n | 20d A +14%n B -49%n | RAW 10d A +14% | last 2025-10-10
+EX4 BBBY 2022-08-08 = c_t 11.41 o_t+1 11.72 gap +3% | 5d A +45%n B +37%n | 10d A +156%Y B -21%n | 20d A +156%n B -40%n | RAW 10d A +156% | last 2026-08-14
+EX5 BBBY 2023-04-14 = c_t 0.24 o_t+1 0.24 gap +1% | 5d A +133%Y B +22%n | 10d A +133%Y B -55%n | 20d A +4679%Y B +4192%Y | RAW 10d A +133% | last 2026-08-14
+EX6 SIVB 2023-03-03 = c_t 284.41 o_t+1 284.83 gap +0% | 5d A +1%n B +nan%? INCOMPLETE(4) | 10d A +1%n B +nan%? INCOMPLETE(4) | 20d A +1%n B +nan%? INCOMPLETE(4) | RAW 10d A +1% | last 2023-03-09
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+SM +100/10 A by raw price at t = <1 2513 1-5 3351 >=5 1328
+SM +100/10 adjustment = adj(TR) 7192 raw 8781 raw-not-adj 1599 adj-not-raw 10 | split-only 7182 differs-from-TR 10
+SM +100/10 families = A 7192 ep 1218 | B 2362 Bmax 3723 A-not-B 4830 | A-closeref 7625 | Amissing 387 Azerovol 288
+SM +100/10 incomplete = incomplete windows 8010 (delisted 2980) | A on available 25 | B delisting: drop 0, last-price 1, last x0.7 0, zero 0
+SM +100/20 adjustment = adj(TR) 16567 raw 19771 raw-not-adj 3231 adj-not-raw 27 | split-only 16540 differs-from-TR 27
+SM +100/20 families = A 16567 ep 1584 | B 5611 Bmax 9756 A-not-B 10956 | A-closeref 17069 | Amissing 1042 Azerovol 705
+SM +100/20 incomplete = incomplete windows 15960 (delisted 5920) | A on available 122 | B delisting: drop 0, last-price 0, last x0.7 0, zero 0
+SM +200/20 adjustment = adj(TR) 5340 raw 8708 raw-not-adj 3375 adj-not-raw 7 | split-only 5337 differs-from-TR 3
+SM +200/20 families = A 5340 ep 469 | B 1675 Bmax 2806 A-not-B 3665 | A-closeref 5552 | Amissing 627 Azerovol 259
+SM +200/20 incomplete = incomplete windows 15960 (delisted 5920) | A on available 40 | B delisting: drop 0, last-price 0, last x0.7 0, zero 0
+SM +50/10 adjustment = adj(TR) 26007 raw 27361 raw-not-adj 1441 adj-not-raw 87 | split-only 25964 differs-from-TR 55
+SM +50/10 families = A 26007 ep 4887 | B 9497 Bmax 15024 A-not-B 16510 | A-closeref 27206 | Amissing 830 Azerovol 778
+SM +50/10 incomplete = incomplete windows 8010 (delisted 2980) | A on available 88 | B delisting: drop 0, last-price 14, last x0.7 0, zero 0
+SM +50/5 adjustment = adj(TR) 11118 raw 11754 raw-not-adj 673 adj-not-raw 37 | split-only 11105 differs-from-TR 17
+SM +50/5 families = A 11118 ep 3688 | B 4010 Bmax 5526 A-not-B 7108 | A-closeref 12187 | Amissing 255 Azerovol 349
+SM +50/5 incomplete = incomplete windows 4005 (delisted 1490) | A on available 30 | B delisting: drop 0, last-price 7, last x0.7 0, zero 0
+SM sample = securities 801 of 801 sampled | delisted before data end 298 | windows 5/10/20d 1951539 1947534 1939531
+Unrealized = $0.00
+Volume = $0.00
+err None

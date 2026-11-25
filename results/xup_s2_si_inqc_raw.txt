@@ -19,3 +19,25 @@ SI signed distance to nearest publication =
 Unrealized = $0.00
 Volume = $0.00
 err None
+### xup s2 si v2
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+SI AAPL 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI AMC 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI BBBY 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI GME 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI TSLA 2021 change algo dates = 0113 0128 0211 0225 0311 0326 0413 0428
+SI changes = 1537224 changes, 4002 symbols | previous_short_interest == prior value 36.8%
+SI gaps / stale = delivery gaps >4d 1 (p50 211d) | symbol-days with value unchanged >35d 22.4% >70d 21.5% | si<=0 0.00% | deliveries 2251 last 2026-08-27
+SI main change dates 2018/2022/2025 Q1 = 0125 0213,0228 0313,0328 0113,0127 0211,0226    
+SI n = trading days rule-publication->usable = 0:6.1% 1:19.3% 2:29.7% 3:6.0% 4:6.1% 5:6.1% 6:6.0% 7:6.1% 8:5.9% 9:5.0% 10:3.1% 11:0.6%
+SI record times = algo 2018-01-11 t 2018-01-10 00:00:00 end 2018-01-11 00:00:00 | algo 2018-01-11 t 2018-01-10 00:00:00 end 2018-01-11 00:00:00
+SI rule publish 2018/2022/2025 Q1 = 0110 0124 0209 0227 0309 0326 0111 0126 0209 0225 0309 0324 0113 0127 0211 0226 0311 0325
+SI signed distance to nearest publication = -5:3.1% -4:6.1% -3:6.0% -2:5.8% -1:6.0% 0:6.1% 1:19.3% 2:29.7% 3:6.0% 4:6.1% 5:5.3% 6:0.6%
+Unrealized = $0.00
+Volume = $0.00
+err None
