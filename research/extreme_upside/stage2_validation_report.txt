@@ -16,16 +16,27 @@ Scripts (strategy/quantconnect/inqc/)            Raw outputs (results/)
   xup_s2_si_inqc.py          (V4  short-interest timestamps; v2 = calendar fixed)               xup_s2_si_inqc_raw.txt
   xup_s2_si_b_inqc.py        (V4b off-cycle short-interest changes)                             xup_s2_si_b_inqc_raw.txt
   xup_s2_labels_inqc.py      (V5  event labels; v2 = history fill-forward off)                  xup_s2_labels_inqc_raw.txt
+  xup_s2_instr_class_inqc.py (V6  option A classification; v3 = with N-CEN, fund-like flag)      xup_s2_instr_class_inqc_raw.txt
+  xup_s2_labels_a_inqc.py    (V5-A label integrity on the securities added by universe A)       xup_s2_labels_a_inqc_raw.txt
+  xup_ic_0..4.py             imported classification data (plain text), built by
+                             research/extreme_upside/instrument_class/build_instrument_class.py
 Runs that were wrong and repeated (kept in the raw files as v1, superseded by v2):
   * V4 v1: the FINRA rule calendar was built in initialize(), where QC clips history to the start date.
   * V5 v1 / V2 v1: history() filled missing sessions forward by default, so halted and delisted days looked
     like flat bars. All numbers below come from the v2 runs, which have fill-forward switched off.
 
-STATUS (section 10): all eight validation items were executed and every treatment is fixed before any
-predictive test. One item stays open as a DECISION for the owner. Requiring Morningstar fundamentals drops about a
-third of common-stock extreme events, and the fix needs a point-in-time ETF list imported into QC. The derived
-float is NOT validated and stays an uncertain derived variable. PIT share count, delistings, corporate actions,
-labels and short-interest timing are validated.
+STATUS (updated 2026-11-25, after the owner chose OPTION A): Stage 2 is COMPLETE, with the limitations stated
+in sections 8 and 11.7. The main universe is now the broad price/volume universe A, which does not require
+fundamentals. Non-equity instruments are excluded with an imported historical classification: SEC
+series/class 2010-2026, SEC Form N-CEN 2018-2026, and current SEC / Nasdaq Trader lists. All classification ran
+inside QC, and only aggregates left QC.
+The universe is NOT perfectly complete:
+* 5,037 securities (34% of A, mostly dead securities first seen in 2006-09) cannot be classified and are kept as
+  UNRESOLVED.
+* Their estimated non-equity share is ~20-25%; their extreme events are almost all equity-like.
+The derived float stays an uncertain derived variable. PIT shares, delistings, corporate actions, labels and
+short-interest timing are validated.
+Section 11 = option A; sections 1-10 = the first Stage 2 pass (B-based), kept for the record.
 
 
 0. CORRECTIONS TO STAGE 1
@@ -478,7 +489,8 @@ Validation item (brief)                         Result
                                                  stocks by size and exchange, not of the full event base.
 8 deliverables                                   This report (sections 1-9).
 
-STAGE 2 = NOT YET FULLY COMPLETE: ONE OPEN ITEM, which is a decision, not a missing check.
+[First pass, superseded: the owner chose option (a) on 2026-11-25. Result: section 11.]
+STAGE 2 (first pass) HAD ONE OPEN ITEM, a decision rather than a missing check:
 The selection bias from requiring fundamentals is large (1.4). It can be fixed only by building A-stock, and
 that needs a point-in-time ETF/ETN list IMPORTED into QC, because QC has no ETF flag. Options:
   (a) import a PIT ETF/ETN list (from SEC fund filings / exchange listing files) into QC, then A-stock becomes the
@@ -486,3 +498,182 @@ that needs a point-in-time ETF/ETN list IMPORTED into QC, because QC has no ETF 
   (b) no import: B is the main universe and every result carries the stated bias; A-stock (with ~18% fund
       contamination) is a robustness check only.
 Everything else needed for Stage 3 is validated, and the treatments above are fixed before any predictive test.
+
+
+11. OPTION A - BROAD UNIVERSE WITH A HISTORICAL INSTRUMENT CLASSIFICATION (owner decision 2026-11-25)
+----------------------------------------------------------------------------------------------------
+11.1 Imported classification (data flows INTO QC only)
+Builder: research/extreme_upside/instrument_class/build_instrument_class.py (sources cached, output
+research/extreme_upside/instrument_class/instrument_class_v1.psv). It is imported as plain-text project files
+strategy/quantconnect/inqc/xup_ic_0..4.py, because:
+  * this account has no Object Store read permission in backtests (the upload worked; reading did not);
+  * QC rejects compressed or encoded data in source files;
+  * project files are limited to 32k characters each.
+Sources:
+  S1 SEC Investment Company Series and Class Information, yearly 2010-2026: open-end '40-Act ETF share-class
+     tickers (org type 30, 1-4 letters; mutual-fund classes carry 5-letter ...X tickers).
+     - 7,624 series-ticker records. Series IDs link 422 ticker changes.
+     - Each yearly file includes funds that were later liquidated.
+     - Effective range: first file year - 1 .. last file year.
+  S4 SEC Form N-CEN data sets 2018q3-2026q3:
+     - ETF and UIT tickers (SPY, QQQ, DIA are S-6 UITs and are missing from S1).
+     - Closed-end fund tickers (common / preferred / debt).
+     - Report period end dates; effective range = first report - 400 days .. last report + 120 days.
+     - 6,392 type-ticker records (5,729 ETF, 598 CEF, 53 CEF preferred, 12 CEF debt).
+  S2/S3 SEC company_tickers_exchange.json and Nasdaq Trader nasdaqlisted / otherlisted (as of 2026-11-25):
+     - Current type from the security name and flags.
+     - ETNs carry ETF = N in Nasdaq Trader (e.g. VXX) and are detected by name.
+     - Test issues are flagged.
+     - Applied only to the security id that holds the ticker on/after 2025-06-01, and from there to that
+       security's whole history. QC security ids survive ticker changes; a reused ticker is a new id.
+  Rules: Nasdaq 5th-letter suffix (W warrant, R right, U unit, N/O/P/M preferred, Y/F ADR / foreign, A/B/Q common
+     class), NYSE-style .WS / .U / .R / .RT, exchange test symbols (Z?ZZT, ZVV, ZBZX, CBO, CBX).
+  Not used: stockanalysis.com (refused automated access) and finra.org / web archives (blocked).
+Precedence for each QC security:
+  1. test symbol;
+  2. Morningstar fundamentals, if present (common / secondary class / ADR-foreign / CEF / preferred-other);
+  3. S1 ETF range overlap;
+  4. S4 overlap;
+  5. current list;
+  6. ticker rule;
+  7. otherwise UNRESOLVED.
+
+11.2 Counts, 2006-01 .. 2026-08 (distinct QC securities)
+Original QC universe                                   24,148   (9,431 with fundamentals, 14,717 without)
+Excluded as ETF (incl. UITs, commodity pools, levered)   7,366
+Excluded as ETN                                             37
+Excluded as CEF                                            555   (124 via Morningstar sub-type, 431 via N-CEN /
+                                                                  current list)
+Excluded as preferred / other non-common                   248   (203 preferred, 45 Morningstar non-common types)
+Excluded as debt (baby bonds, notes)                        44
+Excluded as warrant / right / unit                         914   (402 / 64 / 448)
+Excluded as test symbol                                      5
+BROAD EQUITY UNIVERSE A                                 14,979
+  with fundamentals                                      9,262   (common 8,812, secondary class 38, ADR-foreign 412)
+  without fundamentals                                   5,717   (common by evidence 494, ADR-foreign 186,
+                                                                  UNRESOLVED 5,037)
+  UNRESOLVED                                             5,037   (kept in A, flagged; A-strict = 9,942)
+(ADR-foreign: 412 with fundamentals, 186 without.)
+Morningstar vs import conflicts:
+  * Morningstar CEF = import CEF: 113 (agreement).
+  * Morningstar common but import says ETF 38 (e.g. AIQ06, ANSS06, MIC06: ticker reuse within the effective-range
+    slack); CEF 30 (BDCs such as MFIC, GLAD, PSEC and mortgage REIT BXMT that file N-CEN-type data; they are
+    operating companies); unit 7.
+  * Morningstar wins for these.
+
+11.3 Coverage by year (securities active in the year)
+year  A      with fund  without fund  of which UNRESOLVED   ETF    ETN  CEF
+2006  6,674  3,566      3,108         2,929                   357    1   355
+2007  6,758  3,694      3,064         2,881                   564    1   380
+2010  5,836  3,681      2,155         1,980                   973    4   409
+2011  5,743  3,698      2,045         1,864                 1,134    4   423
+2014  5,825  4,135      1,690         1,487                 1,493    7   478
+2015  5,864  4,291      1,573         1,367                 1,693   12   485
+2018  5,658  4,379      1,279         1,016                 2,157   22   502
+2019  5,672  4,478      1,194           912                 2,336   29   482
+2022  6,700  5,829        871           537                 3,149   35   430
+2023  6,426  5,689        737           374                 3,546   35   416
+2024  6,040  5,449        591           160                 4,045   (ETN / CEF cut off in the output)
+2026  5,802  5,113        689           101                 5,705   37   354
+Coverage by exchange (A): Nasdaq 5,663, NYSE 3,074, OTCM 732, NYSE American 397, Arca / BZX / other 17,
+unknown 5,125. Unknown = UNRESOLVED securities without fundamentals and without a current listing; QC carries no
+exchange for them.
+
+11.4 Change in the event universe (close-based adjusted episodes, non-overlapping, 2006-2026)
+                 A (main)   A-strict (no UNRESOLVED)   fundamental COMMON only (old B)   A vs old B
++50%/5d          37,055     25,853                     22,920                            +62%
++100%/10d        12,316      8,632                      7,659                            +61%
++200%/20d         4,310      3,136                      2,777                            +55%
++100%/10d by block (A / UNRESOLVED part / old B):
+  2006-09 2,665 / 1,667 / 889 | 2010-14 1,044 / 580 / 423 | 2015-19 1,765 / 754 / 896 |
+  2020-22 2,535 / 455 / 1,847 | 2023-26 4,307 / 228 / 3,604
+-> Old B missed two thirds of the 2006-09 events and a fifth of the 2020-26 events.
+Excluded classes still carry events: +100%/10d ETF 520 (levered / volatility products), preferred 74, ETN 21,
+CEF 20. These were correctly removed.
+
+11.5 Manual inspection (5 random dates: 2007-06-02, 2011-11-01, 2016-02-09, 2021-05-07, 2024-01-31; hash-drawn
+tickers per class; classification by me from the ticker and date)
+Classified sample (~115 tickers):
+* ETF, ETN, CEF, preferred, warrant and unit samples are correct. Examples: DOG, PGF, IWV, GLL (commodity pool),
+  DJP, DGP, FNGD (ETN), VPV, ETY, PIM, NXN (CEF), MBFIP, AGNCN (preferred), SBNYW, GCMGW (warrant).
+* Errors that cross the include/exclude line: OPWV (Openwave, a common stock) classified UNIT (the same
+  security on two dates); TVC (TVA bond) classified common.
+* Errors inside the same side: RDY, BVN, KB are ADRs labelled common (all equity).
+* Inclusion-correct rate about 97-98%.
+Unresolved sample (40):
+* common stocks 26 (USU, COOL, SIAL, CULS, CBKN, ETM, CMN, HEK, SCMR, LAVA, GMO, CALA, RBCN, UNXL, TEAR, NYCB, GTT,
+  PHAS, SCU, MDLY, SIOX, IFMK, NOTV, LRHC, OMI, SMLP)
+* ADR 1 (QIHU)
+* CEF 2 (NPM, DCF)
+* ETN 1 (MLPL)
+* debt / preferred 5 (AEH, JBN, BXSPRA, GBLIL, OXSQZ)
+* not identified 5
+Of the 35 identified: 77% equity, 9% funds, 14% debt / preferred.
+Unresolved securities WITH +100%/10d events (40 hash-drawn): almost all small common stocks or ADRs (GORX, IMP,
+YMI, RHIE, SGIC, CSAR, CALA, NIHD, SEAC, FAAS, TIS, CLZR, EPE, CNVR, HMNY, IMNP, YGYI, CXDC, DIET, ROSG, LK, MEMY,
+USU, AKAO, RITT ...).
+
+11.6 Survivorship of the classification (no-fundamental securities)
+                 first seen 2006-09   2010-14       2015-19       2020-22       2023-26
+alive at 2026-06 res 99% (n 921)      100% (540)    99% (873)     99% (934)     99% (3,435)
+dead before      res 11% (n 3,872)    44% (1,269)   67% (1,559)   77% (1,053)   82% (256)
+The imported data does NOT add survivorship bias to the UNIVERSE: QC's universe is survivorship-free and nothing is
+dropped for lack of a match. It does leave a survivorship gap in the CLASSIFICATION:
+* There is no public historical ETF list before 2010, no CEF list before 2018 and no ETN list at all.
+* Dead funds and notes from those years stay UNRESOLVED inside A.
+Point-in-time fund-likeness flag (trailing 120 sessions, idiosyncratic volatility vs SPY < 0.6% a day and at most
+2.5% of days with |return| > 8%):
+* Calibrated on labelled securities: catches 44% of funds and flags 1.5% of common stocks (pooled quarterly,
+  174k fund and 316k common observations).
+* Estimated non-equity share among UNRESOLVED: 2006-09 ~4%, 2010-14 ~11%, 2015-19 ~25%, 2020-22 ~20%,
+  2023-26 ~23%.
+* The manual sample suggests ~23% incl. debt / preferred.
+* Only 13 of 3,684 UNRESOLVED +100%/10d episodes started in a fund-like state.
+* Securities that were fund-like most of the time (n 128) are mostly SPAC shells, baby bonds and a few ETFs
+  (GPAC, SCRM, BWAC, ZNTE, DNAA, LNFA, JMPB, VZA, FUTS, RJD).
+-> UNRESOLVED contaminates the DENOMINATOR (non-events) by up to ~10% of A in 2006-09 and ~1% after 2020. It
+   hardly touches the NUMERATOR (events).
+
+11.7 Label integrity on the securities added by A (V5-A: 1,446 sampled no-fundamental securities kept by the
+classification - 115 common by evidence, 37 ADR, 1,298 unresolved; 1,142 delisted before the data end; 2.14M
+complete 10-day windows)
+* +100%/10d family A: 14,803 starts / 2,550 episodes (B sample: 7,192 / 1,218 on 1.95M windows).
+* Windows with a missing session: 16.5% of events (B sample 5.4%).
+* 363 of 1,446 securities (25%) contain a gap of more than 10 market sessions. 1,571 +100%/10d events (10.6%)
+  sit in windows crossing such a gap. These are possible ticker-reuse splices, suspensions or relistings. The
+  section 6.3 rule (segment at gaps > 10 sessions, no window across a segment boundary) removes them. It is
+  MANDATORY for A.
+* Raw-only (artificial) events: 1,819 of 16,560 (11%). Adjusted labels as fixed in section 3.
+* Total-return vs split-only adjustment: 53 of 14,803 differ.
+* Incomplete windows: family A on available sessions adds 280 events (+1.9%). Family B under last-price adds 59
+  (+1.0%), under last x 0.7 adds 5, under zero adds 0. Delisting treatment is still immaterial for upside counts.
+* Raw price at t of +100%/10d events: <$1 49%, $1-5 36%, $5+ 15% (B sample: 35 / 47 / 18). The added securities
+  are even more penny-heavy, so tradability strata are required.
+* Zero-volume days in the window: 0.8% of events.
+
+11.8 Final universe definitions for Stage 3 (fixed)
+A        MAIN: all QC securities not identified as ETF / ETN / CEF / preferred / debt / warrant / right / unit /
+         test.
+         - Includes common stock with or without fundamentals, secondary share classes, ADR / foreign ordinaries
+           and UNRESOLVED.
+         - Every result is also reported for A-strict (no UNRESOLVED), A-ex-ADR, and A with the PIT fund-like flag
+           applied to UNRESOLVED.
+B        Morningstar fundamental common stocks with the primary-share correction (section 1.3), for market cap,
+         shares, valuation and other fundamental hypotheses.
+C        B with derived float (2011-), partial and uncertain (section 4).
+D        A with a usable FINRA short-interest value (2018-01 .. 2026-08), publication timestamp, age <= 35 days,
+         no duplicate-record days (section 5).
+Mandatory label rules for all: fill-forward off, segment at gaps > 10 sessions, adjusted ratios, open(t+1)
+reference, families A and B, incomplete windows flagged, non-overlapping episodes.
+
+11.9 What is still not perfect
+* 5,037 UNRESOLVED securities (34% of A by count, 30% of A events), concentrated in 2006-09 dead securities.
+* Estimated non-equity share among them ~20-25%. They cannot be resolved with public historical data reachable
+  from this environment.
+* A few known misclassifications (OPWV as unit, TVC as common). The inclusion error on the inspected sample is
+  ~2-3%.
+* ETN coverage is current-only: 37 ETNs alive or traceable. Dead ETNs (e.g. the 2010s iPath / VelocityShares
+  series) stay UNRESOLVED unless N-CEN or a name matched them. Most would be flagged fund-like only when calm.
+* Morningstar coverage itself is static per security (section 1.4).
+* The universe is therefore complete with respect to QC's survivorship-free security list, but its equity / non-
+  equity split is only approximately complete before 2010 and nearly complete after 2018.

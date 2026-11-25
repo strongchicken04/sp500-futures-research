@@ -1,0 +1,29 @@
+### xup s2 labels_a v1
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+SM +100/10 A by raw price at t = <1 7309 1-5 5347 >=5 2147
+SM +100/10 adjustment = adj(TR) 14803 raw 16560 raw-not-adj 1819 adj-not-raw 62 | split-only 14750 differs-from-TR 53
+SM +100/10 by group (starts/episodes) = ADDED-COMMON 1333/225 ADDED-ADR 766/133 UNRESOLVED 12704/2192 | securities with a gap > 10 sessions 363 | +100/10 events in windows crossing such a gap 1571
+SM +100/10 families = A 14803 ep 2550 | B 5737 Bmax 8350 A-not-B 9066 | A-closeref 15793 | Amissing 2443 Azerovol 114
+SM +100/10 incomplete = incomplete windows 14400 (delisted 11360) | A on available 280 | B delisting: drop 0, last-price 59, last x0.7 5, zero 0
+SM +100/20 adjustment = adj(TR) 31656 raw 35181 raw-not-adj 3669 adj-not-raw 144 | split-only 31531 differs-from-TR 125
+SM +100/20 families = A 31656 ep 2972 | B 12127 Bmax 19590 A-not-B 19529 | A-closeref 32766 | Amissing 5935 Azerovol 322
+SM +100/20 incomplete = incomplete windows 28660 (delisted 22580) | A on available 679 | B delisting: drop 0, last-price 119, last x0.7 29, zero 0
+SM +200/20 adjustment = adj(TR) 12236 raw 15877 raw-not-adj 3697 adj-not-raw 56 | split-only 12203 differs-from-TR 33
+SM +200/20 families = A 12236 ep 1018 | B 5852 Bmax 7724 A-not-B 6384 | A-closeref 12758 | Amissing 3707 Azerovol 235
+SM +200/20 incomplete = incomplete windows 28660 (delisted 22580) | A on available 235 | B delisting: drop 0, last-price 23, last x0.7 16, zero 0
+SM +50/10 adjustment = adj(TR) 45558 raw 47081 raw-not-adj 1686 adj-not-raw 163 | split-only 45440 differs-from-TR 130
+SM +50/10 families = A 45558 ep 8463 | B 17588 Bmax 27248 A-not-B 27970 | A-closeref 47654 | Amissing 4515 Azerovol 254
+SM +50/10 incomplete = incomplete windows 14400 (delisted 11360) | A on available 608 | B delisting: drop 0, last-price 164, last x0.7 42, zero 0
+SM +50/5 adjustment = adj(TR) 20817 raw 21538 raw-not-adj 795 adj-not-raw 74 | split-only 20772 differs-from-TR 45
+SM +50/5 families = A 20817 ep 6925 | B 8063 Bmax 11004 A-not-B 12754 | A-closeref 22820 | Amissing 1529 Azerovol 92
+SM +50/5 incomplete = incomplete windows 7210 (delisted 5690) | A on available 222 | B delisting: drop 0, last-price 72, last x0.7 18, zero 0
+SM groups = sampled no-fund securities 3723 | kept 1450: ADDED-ADR 37 ADDED-COMMON 115 UNRESOLVED 1298
+SM sample = securities 1446 of 1450 sampled | delisted before data end 1142 | windows 5/10/20d 2150750 2143544 2129168
+Unrealized = $0.00
+Volume = $0.00
+err None
