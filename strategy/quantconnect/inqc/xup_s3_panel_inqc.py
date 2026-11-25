@@ -14,6 +14,7 @@ from xup_s3_const import _blk
 from xup_s3_modes_ab import ModesAB
 from xup_s3_modes_u import ModesU
 from xup_s3_modes_m import ModesM
+from xup_s3_modes_r import ModesR
 # endregion
 #
 # EXTREME-UPSIDE RESEARCH - STAGE 3 PANEL (owner brief 2026-11-25). All security-level work stays inside QC; the
@@ -523,7 +524,7 @@ class XupS3Panel(QCAlgorithm):
 
 
 # QC does not allow a Python class to inherit from QCAlgorithm and another class: attach the mode methods instead
-for _M in (ModesAB, ModesU, ModesM):
+for _M in (ModesAB, ModesU, ModesM, ModesR):
     for _n, _f in list(vars(_M).items()):
         if not _n.startswith("__"):
             setattr(XupS3Panel, _n, _f)

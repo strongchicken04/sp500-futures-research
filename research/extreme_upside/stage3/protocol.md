@@ -176,3 +176,15 @@ Source: `results/xup_s3_model_raw.txt` (MODEL v1). Applying the rule pre-committ
   - Calibration: the full-A top decile under-predicts in validation (LR 1.78 % predicted vs 3.43 % observed),
     because the event rate is higher in 2017–2020 than in training. No recalibration is applied; calibration is
     reported as is.
+
+### Amendment 4 (2026-11-25, after TEST v1) — robustness run for deliverable 8, no selection
+TEST v1 evaluated the models in A, B, C and D only. Deliverable 8 also asks for robustness across A-strict,
+A-ex-ADR and A-fund, so mode ROBUST (`xup_s3_modes_r.py`) adds the following. It is NOT a new test of a new model:
+- **Models:** six frozen specifications (price LR, momentum LR, volume LR, full-A LR, RF, GBM), refit
+  identically to TEST (same code, seeds and training rows on A). Their 2021–2025 scores are evaluated inside
+  A-strict, A-ex-ADR and A-fund, and in the sub-periods 2021–22 and 2023–25.
+- **Univariate:** the A-universe variables H2, H5, H6, H7, H8 and H9 get top/bottom-decile RR with 200-resample
+  cluster-bootstrap CIs in the three sensitivity universes, for 2006–2020 and 2021–2025.
+- **No changes:** no model, feature, hyperparameter or threshold changes; nothing is chosen from these results.
+  The evidence statuses of Amendment 2 / protocol §5 are not re-decided here. They can only be weakened by a
+  failed robustness check, never rescued by it.

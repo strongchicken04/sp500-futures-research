@@ -1,0 +1,92 @@
+### xup s3 TEST v1
+P0 panel = mode TEST | sample securities 2986 with data 2947 | rows 6022604 | build 12 min
+R H1 lmcap [B] = 2021-2025: RR 0.00 [0.00,0.00] diff -3.214pp p 0.005 | rho -0.95 AUC 0.142 | n 1154k pos 6495 miss 0k
+R H1s lds [B] = 2021-2025: RR 0.17 [0.07,0.31] diff -1.363pp p 0.005 | rho -0.94 AUC 0.314 | n 1154k pos 6495 miss 0k
+R H2 rvol20 [A] = 2021-2025: RR 0.87 [0.77,0.98] diff -0.155pp p 0.020 | rho -0.12 AUC 0.469 | n 1604k pos 9300 miss 2k
+R H2s rvol5 [A] = 2021-2025: RR 0.88 [0.81,0.96] diff -0.133pp p 0.010 | rho -0.25 AUC 0.473 | n 1604k pos 9300 miss 4k
+R H3 si_ds [D] = 2021-2025: RR 0.83 [0.52,1.23] diff -0.134pp p 0.450 | rho -0.54 AUC 0.435 | n 1247k pos 6185 miss 146k
+R H3s dtc [D] = 2021-2025: RR 0.16 [0.12,0.22] diff -1.498pp p 0.005 | rho -0.77 AUC 0.275 | n 1247k pos 6185 miss 0k
+R H4 lfloat [C] = 2021-2025: RR 0.11 [0.04,0.27] diff -1.616pp p 0.005 | rho -0.90 AUC 0.291 | n 1103k pos 6010 miss 0k
+R H4s float_ds [C] = 2021-2025: RR 0.66 [0.41,0.98] diff -0.383pp p 0.030 | rho -0.26 AUC 0.453 | n 1103k pos 6010 miss 0k
+R H5 atr_p [A] = 2021-2025: RR 104.76 [60.35,277.16] diff +3.428pp p 0.005 | rho +0.83 AUC 0.890 | n 1604k pos 9300 miss 0k
+R H5s rv20 [A] = 2021-2025: RR 100.39 [56.58,260.89] diff +2.912pp p 0.005 | rho +0.99 AUC 0.857 | n 1604k pos 9300 miss 0k
+R H6 gap [A] = 2021-2025: RR 1.01 [0.95,1.07] diff +0.011pp p 0.810 | rho +0.13 AUC 0.503 | n 1604k pos 9300 miss 0k
+R H6s intraday [A] = 2021-2025: RR 0.85 [0.80,0.92] diff -0.258pp p 0.005 | rho -0.14 AUC 0.467 | n 1604k pos 9300 miss 0k
+R H7 r20 [A] = 2021-2025: RR 0.56 [0.48,0.65] diff -0.969pp p 0.005 | rho -0.15 AUC 0.402 | n 1604k pos 9300 miss 0k
+R H7s r5 [A] = 2021-2025: RR 0.81 [0.74,0.90] diff -0.339pp p 0.005 | rho -0.18 AUC 0.459 | n 1604k pos 9300 miss 0k
+R H8 lpx [A] = 2021-2025: RR 0.01 [0.00,0.02] diff -3.039pp p 0.005 | rho -0.98 AUC 0.134 | n 1604k pos 9300 miss 0k
+R H8s lpx_prev [A] = 2021-2025: RR 0.01 [0.00,0.02] diff -3.062pp p 0.005 | rho -0.98 AUC 0.134 | n 1604k pos 9300 miss 0k
+R H9 ldv [A] = 2021-2025: RR 0.09 [0.05,0.14] diff -1.065pp p 0.005 | rho -0.98 AUC 0.274 | n 1604k pos 9300 miss 0k
+R H9s rdv20 [A] = 2021-2025: RR 0.79 [0.70,0.89] diff -0.276pp p 0.005 | rho -0.31 AUC 0.448 | n 1604k pos 9300 miss 0k
+T full+SI GBM [D] = n 1247k pos 6185 base 0.496% | PR-AUC 0.0487 [0.0416,0.0556] lift 9.8 | P@1% 6.30% [5.36,7.20] (829/13150) P@5 4.40 P@10 3.32 | R@1/5/10 13/45/67% | Brier 6.526e-3 AUC 0.914 it=100
+T full+float GBM [C] = n 1103k pos 6010 base 0.545% | PR-AUC 0.0471 [0.0413,0.0520] lift 8.7 | P@1% 6.71% [5.56,7.60] (782/11656) P@5 4.23 P@10 3.39 | R@1/5/10 13/39/63% | Brier 8.057e-3 AUC 0.913 it=75
+T full+fund GBM [B] = n 1154k pos 6495 base 0.563% | PR-AUC 0.0517 [0.0459,0.0573] lift 9.2 | P@1% 6.39% [5.57,7.32] (767/12003) P@5 4.76 P@10 3.62 | R@1/5/10 12/43/65% | Brier 7.369e-3 AUC 0.916 it=100
+T fullA GBM = n 1604k pos 9300 base 0.580% | PR-AUC 0.0565 [0.0517,0.0624] lift 9.8 | P@1% 7.54% [6.78,8.39] (1263/16749) P@5 5.13 P@10 3.89 | R@1/5/10 14/45/67% | Brier 6.114e-3 AUC 0.915 it=275
+T fullA GBM [B] = n 1154k pos 6495 base 0.563% | PR-AUC 0.0515 [0.0456,0.0565] lift 9.2 | P@1% 6.69% [5.74,7.57] (803/12003) P@5 4.88 P@10 3.63 | R@1/5/10 12/44/65% | Brier 6.076e-3 AUC 0.915 it=75
+T fullA GBM [C] = n 1103k pos 6010 base 0.545% | PR-AUC 0.0480 [0.0414,0.0530] lift 8.8 | P@1% 6.07% [5.04,7.15] (707/11656) P@5 4.41 P@10 3.43 | R@1/5/10 12/41/63% | Brier 7.246e-3 AUC 0.915 it=75
+T fullA GBM [D] = n 1247k pos 6185 base 0.496% | PR-AUC 0.0464 [0.0390,0.0545] lift 9.4 | P@1% 6.61% [5.20,7.61] (869/13150) P@5 4.28 P@10 3.31 | R@1/5/10 14/44/67% | Brier 5.709e-3 AUC 0.910 it=50
+T fullA L2 = n 1604k pos 9300 base 0.580% | PR-AUC 0.0549 [0.0505,0.0612] lift 9.5 | P@1% 7.25% [6.50,8.34] (1215/16749) P@5 5.24 P@10 3.85 | R@1/5/10 13/45/67% | Brier 5.608e-3 AUC 0.910 C=0.1
+T fullA LR = n 1604k pos 9300 base 0.580% | PR-AUC 0.0549 [0.0505,0.0612] lift 9.5 | P@1% 7.25% [6.49,8.34] (1214/16749) P@5 5.23 P@10 3.85 | R@1/5/10 13/45/67% | Brier 5.608e-3 AUC 0.910
+T fullA RF = n 1604k pos 9300 base 0.580% | PR-AUC 0.0596 [0.0540,0.0667] lift 10.3 | P@1% 7.74% [6.83,8.53] (1296/16749) P@5 5.31 P@10 3.96 | R@1/5/10 14/46/68% | Brier 5.577e-3 AUC 0.915
+T mcap+price+vol LR [B] = n 1154k pos 6495 base 0.563% | PR-AUC 0.0490 [0.0419,0.0551] lift 8.7 | P@1% 6.76% [5.58,8.12] (812/12003) P@5 4.45 P@10 3.42 | R@1/5/10 13/40/61% | Brier 5.484e-3 AUC 0.888
+T momentum LR = n 1604k pos 9300 base 0.580% | PR-AUC 0.0430 [0.0387,0.0490] lift 7.4 | P@1% 6.29% [5.59,7.20] (1054/16749) P@5 4.51 P@10 3.41 | R@1/5/10 11/39/59% | Brier 5.698e-3 AUC 0.875
+T price LR = n 1604k pos 9300 base 0.580% | PR-AUC 0.0376 [0.0346,0.0424] lift 6.5 | P@1% 6.25% [5.29,7.66] (1047/16749) P@5 4.18 P@10 3.07 | R@1/5/10 11/36/53% | Brier 5.660e-3 AUC 0.869
+T price+mom LR = n 1604k pos 9300 base 0.580% | PR-AUC 0.0502 [0.0462,0.0559] lift 8.7 | P@1% 7.05% [6.30,7.97] (1181/16749) P@5 5.01 P@10 3.77 | R@1/5/10 13/44/65% | Brier 5.632e-3 AUC 0.904
+T price+vol LR = n 1604k pos 9300 base 0.580% | PR-AUC 0.0440 [0.0399,0.0508] lift 7.6 | P@1% 7.10% [6.05,8.31] (1189/16749) P@5 4.26 P@10 3.16 | R@1/5/10 13/37/55% | Brier 5.650e-3 AUC 0.871
+T price+volat LR = n 1604k pos 9300 base 0.580% | PR-AUC 0.0526 [0.0483,0.0579] lift 9.1 | P@1% 7.06% [6.16,7.99] (1183/16749) P@5 5.20 P@10 3.84 | R@1/5/10 13/45/66% | Brier 5.628e-3 AUC 0.910
+T tradability top1% fullA GBM = rows 16749 events 1263 | px med 0.66 <$1 62% 1-5 31% | $vol med 397k <100k 27% | miss20 0% | events confirmed by B 29% Bmax 53% | A ret>200% 38%
+T uncond = n 1604k pos 9300 base 0.580% | PR-AUC 0.0037 [0.0034,0.0041] lift 0.6 | P@1% 0.16% [0.00,0.41] (26/16749) P@5 0.15 P@10 0.14 | R@1/5/10 0/1/2% | Brier 5.770e-3 AUC 0.500
+T volume LR = n 1604k pos 9300 base 0.580% | PR-AUC 0.0460 [0.0413,0.0550] lift 7.9 | P@1% 7.02% [6.05,8.25] (1176/16749) P@5 4.18 P@10 3.10 | R@1/5/10 13/36/54% | Brier 5.650e-3 AUC 0.863
+err None
+--- LOG ---
+R H1 lmcap deciles rate%: 3.21 1.16 0.50 0.19 0.20 0.11 0.09 0.13 0.04 0.00 0.00
+R H1s lds deciles rate%: 1.64 0.82 0.86 0.56 0.35 0.37 0.29 0.25 0.22 0.28 0.00
+R H2 rvol20 deciles rate%: 1.24 0.76 0.47 0.34 0.32 0.32 0.34 0.38 0.49 1.09 3.41
+R H2s rvol5 deciles rate%: 1.14 0.71 0.50 0.41 0.37 0.32 0.34 0.44 0.49 1.01 3.47
+R H3 si_ds deciles rate%: 0.80 0.82 0.54 0.45 0.25 0.34 0.29 0.38 0.24 0.67 0.64
+R H3s dtc deciles rate%: 1.79 1.07 0.51 0.33 0.21 0.19 0.23 0.15 0.18 0.29 0.00
+R H4 lfloat deciles rate%: 1.82 1.00 0.49 0.62 0.38 0.20 0.27 0.23 0.24 0.20 0.00
+R H4s float_ds deciles rate%: 1.13 0.73 0.52 0.34 0.33 0.41 0.26 0.30 0.69 0.75 0.00
+R H5 atr_p deciles rate%: 0.03 0.01 0.01 0.01 0.02 0.08 0.22 0.55 1.39 3.46 0.00
+R H5s rv20 deciles rate%: 0.03 0.02 0.03 0.04 0.07 0.16 0.41 0.79 1.31 2.94 0.00
+R H6 gap deciles rate%: 1.56 0.49 0.30 0.17 0.36 0.29 0.20 0.32 0.52 1.58 0.00
+R H6s intraday deciles rate%: 1.73 0.63 0.36 0.23 0.18 0.21 0.21 0.29 0.48 1.47 0.00
+R H7 r20 deciles rate%: 2.19 0.59 0.36 0.25 0.19 0.17 0.20 0.25 0.37 1.22 0.00
+R H7s r5 deciles rate%: 1.76 0.59 0.38 0.26 0.24 0.20 0.21 0.31 0.44 1.42 0.00
+R H8 lpx deciles rate%: 3.06 1.38 0.70 0.32 0.13 0.06 0.05 0.05 0.02 0.02 0.00
+R H8s lpx_prev deciles rate%: 3.08 1.38 0.68 0.32 0.14 0.06 0.05 0.05 0.02 0.02 0.00
+R H9 ldv deciles rate%: 1.18 1.51 1.07 0.73 0.48 0.30 0.21 0.13 0.09 0.11 0.00
+R H9s rdv20 deciles rate%: 1.31 0.86 0.47 0.37 0.33 0.32 0.31 0.34 0.46 1.03 0.00
+TIME _univ_rep 0.4 min
+YTD2026 price LR: n 189013 pos 1725 base 0.913% PR-AUC 0.0540 [0.0406,0.0659] P@1% 7.49% (150/2002) R@10 53% AUC 0.874
+YTD2026 momentum LR: n 189013 pos 1725 base 0.913% PR-AUC 0.0653 [0.0534,0.0767] P@1% 9.64% (193/2002) R@10 65% AUC 0.888
+YTD2026 volume LR: n 189013 pos 1725 base 0.913% PR-AUC 0.0621 [0.0493,0.0777] P@1% 9.14% (183/2002) R@10 53% AUC 0.870
+YTD2026 price+mom LR: n 189013 pos 1725 base 0.913% PR-AUC 0.0738 [0.0580,0.0847] P@1% 10.59% (212/2002) R@10 69% AUC 0.912
+YTD2026 price+vol LR: n 189013 pos 1725 base 0.913% PR-AUC 0.0586 [0.0460,0.0744] P@1% 8.14% (163/2002) R@10 54% AUC 0.875
+YTD2026 price+volat LR: n 189013 pos 1725 base 0.913% PR-AUC 0.0753 [0.0597,0.0871] P@1% 9.84% (197/2002) R@10 72% AUC 0.912
+CALIB fullA LR (pred%/obs% by predicted decile): 0.01/0.00 0.02/0.00 0.03/0.01 0.04/0.02 0.05/0.05 0.07/0.05 0.11/0.14 0.24/0.45 0.58/1.19 3.11/3.88
+YTD2026 fullA LR: n 189013 pos 1725 base 0.913% PR-AUC 0.0834 [0.0683,0.0997] P@1% 10.74% (215/2002) R@10 73% AUC 0.918
+CALIB fullA L2 (pred%/obs% by predicted decile): 0.01/0.00 0.02/0.00 0.03/0.01 0.04/0.02 0.05/0.05 0.07/0.05 0.11/0.14 0.24/0.45 0.58/1.19 3.11/3.88
+YTD2026 fullA L2: n 189013 pos 1725 base 0.913% PR-AUC 0.0834 [0.0682,0.0997] P@1% 10.74% (215/2002) R@10 73% AUC 0.918
+YTD2026 fullA RF: n 189013 pos 1725 base 0.913% PR-AUC 0.0813 [0.0648,0.0946] P@1% 10.69% (214/2002) R@10 73% AUC 0.918
+CALIB fullA GBM (pred%/obs% by predicted decile): 0.01/0.00 0.01/0.00 0.02/0.01 0.02/0.02 0.03/0.02 0.05/0.06 0.09/0.12 0.22/0.36 0.68/1.15 4.74/4.05
+YTD2026 fullA GBM: n 189013 pos 1725 base 0.913% PR-AUC 0.0797 [0.0630,0.0967] P@1% 9.49% (190/2002) R@10 71% AUC 0.915
+YTD2026 mcap+price+vol LR [B]: n 136104 pos 1156 base 0.849% PR-AUC 0.0664 [0.0538,0.1009] P@1% 8.80% (122/1386) R@10 66% AUC 0.902
+CALIB fullA GBM [B] (pred%/obs% by predicted decile): 0.01/0.00 0.02/0.00 0.02/0.01 0.03/0.01 0.03/0.01 0.04/0.04 0.07/0.10 0.18/0.37 0.60/1.24 4.88/3.84
+YTD2026 fullA GBM [B]: n 136104 pos 1156 base 0.849% PR-AUC 0.0720 [0.0600,0.0954] P@1% 9.96% (138/1386) R@10 67% AUC 0.912
+CALIB full+fund GBM [B] (pred%/obs% by predicted decile): 0.01/0.00 0.01/0.00 0.01/0.02 0.02/0.01 0.02/0.01 0.04/0.02 0.06/0.12 0.16/0.35 0.51/1.26 6.72/3.84
+YTD2026 full+fund GBM [B]: n 136104 pos 1156 base 0.849% PR-AUC 0.0679 [0.0572,0.0944] P@1% 9.74% (135/1386) R@10 71% AUC 0.916
+CALIB fullA GBM [D] (pred%/obs% by predicted decile): 0.04/0.00 0.04/0.01 0.04/0.01 0.04/0.03 0.05/0.03 0.07/0.03 0.11/0.09 0.26/0.33 0.86/1.02 5.55/3.41
+YTD2026 fullA GBM [D]: n 140872 pos 1118 base 0.794% PR-AUC 0.0680 [0.0534,0.0820] P@1% 8.64% (133/1540) R@10 74% AUC 0.921
+CALIB full+SI GBM [D] (pred%/obs% by predicted decile): 0.00/0.00 0.01/0.00 0.01/0.03 0.01/0.02 0.02/0.02 0.03/0.02 0.07/0.10 0.20/0.27 0.74/1.04 7.06/3.45
+YTD2026 full+SI GBM [D]: n 140872 pos 1118 base 0.794% PR-AUC 0.0686 [0.0544,0.0847] P@1% 9.16% (141/1540) R@10 74% AUC 0.922
+CALIB fullA GBM [C] (pred%/obs% by predicted decile): 0.01/0.00 0.01/0.00 0.01/0.02 0.01/0.00 0.01/0.01 0.02/0.03 0.05/0.11 0.15/0.36 0.50/1.23 7.10/3.69
+YTD2026 fullA GBM [C]: n 134206 pos 1131 base 0.843% PR-AUC 0.0652 [0.0481,0.0956] P@1% 8.80% (122/1386) R@10 67% AUC 0.914
+CALIB full+float GBM [C] (pred%/obs% by predicted decile): 0.01/0.00 0.01/0.00 0.01/0.02 0.01/0.01 0.01/0.01 0.02/0.03 0.05/0.11 0.14/0.37 0.47/1.28 7.73/3.62
+YTD2026 full+float GBM [C]: n 134206 pos 1131 base 0.843% PR-AUC 0.0645 [0.0451,0.0934] P@1% 10.39% (144/1386) R@10 62% AUC 0.904
+IMPORTANCE fullA GBM (PR-AUC drop, subsample): lpx_prev 0.0646 atr_p 0.0429 rv20 0.0238 dhi60 0.0218 lpx 0.0142 dhi20 0.0110 dlo60 0.0100 lvol 0.0091 rdv20 0.0078 r20 0.0075 rvol10 0.0059 ldv 0.0057 r10 0.0042 range_p 0.0029 dhi10 0.0022
+TIME _importance 3.6 min
+TEST secondary endpoints, fullA GBM: A5/50: base 0.85% AP 0.082 (x9.7) P@1 12.0% (2016) AUC 0.909 | A20/200: base 0.42% AP 0.038 (x9.1) P@1 4.8% (802) AUC 0.916 | B10/100: base 0.19% AP 0.014 (x7.2) P@1 1.8% (301) AUC 0.896 | M10/100: base 0.31% AP 0.026 (x8.4) P@1 3.5% (592) AUC 0.907 | A10/50: base 1.93% AP 0.134 (x6.9) P@1 19.4% (3250) AUC 0.892
+TIME _secondary 8.5 min
+TIME _tradability 0.0 min
+Algorithm Id:(28ad3ed002f229e5d6e44f0c7c40aa80) completed in 3068.81 seconds at 27k data points per second. Processing total of 84,102,925 data points.
