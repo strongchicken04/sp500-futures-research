@@ -1,3 +1,46 @@
 ### xup s4 S4CALIB v1 | project 38061541 backtest 4ad3ac203449dc88704b396179b68dfa | INVALID: mode line missing or wrong (template / incomplete script?); S4 CHECK not OK
 err None
 --- LOG ---
+### xup s4 S4CALIB v2 | project 38061541 backtest aff85f9d4bcc60bba6b1687d8a0cceaa | VALID
+K GBM = Brier 5.973e-3 logloss 0.0286 ECE10 0.101pp pred/obs 0.94 ECE20 0.190pp | top1% pred 18.34% obs 8.55% | AUC-free
+K LR = Brier 5.647e-3 logloss 0.0282 ECE10 0.168pp pred/obs 0.74 ECE20 0.169pp | top1% pred 10.24% obs 8.22% | AUC-free
+K RF = Brier 5.613e-3 logloss 0.0274 ECE10 0.103pp pred/obs 0.84 ECE20 0.103pp | top1% pred 8.86% obs 8.81% | AUC-free
+K VOL = Brier 5.689e-3 logloss 0.0306 ECE10 0.185pp pred/obs 0.68 ECE20 0.185pp | top1% pred 9.64% obs 7.52% | AUC-free
+K2 RF drift by year = 2021 base 0.35% pred/obs 0.60 ECE 0.16 | 2022 base 0.38% pred/obs 1.33 ECE 0.13 | 2023 base 0.54% pred/obs 1.04 ECE 0.04 | 2024 base 0.83% pred/obs 0.70 ECE 0.26 | 2025 base 0.84% pred/obs 0.70 ECE 
+K4 Spearman pooled = RF-VOL 0.780 RF-LR 0.879 RF-GBM 0.925 RF-PRICE 0.771 RF-MOM 0.716 VOL-LR 0.915 VOL-GBM 0.841 VOL-PRICE 0.984 VOL-MOM 0.516
+K5 top1 overlap = share of RF selections also selected by: VOL 37% LR 64% GBM 50% PRICE 34% MOM 39%
+K5 top10 overlap = share of RF selections also selected by: VOL 66% LR 84% GBM 87% PRICE 66% MOM 67%
+K5 top5 overlap = share of RF selections also selected by: VOL 58% LR 80% GBM 78% PRICE 58% MOM 64%
+K7 RF-VOL advantage = all: RF 0.0601 VOL 0.0461 d +0.0139 (pos 9367) | ex top1% secs: RF 0.0593 VOL 0.0449 d +0.0144 (pos 8934) | ex top5% secs: RF 0.0541 VOL 0.0409 d +0.0132 (pos 7724)
+K8 calibration experiment = Platt slope 1.049 intercept 0.625 fitted on validation rows 1111849 (positives 4754); results in log lines CAL
+P0 panel = mode S4CALIB | sample securities 2986 with data 2947 | rows 6028644 | build 13 min
+S4 CHECK = OK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+err None
+--- LOG ---
+REL RF deciles pred/obs %: 0.00/0.00 0.01/0.00 0.02/0.01 0.03/0.02 0.05/0.03 0.07/0.06 0.12/0.12 0.29/0.34 0.84/1.15 3.48/4.09
+REL VOL deciles pred/obs %: 0.00/0.02 0.01/0.02 0.03/0.05 0.04/0.08 0.06/0.07 0.10/0.16 0.15/0.31 0.27/0.62 0.57/1.33 2.74/3.15
+REL LR deciles pred/obs %: 0.01/0.00 0.02/0.01 0.03/0.00 0.04/0.02 0.05/0.05 0.07/0.05 0.11/0.14 0.24/0.46 0.58/1.20 3.17/3.90
+REL GBM deciles pred/obs %: 0.01/0.00 0.02/0.00 0.02/0.01 0.03/0.02 0.04/0.03 0.05/0.05 0.09/0.13 0.23/0.37 0.70/1.19 4.32/4.03
+K3 RF pred/obs by price stratum: <0.10 0.54 0.10-0.49 0.96 0.50-0.99 0.97 1-2.99 0.83 3-4.99 0.65 5-9.99 0.56 >=10 1.03
+K3 RF pred/obs by $vol stratum: <100k 0.78 100-500k 0.88 500k-1M 0.89 1-5M 0.89 5-10M 0.91 >10M 0.82
+K3 RF pred/obs by ATR tercile (2006-2020 cut-offs): T1 base 0.02% 1.77 T2 base 0.02% 2.12 T3 base 1.22% 0.82
+K3 RF pred/obs by SPY 20d vol tercile (2006-2020 cut-offs): T1 base 0.68% 0.64 ECE 0.26 T2 base 0.61% 0.80 ECE 0.13 T3 base 0.49% 1.10 ECE 0.05
+K3 RF monthly: corr(base rate, obs/pred) +0.727 over 60 months; obs/pred p10/50/90 0.5/0.996/2.06
+K4 Spearman pooled (all pairs): RF-VOL 0.780 RF-LR 0.879 RF-GBM 0.925 RF-PRICE 0.771 RF-MOM 0.716 VOL-LR 0.915 VOL-GBM 0.841 VOL-PRICE 0.984 VOL-MOM 0.516 LR-GBM 0.932 LR-PRICE 0.910 LR-MOM 0.743 GBM-PRICE 0.846 GBM-MOM 0.737 PRICE-MOM 0.542
+K4 within-day rank correlation RF-VOL 0.778 RF-LR 0.875 RF-GBM 0.922
+K6 persistence RF top1: share of selections whose previous session was also selected 82.7%
+K6 persistence RF top5: share of selections whose previous session was also selected 90.8%
+K6 persistence VOL top1: share of selections whose previous session was also selected 81.9%
+K6 persistence VOL top5: share of selections whose previous session was also selected 89.8%
+K6 RF security-level mean percentile, 2021-22 vs 2023-25: Spearman 0.911 over 1387 securities
+K7 RF-VOL advantage: all: RF 0.0601 VOL 0.0461 d +0.0139 (pos 9367) | ex top1% secs: RF 0.0593 VOL 0.0449 d +0.0144 (pos 8934) | ex top5% secs: RF 0.0541 VOL 0.0409 d +0.0132 (pos 7724) | ex px<0.10: RF 0.0567 VOL 0.0411 d +0.0156 (pos 9187) | px<1: RF 0.0833 VOL 0.0788 d +0.0045 (pos 3627) | px>=1: RF 0.0433 VOL 0.0189 d +0.0243 (pos 5740)
+CAL test 2021-25 TEST-refit RF raw: Brier 5.613e-3 logloss 0.0274 ECE10 0.103pp pred/obs 0.84 | PR-AUC 0.0601
+CAL test 2021-25 MODEL RF raw: Brier 5.631e-3 logloss 0.0278 ECE10 0.172pp pred/obs 0.72 | PR-AUC 0.0574
+CAL test 2021-25 MODEL RF + Platt(valid): Brier 5.651e-3 logloss 0.0276 ECE10 0.103pp pred/obs 1.09 | PR-AUC 0.0574
+CAL test 2021-25 MODEL RF + isotonic(valid): Brier 5.625e-3 logloss 0.0274 ECE10 0.066pp pred/obs 1.10 | PR-AUC 0.0566
+CAL 2026 YTD TEST-refit RF raw: Brier 8.618e-3 logloss 0.0390 ECE10 0.316pp pred/obs 0.66 | PR-AUC 0.0809
+CAL 2026 YTD MODEL RF raw: Brier 8.664e-3 logloss 0.0399 ECE10 0.391pp pred/obs 0.57 | PR-AUC 0.0781
+CAL 2026 YTD MODEL RF + Platt(valid): Brier 8.635e-3 logloss 0.0388 ECE10 0.135pp pred/obs 0.87 | PR-AUC 0.0781
+CAL 2026 YTD MODEL RF + isotonic(valid): Brier 8.596e-3 logloss 0.0387 ECE10 0.137pp pred/obs 0.86 | PR-AUC 0.0781
+CHECK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(aff85f9d4bcc60bba6b1687d8a0cceaa) completed in 1963.04 seconds at 43k data points per second. Processing total of 84,115,119 data points.
