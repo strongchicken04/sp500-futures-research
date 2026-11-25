@@ -398,5 +398,20 @@ The selection is much more concentrated than the events: a small set of permanen
 - Pooled ΔPR-AUC +0.0139, date-cluster bootstrap [0.0117, 0.0163], p 0.001.
 - **The RF advantage is not a calendar-concentration artefact.**
 
-## 14. Exploratory: pre-event vs placebo inside S0 / S1 / S2 (S4XSEG)
-[pending]
+## 14. Exploratory: pre-event vs placebo inside S0 / S1 / S2 (S4XSEG v1; Amendment 2; not confirmatory)
+| Segment, definition | n | RF top 1 %: pre / placebo, ratio | RF top 5 %: pre / placebo, Δ [CI], ratio | Volume LR top 5 %: pre / placebo, ratio |
+|---|---|---|---|---|
+| S0, E1 | 700 | 28.7 / 13.7 %, 2.10 | 62.3 / 41.6 %, +20.7 [15.7, 25.3], 1.50 | 42.3 / 29.9 %, 1.42 |
+| S1, E1 | 457 | 32.6 / 15.0 %, 2.17 | 63.7 / 42.9 %, +20.8 [15.2, 26.5], 1.49 | 41.0 / 30.9 %, 1.33 |
+| S2, E1 | 177 | 44.2 / 23.3 %, 1.89 | 68.7 / 44.2 %, +24.5 [16.1, 33.9], 1.56 | 35.6 / 25.2 %, 1.41 |
+| S1, E3 | 1,042 | 24.1 / 12.6 %, 1.92 | 56.6 / 31.8 %, +24.8 [21.0, 28.9], 1.78 | 39.9 / 25.1 %, 1.59 |
+| S2, E3 | 431 | 37.3 / 14.5 %, 2.57 | 51.0 / 24.8 %, +26.2 [20.5, 32.0], 2.06 | 35.7 / 19.0 %, 1.88 |
+
+- **Deduplication:** with C10 the ratios are similar or higher; for example S1 E1 top 5 %: 54.6 / 34.4 %, ratio
+  1.59.
+- **The contrast is much stronger than in the full universe** (E1 top 5 % ratio 1.14). But there is a
+  confounder: segment membership depends on dollar volume at t, which rises before events. In the placebo window
+  the stock is more often outside the segment and cannot be flagged.
+- **E3 inflation:** E3 counts events whose move day, with its volume spike, is in the segment.
+- **What a confirmatory test needs:** a membership-matched placebo.
+- **Status:** a promising lead, not an established result.
