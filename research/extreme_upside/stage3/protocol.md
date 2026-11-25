@@ -108,3 +108,11 @@ No trading-profit claim from family A.
 
 ## Amendments
 (none yet)
+
+### Amendment 1 (2026-11-25, before any Stage 3 result was seen)
+- Block consistency for the univariate stage uses the four descriptive blocks inside 2006–2020: 2006–09,
+  2010–14, 2015–19 and 2020 alone. The untouched 2021–2025 replication is the fifth check, run in Stage 3G.
+- The Mann-Whitney AUC bootstrap uses 60 cluster resamples, for compute reasons on 1 CPU. The relative-risk,
+  odds-ratio and slope CIs keep 200.
+- The panel's market-cap snapshots are weekly. The universe pass is weekly, so a security that lived less
+  than one week can be missed.
