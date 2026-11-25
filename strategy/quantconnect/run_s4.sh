@@ -34,44 +34,6 @@ for i in $(seq 1 90); do
   if grep -qi "no spare nodes" $LOG; then sleep 60; continue; fi
   break
 done
-python3 - "$LOG" "$MODE" "$LABEL" >> $OUT <<'PY'
-import json, re, sys
-sys.path.insert(0, "strategy/quantconnect")
-from deploy_long import call
-log, mode, label = open(sys.argv[1]).read(), sys.argv[2], sys.argv[3]
-d = json.load(open("qc_result_MSXB_1792352605.json"))
-bt = d.get("backtest", d)
-rs = bt.get("runtimeStatistics") or {}
-pid = int(re.findall(r"project (\d+)", log)[-1]); bid = re.findall(r"backtest\] id (\w+)", log)[-1]
-p0 = rs.get("P0 panel", ""); chk = rs.get("S4 CHECK", "")
-why = []
-if f"mode {mode} " not in p0 + " ":
-    why.append("mode line missing or wrong (template / incomplete script?)")
-if not chk.startswith("OK"):
-    why.append("S4 CHECK not OK")
-if str(bt.get("error")) not in ("None", ""):
-    why.append("backtest error")
-if any(k.startswith("ERR") for k in rs):
-    why.append("ERR statistic present")
-print(f"### xup s4 {mode} {label} | project {pid} backtest {bid} | {'VALID' if not why else 'INVALID: ' + '; '.join(why)}")
-for k in sorted(rs):
-    if k.split(" ")[0] in ("Equity", "Fees", "Holdings", "Net", "Probabilistic", "Return", "Unrealized", "Volume"):
-        continue
-    print(k, "=", rs[k])
-print("err", str(bt.get("error"))[:300])
-lines = []
-for s0 in range(0, 2000, 200):
-    r = call("backtests/read/log", {"projectId": pid, "backtestId": bid, "start": s0, "end": s0 + 200, "format": "json", "query": " "})
-    L = r.get("logs", [])
-    lines += L
-    if len(L) < 200:
-        break
-print("--- LOG ---")
-for l in lines:
-    l = re.sub(r"^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d ", "", l)
-    if l.startswith(("Launching", "Warning", "Request for future")):
-        continue
-    print(l)
-PY
+python3 strategy/quantconnect/s4_collect.py "$MODE" "$LABEL" "$LOG" >> $OUT
 git checkout -- qc_result_MSXB_1792352605.json 2>/dev/null
 grep "### xup s4 $MODE $LABEL" $OUT | tail -1

@@ -66,6 +66,10 @@ class S4Core:
             ds, o, hi, lo, c = ds[ok], o[ok], hi[ok], lo[ok], c[ok]
         md = np.array([self.mdi.get(int(d), -1) for d in ds])
         okm = md >= 0
+        cnt = getattr(self, "s4_cnt", None)
+        if cnt is None:
+            cnt = self.s4_cnt = {"bars": 0, "md_drop": 0, "rawadj_drop": 0, "secs": 0}
+        cnt["bars"] += len(adj[0]); cnt["md_drop"] += int((~okm).sum()); cnt["rawadj_drop"] += len(adj[0]) - len(ds); cnt["secs"] += 1
         ds, o, hi, lo, c, md = ds[okm], o[okm], hi[okm], lo[okm], c[okm], md[okm]
         n = len(ds)
         seg = np.concatenate([[0], np.cumsum(np.diff(md) > 11)]).astype(np.int32)

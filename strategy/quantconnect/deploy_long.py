@@ -44,8 +44,14 @@ def main():
     main_py = sys.argv[2] if len(sys.argv) > 2 else "strategy/quantconnect/main.py"
     content = pathlib.Path(main_py).read_text()
 
-    # 1. create project (or reuse if it already exists)
-    r = call("projects/create", {"name": name, "language": "Py"})
+    # 1. create project (or reuse if it already exists); env QC_PROJECT_ID forces a specific existing project
+    if os.environ.get("QC_PROJECT_ID"):
+        r = {"success": True, "projects": [{"projectId": int(os.environ["QC_PROJECT_ID"])}]}
+        print(f"[forced] project {os.environ['QC_PROJECT_ID']}")
+    else:
+        r = call("projects/create", {"name": name, "language": "Py"})
+        if not r.get("success"):
+            print("[create failed]", str(r.get("errors"))[:200])
     if r.get("success") and r.get("projects"):
         pid = r["projects"][0]["projectId"]
         print(f"[create] project {pid}")

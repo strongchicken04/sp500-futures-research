@@ -1,0 +1,27 @@
+### xup s4 S4EVENTS v1 | project 38061541 backtest 0e6cc7e0be91614d66ed1e0c1413d2c1 | INVALID: S4 CHECK not OK
+B1 A10/100 E1 = events 4215 secs 1159 pos-days 24426 per event mean 5.80 med 6 | dur mean 6.2 med 7 p90 10 | overlap 471 | incompl 112 | test 1539 | close-conf B 45% Bmax 57%
+B1 A10/100 E2 = events 3744 secs 1159 pos-days 24426 per event mean 6.52 med 7 | dur mean 7.2 med 8 p90 11 | overlap 0 | incompl 105 | test 1342 | close-conf B 47% Bmax 57%
+B1 A10/100 E3 = events 3883 secs 1172 pos-days 15753 per event mean 4.06 med 2 | dur mean 4.7 med 3 p90 10 | overlap 1 | incompl 184 | test 1387
+B1 B10/100 E1 = events 1851 secs 827 pos-days 7758 per event mean 4.19 med 3 | dur mean 4.7 med 4 p90 9 | overlap 72 | incompl 37 | test 713
+B1 B10/100 E2 = events 1779 secs 827 pos-days 7758 per event mean 4.36 med 3 | dur mean 5.0 med 4 p90 9 | overlap 0 | incompl 36 | test 677
+B1 M10/100 E1 = events 2324 secs 922 pos-days 12551 per event mean 5.40 med 5 | dur mean 5.8 med 6 p90 10 | overlap 153 | incompl 55 | test 865
+B1 M10/100 E2 = events 2171 secs 922 pos-days 12551 per event mean 5.78 med 6 | dur mean 6.3 med 7 p90 10 | overlap 0 | incompl 53 | test 794
+B2 E1 ambiguity = E1 episodes merged by E2 with a neighbour 882 of 4215 (20.9%); E2 events built from >1 E1 episode 411 of 3744
+B3 E3 vs E1 = E3 events whose move day lies in an E1 span 3813/3883 (98.2%); E1 episodes with an excursion day in (start, last+10] 4215/4215 (100.0%)
+B4 E3 coverage = rows with a defined excursion ratio 6028644 of 6028644 (100.0%); excursion days 15753; test E3 events 1387
+B5 test A E1 = 2021-25 events 1539 secs 511 pos-days 9331 med pos/event 7 max ret med 154% incompl 32
+B5 test A E2 = 2021-25 events 1342 secs 510 pos-days 9334 med pos/event 8 max ret med 153% incompl 30
+B6 2026 YTD A E1 = events 280 incomplete 32 (data end 2026-08-27)
+P0 panel = mode S4EVENTS | sample securities 2986 with data 2947 | rows 6028644 | build 15 min
+S4 CHECK = FAILED rows 6028644 (S3 6022604) primary events 24426 (S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+err None
+--- LOG ---
+AE1 blocks 06-09:1008 10-14:350 15-19:610 20-22:842 23-25:1125 26-26:280 | price all 109/902/707/1403/430/355/309 test 31/305/240/513/172/165/113 | $vol all 1767/1005/343/561/155/384 test 523/405/136/235/61/179
+AE2 blocks 06-09:917 10-14:331 15-19:552 20-22:746 23-25:969 26-26:229 | price all 95/815/635/1232/390/306/271 test 28/275/213/448/154/134/90 | $vol all 1690/908/308/481/120/237 test 517/366/123/198/46/92
+AE3 blocks 06-09:944 10-14:350 15-19:556 20-22:754 23-25:1022 26-26:257 | price all 42/480/498/1147/594/539/583 test 11/157/143/391/232/233/220 | $vol all 341/369/236/707/316/1914 test 9/48/58/221/114/937
+BE1 blocks 06-09:397 10-14:159 15-19:275 20-22:368 23-25:519 26-26:133 | price all 42/370/326/622/180/165/146 test 7/111/125/254/74/78/64 | $vol all 771/436/156/259/73/156 test 247/178/64/115/34/75
+BE2 blocks 06-09:385 10-14:156 15-19:268 20-22:351 23-25:493 26-26:126 | price all 38/363/316/598/174/153/137 test 7/108/122/241/71/71/57 | $vol all 761/431/148/250/68/121 test 246/175/61/113/33/49
+ME1 blocks 06-09:542 10-14:195 15-19:332 20-22:458 23-25:632 26-26:165 | price all 62/494/406/759/232/202/169 test 12/136/149/299/97/98/74 | $vol all 956/551/188/329/89/211 test 293/213/71/143/42/103
+ME2 blocks 06-09:515 10-14:185 15-19:316 20-22:424 23-25:580 26-26:151 | price all 57/471/387/711/220/178/147 test 12/130/142/277/92/82/59 | $vol all 936/531/177/301/77/149 test 292/209/67/131/36/59
+CHECK rows 6028644 (S3 6022604) primary events 24426 (S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(0e6cc7e0be91614d66ed1e0c1413d2c1) completed in 941.28 seconds at 89k data points per second. Processing total of 84,115,119 data points.

@@ -1,5 +1,6 @@
 # region imports
 from AlgorithmImports import *
+from datetime import date as _date
 import numpy as np
 import pandas as pd
 from xup_s3_const import *
@@ -121,3 +122,24 @@ class S4ModesA:
         ytd = (e1["date"] >= Y0)
         S("B6 2026 YTD A E1", f"events {int(ytd.sum())} incomplete {int(e1['incomplete'][ytd].sum())} (data end 2026-08-27)")
         self.lg("CHECK " + self.s4_check)
+
+    def mode_s4diag(self):
+        """panel fingerprint by year (aggregates only) to diagnose run-to-run differences"""
+        S = self.set_runtime_statistic
+        self._s4_finish()
+        c = getattr(self, "s4_cnt", {})
+        spy_days = np.array(sorted(self.mdi.keys()))
+        sy = np.array([_date.fromordinal(int(d)).year for d in spy_days])
+        S("G0 counts", f"history bars {c.get('bars')} md-dropped {c.get('md_drop')} raw/adj-misaligned dropped {c.get('rawadj_drop')} securities {c.get('secs')} | SPY sessions {len(spy_days)} first {_date.fromordinal(int(spy_days[0]))} last {_date.fromordinal(int(spy_days[-1]))} | errors {len(self.err)}")
+        prim = self.L[:, PRIMARY]
+        lpx = self.F[:, FI["lpx"]]
+        parts = []
+        for y in range(2006, 2027):
+            m = self.Y == y
+            parts.append(f"{y % 100:02d}:{int(m.sum())}/{int((prim[m] == 1).sum())}/{len(np.unique(self.SID[m]))}/{int((sy == y).sum())}/{np.nansum(lpx[m]):.0f}")
+        S("G1 rows/pos/secs/spydays/sum-lpx by year a", " ".join(parts[:7])[:198])
+        S("G1 rows/pos/secs/spydays/sum-lpx by year b", " ".join(parts[7:14])[:198])
+        S("G1 rows/pos/secs/spydays/sum-lpx by year c", " ".join(parts[14:])[:198])
+        nb = np.bincount(self.SID)
+        S("G2 per-security rows", f"securities {len(nb)} rows p10/50/90 {q(nb, (10, 50, 90))} max {nb.max()} | segments {len(np.unique(self.GS))} | sum D mod 1e6 {int(self.D.astype(np.int64).sum() % 1000000)}")
+        self.lg("G3 errors: " + " | ".join(e[:40] for e in self.err[:10]))
