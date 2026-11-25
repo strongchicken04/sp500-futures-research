@@ -41,8 +41,9 @@ SPECS = [
     ("fullA GBM [C]", "C", FULL_A + G_FUND, "gbm", "c"),
     ("full+float GBM [C]", "C", FULL_A + G_FUND + G_FLT, "gbm", "c"),
 ]
-FROZEN = None   # filled by amendment before TEST: list of SPECS names to evaluate on the test period
-L2_C_FROZEN = None   # L2 C chosen on validation in MODEL, fixed by the same amendment
+# Amendment 3 (protocol.md), committed before TEST: all 18 specifications ran in MODEL v1 -> all are frozen.
+FROZEN = [sp[0] for sp in SPECS]
+L2_C_FROZEN = 0.1   # chosen on validation in MODEL v1
 
 
 def _split(alg, sp, test=False):
@@ -202,7 +203,8 @@ class ModesM:
             t0 = _t.time()
             try:
                 self._one_spec(spec, test, results)
-                self.lg(f"TIME {spec[0]} {(_t.time() - t0) / 60:.1f} min")
+                if not test:
+                    self.lg(f"TIME {spec[0]} {(_t.time() - t0) / 60:.1f} min")
             except Exception as e:
                 import traceback
                 S(f"{'T' if test else 'M'} {spec[0]}", ("ERROR " + str(e) + " | " + traceback.format_exc()[-120:])[:198])

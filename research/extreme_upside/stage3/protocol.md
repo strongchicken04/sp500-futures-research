@@ -156,3 +156,23 @@ Model implementation, fixed here before the first MODEL run (smoke runs included
   within each day" means the ceil(k × n_day) highest-scored rows of each day. Ranking by a percentile ≤ k
   selected no rows on days with fewer than 100 securities. Calibration deciles are now rank-based, because
   tied scores left quantile bins empty. Neither change touches models or hyperparameters.
+
+### Amendment 3 (2026-11-25, after MODEL v1 validation results, BEFORE any test-period output)
+Source: `results/xup_s3_model_raw.txt` (MODEL v1). Applying the rule pre-committed in Amendment 2:
+- **FROZEN:** all 18 specifications. All ran without error. Their features, models and preprocessing are
+  unchanged, and the GBM iteration rule is unchanged.
+- **L2_C_FROZEN = 0.1:** the value chosen on validation.
+- **Best model:** "fullA RF", with the highest validation PR-AUC in A: 0.0722 [0.0638, 0.0786]. The other full-A
+  models are statistically indistinguishable: LR 0.0704, L2 0.0707, GBM 0.0706.
+- **Best single-group baseline:** "volume LR", validation PR-AUC 0.0557 [0.0466, 0.0639]. Price-only scored
+  0.0478 and momentum-only 0.0475. This baseline is the comparator for the model-evidence rule of Amendment 2.
+- **TEST refit:** each specification is refit on its development + validation window, with the training end
+  purged by 60 calendar days before 2021-01-01. It is evaluated once on 2021–2025, and 2026 YTD is reported
+  separately.
+- **Univariate replication:** `_univ_rep` 2021–2025 runs in the same job.
+- **Known issues fixed before TEST (no change after):**
+  - GBM chose the minimum of 25 trees in the C and D universes (internal holdout). This is reported as a
+    limitation and not retuned.
+  - Calibration: the full-A top decile under-predicts in validation (LR 1.78 % predicted vs 3.43 % observed),
+    because the event rate is higher in 2017–2020 than in training. No recalibration is applied; calibration is
+    reported as is.
