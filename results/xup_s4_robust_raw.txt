@@ -1,0 +1,38 @@
+### xup s4 S4ROBUST v1 | project 38061541 backtest b4cd240c9b233d094515767640513c82 | VALID
+P0 panel = mode S4ROBUST | sample securities 2986 with data 2947 | rows 6028644 | build 12 min
+R A A10 k1 = ev 1539 cap 28.8% pre 22.2% placebo 15.7% in-only 6.7% | evprec 17.2% | lead med 27 | conf(Bmax) 56% | sel <$1 78% $vol 501k
+R A A10 k5 = ev 1539 cap 62.8% pre 55.4% placebo 49.8% in-only 7.4% | evprec 12.5% | lead med 40 | conf(Bmax) 57% | sel <$1 59% $vol 270k
+R A B10 k5 = ev 713 cap 55.4% pre 49.9% placebo 45.2% in-only 5.5% | evprec 4.9% | lead med 40 | conf(Bmax) nan% | sel <$1 59% $vol 270k
+R A M10 k5 = ev 865 cap 59.5% pre 51.7% placebo 46.6% in-only 7.9% | evprec 6.7% | lead med 40 | conf(Bmax) nan% | sel <$1 59% $vol 270k
+R A-exADR A10 k1 = ev 1469 cap 28.5% pre 21.9% placebo 15.6% in-only 6.5% | evprec 17.4% | lead med 27 | conf(Bmax) 55% | sel <$1 78% $vol 514k
+R A-exADR A10 k5 = ev 1469 cap 63.1% pre 55.9% placebo 49.3% in-only 7.2% | evprec 12.9% | lead med 40 | conf(Bmax) 56% | sel <$1 59% $vol 276k
+R A-exADR B10 k5 = ev 677 cap 55.4% pre 50.2% placebo 44.8% in-only 5.2% | evprec 5.0% | lead med 40 | conf(Bmax) nan% | sel <$1 59% $vol 276k
+R A-exADR M10 k5 = ev 822 cap 59.2% pre 51.9% placebo 46.1% in-only 7.3% | evprec 6.9% | lead med 40 | conf(Bmax) nan% | sel <$1 59% $vol 276k
+R A-fund A10 k1 = ev 1537 cap 28.8% pre 22.2% placebo 15.8% in-only 6.6% | evprec 17.2% | lead med 27 | conf(Bmax) 56% | sel <$1 79% $vol 498k
+R A-fund A10 k5 = ev 1537 cap 62.7% pre 55.2% placebo 49.5% in-only 7.5% | evprec 12.6% | lead med 40 | conf(Bmax) 57% | sel <$1 59% $vol 271k
+R A-fund B10 k5 = ev 712 cap 55.3% pre 50.0% placebo 44.8% in-only 5.3% | evprec 4.9% | lead med 40 | conf(Bmax) nan% | sel <$1 59% $vol 271k
+R A-fund M10 k5 = ev 864 cap 59.4% pre 51.7% placebo 46.3% in-only 7.6% | evprec 6.7% | lead med 40 | conf(Bmax) nan% | sel <$1 59% $vol 271k
+R A-strict A10 k1 = ev 1300 cap 29.3% pre 22.6% placebo 16.3% in-only 6.7% | evprec 16.8% | lead med 27 | conf(Bmax) 56% | sel <$1 75% $vol 543k
+R A-strict A10 k5 = ev 1300 cap 62.7% pre 55.3% placebo 50.8% in-only 7.4% | evprec 12.0% | lead med 40 | conf(Bmax) 56% | sel <$1 56% $vol 273k
+R A-strict B10 k5 = ev 600 cap 55.0% pre 48.8% placebo 45.5% in-only 6.2% | evprec 4.5% | lead med 40 | conf(Bmax) nan% | sel <$1 56% $vol 273k
+R A-strict M10 k5 = ev 731 cap 59.1% pre 50.8% placebo 47.1% in-only 8.3% | evprec 6.3% | lead med 40 | conf(Bmax) nan% | sel <$1 56% $vol 273k
+R B A10 k1 = ev 1080 cap 31.3% pre 24.4% placebo 17.3% in-only 6.9% | evprec 18.0% | lead med 28 | conf(Bmax) 54% | sel <$1 75% $vol 556k
+R B A10 k5 = ev 1080 cap 62.9% pre 56.1% placebo 50.2% in-only 6.8% | evprec 12.2% | lead med 40 | conf(Bmax) 55% | sel <$1 55% $vol 283k
+R B B10 k5 = ev 490 cap 53.7% pre 48.4% placebo 43.9% in-only 5.3% | evprec 4.4% | lead med 40 | conf(Bmax) nan% | sel <$1 55% $vol 283k
+R B M10 k5 = ev 606 cap 58.4% pre 50.8% placebo 45.6% in-only 7.6% | evprec 6.3% | lead med 40 | conf(Bmax) nan% | sel <$1 55% $vol 283k
+R incomplete events = test E1 events 1539 incomplete 32 | cap5 all 62.8% complete-only 62.7% incomplete-only 68.8%
+R incomplete k1 = selected 16789 invalid-label 528 | P excluding invalid 7.77% | P invalid-as-negative 7.53%
+R incomplete k5 = selected 81210 invalid-label 938 | P excluding invalid 5.36% | P invalid-as-negative 5.29%
+S4 CHECK = OK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+err None
+--- LOG ---
+RS1 A: S1 base 0.226% P@1 4.86% lift 21.46 | S1 events 457 cap5 76.1% pre5 63.5%
+RS1 A-strict: S1 base 0.222% P@1 5.00% lift 22.55 | S1 events 400 cap5 76.8% pre5 64.5%
+RS1 A-exADR: S1 base 0.235% P@1 5.03% lift 21.39 | S1 events 436 cap5 76.6% pre5 63.5%
+RS1 A-fund: S1 base 0.228% P@1 4.86% lift 21.38 | S1 events 456 cap5 76.1% pre5 63.4%
+RS1 B: S1 base 0.219% P@1 5.03% lift 23.01 | S1 events 331 cap5 78.2% pre5 64.7%
+RE A-strict RF k5: E2 ev 1137 cap 60.9% pre 51.4% placebo 48.7% | E3 ev 1172 cap 75.9% pre 59.3% placebo 48.8%
+RE A-exADR RF k5: E2 ev 1274 cap 61.3% pre 52.1% placebo 47.4% | E3 ev 1317 cap 75.7% pre 59.9% placebo 48.5%
+RE A-fund RF k5: E2 ev 1340 cap 60.8% pre 51.3% placebo 47.7% | E3 ev 1387 cap 76.2% pre 59.8% placebo 48.1%
+CHECK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(b4cd240c9b233d094515767640513c82) completed in 1349.37 seconds at 62k data points per second. Processing total of 84,115,119 data points.
