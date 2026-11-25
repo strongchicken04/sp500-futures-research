@@ -1,0 +1,44 @@
+### xup s4 S4OUTC v1 | project 38061541 backtest 7a4934ad8cb20ac849166fbea093db7a | VALID
+C7 S1 RF top1 = n 11788 valid10 11689 | share close(t+10) <= -50% 3.82% vs share reaching +100% close in window 3.06% -> FLAG
+O00 UNCOND a = n 1611773 valid10 99.6% valid20 99.2% incompl20 seg-end 12730 data-end 0 | maxHIGH10 0.714/2.17/5.24/10.7/20% | maxCLOSE10 -1.06/0.503/3.11/7.81/15.5%
+O00 UNCOND b = close t+5 -8.56/-3.56/-0.0346/3.01/7.78% | t+10 -12.4/-5.25/-0.0518/4.38/11.3% | t+20 -18/-7.81/-0.128/6.31/16.3%
+O01 RF top1 a = n 16789 valid10 96.9% valid20 94.7% incompl20 seg-end 888 data-end 0 | maxHIGH10 2.19/6.61/16.6/38/83.1% | maxCLOSE10 -6.1/-0.542/7.3/21.5/48.8%
+O01 RF top1 b = close t+5 -24.4/-14/-4.11/6.38/21.5% | t+10 -34/-20.3/-7.11/7.41/30.2% | t+20 -46.3/-29.6/-12.4/7.63/38.5%
+O02 RF top5 a = n 81210 valid10 98.8% valid20 97.9% incompl20 seg-end 1723 data-end 0 | maxHIGH10 2.04/5.76/13.9/30.3/63.6% | maxCLOSE10 -4.81/-0.0205/6.54/18.7/41.1%
+O02 RF top5 b = close t+5 -20.1/-11.5/-3.12/5.74/18.3% | t+10 -28.5/-16.8/-5.41/7.35/25.9% | t+20 -39.6/-24.8/-9.43/8.28/35.2%
+O04 PRICE top1 a = n 16789 valid10 98.2% valid20 96.9% incompl20 seg-end 523 data-end 0 | maxHIGH10 1.72/5.27/13.2/29.4/65.8% | maxCLOSE10 -4.03/0/6.21/17.3/37.9%
+O04 PRICE top1 b = close t+5 -17.9/-9.86/-2.35/5.31/16.5% | t+10 -26/-14.9/-4.3/6.63/23.1% | t+20 -37.7/-22.6/-8.11/7.17/30.8%
+O07 VOL top1 a = n 16789 valid10 97.9% valid20 96.3% incompl20 seg-end 626 data-end 0 | maxHIGH10 1.83/5.71/14.2/32.7/77% | maxCLOSE10 -4.2/0/6.52/18.5/41.6%
+O07 VOL top1 b = close t+5 -19/-10.4/-2.59/5.29/17.1% | t+10 -27.4/-15.4/-4.56/6.72/24.9% | t+20 -39/-23.5/-8.3/7.89/33.4%
+O9 RF top1 failures (A10/100 = 0) = n 14997 | c10 med -8.7% | c20 p5/25/50 -57.5/-30.6/-14.1% | c20<=-50% 8.4% | c10>=+100% 0.0%
+O9 RF top1 successes (A10/100 = 1) = n 1264 | c10 med 56.9% | c20 p5/25/50 -46.1/-1.69/27.1% | c20<=-50% 4.0% | c10>=+100% 29.1%
+O9 UNCOND failures = n 1596057 | c10 med -0.1% | c20 p5/25/50 -25.8/-7.84/-0.174% | c20<=-50% 0.7% | c10>=+100% 0.0%
+P0 panel = mode S4OUTC | sample securities 2986 with data 2947 | rows 6028644 | build 13 min
+S4 CHECK = OK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+err None
+--- LOG ---
+O00 UNCOND c: minLOW10 -18.4/-10.6/-5.26% minLOW20 -25.7/-15.2/-7.57% | hit50/100/200 1.9/0.6/0.2% close+100 0.3% | c10<0 50% c20<0 51% c20<=-50% 0.7% c20<=-80% 0.1% low20<=-50% 1.2% | t-max med 5 t100 med 6 | high-close gap med 2pp
+O01 RF top1 c: minLOW10 -42.5/-29.7/-18.6% minLOW20 -55.2/-40.2/-26.6% | hit50/100/200 18.5/7.8/2.8% close+100 3.9% | c10<0 63% c20<0 67% c20<=-50% 8.0% c20<=-80% 0.7% low20<=-50% 13.9% | t-max med 3 t100 med 5 | high-close gap med 9pp
+O02 RF top5 c: minLOW10 -36.3/-25.4/-15.9% minLOW20 -48.2/-35/-22.7% | hit50/100/200 13.7/5.4/2.0% close+100 2.8% | c10<0 62% c20<0 65% c20<=-50% 5.1% c20<=-80% 0.4% low20<=-50% 8.9% | t-max med 3 t100 med 6 | high-close gap med 7pp
+O03 RF top10 a: n 161756 valid10 99.2% valid20 98.5% incompl20 seg-end 2457 data-end 0 | maxHIGH10 1.97/5.41/12.5/26.7/52.7% | maxCLOSE10 -4.18/0/6.17/17.1/35.8%
+O03 RF top10 b: close t+5 -18.1/-10.1/-2.45/5.59/16.7% | t+10 -25.6/-14.8/-4.32/7.22/23.6% | t+20 -35.9/-22/-7.56/8.72/32.6%
+O03 RF top10 c: minLOW10 -33.3/-23.1/-14.1% minLOW20 -44.5/-31.9/-20.3% | hit50/100/200 10.8/4.0/1.5% close+100 2.1% | c10<0 61% c20<0 63% c20<=-50% 3.8% c20<=-80% 0.4% low20<=-50% 6.8% | t-max med 4 t100 med 6 | high-close gap med 6pp
+O04 PRICE top1 c: minLOW10 -34.5/-23.4/-14.2% minLOW20 -47.3/-33.1/-20.8% | hit50/100/200 13.8/6.1/2.4% close+100 2.8% | c10<0 61% c20<0 65% c20<=-50% 4.7% c20<=-80% 0.4% low20<=-50% 8.3% | t-max med 4 t100 med 6 | high-close gap med 7pp
+O05 PRICE top5 a: n 81210 valid10 98.9% valid20 97.9% incompl20 seg-end 1678 data-end 0 | maxHIGH10 1.73/4.91/11.5/25.1/52.7% | maxCLOSE10 -3.58/0.0696/5.74/16/34.1%
+O05 PRICE top5 b: close t+5 -16.4/-9.02/-2.08/5.13/15.3% | t+10 -23.7/-13.4/-3.79/6.74/22.4% | t+20 -34.1/-20.3/-6.77/8.29/31.4%
+O05 PRICE top5 c: minLOW10 -32.1/-21.7/-13% minLOW20 -43.3/-30.8/-19% | hit50/100/200 10.7/4.2/1.6% close+100 2.2% | c10<0 60% c20<0 63% c20<=-50% 3.1% c20<=-80% 0.2% low20<=-50% 6.1% | t-max med 4 t100 med 6 | high-close gap med 5pp
+O06 PRICE top10 a: n 161756 valid10 99.3% valid20 98.6% incompl20 seg-end 2326 data-end 0 | maxHIGH10 1.67/4.51/10.4/22.3/44.5% | maxCLOSE10 -3.23/0.223/5.36/14.7/30.6%
+O06 PRICE top10 b: close t+5 -15.1/-8.11/-1.71/4.85/14.1% | t+10 -21.7/-12/-3.02/6.54/20.4% | t+20 -31.1/-18.1/-5.31/8.42/28.6%
+O06 PRICE top10 c: minLOW10 -29.4/-19.8/-11.7% minLOW20 -40.1/-28/-17% | hit50/100/200 8.5/3.1/1.1% close+100 1.6% | c10<0 59% c20<0 61% c20<=-50% 2.3% c20<=-80% 0.2% low20<=-50% 4.5% | t-max med 4 t100 med 6 | high-close gap med 5pp
+O07 VOL top1 c: minLOW10 -36.4/-24.5/-14.9% minLOW20 -48.9/-34.6/-21.8% | hit50/100/200 16.0/7.1/2.5% close+100 3.0% | c10<0 62% c20<0 64% c20<=-50% 5.3% c20<=-80% 0.5% low20<=-50% 9.3% | t-max med 4 t100 med 6 | high-close gap med 7pp
+O08 VOL top5 a: n 81210 valid10 98.9% valid20 98.0% incompl20 seg-end 1659 data-end 0 | maxHIGH10 1.75/4.97/11.7/25.5/53.1% | maxCLOSE10 -3.66/0.0464/5.77/16/34.4%
+O08 VOL top5 b: close t+5 -16.6/-9.06/-2.06/5.16/15.5% | t+10 -23.9/-13.4/-3.7/6.82/22.4% | t+20 -34/-20.2/-6.55/8.51/31.8%
+O08 VOL top5 c: minLOW10 -32.2/-21.7/-13% minLOW20 -43.4/-30.7/-18.9% | hit50/100/200 10.9/4.2/1.6% close+100 2.2% | c10<0 60% c20<0 62% c20<=-50% 3.1% c20<=-80% 0.2% low20<=-50% 6.1% | t-max med 4 t100 med 6 | high-close gap med 6pp
+O09 VOL top10 a: n 161756 valid10 99.3% valid20 98.6% incompl20 seg-end 2304 data-end 0 | maxHIGH10 1.64/4.53/10.4/22.4/44.9% | maxCLOSE10 -3.27/0.205/5.33/14.7/30.7%
+O09 VOL top10 b: close t+5 -15.2/-8.11/-1.67/4.88/14.2% | t+10 -21.8/-12/-2.92/6.54/20.5% | t+20 -31.1/-18.1/-5.11/8.46/28.8%
+O09 VOL top10 c: minLOW10 -29.6/-19.8/-11.7% minLOW20 -40.1/-28/-17% | hit50/100/200 8.6/3.1/1.1% close+100 1.6% | c10<0 59% c20<0 61% c20<=-50% 2.4% c20<=-80% 0.2% low20<=-50% 4.5% | t-max med 4 t100 med 6 | high-close gap med 5pp
+O S1 RF top1 a: n 11788 valid10 99.2% valid20 98.6% incompl20 seg-end 167 data-end 0 | maxHIGH10 2.11/5.8/14.8/32.9/64.1% | maxCLOSE10 -7.08/-1.23/6.32/20.3/44.6%
+O S1 RF top1 b: close t+5 -26.3/-15.3/-5.22/5.8/21.2% | t+10 -36/-22.1/-8.45/6.5/27% | t+20 -48/-31.1/-14.2/5.46/36.4%
+O S1 RF top1 c: minLOW10 -43.1/-30.4/-19% minLOW20 -55.5/-40.5/-26.7% | hit50/100/200 14.4/4.9/1.7% close+100 3.1% | c10<0 65% c20<0 69% c20<=-50% 8.9% c20<=-80% 0.9% low20<=-50% 14.2% | t-max med 3 t100 med 5 | high-close gap med 8pp
+CHECK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(7a4934ad8cb20ac849166fbea093db7a) completed in 1350.45 seconds at 62k data points per second. Processing total of 84,115,119 data points.
