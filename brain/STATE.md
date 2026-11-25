@@ -1,7 +1,7 @@
 # Brain state
 
 heartbeat: 2026-11-04 (night shifts PAUSED by the owner 2026-11-04: trigger trig_01B4r87kDhBbXX4qsUwAEPse disabled; resume when the owner answers)
-last shift: 2026-11-25 (extreme-upside Stage 2 data validation done; open decision: import a PIT ETF list into QC; trigger still paused)
+last shift: 2026-11-25 (extreme-upside Stage 2 COMPLETE incl. option A broad universe with imported historical instrument classification; next: Stage 3 only on the owner's go; trigger still paused)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-28/29 (report brain/reports/2026-10-29.md):
