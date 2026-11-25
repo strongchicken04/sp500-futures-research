@@ -320,10 +320,45 @@ Baselines (section B):
   - A-strict removes the unresolved-class securities. It is lower in 2006-2019 and almost equal from 2020:
     2023-25 A 0.732 % vs A-strict 0.720 %.
 
-ROBUST run (Amendment 4: frozen models evaluated on 2021-2025 inside each universe and sub-period; univariate
-RR in each sensitivity universe): see section F.1 below.
+ROBUST run (Amendment 4): frozen models evaluated on 2021-2025 inside each universe and sub-period, plus
+univariate RR in each sensitivity universe. Results in F.1.
 
-F.1 [ROBUST_PLACEHOLDER]
+F.1 ROBUST v1 (results/xup_s3_robust_raw.txt)
+Reproducibility check:
+  - The identical refit reproduces the TEST point estimates in A exactly (e.g. RF 0.0596, P@1% 1,296 / 16,749).
+  - CIs differ slightly because ROBUST uses 30 resamples.
+
+Frozen models, test 2021-2025, by universe (PR-AUC [CI] | P@1% | AUC):
+  universe   rows / events / base       price LR      momentum LR   volume LR     full-A LR     full-A RF                      full-A GBM
+  A          1,604k / 9,300 / 0.580%    0.0376        0.0430        0.0460        0.0549        0.0596 [.054,.065] 7.74% .915  0.0565
+  A-strict   1,406k / 7,877 / 0.560%    0.0341        0.0428        0.0439        0.0536        0.0584 [.052,.064] 7.44% .916  0.0556
+  A-exADR    1,481k / 8,893 / 0.600%    0.0405        0.0446        0.0487        0.0564        0.0614 [.055,.067] 7.87% .916  0.0583
+  A-fund     1,582k / 9,289 / 0.587%    0.0377        0.0430        0.0461        0.0549        0.0597 [.054,.065] 7.74% .914  0.0566
+  - Model ranking and levels are stable across the four universe definitions (PR-AUC within +/- 0.003). The
+    unresolved-class securities and ADRs do not drive the result.
+  - In every universe the full models beat price-only and momentum-only. Against volume-only, the CIs overlap
+    in every universe; the same INCONCLUSIVE status holds.
+
+Sub-periods of the test, universe A (descriptive):
+  period    base     price LR  momentum LR  volume LR  full-A LR  full-A RF                     full-A GBM
+  2021-22   0.361%   0.0251    0.0273       0.0329     0.0378     0.0458 [.035,.055] P@1 5.57%   0.0409
+  2023-25   0.732%   0.0438    0.0501       0.0516     0.0610     0.0648 [.059,.071] P@1 9.22%   0.0622
+  - ROC-AUC is the same in both sub-periods (about 0.91). PR-AUC and precision move with the base rate, which
+    doubled.
+
+Univariate top / bottom RR in the sensitivity universes (dev 2006-2020 | test 2021-2025):
+  variable     A-strict                         A-exADR                          A-fund
+  H2 rvol20    0.82 [.69,.92] | 0.81 [.72,.93]  0.96 [.86,1.04] | 0.87 [.77,.98] 0.93 [.83,1.01] | 0.87 [.76,.97]
+  H5 atr_p     37.1 [22,69] | 100.0 [54,255]    50.7 [35,80] | 107.3 [61,286]   45.8 [32,71] | 122.8 [65,297]
+  H6 gap       1.41 [1.29,1.53] | 0.97 [.92,1.04]  1.39 [1.30,1.48] | 1.00 [.95,1.07]  1.39 [1.30,1.47] | 1.01 [.95,1.07]
+  H7 r20       0.61 [.53,.73] | 0.58 [.49,.69]  0.49 [.44,.56] | 0.55 [.47,.64]  0.49 [.44,.56] | 0.56 [.47,.65]
+  H8 lpx       0.01 [.01,.02] | 0.01 [.00,.02]  0.01 [.00,.02] | 0.01 [.00,.02]  0.01 [.00,.02] | 0.01 [.00,.02]
+  H9 ldv       0.03 [.02,.06] | 0.08 [.04,.12]  0.03 [.02,.05] | 0.09 [.05,.15]  0.03 [.02,.05] | 0.09 [.04,.14]
+  - H5, H8 and H9 are robust in every sensitivity universe and in both periods.
+  - H7 is contradicted in every universe.
+  - H6 fails to replicate in test in every universe.
+  - H2 is below 1 in A-strict even in dev: the opposite direction to the hypothesis.
+  - Robustness confirms the statuses in section 10; it does not change any of them.
 
 
 ------------------------------------------------------------------------------------------------------------------
@@ -388,29 +423,33 @@ EVIDENCE - all four criteria met. NOT five independent discoveries: they measure
      - n: 4.19 M rows, 13,346 events.
      - OOS 2021-25: RR 0.01 [0.00, 0.02], 3.06 % vs 0.02 % (1.60 M rows, 9,300 events).
      - Blocks: 4 / 4.
-     - Robustness: [see F.1].
+     - Robustness: RR 0.01 in A-strict, A-exADR and A-fund, dev and test (F.1).
      - Limitations: partly mechanical (tick size and discreteness at sub-$1 prices; possible bad-tick highs).
   H5 high volatility (atr_p; rv20 as secondary) [A]
      - Effect: RR 48.9 [34.3, 77.0], 2.09 % vs 0.043 %.
      - OOS: RR 104.8 [60.4, 277.2], 3.46 % vs 0.03 %.
      - Blocks: 4 / 4. AUC 0.871 dev, 0.890 test.
+     - Robustness: RR 37-123 in every sensitivity universe and period (F.1).
      - Limitations: volatility is partly the price effect; this is the largest single predictor.
   H9 low dollar volume (ldv; two-sided) [A]
      - Effect: RR 0.03 [0.02, 0.05].
      - OOS: 0.09 [0.05, 0.14].
      - Blocks: 4 / 4.
+     - Robustness: RR 0.03 dev / 0.08-0.09 test in every sensitivity universe (F.1).
      - Limitations: collinear with price; the test decile shape peaks in d2 (1.51 %) rather than d1.
   H1 low market cap (lmcap) [B]
      - Effect: RR 0.01 [0.00, 0.01].
      - n: 2.61 M rows, 5,395 events.
      - OOS: RR 0.00 [0.00, 0.00], 3.21 % vs 0.00 % (1.15 M rows, 6,495 events).
      - Blocks: 4 / 4.
+     - Robustness: same sign in all 27 targets; the sensitivity universes do not apply (B is its own universe).
      - Limitations: B requires a Morningstar snapshot; adds nothing in the models.
   H4 low float (lfloat) [C, 2011+]
      - Effect: RR 0.04 [0.02, 0.09].
      - n: 1.75 M rows, 3,243 events.
      - OOS: RR 0.11 [0.04, 0.27] (1.10 M rows, 6,010 events).
      - Blocks: 3 / 3 available + test.
+     - Robustness: same sign in all secondary targets.
      - Limitations: float is a stale ratio times PIT shares; collinear with market cap; adds nothing in the
        models. float_ds (H4s) is weaker: dev RR 0.45, q 0.036; test 0.66 [0.41, 0.98].
 

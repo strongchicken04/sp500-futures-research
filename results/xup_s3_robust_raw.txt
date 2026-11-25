@@ -1,0 +1,41 @@
+### xup s3 ROBUST v1
+P0 panel = mode ROBUST | sample securities 2986 with data 2947 | rows 6022604 | build 12 min
+X fullA GBM A = 2021-25 n 1604k pos 9300 base 0.580% | PR-AUC 0.0565 [0.0517,0.0600] | P@1% 7.54% (1263/16749) R@10 67% AUC 0.915
+X fullA GBM A-exADR = 2021-25 n 1481k pos 8893 base 0.600% | PR-AUC 0.0583 [0.0532,0.0615] | P@1% 7.73% (1198/15494) R@10 68% AUC 0.916
+X fullA GBM A-fund = 2021-25 n 1582k pos 9289 base 0.587% | PR-AUC 0.0566 [0.0518,0.0601] | P@1% 7.56% (1255/16594) R@10 67% AUC 0.914
+X fullA GBM A-strict = 2021-25 n 1406k pos 7877 base 0.560% | PR-AUC 0.0556 [0.0497,0.0597] | P@1% 7.48% (1087/14541) R@10 67% AUC 0.916
+X fullA LR A = 2021-25 n 1604k pos 9300 base 0.580% | PR-AUC 0.0549 [0.0500,0.0604] | P@1% 7.25% (1214/16749) R@10 67% AUC 0.910
+X fullA LR A-exADR = 2021-25 n 1481k pos 8893 base 0.600% | PR-AUC 0.0564 [0.0513,0.0623] | P@1% 7.45% (1154/15494) R@10 67% AUC 0.911
+X fullA LR A-fund = 2021-25 n 1582k pos 9289 base 0.587% | PR-AUC 0.0549 [0.0501,0.0605] | P@1% 7.26% (1204/16594) R@10 66% AUC 0.909
+X fullA LR A-strict = 2021-25 n 1406k pos 7877 base 0.560% | PR-AUC 0.0536 [0.0478,0.0595] | P@1% 6.85% (996/14541) R@10 66% AUC 0.909
+X fullA RF A = 2021-25 n 1604k pos 9300 base 0.580% | PR-AUC 0.0596 [0.0538,0.0650] | P@1% 7.74% (1296/16749) R@10 68% AUC 0.915
+X fullA RF A-exADR = 2021-25 n 1481k pos 8893 base 0.600% | PR-AUC 0.0614 [0.0552,0.0665] | P@1% 7.87% (1220/15494) R@10 69% AUC 0.916
+X fullA RF A-fund = 2021-25 n 1582k pos 9289 base 0.587% | PR-AUC 0.0597 [0.0538,0.0651] | P@1% 7.74% (1285/16594) R@10 68% AUC 0.914
+X fullA RF A-strict = 2021-25 n 1406k pos 7877 base 0.560% | PR-AUC 0.0584 [0.0519,0.0639] | P@1% 7.44% (1082/14541) R@10 68% AUC 0.916
+X momentum LR A = 2021-25 n 1604k pos 9300 base 0.580% | PR-AUC 0.0430 [0.0392,0.0489] | P@1% 6.29% (1054/16749) R@10 59% AUC 0.875
+X momentum LR A-exADR = 2021-25 n 1481k pos 8893 base 0.600% | PR-AUC 0.0446 [0.0404,0.0509] | P@1% 6.38% (988/15494) R@10 59% AUC 0.879
+X momentum LR A-fund = 2021-25 n 1582k pos 9289 base 0.587% | PR-AUC 0.0430 [0.0392,0.0490] | P@1% 6.30% (1045/16594) R@10 59% AUC 0.874
+X momentum LR A-strict = 2021-25 n 1406k pos 7877 base 0.560% | PR-AUC 0.0428 [0.0381,0.0491] | P@1% 6.29% (915/14541) R@10 59% AUC 0.875
+X price LR A = 2021-25 n 1604k pos 9300 base 0.580% | PR-AUC 0.0376 [0.0344,0.0407] | P@1% 6.25% (1047/16749) R@10 53% AUC 0.869
+X price LR A-exADR = 2021-25 n 1481k pos 8893 base 0.600% | PR-AUC 0.0405 [0.0367,0.0445] | P@1% 6.54% (1013/15494) R@10 54% AUC 0.873
+X price LR A-fund = 2021-25 n 1582k pos 9289 base 0.587% | PR-AUC 0.0377 [0.0344,0.0407] | P@1% 6.25% (1037/16594) R@10 53% AUC 0.868
+X price LR A-strict = 2021-25 n 1406k pos 7877 base 0.560% | PR-AUC 0.0341 [0.0303,0.0375] | P@1% 5.44% (791/14541) R@10 51% AUC 0.864
+X volume LR A = 2021-25 n 1604k pos 9300 base 0.580% | PR-AUC 0.0460 [0.0403,0.0511] | P@1% 7.02% (1176/16749) R@10 54% AUC 0.863
+X volume LR A-exADR = 2021-25 n 1481k pos 8893 base 0.600% | PR-AUC 0.0487 [0.0426,0.0541] | P@1% 7.43% (1151/15494) R@10 54% AUC 0.865
+X volume LR A-fund = 2021-25 n 1582k pos 9289 base 0.587% | PR-AUC 0.0461 [0.0404,0.0511] | P@1% 7.08% (1175/16594) R@10 53% AUC 0.862
+X volume LR A-strict = 2021-25 n 1406k pos 7877 base 0.560% | PR-AUC 0.0439 [0.0382,0.0501] | P@1% 6.37% (926/14541) R@10 52% AUC 0.858
+err None
+--- LOG ---
+RU H2 rvol20 top/bottom RR: A-strict dev 0.82 [0.69,0.92] | A-strict test 0.81 [0.72,0.93] | A-exADR dev 0.96 [0.86,1.04] | A-exADR test 0.87 [0.77,0.98] | A-fund dev 0.93 [0.83,1.01] | A-fund test 0.87 [0.76,0.97]
+RU H5 atr_p top/bottom RR: A-strict dev 37.05 [22.30,68.84] | A-strict test 99.96 [53.58,255.00] | A-exADR dev 50.70 [35.28,79.64] | A-exADR test 107.28 [60.54,286.28] | A-fund dev 45.82 [31.91,70.94] | A-fund test 122.76 [65.29,297.44]
+RU H6 gap top/bottom RR: A-strict dev 1.41 [1.29,1.53] | A-strict test 0.97 [0.92,1.04] | A-exADR dev 1.39 [1.30,1.48] | A-exADR test 1.00 [0.95,1.07] | A-fund dev 1.39 [1.30,1.47] | A-fund test 1.01 [0.95,1.07]
+RU H7 r20 top/bottom RR: A-strict dev 0.61 [0.53,0.73] | A-strict test 0.58 [0.49,0.69] | A-exADR dev 0.49 [0.44,0.56] | A-exADR test 0.55 [0.47,0.64] | A-fund dev 0.49 [0.44,0.56] | A-fund test 0.56 [0.47,0.65]
+RU H8 lpx top/bottom RR: A-strict dev 0.01 [0.01,0.02] | A-strict test 0.01 [0.00,0.02] | A-exADR dev 0.01 [0.00,0.02] | A-exADR test 0.01 [0.00,0.02] | A-fund dev 0.01 [0.00,0.02] | A-fund test 0.01 [0.00,0.02]
+RU H9 ldv top/bottom RR: A-strict dev 0.03 [0.02,0.06] | A-strict test 0.08 [0.04,0.12] | A-exADR dev 0.03 [0.02,0.05] | A-exADR test 0.09 [0.05,0.15] | A-fund dev 0.03 [0.02,0.05] | A-fund test 0.09 [0.04,0.14]
+RP price LR [A]: 2021-22: base 0.361% PR-AUC 0.0251 [0.0193,0.0334] P@1% 3.70% (252) AUC 0.871 | 2023-25: base 0.732% PR-AUC 0.0438 [0.0381,0.0491] P@1% 7.99% (795) AUC 0.861
+RP momentum LR [A]: 2021-22: base 0.361% PR-AUC 0.0273 [0.0232,0.0323] P@1% 4.53% (308) AUC 0.862 | 2023-25: base 0.732% PR-AUC 0.0501 [0.0447,0.0555] P@1% 7.50% (746) AUC 0.878
+RP volume LR [A]: 2021-22: base 0.361% PR-AUC 0.0329 [0.0263,0.0459] P@1% 4.25% (289) AUC 0.860 | 2023-25: base 0.732% PR-AUC 0.0516 [0.0438,0.0581] P@1% 8.92% (887) AUC 0.857
+RP fullA LR [A]: 2021-22: base 0.361% PR-AUC 0.0378 [0.0304,0.0443] P@1% 5.16% (351) AUC 0.905 | 2023-25: base 0.732% PR-AUC 0.0610 [0.0546,0.0671] P@1% 8.68% (863) AUC 0.906
+RP fullA RF [A]: 2021-22: base 0.361% PR-AUC 0.0458 [0.0349,0.0547] P@1% 5.57% (379) AUC 0.910 | 2023-25: base 0.732% PR-AUC 0.0648 [0.0585,0.0706] P@1% 9.22% (917) AUC 0.912
+RP fullA GBM [A]: 2021-22: base 0.361% PR-AUC 0.0409 [0.0347,0.0478] P@1% 5.53% (376) AUC 0.913 | 2023-25: base 0.732% PR-AUC 0.0622 [0.0554,0.0657] P@1% 8.92% (887) AUC 0.910
+Algorithm Id:(565a617fc2ad2b5c0d3bfefebc6d171f) completed in 1681.21 seconds at 50k data points per second. Processing total of 84,102,925 data points.
