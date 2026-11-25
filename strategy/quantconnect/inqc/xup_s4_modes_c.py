@@ -159,12 +159,19 @@ class S4ModesC:
         df = tb.reset_index() if "time" not in getattr(tb, "columns", []) else tb
         tcol = "time" if "time" in df.columns else df.columns[1]
         tt = pd.to_datetime(df[tcol])
+        if getattr(tt.dt, "tz", None) is not None:
+            out["tz"] = 1.0
+            tt = tt.dt.tz_convert("America/New_York")
+        else:
+            out["tz"] = 0.0
+        out["hours"] = np.bincount(tt.dt.hour.values, minlength=24)
         mins = tt.dt.hour * 60 + tt.dt.minute
         reg = (mins > 570) & (mins <= 960)
         pre = mins <= 570
         post = mins > 960
         hi, cl, vo = df["high"].values, df["close"].values, df["volume"].values
         out["n_reg"] = int(reg.sum()); out["n_pre"] = int(pre.sum()); out["n_post"] = int(post.sum())
+        out["dv_all"] = float(np.nansum(cl * vo))
         if reg.any():
             hr = hi[reg.values].max()
             out["dv_reg"] = float((cl[reg.values] * vo[reg.values]).sum())
@@ -211,6 +218,7 @@ class S4ModesC:
         errs = {}
         for name, idx, off in samples:
             rec = []
+            hist = np.zeros(24, dtype=np.int64)
             for i in idx:
                 if _time.time() - t_start > 40 * 60:
                     break
@@ -223,6 +231,10 @@ class S4ModesC:
                     tb, qb = self._minute(sym, self.D[j])
                     st = self._mstats(tb, qb)
                     st["px"] = self.PX[j]
+                    st["dvratio"] = st.get("dv_reg", np.nan) / max(self.DV[j], 1e-9)
+                    st["dvratio_all"] = st.get("dv_all", np.nan) / max(self.DV[j], 1e-9)
+                    if "hours" in st:
+                        hist = hist + st["hours"]
                     rec.append(st)
                 except Exception as e:
                     kname = type(e).__name__
@@ -234,6 +246,8 @@ class S4ModesC:
                              f" | $vol reg {q(g('dv_reg') / 1e3, (25, 50, 75))}k first30 {q(g('dv_30') / 1e3, (25, 50, 75))}k")[:198])
             S(f"X2 {name}", (f"spread med (quote minutes) p25/50/75 {q(100 * g('spr'), (25, 50, 75))}% first30 {q(100 * g('spr30'), (25, 50, 75))}% | share min spread>5% med {np.nanmedian(g('spr5')) * 100 if has_q.any() else np.nan:.0f}%"
                              f" | high outside reg hours {np.nanmean(g('ext_high')) * 100:.0f}% | minutes >=95% of high med {np.nanmedian(g('near_hi')):.0f} | vol share at >=90% of high med {100 * np.nanmedian(g('vol_at_hi')):.0f}%")[:198])
+            self.lg(f"X5 {name}: tz-aware share {np.nanmean(g('tz')):.2f} | minute-bar count by hour of day (NY if tz-aware): " + " ".join(f"{h}:{int(c)}" for h, c in enumerate(hist) if c))
+            self.lg(f"X6 {name}: minute regular-session $vol / daily-bar $vol of the same day p25/50/75 {q(g('dvratio'), (25, 50, 75))} | all minutes / daily {q(g('dvratio_all'), (25, 50, 75))}")
             pxs = g("px")
             for lo_, hi_, lab in ((0, 1, "<$1"), (1, 5, "$1-5"), (5, 1e9, ">=$5")):
                 m = (pxs >= lo_) & (pxs < hi_)
