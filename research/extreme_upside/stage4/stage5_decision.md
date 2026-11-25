@@ -50,9 +50,19 @@ was seen. The amendments made afterwards changed no criterion. The numbers below
    30 minutes about 1.7 %). Minute quote coverage is about 88 % of sampled items. A cost model for a later
    simulation is therefore feasible.
 
+## Exploratory lead (S4XSEG; cannot change the decision)
+- **Result inside the liquid segments S0 / S1 / S2:** the RF pre-event contrast against the same-security placebo
+  is much stronger than in the full universe:
+  - S1, E1 top 5 %: 63.7 vs 42.9 %, ratio 1.49;
+  - top 1 %: 32.6 vs 15.0 %, ratio 2.17;
+  - S2, E3: ratio 2.06 at top 5 % and 2.57 at top 1 %.
+- **Confounder:** segment membership depends on rising dollar volume before events. Until it is removed with a
+  membership-matched placebo, this is a lead, not evidence.
+
 ## What "further research" should address before any Stage 5 (recommendations, not results)
 1. **A timing target, not a state target.** For example, the probability of a move in the next 1–3 sessions,
-   conditional on already being in the high-volatility state. Evaluated against the within-security placebo.
+   conditional on already being in the high-volatility state. Evaluated against a within-security placebo,
+   **membership-matched** inside liquid segments (S4XSEG lead).
 2. **A target that reflects what can be captured.** For example, a close-based or VWAP-based excursion with an
    explicit stop or adverse-move constraint, because Family A is dominated by unheld intraday highs and the
    selected names drift down.
