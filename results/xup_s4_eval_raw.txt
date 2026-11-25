@@ -75,3 +75,80 @@ DEDUP VOL k10 CW: sig 3276 cap 11.4% pre 6.6% prec 5.3% false 3101 removed/cap 1
 DEDUP VOL k10 CE: sig 18395 cap 65.2% pre 57.3% prec 5.4% false 17399 removed/cap 139.5 lead1-40 p25/50/75 30/33/37 | 21-25 3808/3777/3689/3568/3553
 CHECK rows 6028644 (S3 6022604) primary events 24426 (S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
 Algorithm Id:(4aef7c55d2bb6ce82d102a2b7425e5e2) completed in 1564.59 seconds at 54k data points per second. Processing total of 84,115,119 data points.
+### xup s4 S4EVAL v2 | project 38061541 backtest 2b7c21dccaf997c874d35704c5f712f9 | VALID
+P0 panel = mode S4EVAL | sample securities 2986 with data 2947 | rows 6028644 | build 12 min
+S4 CHECK = OK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+V E1 GBM k1 = ev 1539 cap 40.2% pre 31.2% in-only 9.0% none 59.8% | sig 16789 assoc 17.1% uniq-ev/sig 0.036 false/cap 22.5 rep/cap 3.7 repeat-share 13.5% secs>=2sig-noev 209
+V E1 GBM k10 = ev 1539 cap 81.6% pre 75.6% in-only 6.0% none 18.4% | sig 161756 assoc 9.3% uniq-ev/sig 0.008 false/cap 116.8 rep/cap 10.9 repeat-share 8.5% secs>=2sig-noev 438
+V E1 GBM k5 = ev 1539 cap 67.6% pre 59.1% in-only 8.4% none 32.4% | sig 81210 assoc 12.2% uniq-ev/sig 0.013 false/cap 68.6 rep/cap 8.5 repeat-share 10.9% secs>=2sig-noev 323
+V E1 LR k1 = ev 1539 cap 30.8% pre 25.0% in-only 5.8% none 69.2% | sig 16789 assoc 16.5% uniq-ev/sig 0.028 false/cap 29.6 rep/cap 4.9 repeat-share 13.8% secs>=2sig-noev 141
+V E1 LR k10 = ev 1539 cap 78.6% pre 73.2% in-only 5.4% none 21.4% | sig 161756 assoc 9.3% uniq-ev/sig 0.008 false/cap 121.2 rep/cap 11.4 repeat-share 8.6% secs>=2sig-noev 238
+V E1 LR k5 = ev 1539 cap 61.7% pre 55.0% in-only 6.8% none 38.3% | sig 81210 assoc 12.4% uniq-ev/sig 0.012 false/cap 74.9 rep/cap 9.6 repeat-share 11.2% secs>=2sig-noev 192
+V E1 MOM k1 = ev 1539 cap 30.0% pre 22.7% in-only 7.2% none 70.0% | sig 16789 assoc 14.3% uniq-ev/sig 0.027 false/cap 31.2 rep/cap 4.2 repeat-share 11.6% secs>=2sig-noev 260
+V E1 MOM k10 = ev 1539 cap 76.0% pre 69.1% in-only 6.9% none 24.0% | sig 161756 assoc 8.3% uniq-ev/sig 0.007 false/cap 126.8 rep/cap 10.4 repeat-share 7.5% secs>=2sig-noev 502
+V E1 MOM k5 = ev 1539 cap 58.4% pre 51.1% in-only 7.3% none 41.6% | sig 81210 assoc 10.6% uniq-ev/sig 0.011 false/cap 80.7 rep/cap 8.6 repeat-share 9.5% secs>=2sig-noev 390
+V E1 PRICE k1 = ev 1539 cap 15.5% pre 13.6% in-only 1.9% none 84.5% | sig 16789 assoc 14.1% uniq-ev/sig 0.014 false/cap 60.6 rep/cap 9.0 repeat-share 12.8% secs>=2sig-noev 75
+V E1 PRICE k10 = ev 1539 cap 58.2% pre 56.0% in-only 2.2% none 41.8% | sig 161756 assoc 7.5% uniq-ev/sig 0.005 false/cap 166.9 rep/cap 12.6 repeat-share 7.0% secs>=2sig-noev 185
+V E1 PRICE k5 = ev 1539 cap 41.8% pre 39.4% in-only 2.4% none 58.2% | sig 81210 assoc 10.3% uniq-ev/sig 0.008 false/cap 113.3 rep/cap 12.0 repeat-share 9.5% secs>=2sig-noev 134
+V E1 RF k1 = ev 1539 cap 28.8% pre 22.2% in-only 6.7% none 71.2% | sig 16789 assoc 17.2% uniq-ev/sig 0.026 false/cap 31.3 rep/cap 5.5 repeat-share 14.6% secs>=2sig-noev 168
+V E1 RF k10 = ev 1539 cap 79.5% pre 73.6% in-only 6.0% none 20.5% | sig 161756 assoc 9.4% uniq-ev/sig 0.008 false/cap 119.7 rep/cap 11.4 repeat-share 8.6% secs>=2sig-noev 354
+V E1 RF k5 = ev 1539 cap 62.8% pre 55.4% in-only 7.4% none 37.2% | sig 81210 assoc 12.5% uniq-ev/sig 0.012 false/cap 73.5 rep/cap 9.5 repeat-share 11.3% secs>=2sig-noev 268
+V E1 VOL k1 = ev 1539 cap 22.0% pre 18.9% in-only 3.1% none 78.0% | sig 16789 assoc 16.5% uniq-ev/sig 0.019 false/cap 41.3 rep/cap 7.2 repeat-share 14.6% secs>=2sig-noev 108
+V E1 VOL k10 = ev 1539 cap 66.8% pre 62.4% in-only 4.4% none 33.2% | sig 161756 assoc 7.6% uniq-ev/sig 0.006 false/cap 145.4 rep/cap 11.0 repeat-share 7.0% secs>=2sig-noev 280
+V E1 VOL k5 = ev 1539 cap 50.8% pre 45.8% in-only 5.0% none 49.2% | sig 81210 assoc 10.3% uniq-ev/sig 0.009 false/cap 93.2 rep/cap 9.7 repeat-share 9.3% secs>=2sig-noev 163
+V E2 RF k1 = ev 1342 cap 27.9% pre 19.8% in-only 8.0% none 72.1% | sig 16789 assoc 17.2% uniq-ev/sig 0.022 false/cap 37.2 rep/cap 6.7 repeat-share 14.9% secs>=2sig-noev 168
+V E2 RF k10 = ev 1342 cap 77.6% pre 70.1% in-only 7.5% none 22.4% | sig 161756 assoc 9.4% uniq-ev/sig 0.007 false/cap 140.6 rep/cap 13.6 repeat-share 8.7% secs>=2sig-noev 354
+V E2 RF k5 = ev 1342 cap 60.9% pre 51.5% in-only 9.4% none 39.1% | sig 81210 assoc 12.5% uniq-ev/sig 0.010 false/cap 86.9 rep/cap 11.4 repeat-share 11.5% secs>=2sig-noev 268
+V E2 VOL k1 = ev 1342 cap 21.8% pre 18.4% in-only 3.4% none 78.2% | sig 16789 assoc 16.5% uniq-ev/sig 0.018 false/cap 47.8 rep/cap 8.5 repeat-share 14.8% secs>=2sig-noev 108
+V E2 VOL k10 = ev 1342 cap 66.6% pre 61.4% in-only 5.2% none 33.4% | sig 161756 assoc 7.6% uniq-ev/sig 0.006 false/cap 167.2 rep/cap 12.7 repeat-share 7.0% secs>=2sig-noev 280
+V E2 VOL k5 = ev 1342 cap 50.4% pre 44.6% in-only 5.7% none 49.6% | sig 81210 assoc 10.3% uniq-ev/sig 0.008 false/cap 107.8 rep/cap 11.3 repeat-share 9.4% secs>=2sig-noev 163
+V E3 RF k1 = ev 1387 cap 35.1% pre 24.2% in-only 11.0% none 64.9% | sig 16789 assoc 17.7% uniq-ev/sig 0.029 false/cap 28.4 rep/cap 5.1 repeat-share 14.7% secs>=2sig-noev 118
+V E3 RF k10 = ev 1387 cap 95.5% pre 81.5% in-only 14.0% none 4.5% | sig 161756 assoc 9.2% uniq-ev/sig 0.008 false/cap 110.9 rep/cap 10.2 repeat-share 8.4% secs>=2sig-noev 267
+V E3 RF k5 = ev 1387 cap 76.4% pre 60.2% in-only 16.2% none 23.6% | sig 81210 assoc 12.2% uniq-ev/sig 0.013 false/cap 67.2 rep/cap 8.4 repeat-share 10.9% secs>=2sig-noev 196
+V E3 VOL k1 = ev 1387 cap 21.5% pre 20.9% in-only 0.6% none 78.5% | sig 16789 assoc 11.7% uniq-ev/sig 0.018 false/cap 49.7 rep/cap 5.6 repeat-share 10.0% secs>=2sig-noev 100
+V E3 VOL k10 = ev 1387 cap 65.6% pre 64.3% in-only 1.3% none 34.4% | sig 161756 assoc 5.5% uniq-ev/sig 0.006 false/cap 168.0 rep/cap 8.7 repeat-share 4.9% secs>=2sig-noev 275
+V E3 VOL k5 = ev 1387 cap 49.6% pre 48.7% in-only 0.9% none 50.4% | sig 81210 assoc 7.2% uniq-ev/sig 0.009 false/cap 109.6 rep/cap 7.5 repeat-share 6.3% secs>=2sig-noev 160
+err None
+--- LOG ---
+RANK E1 RF k5: pre-score med 0.961 placebo med 0.949 | pre>placebo 56.3% (n 1462) | event-vs-placebo AUC 0.546
+RANK E1 VOL k5: pre-score med 0.940 placebo med 0.937 | pre>placebo 60.3% (n 1462) | event-vs-placebo AUC 0.512
+RANK E1 PRICE k5: pre-score med 0.921 placebo med 0.921 | pre>placebo 64.0% (n 1462) | event-vs-placebo AUC 0.508
+RANK E1 MOM k5: pre-score med 0.953 placebo med 0.946 | pre>placebo 53.5% (n 1462) | event-vs-placebo AUC 0.533
+RANK E1 LR k5: pre-score med 0.961 placebo med 0.953 | pre>placebo 54.7% (n 1462) | event-vs-placebo AUC 0.528
+RANK E1 GBM k5: pre-score med 0.970 placebo med 0.962 | pre>placebo 57.6% (n 1462) | event-vs-placebo AUC 0.547
+RANK E2 RF k5: pre-score med 0.954 placebo med 0.946 | pre>placebo 53.5% (n 1273) | event-vs-placebo AUC 0.531
+RANK E2 VOL k5: pre-score med 0.938 placebo med 0.933 | pre>placebo 60.4% (n 1273) | event-vs-placebo AUC 0.512
+RANK E3 RF k5: pre-score med 0.966 placebo med 0.946 | pre>placebo 65.1% (n 1329) | event-vs-placebo AUC 0.586
+RANK E3 VOL k5: pre-score med 0.947 placebo med 0.937 | pre>placebo 63.3% (n 1329) | event-vs-placebo AUC 0.526
+DEDUP RF k1 N0: sig 16789 cap 28.8% pre 22.2% prec 17.2% false 13908 removed/cap 0.0 lead1-40 p25/50/75 14/27/39 | 21-25 3305/3514/3444/3276/3250
+DEDUP RF k1 C10: sig 2641 cap 26.6% pre 17.8% prec 16.6% false 2203 removed/cap 31.9 lead1-40 p25/50/75 13/25/34 | 21-25 513/543/562/510/513
+DEDUP RF k1 C20: sig 1786 cap 21.5% pre 12.3% prec 17.0% false 1483 removed/cap 33.8 lead1-40 p25/50/75 13/23/30 | 21-25 340/369/381/351/345
+DEDUP RF k1 CW: sig 1316 cap 15.9% pre 8.6% prec 16.7% false 1096 removed/cap 34.8 lead1-40 p25/50/75 10/20/28.8 | 21-25 235/265/287/262/267
+DEDUP RF k1 CE: sig 2763 cap 28.4% pre 20.5% prec 15.5% false 2335 removed/cap 31.6 lead1-40 p25/50/75 13/25/34 | 21-25 531/558/592/546/536
+DEDUP RF k5 N0: sig 81210 cap 62.8% pre 55.4% prec 12.5% false 71037 removed/cap 0.0 lead1-40 p25/50/75 29/40/40 | 21-25 15999/17296/16629/15841/15445
+DEDUP RF k5 C10: sig 9998 cap 60.3% pre 47.4% prec 11.7% false 8830 removed/cap 73.6 lead1-40 p25/50/75 26/32/36 | 21-25 2146/2066/1988/1887/1911
+DEDUP RF k5 C20: sig 6049 cap 47.6% pre 26.8% prec 11.2% false 5371 removed/cap 77.7 lead1-40 p25/50/75 20/27/33 | 21-25 1322/1241/1195/1134/1157
+DEDUP RF k5 CW: sig 2874 cap 17.1% pre 8.5% prec 8.5% false 2630 removed/cap 81.0 lead1-40 p25/50/75 11/20/31 | 21-25 712/541/536/513/572
+DEDUP RF k5 CE: sig 10122 cap 62.5% pre 51.1% prec 9.4% false 9166 removed/cap 73.5 lead1-40 p25/50/75 25/32/36 | 21-25 2163/2082/2009/1921/1947
+DEDUP RF k10 N0: sig 161756 cap 79.5% pre 73.6% prec 9.4% false 146545 removed/cap 0.0 lead1-40 p25/50/75 37/40/40 | 21-25 31864/34468/33140/31551/30733
+DEDUP RF k10 C10: sig 18461 cap 77.8% pre 65.4% prec 8.6% false 16879 removed/cap 117.1 lead1-40 p25/50/75 30/34/37 | 21-25 3890/3869/3673/3516/3513
+DEDUP RF k10 C20: sig 10799 cap 61.7% pre 36.8% prec 8.3% false 9902 removed/cap 123.3 lead1-40 p25/50/75 23/28/34 | 21-25 2339/2230/2111/2072/2047
+DEDUP RF k10 CW: sig 3914 cap 15.2% pre 8.8% prec 5.7% false 3690 removed/cap 129.0 lead1-40 p25/50/75 10/22/31 | 21-25 968/727/693/755/771
+DEDUP RF k10 CE: sig 18523 cap 79.5% pre 68.4% prec 6.6% false 17300 removed/cap 117.0 lead1-40 p25/50/75 30/33/37 | 21-25 3902/3872/3681/3533/3535
+DEDUP VOL k1 N0: sig 16789 cap 22.0% pre 18.9% prec 16.5% false 14012 removed/cap 0.0 lead1-40 p25/50/75 21/35/40 | 21-25 3305/3514/3444/3276/3250
+DEDUP VOL k1 C10: sig 2496 cap 21.2% pre 16.7% prec 15.2% false 2117 removed/cap 42.2 lead1-40 p25/50/75 18/31/35 | 21-25 446/536/535/490/489
+DEDUP VOL k1 C20: sig 1616 cap 16.2% pre 10.5% prec 14.5% false 1382 removed/cap 44.8 lead1-40 p25/50/75 17/25/32 | 21-25 279/347/344/316/330
+DEDUP VOL k1 CW: sig 908 cap 8.8% pre 5.4% prec 14.1% false 780 removed/cap 46.8 lead1-40 p25/50/75 11/21/31 | 21-25 131/200/220/170/187
+DEDUP VOL k1 CE: sig 2529 cap 21.1% pre 17.3% prec 12.7% false 2209 removed/cap 42.1 lead1-40 p25/50/75 18/30/35 | 21-25 444/543/546/501/495
+DEDUP VOL k5 N0: sig 81210 cap 50.8% pre 45.8% prec 10.3% false 72881 removed/cap 0.0 lead1-40 p25/50/75 30/40/40 | 21-25 15999/17296/16629/15841/15445
+DEDUP VOL k5 C10: sig 9960 cap 49.1% pre 39.8% prec 9.6% false 9005 removed/cap 91.1 lead1-40 p25/50/75 27/33/37 | 21-25 1923/2024/2032/1956/2025
+DEDUP VOL k5 C20: sig 6009 cap 39.0% pre 23.1% prec 9.4% false 5443 removed/cap 96.2 lead1-40 p25/50/75 22/28/34 | 21-25 1153/1195/1210/1185/1266
+DEDUP VOL k5 CW: sig 2362 cap 12.5% pre 7.1% prec 7.8% false 2178 removed/cap 100.8 lead1-40 p25/50/75 13/23/31.5 | 21-25 420/413/460/487/582
+DEDUP VOL k5 CE: sig 9971 cap 49.1% pre 41.9% prec 7.4% false 9229 removed/cap 91.1 lead1-40 p25/50/75 26/32.5/37 | 21-25 1919/2027/2047/1953/2025
+DEDUP VOL k10 N0: sig 161756 cap 66.8% pre 62.4% prec 7.6% false 149459 removed/cap 0.0 lead1-40 p25/50/75 37/40/40 | 21-25 31864/34468/33140/31551/30733
+DEDUP VOL k10 C10: sig 18387 cap 65.2% pre 53.3% prec 7.1% false 17086 removed/cap 139.5 lead1-40 p25/50/75 30/33/37 | 21-25 3824/3762/3681/3571/3549
+DEDUP VOL k10 C20: sig 10700 cap 51.5% pre 30.7% prec 7.1% false 9937 removed/cap 146.9 lead1-40 p25/50/75 22/28/34 | 21-25 2279/2171/2125/2071/2054
+DEDUP VOL k10 CW: sig 3276 cap 11.4% pre 6.6% prec 5.3% false 3101 removed/cap 154.2 lead1-40 p25/50/75 12/23/31 | 21-25 827/570/607/617/655
+DEDUP VOL k10 CE: sig 18395 cap 65.2% pre 57.3% prec 5.4% false 17399 removed/cap 139.5 lead1-40 p25/50/75 30/33/37 | 21-25 3808/3777/3689/3568/3553
+CHECK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(2b7c21dccaf997c874d35704c5f712f9) completed in 1471.15 seconds at 57k data points per second. Processing total of 84,115,119 data points.
