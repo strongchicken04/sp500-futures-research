@@ -152,3 +152,7 @@ Model implementation, fixed here before the first MODEL run (smoke runs included
 - **Univariate replication:** the 18 univariate variables are replicated on 2021–2025 with identical code
   (`_univ_rep`), with no selection.
 - No retuning after TEST. 2026 YTD is reported separately and never used for selection.
+- Addendum to Amendment 2, after the smoke run (1/10 of the sample, development and validation only): "top k %
+  within each day" means the ceil(k × n_day) highest-scored rows of each day. Ranking by a percentile ≤ k
+  selected no rows on days with fewer than 100 securities. Calibration deciles are now rank-based, because
+  tied scores left quantile bins empty. Neither change touches models or hyperparameters.

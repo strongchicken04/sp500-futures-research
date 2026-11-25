@@ -150,7 +150,7 @@ class ModesM:
         from sklearn.metrics import roc_auc_score
         n, pos = len(y), int(y.sum())
         base = pos / max(n, 1)
-        pr = pd.DataFrame({"s": s, "d": d}).groupby("d")["s"].rank(pct=True, ascending=False, method="first").values
+        pr = self._dayrank(s, d)
         o = np.argsort(-s, kind="mergesort")
         ys = y[o].astype(np.float64)
 
@@ -179,9 +179,16 @@ class ModesM:
         out["p1_ci"] = (np.percentile(bp1, 2.5), np.percentile(bp1, 97.5))
         return out
 
+    def _dayrank(self, s, d):
+        """within-day rank r (1 = highest score, ties by row order) scaled so that 'top k' = r <= ceil(k * n_day):
+        returns (r - 1) / n_day + tiny, so pr <= k selects exactly ceil(k * n_day) rows per day (at least 1)"""
+        df = pd.DataFrame({"s": s, "d": d})
+        r = df.groupby("d")["s"].rank(ascending=False, method="first").values
+        n = df.groupby("d")["s"].transform("size").values
+        return (r - 1) / n + 1e-12
+
     def _calib(self, s, y):
-        q = np.quantile(s, np.linspace(0, 1, 11))
-        b = np.clip(np.searchsorted(q, s, side="right") - 1, 0, 9)
+        b = np.minimum((pd.Series(s).rank(method="first").values - 1) * 10 // len(s), 9).astype(int)
         return " ".join(f"{np.mean(s[b == k]) * 100:.2f}/{np.mean(y[b == k]) * 100:.2f}" for k in range(10))
 
     def _run_specs(self, names, test=False):
@@ -280,7 +287,7 @@ class ModesM:
         if "fullA GBM" not in res:
             return
         mt, se, evm = res["fullA GBM"]
-        pr = pd.DataFrame({"s": se, "d": self.D[evm]}).groupby("d")["s"].rank(pct=True, ascending=False, method="first").values
+        pr = self._dayrank(se, self.D[evm])
         sel = np.nonzero(evm)[0][pr <= 0.01]
         F = self.F
         px = np.exp(F[sel, FI["lpx"]]); dv = np.expm1(F[sel, FI["ldv"]])
