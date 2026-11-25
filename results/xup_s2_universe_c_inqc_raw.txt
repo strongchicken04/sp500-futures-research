@@ -1,0 +1,17 @@
+### xup s2 universe_c v1
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+N1 no-fund <=4 letters +100%/10d = securities with >=1 episode 2084, episodes 4951
+N1 sample 0 = GORX09 CAN20 IMP08 TFN06 MSOX23 YMI08 RHIE09 CMRG09 SGIC08 CSAR08 ONI06 MKS08 CALA14 NIHD17 HUIZ21 CEM20 SEAC21 FAAS24 TIS18 PWM24 TBT08 CLZR09 EPE16 CNVR08 CONL23 HNAB09 HMNA09 OSN13 IVVI08
+N1 sample 1 =  OKLL25 BLUS08 IMNP16 MOLG14 YGYI18 XBP23 CXDC21 RMCF26 QBTZ25 DIET09 ROSG09 MNEL12 LK20 MEMY08 DUST13 DOR06 ACY08 USU13 AMPL09
+N1 top by episodes = ZVV:84 FREE:19 HMNA:18 CBO:18 RAMS:16 SPEX:15 ZBZX:15 MTSL:13 DPW:12 DELT:12 WINS:12 HOTR:12 PHUN:12 FFIE:12 EONC:11 PDO:11 IBO:11 MFH:11 SCON:10 ACY:10
+Net Profit = $0.00
+P1 2010-06-02 US non-primary = n 336 with primary sibling 18 (BELFA BFA BRKB RDIB CENTA) | no sibling 318 (ABTL AXK ACM ACOR ACXM ADS) | core companies with >1 class 0 of 2977
+P1 2018-06-01 US non-primary = n 426 with primary sibling 26 (BATRK BF.A BH.A BRK.B RDIB) | no sibling 400 (RFP AUTO AXDX ACM ACOR ACXM) | core companies with >1 class 0 of 3402
+P1 2024-06-04 US non-primary = n 283 with primary sibling 34 (BATRK BELFA BF.A BH.A BIO.B) | no sibling 249 (ORGN ACA ACI AXDX ACM RAMP) | core companies with >1 class 0 of 4234
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+Unrealized = $0.00
+Volume = $0.00
+err None

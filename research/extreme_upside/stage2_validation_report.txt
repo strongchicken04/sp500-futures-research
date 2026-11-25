@@ -92,7 +92,13 @@ Filter by filter:
 is_primary_share = False is set for genuine secondary classes (BRK.B, GOOG), but also for many ordinary
 single-class US stocks: ACM (AECOM), ACI (Albertsons), ACXM, ADS, ACOR, AXDX, ORGN, RAMP.
 V1c checks whether a non-primary US security has a primary share class of the same company on the same day:
-  [PENDING V1c - filled in below when the run finishes]
+    2010-06: 336 non-primary US securities; 18 have a primary sibling (BELFA, BFA, BRKB, RDIB, CENTA) and 318 have
+             none (94%: ABTL, AXK, ACM, ACOR, ACXM, ADS)
+    2018-06: 426; 26 with a sibling (BATRK, BF.A, BH.A, BRK.B, RDIB); 400 without (94%)
+    2024-06: 283; 34 with a sibling (BATRK, BELFA, BF.A, BH.A, BIO.B); 249 without (88%)
+    Core companies with more than one class left after the primary filter: 0 on all three dates.
+  -> About 9 of 10 non-primary US flags are wrong. The filter drops 250-400 ordinary US stocks a day, with
+     about 485 episodes of +100%/10d.
 Treatment for Stage 3 (decided here, before any predictive test):
   keep a fundamental common security when is_primary_share = True, OR when company country = USA and no other
   share class of the same company_id is primary that day; where a company still has several classes, keep the
@@ -121,17 +127,37 @@ Treatment for Stage 3 (decided here, before any predictive test):
 * Requiring fundamentals removes as many extreme events as it keeps. Warrants, units and rights (correctly
   excluded: they are not equity) explain about 40% of that loss. The <= 4-letter group carries 4,944 episodes
   of +100%/10d, versus 6,195 in the core. How many of these are common stocks:
-  [PENDING V1c manual classification of 48 hash-drawn tickers]
+  - Episodes: 4,951 on 2,084 securities. 48 securities with at least one episode were drawn by a fixed hash and
+    classified by hand from the ticker and event year (my classification from general knowledge, not from
+    QC data):
+      common stocks (26): IMP08 YMI08 RHIE09 CMRG09 SGIC08 CSAR08 CALA14 NIHD17 SEAC21 FAAS24 TIS18 PWM24 CLZR09
+                          EPE16 CNVR08 HMNA09 IMNP16 YGYI18 XBP23 CXDC21 RMCF26 DIET09 ROSG09 MEMY08 ACY08 USU13
+      ADRs (5):           CAN20 HUIZ21 OSN13 MOLG14 LK20
+      ETFs / ETNs / CEFs (7): MSOX23 CEM20 TBT08 CONL23 OKLL25 QBTZ25 DUST13
+      not identified (10): GORX09 TFN06 ONI06 MKS08 HNAB09 IVVI08 BLUS08 MNEL12 DOR06 AMPL09
+    Of the 38 identified: about 2/3 are common stocks, 13% ADRs, 18% funds. Roughly 3,000-3,500 stock
+    episodes of +100%/10d are therefore missing from B, which has 6,195.
+  - The securities with the most episodes include exchange TEST SYMBOLS: ZVV (84 episodes), ZBZX (15),
+    CBO (18). These are data artefacts and must be removed by a fixed exclusion list (ZVZZT, ZWZZT, ZXZZT,
+    ZVV, ZBZX, ZJZZT, CBO, CBX, NTEST-type). The rest of the top list is small stocks (FREE, HMNA, RAMS, SPEX,
+    MTSL, DPW, DELT, WINS, HOTR, PHUN, FFIE, EONC, IBO, MFH, SCON).
+  -> REQUIRING FUNDAMENTALS IS A MATERIAL SELECTION BIAS for an extreme-upside study. B loses about a third of
+     exchange-listed common-stock events, mostly small, obscure and legacy-ticker names.
 * Over time, core +100%/10d episodes by block: 2006-09 757, 2010-14 358, 2015-19 694, 2020-22 1,408,
   2023-26 2,982. The event base is concentrated in 2020-2026.
 
 1.5 Universes and what each can answer
 A  broad price/volume: every traded security (6.7k-11.1k a day). Contains ETFs and ETNs, which cannot be
-   separated from stocks without fundamentals, plus warrants, units and rights. Not usable as is. A-stock (A minus
-   the W/U/R/Y/F ticker groups) is the survivorship-complete robustness universe for price/volume hypotheses, with
-   ETF contamination stated.
-B  fundamental core (corrected as in 1.3): 2.8k (2006) - 4.2k (2026). Main universe for market cap, price,
-   liquidity, volatility, gaps and momentum hypotheses, 2006-2026.
+   separated from stocks without fundamentals, plus warrants, units, rights and test symbols. Not usable as is.
+   A-stock = A minus W/U/R/'.' tickers, minus 5-letter Y/F, minus test symbols, minus a POINT-IN-TIME ETF/ETN
+   list. That list does not exist in QC and would have to be IMPORTED into QC (import, not export; e.g. built
+   from SEC fund filings / exchange listing files). With it, A-stock is the survivorship-complete universe for
+   price, volume, gap, momentum and volatility hypotheses. It would hold the ~1/3 of stock events that B misses.
+   Without the list, A-stock can only be a robustness check with ~18% fund contamination among no-fundamental
+   names (V1c sample).
+B  fundamental core (corrected as in 1.3, test symbols removed): 2.8k (2006) - 4.2k (2026) plus 250-400 restored
+   US stocks. Main universe for every hypothesis that needs market cap or shares (2006-2026). It must always be
+   reported with its selection bias: it misses about a third of stock events (1.4).
 C  B with float: 2011-2026 only (no float before 2010, 23% in Jan 2010). Float hypotheses are PARTIAL and use
    an uncertain variable (section 4).
 D  B with short interest: 2018-01 - 2026-08 only, 99% of B. Short-interest hypotheses are PARTIAL
@@ -371,8 +397,11 @@ exchange-listed common stocks with Morningstar coverage.
 * Data end 2026-08-27 in this environment.
 * has_fundamental_data looks static per security. The coverage onboarding lag cannot be measured, and coverage
   may be assigned retroactively.
-* Stocks without fundamentals (legacy lines of renamed companies) cannot be classified inside QC without
-  fundamentals. ETFs and ETNs have no flag. Universe A is therefore contaminated.
+* Stocks without fundamentals (legacy lines of renamed companies, small foreign ordinaries, uncovered small
+  caps): about 2/3 of the no-fundamental <= 4-letter event names. They cannot be separated from ETFs and ETNs
+  inside QC (no fund flag), and the manual 48-ticker classification is mine. Without an imported PIT ETF list,
+  Universe A stays contaminated and B stays biased.
+* Exchange test symbols (ZVV, ZBZX, CBO ...) are in the QC universe and must be excluded explicitly.
 * is_primary_share is unreliable for US single-class stocks. The corrected rule (1.3) is a heuristic.
 * Morningstar migrated feeds on 2026-09-23 and restated history (QC documentation). The point-in-time checks
   (file_date never in the future, DS on split ex-dates) passed on the current data, but the restatement itself
@@ -390,7 +419,8 @@ exchange-listed common stocks with Morningstar coverage.
 9. DATASET ARCHITECTURE FOR STAGE 3 (all built and evaluated inside QC; only aggregates leave)
 ---------------------------------------------------------------------------------------------
 Table 1  security_day (PIT, from the Fundamental universe at t)
-         sid, ticker, segment_id (gap > 10 sessions -> new segment), has_fund, security_type, cef_flag,
+         sid, ticker, segment_id (gap > 10 sessions -> new segment), test_symbol flag, etf_flag (imported PIT
+         list, if approved), has_fund, security_type, cef_flag,
          is_primary_share, company_id, company_country, exchange_id, spac_flag (name/price heuristic, code
          10350010), universe flags A / A-stock / B (rule 1.3) / C / D, raw close, raw volume, dollar volume.
          EXCLUDED as predictors: delisting_date, delisting_reason, share_class_status.
