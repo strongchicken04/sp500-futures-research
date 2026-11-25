@@ -68,6 +68,15 @@ def main():
     else:
         print("[file update] ok")
 
+    # 2b. optional extra project files (e.g. imported data modules): env QC_EXTRA_FILES = comma-separated paths
+    for xf in [x for x in os.environ.get("QC_EXTRA_FILES", "").split(",") if x.strip()]:
+        xn = os.path.basename(xf.strip())
+        xc = pathlib.Path(xf.strip()).read_text()
+        xu = call("files/update", {"projectId": pid, "name": xn, "content": xc})
+        if not xu.get("success"):
+            xu = call("files/create", {"projectId": pid, "name": xn, "content": xc})
+        print("[extra file]", xn, xu.get("success"), str(xu.get("errors", ""))[:120])
+
     # 3. compile
     comp = call("compile/create", {"projectId": pid})
     cid = comp.get("compileId")
