@@ -212,3 +212,17 @@ universes or results.
      both S4DIAG runs. The S4EVAL v1-orphan output, on the revised data, was seen before this amendment. The
      amendment changes no analysis definition, threshold or criterion; it only fixes the data base and the
      check constants.
+
+### Amendment 2 (2026-11-25, ~21:00 UTC, after S4LEAD and S4FILT results) — one added EXPLORATORY analysis
+- **Added mode:** S4XSEG computes the C4 quantity (pre-onset 1–10 vs placebo 31–40, paired bootstrap by
+  security) inside the pre-declared segments S0, S1 and S2.
+  - Models are re-ranked inside each segment: RF and volume LR.
+  - Events: E1 and E3 test events with onset in the segment.
+  - Reported with and without C10 deduplication.
+- **Why:** C4/C5 failed on the whole universe, where chronically flagged sub-$1 stocks dominate, while C6
+  passed inside S0–S2.
+- **Status:** this analysis is exploratory. It cannot change the pre-registered Stage 5 decision mapping (§9).
+  It only informs what "further research" would focus on.
+- **Other change:** S4EXEC v2 re-runs the execution audit with diagnostics (time-zone detection, an hour-of-day
+  histogram, and minute vs daily dollar volume). The v1 dollar-volume and outside-hours figures looked
+  inconsistent. No other definition changes.

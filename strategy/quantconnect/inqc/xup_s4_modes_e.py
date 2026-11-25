@@ -212,3 +212,40 @@ class S4ModesE:
         bd = np.array([self._ap_sorted(yv[oa], Wd[b][di][oa]) - self._ap_sorted(yv[ob], Wd[b][di][ob]) for b in range(1000)])
         S("Q5 calendar control", f"days with >=1 positive {len(aps)} | mean daily AP RF {aps[:, 0].mean():.4f} VOL {aps[:, 1].mean():.4f} RF>VOL on {100 * (aps[:, 0] > aps[:, 1]).mean():.1f}% of days | pooled dAP {d0:+.4f} date-bootstrap {self._ci(bd)} p {self._pval(bd):.4f}")
         self.lg("CHECK " + self.s4_check)
+
+    def mode_s4xseg(self):
+        """EXPLORATORY (not confirmatory): pre-onset (1-10) vs placebo (31-40) inside the pre-declared tradable
+        segments S0 / S1 / S2, RF and volume LR re-ranked inside the segment; E1 and E3 test events with onset in the
+        segment; also with C10 deduplication; paired event bootstrap by security (2,000)"""
+        S = self.set_runtime_statistic
+        self._s4_finish()
+        sc = self._s4_score(["fullA RF", "volume LR"], True)
+        scoredA = self.U["A"] & (self.D >= SCORE_START)
+        nsec = int(self.SID.max()) + 1
+        W = self._boot_W(2000, 505, nsec)
+        evs = {r: self._s4_events(PRIMARY, r) for r in ("E1", "E3")}
+        for seg, p, d in (("S0", 1, 1e5), ("S1", 1, 5e5), ("S2", 5, 1e6)):
+            fm = (self.PX >= p) & (self.DV >= d)
+            for nm in ("fullA RF", "volume LR"):
+                fl, pr = self._s4_flags(sc[nm], scoredA & fm)
+                for r in ("E1", "E3"):
+                    ev = evs[r]
+                    tsel = (ev["date"] >= T0) & (ev["date"] <= T1) & fm[ev["start"]]
+                    aid, ain = self._s4_assoc(ev)
+                    parts = []
+                    for k in (0.01, 0.05):
+                        for rule in ("N0", "C10"):
+                            f = fl[k] if rule == "N0" else self._s4_dedup(fl[k], "C10", aid, scoredA & fm)
+                            c = self._s4_capture(ev, tsel, f)
+                            use = c["pok"]
+                            pre = (c["pre"][use] > 0).astype(np.float32); plc = (c["plac"][use] > 0).astype(np.float32)
+                            sd = c["sid"][use]
+                            P1 = np.bincount(sd, weights=pre, minlength=nsec); P0 = np.bincount(sd, weights=plc, minlength=nsec); N = np.bincount(sd, minlength=nsec).astype(np.float32)
+                            dd = 100 * (W @ (P1 - P0)) / np.maximum(W @ N, 1e-9)
+                            rp, rq = (pre.mean(), plc.mean()) if len(pre) else (np.nan, np.nan)
+                            parts.append(f"k{int(k * 100)}{rule}: {100 * rp:.1f}/{100 * rq:.1f}% d{100 * (rp - rq):+.1f}{self._ci(dd, 1)} r{rp / max(rq, 1e-9):.2f}")
+                    line = f"n {int(tsel.sum())} | " + " | ".join(parts)
+                    if nm == "fullA RF":
+                        S(f"XS {seg} {r} {SHORT[nm]}", line[:198])
+                    self.lg(f"XS {seg} {r} {SHORT[nm]} pre1-10/placebo31-40: {line}")
+        self.lg("CHECK " + self.s4_check)
