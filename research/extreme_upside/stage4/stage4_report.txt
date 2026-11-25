@@ -502,6 +502,11 @@ RUN LIST (all in results/; verdict from the automatic run validation):
   S4XSEG   v1         38061541          fc56f09257c720517c7a80b4248a0049  VALID  (exploratory)
   S4EXEC   v2         38061541          fdac282b5628cda230a2d4ef2825726c  VALID  (diagnostics)
 
+Code state:
+  - All revised-panel runs used the code from commit 6f6cdc4 onward.
+  - Later changes were additive only: S4XSEG mode, S4EXEC diagnostics, the collector script. Re-running any mode
+    on the final commit reproduces its numbers; S4EVAL v2 = v1 line for line shows determinism.
+
 Key configuration:
   - Scored rows: 2020-11-02 .. 2026-08-27 (universe A).
   - Test events: onset 2021-2025.

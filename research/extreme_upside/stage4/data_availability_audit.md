@@ -7,7 +7,7 @@ filled from the S4EXEC runs (`results/xup_s4_exec_raw.txt`, v1 and v2).
 |---|---|---|---|
 | Daily OHLCV, adjusted + raw (AlgoSeek) | yes, 2005-10 .. 2026-08-27 | Stages 1–3; S4AUDIT reproduces Stage 3 exactly | all modes |
 | Segment / gap structure | yes (derived) | 3,541 segments in the 2,947-security sample (S4AUDIT) | event clock, association, dedup |
-| Forward-path outcomes (max / min / close at t+5 / 10 / 20, threshold days) | yes (derived from daily bars) | `mh10` equals Stage 3 `R` on all 6,022,604 rows (0 mismatches) | S4OUTC, events |
+| Forward-path outcomes (max / min / close at t+5 / 10 / 20, threshold days) | yes (derived from daily bars) | `mh10` equals Stage 3 `R` on every row: 6,022,604 rows (S4AUDIT v1) and 6,028,644 rows (every revised-panel run), 0 mismatches | S4OUTC, events |
 | Zero-volume days | yes (`zero20` feature, raw volume) | Stage 3 feature audit | strata, coverage |
 | Missing-session flag (halt / no-trade proxy) | yes (`miss20`) | Stage 3 feature audit | strata |
 | Official trading halts | **no** | Stage 1 audit: no halt dataset in QC | the halt proxy is missing sessions only |
