@@ -38,7 +38,7 @@ from xup_s3_modes_u import ModesU
 # Features: only data up to and including the close of t (see FEATS); leakage unit test in AUDIT.
 
 MODE = "AUDIT"
-class XupS3Panel(QCAlgorithm, ModesAB, ModesU):
+class XupS3Panel(QCAlgorithm):
 
     def initialize(self):
         self.t0 = _time.time()
@@ -520,3 +520,9 @@ class XupS3Panel(QCAlgorithm, ModesAB, ModesU):
             S("ERR misc", f"{len(self.err)}: " + " | ".join(self.err[:3])[:180])
         self.flush()
 
+
+# QC does not allow a Python class to inherit from QCAlgorithm and another class: attach the mode methods instead
+for _M in (ModesAB, ModesU):
+    for _n, _f in list(vars(_M).items()):
+        if not _n.startswith("__"):
+            setattr(XupS3Panel, _n, _f)

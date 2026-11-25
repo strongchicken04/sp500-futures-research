@@ -54,7 +54,7 @@ class ModesU:
             orr = (rate[top] / max(1 - rate[top], 1e-12)) / max(rate[bot] / max(1 - rate[bot], 1e-12), 1e-12)
             brr = np.log(np.maximum(brate[:, top], 1e-9) / np.maximum(brate[:, bot], 1e-9))
             bor = np.log(np.maximum(brate[:, top] / np.maximum(1 - brate[:, top], 1e-9), 1e-9) / np.maximum(brate[:, bot] / np.maximum(1 - brate[:, bot], 1e-9), 1e-9))
-            p = max(2 * min((brr <= 0).mean(), (brr >= 0).mean()), 1.0 / 200)
+            p = min(1.0, max(2 * min((brr <= 0).mean(), (brr >= 0).mean()), 1.0 / 200))
             # slope of logit(rate) on decile index (weighted LS) + bootstrap
             d = np.arange(10)
 
@@ -106,7 +106,7 @@ class ModesU:
                 r2 = p2.sum(0) / np.maximum(n2.sum(0), 1)
                 b2 = (W @ p2) / np.maximum(W @ n2, 1)
                 l2 = np.log(np.maximum(b2[:, 1], 1e-9) / np.maximum(b2[:, 0], 1e-9))
-                p2v = max(2 * min((l2 <= 0).mean(), (l2 >= 0).mean()), 1.0 / 200)
+                p2v = min(1.0, max(2 * min((l2 <= 0).mean(), (l2 >= 0).mean()), 1.0 / 200))
                 parts.append(((f, h), f"{r2[1] / max(r2[0], 1e-12):.2f}{'*' if p2v < 0.01 else ''}"))
                 sec_lines.append(p2v)
             grp = {}

@@ -1,0 +1,4 @@
+### xup s3 BASE v1 (failed: main.py over 32k chars, template ran)
+err None
+--- LOG ---
+Algorithm Id:(a252557ff402b5d149df1b31faec3483) completed in 0.43 seconds at 5k data points per second. Processing total of 2,030 data points.
