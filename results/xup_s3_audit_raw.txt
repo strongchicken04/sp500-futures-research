@@ -1,0 +1,78 @@
+### xup s3 AUDIT v1
+A0 classes (all securities) = COMMON 8815 ETF 7347 UNRESOLVED 5028 ADR_FOREIGN 597 CEF 555 COMMON_NOFUND 490 UNIT 448 WARRANT 402 PREFERRED 203 RIGHT 64 PREF_OTHER 45 DEBT 44 COMMON_SECONDARY 38 ETN 37 TEST 5
+A1 A = securities 2947 | eligible rows 6022604 | primary-label valid 5987283 events 24371 rate 0.407%
+A1 A-exADR = securities 2825 | eligible rows 5668086 | primary-label valid 5634083 events 23349 rate 0.414%
+A1 A-fund = securities 2947 | eligible rows 5922938 | primary-label valid 5888910 events 24359 rate 0.414%
+A1 A-strict = securities 1991 | eligible rows 4633914 | primary-label valid 4611493 events 16207 rate 0.351%
+A1 B = securities 1785 | eligible rows 3914180 | primary-label valid 3895619 events 13046 rate 0.335%
+A1 C = securities 1603 | eligible rows 3001427 | primary-label valid 2985011 events 10384 rate 0.348%
+A1 D = securities 1856 | eligible rows 2120890 | primary-label valid 2103714 events 10499 rate 0.499%
+A2 invalid (incomplete) label share = A5 0.29% A10 0.59% A20 1.17%
+A3 SI match = sampled A securities alive mid-2019 1038 with SI records 1029 | D rows 2120890
+A4 leakage unit test = 22 (security, t) pairs: max |feature(full data) - feature(data cut at t)| + NaN mismatches = 0
+A5 runtime = 11 min total
+P0 panel = mode AUDIT | sample securities 2986 with data 2947 | rows 6022604 | build 11 min
+err None
+--- LOG ---
+FEATURE COVERAGE (share finite on A rows / within the feature's universe) and p1 p50 p99
+r1: 100.0% | -0.1093 0 0.1109
+r2: 100.0% | -0.156 0 0.1532
+r3: 100.0% | -0.1934 0 0.1853
+r5: 100.0% | -0.2532 0 0.235
+r10: 100.0% | -0.3697 0.001016 0.3202
+r20: 100.0% | -0.5435 0.002584 0.44
+dhi5: 100.0% | -0.2866 -0.03175 0
+dhi10: 100.0% | -0.39 -0.04524 0
+dhi20: 100.0% | -0.5128 -0.0639 0
+dhi60: 98.5% | -0.7228 -0.108 -0.000993
+dlo5: 100.0% | 0 0.03365 0.3548
+dlo20: 100.0% | 0.0004081 0.07495 0.7958
+dlo60: 98.5% | 0.002635 0.1443 1.734
+up_streak: 100.0% | 0 0 6
+dn_streak: 100.0% | 0 0 6
+gap: 100.0% | -0.05985 0 0.06837
+intraday: 100.0% | -0.09781 0 0.1034
+clv: 100.0% | 0 0.5 1
+rv5: 100.0% | 0.001485 0.01988 0.1417
+rv10: 100.0% | 0.001878 0.02189 0.1388
+rv20: 100.0% | 0.002183 0.02336 0.1375
+atr_p: 100.0% | 0.003304 0.03651 0.2047
+range_p: 100.0% | 0 0.0311 0.2178
+lpx: 100.0% | -0.9905 2.813 5.782
+lpx_prev: 100.0% | -0.983 2.813 5.782
+lvol: 100.0% | 4.977 12.17 16.69
+rvol5: 99.8% | 0.03747 0.8868 6.942
+rvol10: 99.8% | 0.0302 0.8541 6.291
+rvol20: 99.9% | 0.02434 0.8253 6.035
+ldv: 100.0% | 7.004 14.8 20.27
+rdv20: 100.0% | 0.02578 0.8213 6.099
+vtrend: 99.9% | 0.1744 0.9396 2.695
+pv: 99.9% | -0.1019 0 0.126
+zero20: 100.0% | 0 0 0
+miss20: 100.0% | 0 0 1
+pstrat: 100.0% | 0 2 2
+lmcap: 68.4% | 15.58 20.42 25.46
+lds: 68.4% | 14.63 17.6 21.76
+dds250: 61.4% | -0.8558 0.005747 1.701
+mstrat: 68.4% | 0 2 3
+lfloat: 51.7% | 13.69 17.28 21.64
+float_ds: 51.7% | 0.1165 0.7889 0.9996
+fratio_age: 51.7% | 0 42 645
+ds_mismatch: 51.7% | 0 0 0
+f_implaus: 51.7% | 0 0 0
+si_ds: 30.1% | 3.521e-05 0.02067 0.2335
+dtc: 35.2% | 0.02531 3.23 29.74
+si_chg: 35.1% | -0.8105 -0.001988 5.424
+si_age: 38.9% | 0 8 2007
+si_amb: 38.9% | 0 0 1
+si_miss: 43.9% | 0 0 1
+fundlike: 95.6% | 0 0 1
+ELIGIBLE ROWS / PRIMARY EVENTS BY BLOCK
+A: 2006-09: 1161822/5247 | 2010-14: 1355024/2103 | 2015-19: 1395902/3596 | 2020-22: 939684/4779 | 2023-25: 945838/6921 | 2026-26: 189013/1725
+A-strict: 2006-09: 732157/2077 | 2010-14: 968877/933 | 2015-19: 1103055/2110 | 2020-22: 794783/3549 | 2023-25: 842583/6069 | 2026-26: 170038/1469
+A-exADR: 2006-09: 1116817/5081 | 2010-14: 1290527/2046 | 2015-19: 1310617/3442 | 2020-22: 868733/4440 | 2023-25: 872167/6657 | 2026-26: 175222/1683
+A-fund: 2006-09: 1148408/5246 | 2010-14: 1332557/2103 | 2015-19: 1360772/3596 | 2020-22: 925383/4778 | 2023-25: 934580/6911 | 2026-26: 187210/1725
+B: 2006-09: 643883/1750 | 2010-14: 838476/747 | 2015-19: 932803/1582 | 2020-22: 650993/2704 | 2023-25: 693360/5107 | 2026-26: 136104/1156
+C: 2006-09: 0/0 | 2010-14: 657783/520 | 2015-19: 905117/1480 | 2020-22: 614239/2458 | 2023-25: 673666/4795 | 2026-26: 134206/1131
+D: 2006-09: 0/0 | 2010-14: 0/0 | 2015-19: 479758/1359 | 2020-22: 760503/3534 | 2023-25: 722581/4488 | 2026-26: 140872/1118
+Algorithm Id:(505d89b5c0cd8ae13038fc3ef5cc816a) completed in 659.08 seconds at 128k data points per second. Processing total of 84,156,097 data points.
