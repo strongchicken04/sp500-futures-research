@@ -293,8 +293,70 @@ The **RF** top-1 % profile, recomputed in S4AUDIT with the same formula:
   outside regular hours" share (89 % even on controls, which suggests a session-mask / time-zone problem).
   S4EXEC v2 re-checks them with diagnostics.
 
-## 12. Calibration and ranking stability (S4CALIB)
-[pending: v1 ended without output (QC), re-run as v2]
+## 12. Calibration and ranking stability (S4CALIB v2; v1 ended in QC without any output and is kept as INVALID)
+**Calibration on test rows** (pred / obs = Σ predicted / Σ observed):
+
+| Model | Brier | Log loss | ECE10 | Pred / obs | Top-1 % bin: predicted vs observed |
+|---|---|---|---|---|---|
+| RF | 5.613e-3 | 0.0274 | 0.103 pp | 0.84 | 8.86 vs 8.81 % |
+| Full-A LR | 5.647e-3 | 0.0282 | 0.168 pp | 0.74 | 10.24 vs 8.22 % |
+| GBM | 5.973e-3 | 0.0286 | 0.101 pp | 0.94 | **18.34 vs 8.55 %** (over-confident at the top) |
+| Volume LR | 5.689e-3 | 0.0306 | 0.185 pp | 0.68 | 9.64 vs 7.52 % |
+
+- RF decile reliability: top two deciles 0.84 / 1.15 % and 3.48 / 4.09 % (predicted / observed).
+
+**Drift (RF, predicted / observed):**
+
+| Breakdown | Values |
+|---|---|
+| Year | 2021 0.60 (base 0.35 %); 2022 1.33 (0.38 %); 2023 1.04 (0.54 %); 2024 0.70 (0.83 %); 2025 0.70 (0.84 %); 2026 YTD 0.66 (0.91 %) |
+| Price | < 0.10 0.54; 0.10–0.49 0.96; 0.50–0.99 0.97; 1–2.99 0.83; 3–4.99 0.65; 5–9.99 0.56; ≥ 10 1.03 |
+| Dollar volume | 0.78–0.91 |
+| SPY-vol tercile | 0.64 / 0.80 / 1.10 |
+
+- Monthly correlation of base rate with observed / predicted: +0.727 over 60 months. Probability levels lag the
+  base rate: they under-predict in high-event years and over-predict in quiet ones, while the ranking stays
+  stable.
+
+**Frozen calibration experiment** (MODEL-split RF trained to 2016; Platt / isotonic fitted on validation
+2017–2020 only):
+
+| Period | Model | Pred / obs | ECE10 | Log loss | PR-AUC |
+|---|---|---|---|---|---|
+| Test | MODEL-split RF raw | 0.72 | 0.172 pp | 0.0278 | 0.0574 |
+| Test | + Platt | 1.09 | 0.103 pp | 0.0276 | 0.0574 |
+| Test | + isotonic | 1.10 | 0.066 pp | 0.0274 | 0.0566 |
+| Test | TEST-refit RF | 0.84 | 0.103 pp | 0.0274 | 0.0601 |
+| 2026 YTD | MODEL-split RF raw | 0.57 | | | |
+| 2026 YTD | + Platt | 0.87 | | | |
+| 2026 YTD | + isotonic | 0.86 | | | |
+
+- Validation-fitted calibration fixes most of the level error. It cannot follow later base-rate shifts, and it
+  does not change the ranking.
+
+**Ranking stability:**
+- Spearman rank correlations: RF–GBM 0.925, RF–LR 0.879, RF–volume LR 0.780, RF–price 0.771, volume–price 0.984.
+  Within-day RF–volume LR 0.778.
+- Share of RF selections also chosen by volume LR: 37 % (top 1 %), 58 % (top 5 %), 66 % (top 10 %). By full-A
+  LR: 64 / 80 / 84 %.
+- **Persistence:** 82.7 % of RF top-1 % selections (90.8 % of top 5 %) were also selected the previous session;
+  volume LR 81.9 / 89.8 %.
+- Security-level mean RF percentile, 2021–22 vs 2023–25: Spearman 0.911 over 1,387 securities.
+- The ranking is very stable, and largely a stock state.
+
+**Where the RF advantage over volume LR comes from** (PR-AUC):
+
+| Subset | RF | Volume LR | Difference |
+|---|---|---|---|
+| All | 0.0601 | 0.0461 | +0.0139 |
+| Excluding top 1 % securities | | | +0.0144 |
+| Excluding top 5 % securities | | | +0.0132 |
+| Excluding px < 0.10 | | | +0.0156 |
+| Price < $1 | 0.0833 | 0.0788 | **+0.0045** |
+| Price ≥ $1 | 0.0433 | 0.0189 | **+0.0244** |
+
+- The advantage is not driven by a few securities. It comes mainly from stocks ≥ $1, where volume alone ranks
+  poorly.
 
 ## 13. Concentration and regimes (S4CONC v1; test 2021–25)
 **Selections and dates:**
