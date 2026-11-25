@@ -293,7 +293,7 @@ class ModesM:
         px = np.exp(F[sel, FI["lpx"]]); dv = np.expm1(F[sel, FI["ldv"]])
         y = self.L[sel, PRIMARY] == 1
         b = self.L[sel, TI[("B", 10, 1.0)]] == 1; bm = self.L[sel, TI[("M", 10, 1.0)]] == 1
-        self.set_runtime_statistic("T tradability top1% fullA GBM", (f"rows {len(sel)} events {int(y.sum())} | px med {np.median(px):.2f} <$1 {100 * np.mean(px < 1):.0f}% 1-5 {100 * np.mean((px >= 1) & (px < 5)):.0f}% | $vol med {np.median(dv) / 1e3:.0f}k <100k {100 * np.mean(dv < 1e5):.0f}%"
+        self.set_runtime_statistic("T tradability top1% fullA GBM", (f"rows {len(sel)} events {int(y.sum())} | px med {np.nanmedian(px):.2f} <$1 {100 * np.mean(px < 1):.0f}% 1-5 {100 * np.mean((px >= 1) & (px < 5)):.0f}% | $vol med {np.nanmedian(dv) / 1e3:.0f}k <100k {100 * np.mean(dv < 1e5):.0f}%"
                                                                      f" | miss20 {100 * np.mean(F[sel, FI['miss20']] == 1):.0f}% | events confirmed by B {100 * b[y].mean() if y.any() else 0:.0f}% Bmax {100 * bm[y].mean() if y.any() else 0:.0f}% | A ret>200% {100 * np.mean(self.R[sel][y] > 2) if y.any() else 0:.0f}%")[:198])
 
     def mode_model(self):
