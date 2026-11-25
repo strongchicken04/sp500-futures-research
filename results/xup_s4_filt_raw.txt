@@ -1,0 +1,82 @@
+### xup s4 S4FILT v1 | project 38061541 backtest 1cbd76f47d0242bab5e79152c5aed399 | VALID
+C6 S0 p>=1 $vol>=100k = lift1 valid 22.02 test 17.18 | test E1 events 700 | test cap5 71.9% | P@1 test 5.27% base 0.307% -> PASS
+C6 S1 p>=1 $vol>=500k = lift1 valid 22.73 test 21.46 | test E1 events 457 | test cap5 76.1% | P@1 test 4.86% base 0.226% -> PASS
+C6 S2 p>=5 $vol>=1000k = lift1 valid 22.64 test 41.24 | test E1 events 177 | test cap5 81.4% | P@1 test 4.09% base 0.099% -> PASS
+F T p0 d0k = rows 100.0% ev 100.0% (1539) base 0.58% | P@1/5/10 7.8/5.4/4.0% lift1 13.3 | cap1/5 29/63% pre5 55% evprec1 17% | sig1 16789 ev1 433 | px 0.43 $vol 501k
+F T p0 d1000k = rows 63.5% ev 30.9% (475) base 0.25% | P@1/5/10 6.3/3.4/2.0% lift1 25.6 | cap1/5 44/81% pre5 66% evprec1 14% | sig1 10785 ev1 395 | px 0.88 $vol 3182k
+F T p0 d100k = rows 83.9% ev 66.0% (1016) base 0.43% | P@1/5/10 7.2/4.7/3.3% lift1 16.8 | cap1/5 33/70% pre5 61% evprec1 16% | sig1 14180 ev1 409 | px 0.50 $vol 799k
+F T p0 d250k = rows 76.7% ev 49.8% (766) base 0.35% | P@1/5/10 7.0/4.3/2.8% lift1 20.0 | cap1/5 36/75% pre5 65% evprec1 15% | sig1 12977 ev1 400 | px 0.57 $vol 1218k
+F T p0 d5000k = rows 45.8% ev 15.6% (240) base 0.16% | P@1/5/10 6.0/2.3/1.3% lift1 38.4 | cap1/5 61/87% pre5 62% evprec1 12% | sig1 7986 ev1 350 | px 1.88 $vol 15235k
+F T p0 d500k = rows 70.3% ev 39.7% (611) base 0.30% | P@1/5/10 6.7/3.9/2.4% lift1 22.6 | cap1/5 39/78% pre5 66% evprec1 14% | sig1 11944 ev1 392 | px 0.68 $vol 1835k
+F T p0.1 d0k = rows 99.9% ev 98.0% (1508) base 0.57% | P@1/5/10 7.3/5.2/3.9% lift1 12.8 | cap1/5 28/62% pre5 55% evprec1 16% | sig1 16786 ev1 426 | px 0.46 $vol 468k
+F T p0.1 d1000k = rows 63.4% ev 30.3% (466) base 0.24% | P@1/5/10 6.1/3.3/2.0% lift1 25.2 | cap1/5 45/81% pre5 65% evprec1 13% | sig1 10780 ev1 397 | px 0.94 $vol 3249k
+F T p0.1 d100k = rows 83.8% ev 64.2% (988) base 0.42% | P@1/5/10 6.6/4.5/3.2% lift1 15.8 | cap1/5 32/69% pre5 60% evprec1 15% | sig1 14171 ev1 409 | px 0.54 $vol 765k
+F T p0.1 d250k = rows 76.6% ev 48.5% (747) base 0.34% | P@1/5/10 6.4/4.1/2.7% lift1 18.8 | cap1/5 35/74% pre5 64% evprec1 14% | sig1 12967 ev1 401 | px 0.62 $vol 1200k
+F T p0.1 d5000k = rows 45.8% ev 15.6% (240) base 0.16% | P@1/5/10 6.0/2.3/1.3% lift1 38.8 | cap1/5 61/87% pre5 62% evprec1 12% | sig1 7986 ev1 347 | px 1.91 $vol 15341k
+F T p0.1 d500k = rows 70.3% ev 38.7% (595) base 0.29% | P@1/5/10 6.2/3.8/2.3% lift1 21.5 | cap1/5 39/78% pre5 66% evprec1 13% | sig1 11943 ev1 397 | px 0.72 $vol 1855k
+F T p0.5 d0k = rows 97.7% ev 78.2% (1203) base 0.47% | P@1/5/10 6.3/4.3/3.1% lift1 13.3 | cap1/5 30/63% pre5 54% evprec1 14% | sig1 16403 ev1 412 | px 0.94 $vol 509k
+F T p0.5 d1000k = rows 63.2% ev 26.9% (414) base 0.22% | P@1/5/10 5.1/2.9/1.8% lift1 23.4 | cap1/5 44/80% pre5 64% evprec1 12% | sig1 10740 ev1 361 | px 1.50 $vol 3798k
+F T p0.5 d100k = rows 82.8% ev 54.0% (831) base 0.36% | P@1/5/10 5.8/3.9/2.7% lift1 16.0 | cap1/5 32/70% pre5 60% evprec1 13% | sig1 13949 ev1 383 | px 1.04 $vol 836k
+F T p0.5 d250k = rows 76.0% ev 41.8% (644) base 0.30% | P@1/5/10 5.5/3.6/2.3% lift1 18.3 | cap1/5 35/73% pre5 62% evprec1 12% | sig1 12875 ev1 381 | px 1.18 $vol 1346k
+F T p0.5 d5000k = rows 45.8% ev 14.4% (222) base 0.15% | P@1/5/10 5.6/2.2/1.2% lift1 38.0 | cap1/5 60/86% pre5 65% evprec1 12% | sig1 7978 ev1 313 | px 2.18 $vol 16120k
+F T p0.5 d500k = rows 69.9% ev 33.9% (522) base 0.26% | P@1/5/10 5.4/3.3/2.0% lift1 20.9 | cap1/5 39/76% pre5 64% evprec1 12% | sig1 11879 ev1 370 | px 1.33 $vol 2138k
+F T p1 d0k = rows 94.4% ev 62.6% (963) base 0.38% | P@1/5/10 5.8/3.6/2.6% lift1 15.4 | cap1/5 33/66% pre5 57% evprec1 13% | sig1 15778 ev1 375 | px 1.78 $vol 674k
+F T p1 d1000k = rows 62.8% ev 23.9% (368) base 0.19% | P@1/5/10 4.8/2.5/1.6% lift1 25.1 | cap1/5 48/79% pre5 61% evprec1 11% | sig1 10683 ev1 334 | px 2.15 $vol 4572k
+F T p1 d100k = rows 81.2% ev 45.5% (700) base 0.31% | P@1/5/10 5.3/3.4/2.3% lift1 17.2 | cap1/5 38/72% pre5 61% evprec1 13% | sig1 13689 ev1 369 | px 1.86 $vol 1080k
+F T p1 d250k = rows 75.0% ev 36.0% (554) base 0.26% | P@1/5/10 5.0/3.1/2.0% lift1 19.1 | cap1/5 40/74% pre5 63% evprec1 12% | sig1 12689 ev1 356 | px 1.95 $vol 1703k
+F T p1 d5000k = rows 45.7% ev 13.5% (207) base 0.13% | P@1/5/10 5.0/1.9/1.1% lift1 37.6 | cap1/5 62/86% pre5 62% evprec1 11% | sig1 7964 ev1 286 | px 2.75 $vol 16703k
+F T p1 d500k = rows 69.2% ev 29.7% (457) base 0.23% | P@1/5/10 4.9/2.8/1.8% lift1 21.5 | cap1/5 43/76% pre5 63% evprec1 12% | sig1 11788 ev1 361 | px 2.04 $vol 2726k
+F T p2 d0k = rows 87.9% ev 42.0% (646) base 0.27% | P@1/5/10 6.0/3.0/2.0% lift1 22.0 | cap1/5 41/72% pre5 62% evprec1 13% | sig1 14770 ev1 366 | px 3.00 $vol 979k
+F T p2 d1000k = rows 61.5% ev 19.1% (294) base 0.16% | P@1/5/10 5.0/2.1/1.3% lift1 31.1 | cap1/5 55/82% pre5 67% evprec1 11% | sig1 10520 ev1 311 | px 3.86 $vol 5483k
+F T p2 d100k = rows 77.4% ev 32.7% (504) base 0.23% | P@1/5/10 5.6/2.8/1.8% lift1 24.0 | cap1/5 45/74% pre5 63% evprec1 13% | sig1 13148 ev1 351 | px 3.19 $vol 1502k
+F T p2 d250k = rows 72.2% ev 27.6% (425) base 0.21% | P@1/5/10 5.3/2.5/1.6% lift1 25.9 | cap1/5 48/76% pre5 64% evprec1 12% | sig1 12245 ev1 348 | px 3.37 $vol 2284k
+F T p2 d5000k = rows 45.3% ev 11.0% (170) base 0.11% | P@1/5/10 4.5/1.6/0.9% lift1 40.3 | cap1/5 59/83% pre5 61% evprec1 10% | sig1 7916 ev1 242 | px 4.74 $vol 19829k
+F T p2 d500k = rows 67.3% ev 23.3% (359) base 0.18% | P@1/5/10 5.2/2.3/1.4% lift1 28.2 | cap1/5 52/77% pre5 64% evprec1 12% | sig1 11492 ev1 337 | px 3.59 $vol 3451k
+F T p5 d0k = rows 75.9% ev 18.1% (278) base 0.13% | P@1/5/10 4.4/1.6/1.0% lift1 34.3 | cap1/5 53/78% pre5 66% evprec1 10% | sig1 12890 ev1 200 | px 8.37 $vol 3056k
+F T p5 d1000k = rows 57.1% ev 11.5% (177) base 0.10% | P@1/5/10 4.1/1.3/0.8% lift1 41.2 | cap1/5 60/81% pre5 69% evprec1 9% | sig1 9797 ev1 176 | px 9.30 $vol 8536k
+F T p5 d100k = rows 68.3% ev 15.9% (244) base 0.12% | P@1/5/10 4.6/1.6/1.0% lift1 36.8 | cap1/5 56/80% pre5 68% evprec1 10% | sig1 11716 ev1 198 | px 8.55 $vol 3749k
+F T p5 d250k = rows 64.9% ev 14.6% (224) base 0.12% | P@1/5/10 4.5/1.5/0.9% lift1 38.2 | cap1/5 56/78% pre5 66% evprec1 10% | sig1 11004 ev1 193 | px 8.72 $vol 4548k
+F T p5 d5000k = rows 43.6% ev 7.8% (120) base 0.08% | P@1/5/10 3.5/1.1/0.6% lift1 45.4 | cap1/5 66/84% pre5 65% evprec1 7% | sig1 7670 ev1 149 | px 10.77 $vol 28366k
+F T p5 d500k = rows 61.4% ev 13.2% (203) base 0.11% | P@1/5/10 4.4/1.4/0.9% lift1 40.2 | cap1/5 59/79% pre5 68% evprec1 9% | sig1 10528 ev1 189 | px 8.97 $vol 5816k
+P0 panel = mode S4FILT | sample securities 2986 with data 2947 | rows 6028644 | build 13 min
+S4 CHECK = OK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+err None
+--- LOG ---
+F V p0 d0k: rows 100.0% ev 100.0% (819) base 0.43% | P@1/5/10 9.0/4.8/3.2% lift1 21.2 | cap1/5 34/69% pre5 64% evprec1 19% | sig1 11899 ev1 276 | px 0.51 $vol 424k
+F V p0.1 d0k: rows 100.0% ev 98.9% (810) base 0.42% | P@1/5/10 8.8/4.7/3.2% lift1 20.7 | cap1/5 34/69% pre5 64% evprec1 19% | sig1 11884 ev1 269 | px 0.52 $vol 435k
+F V p0.5 d0k: rows 98.7% ev 80.0% (655) base 0.34% | P@1/5/10 6.5/3.6/2.5% lift1 19.2 | cap1/5 31/68% pre5 60% evprec1 14% | sig1 11282 ev1 242 | px 0.99 $vol 434k
+F V p1 d0k: rows 96.6% ev 61.4% (503) base 0.27% | P@1/5/10 5.3/2.8/1.9% lift1 19.8 | cap1/5 35/69% pre5 62% evprec1 13% | sig1 11105 ev1 217 | px 1.73 $vol 539k
+F V p2 d0k: rows 92.0% ev 39.6% (324) base 0.17% | P@1/5/10 3.1/1.7/1.2% lift1 18.5 | cap1/5 35/71% pre5 61% evprec1 9% | sig1 10968 ev1 181 | px 2.74 $vol 747k
+F V p5 d0k: rows 82.1% ev 16.1% (132) base 0.08% | P@1/5/10 1.5/0.8/0.5% lift1 19.7 | cap1/5 37/74% pre5 60% evprec1 5% | sig1 9811 ev1 90 | px 8.54 $vol 1783k
+F V p0 d100k: rows 86.4% ev 70.1% (574) base 0.32% | P@1/5/10 7.4/3.9/2.5% lift1 22.8 | cap1/5 34/71% pre5 64% evprec1 17% | sig1 10120 ev1 247 | px 0.57 $vol 692k
+F V p0 d250k: rows 79.6% ev 57.0% (467) base 0.27% | P@1/5/10 6.8/3.3/2.2% lift1 24.8 | cap1/5 35/70% pre5 64% evprec1 16% | sig1 9262 ev1 236 | px 0.64 $vol 1041k
+F V p0 d500k: rows 73.4% ev 44.8% (367) base 0.23% | P@1/5/10 6.1/2.9/1.8% lift1 26.7 | cap1/5 35/73% pre5 65% evprec1 14% | sig1 8748 ev1 221 | px 0.83 $vol 1629k
+F V p0 d1000k: rows 66.5% ev 33.8% (277) base 0.19% | P@1/5/10 5.4/2.4/1.5% lift1 28.9 | cap1/5 40/75% pre5 62% evprec1 12% | sig1 8037 ev1 222 | px 1.27 $vol 2749k
+F V p0 d5000k: rows 45.9% ev 15.8% (129) base 0.12% | P@1/5/10 4.0/1.7/1.0% lift1 34.6 | cap1/5 51/83% pre5 64% evprec1 9% | sig1 5649 ev1 146 | px 2.63 $vol 12946k
+F V p0.1 d100k: rows 86.4% ev 69.7% (571) base 0.32% | P@1/5/10 7.3/3.9/2.5% lift1 22.6 | cap1/5 33/71% pre5 63% evprec1 17% | sig1 10120 ev1 244 | px 0.57 $vol 691k
+F V p0.1 d250k: rows 79.6% ev 56.9% (466) base 0.27% | P@1/5/10 6.7/3.3/2.2% lift1 24.6 | cap1/5 35/70% pre5 64% evprec1 16% | sig1 9262 ev1 236 | px 0.64 $vol 1041k
+F V p0.1 d500k: rows 73.4% ev 44.7% (366) base 0.23% | P@1/5/10 6.1/2.9/1.8% lift1 26.6 | cap1/5 35/73% pre5 65% evprec1 14% | sig1 8748 ev1 219 | px 0.84 $vol 1634k
+F V p0.1 d1000k: rows 66.5% ev 33.7% (276) base 0.19% | P@1/5/10 5.4/2.4/1.5% lift1 28.8 | cap1/5 39/75% pre5 62% evprec1 12% | sig1 8037 ev1 223 | px 1.27 $vol 2759k
+F V p0.1 d5000k: rows 45.9% ev 15.8% (129) base 0.12% | P@1/5/10 4.0/1.7/1.0% lift1 34.6 | cap1/5 51/83% pre5 64% evprec1 9% | sig1 5649 ev1 146 | px 2.63 $vol 12946k
+F V p0.5 d100k: rows 85.7% ev 57.4% (470) base 0.26% | P@1/5/10 5.0/2.8/1.9% lift1 19.3 | cap1/5 34/70% pre5 62% evprec1 12% | sig1 10096 ev1 240 | px 1.15 $vol 740k
+F V p0.5 d250k: rows 79.1% ev 47.1% (386) base 0.22% | P@1/5/10 4.5/2.4/1.7% lift1 20.6 | cap1/5 34/71% pre5 62% evprec1 11% | sig1 9207 ev1 215 | px 1.29 $vol 1121k
+F V p0.5 d500k: rows 73.1% ev 37.7% (309) base 0.18% | P@1/5/10 4.2/2.2/1.4% lift1 22.5 | cap1/5 35/72% pre5 62% evprec1 10% | sig1 8684 ev1 205 | px 1.49 $vol 1818k
+F V p0.5 d1000k: rows 66.2% ev 29.4% (241) base 0.15% | P@1/5/10 3.7/1.9/1.2% lift1 24.4 | cap1/5 39/75% pre5 59% evprec1 9% | sig1 8022 ev1 201 | px 1.74 $vol 3014k
+F V p0.5 d5000k: rows 45.9% ev 14.5% (119) base 0.10% | P@1/5/10 3.3/1.5/0.9% lift1 32.0 | cap1/5 50/82% pre5 61% evprec1 7% | sig1 5640 ev1 130 | px 2.90 $vol 13390k
+F V p1 d100k: rows 84.5% ev 46.9% (384) base 0.21% | P@1/5/10 4.6/2.3/1.5% lift1 22.0 | cap1/5 38/72% pre5 63% evprec1 11% | sig1 10051 ev1 215 | px 1.80 $vol 877k
+F V p1 d250k: rows 78.3% ev 39.7% (325) base 0.18% | P@1/5/10 4.0/2.0/1.3% lift1 22.2 | cap1/5 38/71% pre5 62% evprec1 10% | sig1 9141 ev1 199 | px 1.90 $vol 1298k
+F V p1 d500k: rows 72.6% ev 32.6% (267) base 0.16% | P@1/5/10 3.5/1.8/1.2% lift1 22.7 | cap1/5 39/72% pre5 61% evprec1 9% | sig1 8586 ev1 196 | px 2.02 $vol 2025k
+F V p1 d1000k: rows 65.9% ev 25.6% (210) base 0.13% | P@1/5/10 3.0/1.5/1.0% lift1 23.2 | cap1/5 39/75% pre5 57% evprec1 8% | sig1 7993 ev1 177 | px 2.20 $vol 3210k
+F V p1 d5000k: rows 45.8% ev 13.1% (107) base 0.09% | P@1/5/10 2.7/1.3/0.8% lift1 30.4 | cap1/5 47/82% pre5 62% evprec1 7% | sig1 5624 ev1 119 | px 3.41 $vol 14063k
+F V p2 d100k: rows 81.6% ev 31.3% (256) base 0.14% | P@1/5/10 3.0/1.5/1.0% lift1 21.4 | cap1/5 37/73% pre5 62% evprec1 8% | sig1 9645 ev1 172 | px 2.98 $vol 1345k
+F V p2 d250k: rows 76.3% ev 28.1% (230) base 0.13% | P@1/5/10 2.6/1.3/0.9% lift1 20.4 | cap1/5 35/73% pre5 61% evprec1 7% | sig1 9063 ev1 161 | px 3.13 $vol 1931k
+F V p2 d500k: rows 71.1% ev 23.8% (195) base 0.11% | P@1/5/10 2.3/1.2/0.9% lift1 19.9 | cap1/5 37/73% pre5 60% evprec1 6% | sig1 8290 ev1 153 | px 3.27 $vol 2846k
+F V p2 d1000k: rows 65.1% ev 19.5% (160) base 0.10% | P@1/5/10 2.0/1.2/0.8% lift1 20.0 | cap1/5 38/78% pre5 59% evprec1 6% | sig1 7894 ev1 145 | px 3.52 $vol 4470k
+F V p2 d5000k: rows 45.6% ev 10.3% (84) base 0.08% | P@1/5/10 2.1/1.1/0.6% lift1 28.3 | cap1/5 40/80% pre5 64% evprec1 6% | sig1 5587 ev1 101 | px 4.65 $vol 15494k
+F V p5 d100k: rows 74.7% ev 13.3% (109) base 0.07% | P@1/5/10 1.5/0.8/0.5% lift1 21.5 | cap1/5 39/76% pre5 65% evprec1 4% | sig1 8938 ev1 87 | px 9.05 $vol 2863k
+F V p5 d250k: rows 70.6% ev 12.7% (104) base 0.07% | P@1/5/10 1.4/0.8/0.5% lift1 21.5 | cap1/5 36/76% pre5 64% evprec1 4% | sig1 8256 ev1 81 | px 9.45 $vol 3821k
+F V p5 d500k: rows 66.6% ev 11.2% (92) base 0.06% | P@1/5/10 1.4/0.7/0.4% lift1 22.0 | cap1/5 41/74% pre5 64% evprec1 4% | sig1 8009 ev1 82 | px 9.90 $vol 5113k
+F V p5 d1000k: rows 61.7% ev 10.0% (82) base 0.06% | P@1/5/10 1.3/0.7/0.4% lift1 22.6 | cap1/5 39/74% pre5 65% evprec1 4% | sig1 7245 ev1 70 | px 10.67 $vol 7895k
+F V p5 d5000k: rows 44.4% ev 6.3% (52) base 0.04% | P@1/5/10 1.1/0.5/0.3% lift1 26.2 | cap1/5 37/77% pre5 63% evprec1 3% | sig1 5353 ev1 52 | px 13.67 $vol 23148k
+CHECK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(1cbd76f47d0242bab5e79152c5aed399) completed in 1841.53 seconds at 46k data points per second. Processing total of 84,115,119 data points.
