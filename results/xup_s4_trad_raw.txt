@@ -1,0 +1,64 @@
+### xup s4 S4TRAD v1 | project 38061541 backtest 781422a1a9c45736b160947d08afe499 | VALID
+P0 panel = mode S4TRAD | sample securities 2986 with data 2947 | rows 6028644 | build 12 min
+S4 CHECK = OK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+T0 RF all test = rows 1605424 pos 9367 base 0.58% ev 1539 | P@1/5/10 7.8/5.4/4.0% (sel1 16261) | cap1/5/10 29/63/80% | evprec1/5 17/13% | px 15.58 $vol 3536k | missFULL 2.0% mcapNA 24%
+T1 RF px 0 <0.10 = rows 1121 pos 180 base 16.06% ev 31 | P@1/5/10 17.5/15.6/16.1% (sel1 680) | cap1/5/10 94/100/100% | evprec1/5 38/36% | px 0.08 $vol 481k | missFULL 6.5% mcapNA 24%
+T1 RF px 1 0.10-0.49 = rows 34633 pos 1824 base 5.27% ev 305 | P@1/5/10 8.4/6.3/5.5% (sel1 8207) | cap1/5/10 65/95/100% | evprec1/5 19/15% | px 0.33 $vol 95k | missFULL 3.0% mcapNA 28%
+T1 RF px 2 0.50-0.99 = rows 53080 pos 1623 base 3.06% ev 240 | P@1/5/10 6.4/4.7/3.8% (sel1 3815) | cap1/5/10 34/82/95% | evprec1/5 13/11% | px 0.75 $vol 90k | missFULL 2.7% mcapNA 28%
+T1 RF px 3 1-2.99 = rows 185418 pos 3139 base 1.69% ev 513 | P@1/5/10 5.9/4.7/3.3% (sel1 2604) | cap1/5/10 17/57/82% | evprec1/5 14/11% | px 1.86 $vol 215k | missFULL 2.3% mcapNA 26%
+T1 RF px 4 3-4.99 = rows 112784 pos 1028 base 0.91% ev 172 | P@1/5/10 7.0/4.9/3.4% (sel1 344) | cap1/5/10 13/40/59% | evprec1/5 15/12% | px 3.87 $vol 616k | missFULL 2.1% mcapNA 23%
+T1 RF px 5 5-9.99 = rows 224080 pos 951 base 0.42% ev 165 | P@1/5/10 4.8/5.9/4.1% (sel1 334) | cap1/5/10 12/39/54% | evprec1/5 11/11% | px 7.78 $vol 1041k | missFULL 4.2% mcapNA 25%
+T1 RF px 6 >=10 = rows 994308 pos 622 base 0.06% ev 113 | P@1/5/10 6.1/3.2/2.5% (sel1 277) | cap1/5/10 6/19/44% | evprec1/5 12/7% | px 31.46 $vol 13957k | missFULL 1.4% mcapNA 22%
+T2 RF $vol 0 <100k = rows 257355 pos 3548 base 1.38% ev 523 | P@1/5/10 9.5/6.2/4.3% (sel1 3236) | cap1/5/10 21/62/82% | evprec1/5 22/15% | px 4.14 $vol 26k | missFULL 4.0% mcapNA 33%
+T2 RF $vol 1 100-500k = rows 217788 pos 2455 base 1.13% ev 405 | P@1/5/10 7.8/5.0/3.8% (sel1 4942) | cap1/5/10 33/66/81% | evprec1/5 18/12% | px 5.09 $vol 237k | missFULL 3.1% mcapNA 28%
+T2 RF $vol 2 500k-1M = rows 110010 pos 861 base 0.78% ev 136 | P@1/5/10 7.5/5.0/3.6% (sel1 2080) | cap1/5/10 36/61/76% | evprec1/5 15/12% | px 7.80 $vol 710k | missFULL 2.5% mcapNA 25%
+T2 RF $vol 3 1-5M = rows 283398 pos 1354 base 0.48% ev 235 | P@1/5/10 6.1/4.6/3.6% (sel1 3503) | cap1/5/10 33/65/81% | evprec1/5 14/11% | px 11.66 $vol 2333k | missFULL 2.1% mcapNA 22%
+T2 RF $vol 4 5-10M = rows 131457 pos 331 base 0.25% ev 61 | P@1/5/10 7.0/4.2/3.5% (sel1 802) | cap1/5/10 33/54/69% | evprec1/5 14/10% | px 17.89 $vol 7128k | missFULL 1.6% mcapNA 20%
+T2 RF $vol 5 >10M = rows 605416 pos 818 base 0.14% ev 179 | P@1/5/10 8.7/6.0/4.6% (sel1 1698) | cap1/5/10 29/61/74% | evprec1/5 16/11% | px 46.74 $vol 47852k | missFULL 0.7% mcapNA 20%
+T3 RF px1-5 & $vol<100k = rows 90342 pos 1530 base 1.69% ev 229 | P@1/5/10 8.3/6.0/3.6% (sel1 217) | cap1/5/10 7/39/72% | evprec1/5 20/13% | px 2.07 $vol 32k | missFULL 2.3% mcapNA 27%
+T3 RF px1-5 & $vol>=100k = rows 207860 pos 2637 base 1.27% ev 456 | P@1/5/10 5.9/4.4/3.2% (sel1 2731) | cap1/5/10 21/59/78% | evprec1/5 14/10% | px 2.74 $vol 784k | missFULL 2.2% mcapNA 24%
+T3 RF px<1 & $vol<100k = rows 45692 pos 1811 base 3.96% ev 260 | P@1/5/10 9.5/6.3/4.9% (sel1 3019) | cap1/5/10 37/88/98% | evprec1/5 22/15% | px 0.59 $vol 31k | missFULL 2.5% mcapNA 29%
+T3 RF px<1 & $vol>=100k = rows 43142 pos 1816 base 4.21% ev 316 | P@1/5/10 7.9/5.5/4.7% (sel1 9683) | cap1/5/10 67/92/98% | evprec1/5 17/13% | px 0.58 $vol 361k | missFULL 3.3% mcapNA 27%
+T3 RF px>=5 & $vol>=100k = rows 1097067 pos 1366 base 0.12% ev 244 | P@1/5/10 5.4/4.8/3.4% (sel1 611) | cap1/5/10 10/34/54% | evprec1/5 11/10% | px 26.94 $vol 12257k | missFULL 1.5% mcapNA 21%
+T3 RF px>=5 & $vol>=1M = rows 917510 pos 911 base 0.10% ev 177 | P@1/5/10 4.9/4.2/3.4% (sel1 546) | cap1/5/10 13/40/59% | evprec1/5 11/9% | px 32.55 $vol 19903k | missFULL 1.1% mcapNA 20%
+T3 VOL px1-5 & $vol<100k = rows 90342 pos 1530 base 1.69% ev 229 | P@1/5/10 0.0/3.1/2.1% (sel1 18) | cap1/5/10 1/24/64% | evprec1/5 0/6% | px 2.07 $vol 32k | missFULL 2.3% mcapNA 27%
+T3 VOL px1-5 & $vol>=100k = rows 207860 pos 2637 base 1.27% ev 456 | P@1/5/10 1.7/2.4/2.0% (sel1 459) | cap1/5/10 7/35/60% | evprec1/5 7/6% | px 2.74 $vol 784k | missFULL 2.2% mcapNA 24%
+T3 VOL px<1 & $vol<100k = rows 45692 pos 1811 base 3.96% ev 260 | P@1/5/10 8.5/4.7/4.0% (sel1 5316) | cap1/5/10 45/98/100% | evprec1/5 19/12% | px 0.59 $vol 31k | missFULL 2.5% mcapNA 29%
+T3 VOL px<1 & $vol>=100k = rows 43142 pos 1816 base 4.21% ev 316 | P@1/5/10 6.7/4.6/4.2% (sel1 10641) | cap1/5/10 58/94/99% | evprec1/5 16/11% | px 0.58 $vol 361k | missFULL 3.3% mcapNA 27%
+T3 VOL px>=5 & $vol>=100k = rows 1097067 pos 1366 base 0.12% ev 244 | P@1/5/10 0.0/3.4/2.2% (sel1 0) | cap1/5/10 3/6/12% | evprec1/5 0/17% | px 26.94 $vol 12257k | missFULL 1.5% mcapNA 21%
+T3 VOL px>=5 & $vol>=1M = rows 917510 pos 911 base 0.10% ev 177 | P@1/5/10 0.0/4.3/2.7% (sel1 0) | cap1/5/10 3/7/16% | evprec1/5 0/17% | px 32.55 $vol 19903k | missFULL 1.1% mcapNA 20%
+err None
+--- LOG ---
+T4 RF ATR d1 (cut -): rows 140547 pos 50 base 0.04% ev 10 | P@1/5/10 0.0/0.0/0.0% (sel1 0) | cap1/5/10 0/0/0% | evprec1/5 0/0% | px 11.02 $vol 182k | missFULL 6.3% mcapNA 47%
+T4 RF ATR d2 (cut 0.01492): rows 88541 pos 11 base 0.01% ev 0 | P@1/5/10 0.0/0.0/0.0% (sel1 0) | cap1/5/10 0/0/0% | evprec1/5 0/0% | px 49.32 $vol 32441k | missFULL 1.0% mcapNA 27%
+T4 RF ATR d3 (cut 0.01991): rows 111481 pos 11 base 0.01% ev 1 | P@1/5/10 0.0/0.0/0.0% (sel1 0) | cap1/5/10 0/0/0% | evprec1/5 0/0% | px 45.61 $vol 25340k | missFULL 0.6% mcapNA 21%
+T4 RF ATR d4 (cut 0.02433): rows 126868 pos 12 base 0.01% ev 2 | P@1/5/10 0.0/0.0/0.0% (sel1 0) | cap1/5/10 0/0/0% | evprec1/5 0/0% | px 40.23 $vol 20842k | missFULL 0.5% mcapNA 19%
+T4 RF ATR d5 (cut 0.02892): rows 138380 pos 13 base 0.01% ev 1 | P@1/5/10 0.0/0.0/0.0% (sel1 0) | cap1/5/10 0/0/0% | evprec1/5 0/0% | px 33.38 $vol 16260k | missFULL 0.4% mcapNA 19%
+T4 RF ATR d6 (cut 0.03413): rows 146124 pos 28 base 0.02% ev 4 | P@1/5/10 0.0/0.0/0.0% (sel1 3) | cap1/5/10 0/0/0% | evprec1/5 0/5% | px 26.90 $vol 11164k | missFULL 0.5% mcapNA 18%
+T4 RF ATR d7 (cut 0.04039): rows 153263 pos 84 base 0.05% ev 12 | P@1/5/10 0.0/0.0/0.2% (sel1 7) | cap1/5/10 8/8/17% | evprec1/5 0/3% | px 20.79 $vol 6948k | missFULL 0.7% mcapNA 19%
+T4 RF ATR d8 (cut 0.04841): rows 171941 pos 342 base 0.20% ev 60 | P@1/5/10 1.5/0.9/1.4% (sel1 66) | cap1/5/10 3/13/32% | evprec1/5 2/3% | px 13.60 $vol 3484k | missFULL 1.0% mcapNA 19%
+T4 RF ATR d9 (cut 0.06014): rows 221651 pos 1172 base 0.53% ev 173 | P@1/5/10 4.2/2.7/2.0% (sel1 260) | cap1/5/10 5/24/51% | evprec1/5 6/6% | px 6.47 $vol 1264k | missFULL 1.7% mcapNA 22%
+T4 RF ATR d10 (cut 0.08197): rows 306628 pos 7644 base 2.49% ev 1276 | P@1/5/10 7.9/5.6/4.3% (sel1 15925) | cap1/5/10 34/72/87% | evprec1/5 17/13% | px 2.71 $vol 383k | missFULL 4.3% mcapNA 25%
+T4 RF RV20 d1 (cut -): rows 143982 pos 47 base 0.03% ev 9 | P@1/5/10 0.0/0.0/0.0% (sel1 0) | cap1/5/10 0/0/0% | evprec1/5 0/0% | px 10.96 $vol 245k | missFULL 6.0% mcapNA 41%
+T4 RF RV20 d2 (cut 0.009554): rows 97965 pos 2 base 0.00% ev 0 | P@1/5/10 0.0/0.0/0.0% (sel1 0) | cap1/5/10 0/0/0% | evprec1/5 0/0% | px 41.97 $vol 17346k | missFULL 1.3% mcapNA 23%
+T4 RF RV20 d3 (cut 0.01277): rows 125308 pos 29 base 0.02% ev 4 | P@1/5/10 0.0/0.0/0.0% (sel1 0) | cap1/5/10 0/0/0% | evprec1/5 0/24% | px 39.38 $vol 14011k | missFULL 0.6% mcapNA 19%
+T4 RF RV20 d4 (cut 0.0157): rows 143614 pos 31 base 0.02% ev 5 | P@1/5/10 0.0/0.0/0.0% (sel1 0) | cap1/5/10 0/0/20% | evprec1/5 0/24% | px 33.95 $vol 12451k | missFULL 0.5% mcapNA 19%
+T4 RF RV20 d5 (cut 0.01878): rows 150761 pos 68 base 0.05% ev 12 | P@1/5/10 0.0/0.0/0.7% (sel1 1) | cap1/5/10 0/0/0% | evprec1/5 0/5% | px 28.76 $vol 10518k | missFULL 0.6% mcapNA 20%
+T4 RF RV20 d6 (cut 0.02225): rows 155492 pos 126 base 0.08% ev 26 | P@1/5/10 20.0/4.6/1.8% (sel1 5) | cap1/5/10 4/15/42% | evprec1/5 20/6% | px 23.02 $vol 7690k | missFULL 0.7% mcapNA 20%
+T4 RF RV20 d7 (cut 0.02643): rows 166786 pos 348 base 0.21% ev 50 | P@1/5/10 2.8/2.1/2.0% (sel1 36) | cap1/5/10 6/20/44% | evprec1/5 3/7% | px 16.50 $vol 4776k | missFULL 0.9% mcapNA 22%
+T4 RF RV20 d8 (cut 0.03185): rows 184823 pos 811 base 0.44% ev 126 | P@1/5/10 2.4/3.1/2.6% (sel1 170) | cap1/5/10 9/30/53% | evprec1/5 7/8% | px 10.11 $vol 2518k | missFULL 1.4% mcapNA 22%
+T4 RF RV20 d9 (cut 0.03979): rows 213135 pos 2018 base 0.95% ev 330 | P@1/5/10 7.6/4.4/2.9% (sel1 924) | cap1/5/10 12/47/71% | evprec1/5 15/12% | px 5.47 $vol 1259k | missFULL 2.4% mcapNA 24%
+T4 RF RV20 d10 (cut 0.05472): rows 223558 pos 5887 base 2.63% ev 977 | P@1/5/10 7.9/5.7/4.6% (sel1 15125) | cap1/5/10 40/78/91% | evprec1/5 17/13% | px 3.19 $vol 845k | missFULL 4.4% mcapNA 25%
+T4 RF MCAP d1 (cut -): rows 166702 pos 4661 base 2.80% ev 740 | P@1/5/10 9.5/5.9/4.6% (sel1 8406) | cap1/5/10 38/73/89% | evprec1/5 21/14% | px 1.69 $vol 76k | missFULL 2.2% mcapNA 0%
+T4 RF MCAP d2 (cut 17.89): rows 119980 pos 873 base 0.73% ev 166 | P@1/5/10 4.6/3.8/2.5% (sel1 1295) | cap1/5/10 18/48/68% | evprec1/5 12/9% | px 5.01 $vol 227k | missFULL 2.6% mcapNA 0%
+T4 RF MCAP d3 (cut 18.79): rows 107732 pos 367 base 0.34% ev 71 | P@1/5/10 2.2/2.0/1.6% (sel1 454) | cap1/5/10 7/28/56% | evprec1/5 5/5% | px 8.62 $vol 578k | missFULL 2.5% mcapNA 0%
+T4 RF MCAP d4 (cut 19.4): rows 108301 pos 230 base 0.21% ev 38 | P@1/5/10 4.9/3.4/2.0% (sel1 182) | cap1/5/10 11/37/55% | evprec1/5 9/8% | px 9.97 $vol 1134k | missFULL 3.2% mcapNA 0%
+T4 RF MCAP d5 (cut 19.91): rows 99411 pos 139 base 0.14% ev 26 | P@1/5/10 0.0/2.4/1.1% (sel1 57) | cap1/5/10 0/19/27% | evprec1/5 12/7% | px 14.19 $vol 2584k | missFULL 1.6% mcapNA 0%
+T4 RF MCAP d6 (cut 20.4): rows 96388 pos 117 base 0.12% ev 19 | P@1/5/10 17.5/3.3/2.7% (sel1 40) | cap1/5/10 5/32/68% | evprec1/5 22/4% | px 17.75 $vol 5478k | missFULL 1.3% mcapNA 0%
+T4 RF MCAP d7 (cut 20.96): rows 102891 pos 73 base 0.07% ev 14 | P@1/5/10 11.1/1.9/2.8% (sel1 9) | cap1/5/10 7/29/29% | evprec1/5 11/10% | px 23.84 $vol 10352k | missFULL 1.0% mcapNA 0%
+T4 RF MCAP d8 (cut 21.5): rows 123152 pos 155 base 0.13% ev 24 | P@1/5/10 17.2/8.8/7.0% (sel1 163) | cap1/5/10 38/62/83% | evprec1/5 32/23% | px 36.42 $vol 20474k | missFULL 1.0% mcapNA 0%
+T4 RF MCAP d9 (cut 22.17): rows 132848 pos 75 base 0.06% ev 12 | P@1/5/10 11.1/2.9/3.6% (sel1 45) | cap1/5/10 17/25/58% | evprec1/5 22/7% | px 57.42 $vol 49469k | missFULL 0.9% mcapNA 0%
+T4 RF MCAP d10 (cut 23.19): rows 170402 pos 3 base 0.00% ev 1 | P@1/5/10 0.0/0.0/0.0% (sel1 5) | cap1/5/10 0/0/0% | evprec1/5 0/2% | px 98.72 $vol 185038k | missFULL 0.2% mcapNA 0%
+T4 RF MCAP missing (cut -): rows 377617 pos 2674 base 0.71% ev 428 | P@1/5/10 6.2/5.5/4.2% (sel1 5605) | cap1/5/10 26/65/80% | evprec1/5 14/13% | px 13.55 $vol 1570k | missFULL 3.3% mcapNA 100%
+CHECK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(781422a1a9c45736b160947d08afe499) completed in 1391.69 seconds at 60k data points per second. Processing total of 84,115,119 data points.
