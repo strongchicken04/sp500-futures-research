@@ -146,3 +146,37 @@ class ModesU:
             S(f"U H10 {va} x {vb} [{uni}]", " | ".join(cells)[:198])
             self.lg(f"H10 {va}(rows q1..q5) x {vb}(cols) rate%: " + " ; ".join(" ".join(f"{rt[i, j] * 100:.2f}" for j in range(5)) for i in range(5)))
 
+    # ---------------- Stage 3G: univariate replication on the untouched test period (called from TEST mode only) ----------------
+    def _univ_rep(self, y0=2021, y1=2025, tag="R"):
+        """same decile construction and top/bottom statistics as mode_univ, restricted to years y0..y1; no selection"""
+        S = self.set_runtime_statistic
+        rng = np.random.RandomState(2026)
+        L, F = self.L, self.F
+        mo = self._month()
+        per = (self.Y >= y0) & (self.Y <= y1)
+        prim = L[:, PRIMARY]
+        nsec = int(self.SID.max()) + 1
+        W = rng.poisson(1.0, size=(200, nsec)).astype(np.float32)
+        for hid, var, uni, sign in self.VARS:
+            m = self.U[uni] & per & (prim >= 0)
+            if m.sum() < 1000:
+                S(f"{tag} {hid} {var} [{uni}]", "too few rows")
+                continue
+            dec, pr = self._deciles(F[m, FI[var]], mo[m])
+            y = (prim[m] == 1).astype(np.float32)
+            sid = self.SID[m]
+            key = sid.astype(np.int64) * 11 + dec
+            n_c = np.bincount(key, minlength=nsec * 11).reshape(nsec, 11).astype(np.float32)
+            p_c = np.bincount(key, weights=y, minlength=nsec * 11).reshape(nsec, 11).astype(np.float32)
+            N = n_c.sum(0); P = p_c.sum(0); rate = P / np.maximum(N, 1)
+            brate = (W @ p_c) / np.maximum(W @ n_c, 1)
+            rr = rate[9] / max(rate[0], 1e-12)
+            brr = np.log(np.maximum(brate[:, 9], 1e-9) / np.maximum(brate[:, 0], 1e-9))
+            p = min(1.0, max(2 * min((brr <= 0).mean(), (brr >= 0).mean()), 1.0 / 200))
+            spear = np.corrcoef(pd.Series(rate[:10]).rank().values, np.arange(10))[0, 1]
+            fin = np.isfinite(pr)
+            o = np.argsort(pr[fin], kind="mergesort"); ys = y[fin][o]
+            wn = 1 - ys; auc = float((ys * (np.cumsum(wn) - wn)).sum() / max(ys.sum() * wn.sum(), 1e-9))
+            ci = np.exp((np.percentile(brr, 2.5), np.percentile(brr, 97.5)))
+            S(f"{tag} {hid} {var} [{uni}]", f"{y0}-{y1}: RR {rr:.2f} [{ci[0]:.2f},{ci[1]:.2f}] diff {(rate[9] - rate[0]) * 100:+.3f}pp p {p:.3f} | rho {spear:+.2f} AUC {auc:.3f} | n {int(N.sum() / 1000)}k pos {int(P.sum())} miss {int(N[10] / 1000)}k"[:198])
+            self.lg(f"{tag} {hid} {var} deciles rate%: " + " ".join(f"{rate[k] * 100:.2f}" for k in range(11)))

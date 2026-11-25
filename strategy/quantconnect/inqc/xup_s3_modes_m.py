@@ -42,6 +42,7 @@ SPECS = [
     ("full+float GBM [C]", "C", FULL_A + G_FUND + G_FLT, "gbm", "c"),
 ]
 FROZEN = None   # filled by amendment before TEST: list of SPECS names to evaluate on the test period
+L2_C_FROZEN = None   # L2 C chosen on validation in MODEL, fixed by the same amendment
 
 
 def _split(alg, sp, test=False):
@@ -92,6 +93,10 @@ class ModesM:
         if kind == "l2":
             Z, st = self._prep(X)
             best = None
+            if Xh is None:   # TEST: C fixed to the value chosen on validation (L2_C_FROZEN)
+                m = LogisticRegression(C=L2_C_FROZEN, max_iter=400).fit(Z, y, sample_weight=w)
+                self.l2_C = L2_C_FROZEN
+                return lambda A: m.predict_proba(self._prep(A, st)[0])[:, 1], m
             for C in (0.001, 0.01, 0.1, 1.0):
                 m = LogisticRegression(C=C, max_iter=400).fit(Z, y, sample_weight=w)
                 if Xh is not None:
@@ -183,9 +188,24 @@ class ModesM:
         S = self.set_runtime_statistic
         li = PRIMARY
         results = {}
-        for (name, uni, feats, kind, sp) in SPECS:
-            if names is not None and name not in names:
+        for spec in SPECS:
+            if names is not None and spec[0] not in names:
                 continue
+            import time as _t
+            t0 = _t.time()
+            try:
+                self._one_spec(spec, test, results)
+                self.lg(f"TIME {spec[0]} {(_t.time() - t0) / 60:.1f} min")
+            except Exception as e:
+                import traceback
+                S(f"{'T' if test else 'M'} {spec[0]}", ("ERROR " + str(e) + " | " + traceback.format_exc()[-120:])[:198])
+        return results
+
+    def _one_spec(self, spec, test, results):
+        S = self.set_runtime_statistic
+        li = PRIMARY
+        name, uni, feats, kind, sp = spec
+        if True:
             tr, ev, ytd = _split(self, sp, test)
             um = self.U[uni]
             idx, y, w = self._train_rows(um & tr, li)
@@ -216,7 +236,6 @@ class ModesM:
                     yy = (self.L[ym, li] == 1).astype(int)
                     m2 = self._metrics(f(self.F[ym][:, cols]), yy, self.D[ym], self.SID[ym], boot=30)
                     self.lg(f"YTD2026 {name}: n {m2['n']} pos {m2['pos']} base {m2['base'] * 100:.3f}% PR-AUC {m2['ap']:.4f} [{m2['ap_ci'][0]:.4f},{m2['ap_ci'][1]:.4f}] P@1% {m2['p1'] * 100:.2f}% ({m2['k1']}/{m2['n1']}) R@10 {m2['r10'] * 100:.0f}% AUC {m2['auc']:.3f}")
-        return results
 
     def _importance(self, test=False):
         """permutation importance (PR-AUC drop) of the main GBM on a fixed evaluation subsample"""
@@ -283,14 +302,24 @@ class ModesM:
                 return (wy * np.cumsum(wy) / np.maximum(np.cumsum(ww), 1e-9)).sum() / max(wy.sum(), 1e-9)
             d = [ap(sG, W[i][sid].astype(float)) - ap(sA, W[i][sid].astype(float)) for i in range(60)]
             self.set_runtime_statistic("M H10 GBM minus additive LR PR-AUC", f"{mG[0]['ap'] - mA[0]['ap']:+.4f} [{np.percentile(d, 2.5):+.4f},{np.percentile(d, 97.5):+.4f}]")
-        self._importance(False)
-        self._secondary(False)
+        self._safe(self._importance, False)
+        self._safe(self._secondary, False)
+
+    def _safe(self, fn, *a):
+        import time as _t, traceback
+        t0 = _t.time()
+        try:
+            fn(*a)
+        except Exception as e:
+            self.lg(f"ERROR {fn.__name__}: {e} | {traceback.format_exc()[-150:]}")
+        self.lg(f"TIME {fn.__name__} {(_t.time() - t0) / 60:.1f} min")
 
     def mode_test(self):
         if FROZEN is None:
             self.set_runtime_statistic("T ERROR", "FROZEN specification not set - refusing to touch the test period")
             return
+        self._safe(self._univ_rep, 2021, 2025, "R")
         res = self._run_specs(FROZEN, test=True)
-        self._importance(True)
-        self._secondary(True)
-        self._tradability(res)
+        self._safe(self._importance, True)
+        self._safe(self._secondary, True)
+        self._safe(self._tradability, res)

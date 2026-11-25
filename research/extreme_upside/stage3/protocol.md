@@ -116,3 +116,39 @@ No trading-profit claim from family A.
   odds-ratio and slope CIs keep 200.
 - The panel's market-cap snapshots are weekly. The universe pass is weekly, so a security that lived less
   than one week can be missed.
+
+### Amendment 2 (2026-11-25, after the univariate results on 2006–2020, before any model result was seen)
+Model implementation, fixed here before the first MODEL run (smoke runs included):
+- **Random forest:** 200 trees, min_samples_leaf 200, max_features √p, max_samples 0.5, no class balancing.
+  The draft said 300 trees and a balanced subsample; changed for compute on 1 CPU. The training subsample is
+  already weighted back to the population.
+- **Gradient boosting:** HistGradientBoosting with learning rate 0.05, max_leaf_nodes 31, l2 0.1. The number of
+  trees (25 to 500, in steps of 25) is chosen on the last 10 % of the training rows by date, by weighted log loss,
+  stopping after 3 steps without improvement. The model is then refit on all training rows. Missing values are
+  handled natively.
+- **L2 logistic:** C ∈ {0.001, 0.01, 0.1, 1}, chosen on validation PR-AUC. TEST uses that C, fixed (L2_C_FROZEN).
+- **Unregularised LR:** C = 1e4. Inputs are winsorised at the training p1/p99, median-imputed, given missing
+  indicators and standardised.
+- **Purge / embargo:** training ends 60 calendar days (≈ 41 sessions) before the next period. That is ≥ the
+  maximum horizon (20) plus the 20-session embargo.
+- **Splits:**
+  - A and B: development 2006-02..2016 / validation 2017–2020.
+  - C (float from 2011): development 2011–2016 / validation 2017–2020.
+  - D (SI from 2018-01-11): development 2018-01-11..2019 / validation 2020 only. D therefore has a much
+    shorter history; this is a known limitation.
+- **CIs:** model-metric CIs use 60 Poisson cluster-bootstrap resamples by security (2026 YTD: 30) instead of 200,
+  for compute reasons.
+- **Secondary endpoints:** the full-A GBM is refit for A5/+50, A20/+200, B10/+100, B-max10/+100 and A10/+50,
+  and reported descriptively.
+- **H10 formal test:** validation PR-AUC of full-A GBM minus full-A LR, with a cluster-bootstrap CI.
+
+**Pre-committed rule for the TEST run (decided now, before MODEL results):**
+- **FROZEN = all specifications that run without error in MODEL.** Every one is refit on the full development +
+  validation window and evaluated once on 2021–2025, so no model is selected on test results.
+- **"Best model":** the specification with the highest validation PR-AUC within universe A. It is named in
+  Amendment 3 before TEST.
+- **Model evidence:** a model is described as having predictive value beyond simple baselines only if its test
+  PR-AUC CI lies above the CI of the best single-group baseline (price-only, momentum-only or volume-only LR).
+- **Univariate replication:** the 18 univariate variables are replicated on 2021–2025 with identical code
+  (`_univ_rep`), with no selection.
+- No retuning after TEST. 2026 YTD is reported separately and never used for selection.

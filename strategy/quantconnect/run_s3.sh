@@ -6,8 +6,14 @@ cd "$(dirname "$0")/../.."
 SRC=strategy/quantconnect/inqc/xup_s3_panel_inqc.py
 TMP=$(mktemp -d)/main_s3.py
 sed "s/^MODE = \"AUDIT\"/MODE = \"$MODE\"/" $SRC > $TMP
-X=$(ls strategy/quantconnect/inqc/xup_ic_*.py strategy/quantconnect/inqc/xup_s3_const.py strategy/quantconnect/inqc/xup_s3_modes_*.py | tr '\n' ',' | sed 's/,$//')
+CONST=strategy/quantconnect/inqc/xup_s3_const.py
 OUT=results/xup_s3_$(echo $MODE | tr A-Z a-z)_raw.txt
+if [ -n "$SAMPLE_MOD" ]; then   # smoke test on a smaller fixed-hash sample; output kept out of results/
+  CONST=$(dirname $TMP)/xup_s3_const.py
+  sed "s/^SAMPLE_MOD = .*/SAMPLE_MOD = $SAMPLE_MOD/" strategy/quantconnect/inqc/xup_s3_const.py > $CONST
+  OUT=/tmp/xup_s3_$(echo $MODE | tr A-Z a-z)_smoke.txt
+fi
+X=$(ls strategy/quantconnect/inqc/xup_ic_*.py $CONST strategy/quantconnect/inqc/xup_s3_modes_*.py | tr '\n' ',' | sed 's/,$//')
 LOG=/tmp/s3_${MODE}_log.txt
 for i in $(seq 1 90); do
   QC_EXTRA_FILES=$X python3 strategy/quantconnect/deploy_long.py MSXB_1792352605 $TMP > $LOG 2>&1
