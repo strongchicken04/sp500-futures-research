@@ -1,0 +1,14 @@
+### xup s4 S4CONC v1 | project 38061541 backtest 4dff88079363e2295bbaa735a224c4e4 | VALID
+P0 panel = mode S4CONC | sample securities 2986 with data 2947 | rows 6028644 | build 11 min
+Q1 daily counts = test days 1255 | eligible rows/day p10/50/90 1.22e+03/1.27e+03/1.37e+03 min 1148 max 1390 | RF top-1% selections/day p50 13 max 14 (20% sample of the universe)
+Q2 date concentration = share of positive rows on top 1% / 5% of days 3.4% / 14.2% | E1 onsets/day mean 1.23 var 1.88 var/mean 1.53 days > mean+3sd 11 | daily rate var obs/binomial 4.22 ICC 0.0025
+Q3 security concentration = securities with test rows 1832, with >=1 event 511 | share of events from top 1/5/10% securities 12.9/43.5/65.8% | RF top-1% selections from top 1/5/10% 22.9/64.3/86.9%
+Q5 calendar control = days with >=1 positive 1207 | mean daily AP RF 0.1059 VOL 0.0896 RF>VOL on 65.5% of days | pooled dAP +0.0139 date-bootstrap [0.0117,0.0163] p 0.0010
+S4 CHECK = OK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+err None
+--- LOG ---
+Q4 regime SPY 20d vol: T1: rows 340937 base 0.69% ev 355 RF AP 0.0762 P@1 9.2% VOL AP 0.0498 P@1 7.9% | T2: rows 744490 base 0.60% ev 736 RF AP 0.0576 P@1 7.5% VOL AP 0.0499 P@1 7.3% | T3: rows 519997 base 0.49% ev 448 RF AP 0.0568 P@1 7.2% VOL AP 0.0408 P@1 6.3%
+Q4 regime IWM 20d return: T1: rows 633578 base 0.48% ev 548 RF AP 0.0647 P@1 7.9% VOL AP 0.0447 P@1 6.3% | T2: rows 438080 base 0.59% ev 412 RF AP 0.0594 P@1 7.7% VOL AP 0.0492 P@1 7.0% | T3: rows 533766 base 0.70% ev 579 RF AP 0.0604 P@1 7.6% VOL AP 0.0481 P@1 8.2%
+Q4 regime panel median r20: T1: rows 670707 base 0.50% ev 599 RF AP 0.0625 P@1 7.8% VOL AP 0.0451 P@1 6.6% | T2: rows 513418 base 0.59% ev 481 RF AP 0.0612 P@1 7.9% VOL AP 0.0507 P@1 7.2% | T3: rows 421299 base 0.71% ev 459 RF AP 0.0600 P@1 7.4% VOL AP 0.0462 P@1 7.9%
+CHECK rows 6028644 (S4 canon 6028644; S3 6022604) primary events 24426 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(4dff88079363e2295bbaa735a224c4e4) completed in 1345.03 seconds at 63k data points per second. Processing total of 84,120,377 data points.
