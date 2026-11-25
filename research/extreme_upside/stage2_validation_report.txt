@@ -21,9 +21,11 @@ Runs that were wrong and repeated (kept in the raw files as v1, superseded by v2
   * V5 v1 / V2 v1: history() filled missing sessions forward by default, so halted and delisted days looked
     like flat bars. All numbers below come from the v2 runs, which have fill-forward switched off.
 
-STATUS: see section 10. Short version: universe, delistings, corporate actions, labels and short-interest timing
-are validated, with defined treatments. The derived float is NOT validated as a reliable variable and stays an
-uncertain derived variable. Two universe problems found here change the Stage 1 universe definition (section 1).
+STATUS (section 10): all eight validation items were executed and every treatment is fixed before any
+predictive test. One item stays open as a DECISION for the owner. Requiring Morningstar fundamentals drops about a
+third of common-stock extreme events, and the fix needs a point-in-time ETF list imported into QC. The derived
+float is NOT validated and stays an uncertain derived variable. PIT share count, delistings, corporate actions,
+labels and short-interest timing are validated.
 
 
 0. CORRECTIONS TO STAGE 1
@@ -309,7 +311,16 @@ partial evidence. A float-based result cannot confirm the main hypothesis.
   Stage 1's extra 1-day lag is removed.
 * Off-cycle changes: about 45% of value changes fall on other days, spread evenly (-5..+11 trading days).
   previous_short_interest equals the prior value in only 36.8% of changes.
-  [PENDING V4b: duplicates / flip-backs / concentration]
+  V4b explains them. They are DUPLICATE RECORDS, not timing:
+  - 495,814 cases of the same symbol appearing more than once in one daily file.
+  - 93% of off-cycle changes are flip-backs (the value returns to the one before), i.e. two records
+    alternating.
+  - Off-cycle changes occur in only 9% of the 3,982 tracked symbols, and the top 5% of symbols hold 78% of them
+    (CADC, IAM, KBSF, LBIX, ENB, EBIO, CCCR, CUR, ESDI, HR, GXF, FLEH; also the reused ticker BBBY: 465).
+  - GME, AMC, AAPL and TSLA: 0 off-cycle changes.
+  - They grow from 14k (2018) to 99k (2025) a year.
+  Treatment: a symbol-day with more than one record is AMBIGUOUS and set to missing. Never pick one of the two
+  values silently.
 * Staleness / forward fill: the universe is a daily forward-filled snapshot. 22.4% of symbol-days carry a value
   unchanged for more than 35 days (21.5% more than 70 days, i.e. at least 2 missed cycles). si <= 0: 0.00%. One
   symbol had a 211-day delivery gap. Treatment: value age = days since the last change; age > 35 days -> missing,
@@ -446,4 +457,32 @@ Execution: features and labels are computed inside the QC algorithm per run (or 
 
 10. STAGE 2 STATUS
 ------------------
-[filled in after V1c and V4b]
+Validation item (brief)                         Result
+1 universe, filters, attrition, A-D              DONE. Two filter defects found and fixed by rule (primary-share
+                                                 mis-flags; test symbols). Selection bias from requiring
+                                                 fundamentals QUANTIFIED: B misses about 1/3 of stock events.
+2 delistings / bankruptcies                      DONE. Treatment defined. Upside event counts change < 1% across
+                                                 assumptions. SIVB (halted exit) and HTZ (surviving equity) are
+                                                 the documented exceptions.
+3 corporate actions                              DONE. One convention: adjusted ratios for labels, raw levels for
+                                                 tradability. Raw data would create 18-39% fake events.
+4 derived PIT float                              DONE. PIT shares VALIDATED; float ratio NOT validated -> float
+                                                 stays an uncertain derived variable (partial research only).
+5 short-interest timestamps                      DONE. QC time >= FINRA publication + 1 trading day (+1/+2); no
+                                                 extra delay; duplicate-record days -> missing; value age > 35
+                                                 days -> missing.
+6 event labels                                   DONE. Families A and B defined, open(t+1) reference, incomplete
+                                                 windows, overlap (episodes), gap segmentation (ticker-reuse
+                                                 splice found), halt proxy.
+7 representativeness                             DONE. B is representative of exchange-listed covered common
+                                                 stocks by size and exchange, not of the full event base.
+8 deliverables                                   This report (sections 1-9).
+
+STAGE 2 = NOT YET FULLY COMPLETE: ONE OPEN ITEM, which is a decision, not a missing check.
+The selection bias from requiring fundamentals is large (1.4). It can be fixed only by building A-stock, and
+that needs a point-in-time ETF/ETN list IMPORTED into QC, because QC has no ETF flag. Options:
+  (a) import a PIT ETF/ETN list (from SEC fund filings / exchange listing files) into QC, then A-stock becomes the
+      main universe for price/volume hypotheses and B for fundamental ones. RECOMMENDED.
+  (b) no import: B is the main universe and every result carries the stated bias; A-stock (with ~18% fund
+      contamination) is a robustness check only.
+Everything else needed for Stage 3 is validated, and the treatments above are fixed before any predictive test.

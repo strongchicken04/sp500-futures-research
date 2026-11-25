@@ -1,0 +1,15 @@
+### xup s2 si_b v1
+Equity = $100,000.00
+Fees = -$0.00
+Holdings = $0.00
+Net Profit = $0.00
+Probabilistic Sharpe Ratio = 0%
+Return = 0.00 %
+SIb duplicates = duplicate records of a symbol within one day: 495814 over 2251 days
+SIb extra symbols off-cycle = GME:0 AMC:0 AAPL:0 TSLA:0 BBBY:465
+SIb off-cycle per year = 2018:14046 2019:37736 2020:56191 2021:66340 2022:77466 2023:86592 2024:91876 2025:99449 2026:69769
+SIb on/off cycle = changes on-cycle 937759 off-cycle 599465 (39%) | off-cycle flip-backs 93% | symbols with any off-cycle change 9% of 3982 | top 5% symbols hold 78% of off-cycle
+SIb top off-cycle symbols = CADC:3986/6464 IAM:3722/6018 KBSF:3675/5926 LBIX:3473/5604 ENB:3364/5418 EBIO:3216/5185 CCCR:3075/4962 CUR:3041/4946 ESDI:3033/4883 HR:2794/4501 GXF:2794/4501 FLEH:2794/4501
+Unrealized = $0.00
+Volume = $0.00
+err None
