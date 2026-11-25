@@ -6,7 +6,7 @@ cd "$(dirname "$0")/../.."
 SRC=strategy/quantconnect/inqc/xup_s3_panel_inqc.py
 TMP=$(mktemp -d)/main_s3.py
 sed "s/^MODE = \"AUDIT\"/MODE = \"$MODE\"/" $SRC > $TMP
-X=$(ls strategy/quantconnect/inqc/xup_ic_*.py | tr '\n' ',' | sed 's/,$//')
+X=$(ls strategy/quantconnect/inqc/xup_ic_*.py strategy/quantconnect/inqc/xup_s3_const.py strategy/quantconnect/inqc/xup_s3_modes_*.py | tr '\n' ',' | sed 's/,$//')
 OUT=results/xup_s3_$(echo $MODE | tr A-Z a-z)_raw.txt
 LOG=/tmp/s3_${MODE}_log.txt
 for i in $(seq 1 90); do

@@ -65,6 +65,8 @@ def main():
     if not u.get("success"):
         c = call("files/create", {"projectId": pid, "name": "main.py", "content": content})
         print("[file create]", c.get("success"), json.dumps(c)[:200])
+        if not c.get("success"):
+            print("main.py upload FAILED (update:", json.dumps(u)[:200], ") - aborting instead of running the template"); sys.exit(1)
     else:
         print("[file update] ok")
 
