@@ -173,7 +173,7 @@ class S45ModesB:
             bb = self._s45_pairboot(out["L2_FULL"][1]["cap"][el2].astype(float), out["STATE"][1]["cap"][el2].astype(float), out["STATE"][1]["sid"][el2], None, B=1000)
             S(f"M6 ONSET_{k}", (f"base {100 * yk.mean():.2f}% | PR-AUC STATE {out['STATE'][0]:.4f} L2 {out['L2_FULL'][0]:.4f} | cap STATE {100 * out['STATE'][1]['cap'][el2].mean():.1f}% L2 {100 * out['L2_FULL'][1]['cap'][el2].mean():.1f}%"
                                 f" d {100 * bb['d']:+.1f}pp {bb['cs']} (events {int(el2.sum())})")[:198])
-        self.lg("CHECK " + self.s4_check)
+        self._s45_end()
 
     # ---------------- placebo ----------------
     def _s45_memcount(self, member, mv, sel, a, b):
@@ -226,4 +226,4 @@ class S45ModesB:
         e1 = verdict.get(("E1", "L2_FULL", 1, 3, 31, 33, "unmatched"), False) and verdict.get(("E1", "L2_FULL", 1, 3, 31, 33, "matched"), False)
         alt = verdict.get(("E2", "L2_FULL", 1, 3, 31, 33, "matched"), False) or verdict.get(("E3", "L2_FULL", 1, 3, 31, 33, "matched"), False)
         S("C3 verdict", f"E1 unmatched+matched {'PASS' if e1 else 'FAIL'} | E2 or E3 matched {'PASS' if alt else 'FAIL'} -> C3 {'PASS' if (e1 and alt) else 'FAIL'}")
-        self.lg("CHECK " + self.s4_check)
+        self._s45_end()

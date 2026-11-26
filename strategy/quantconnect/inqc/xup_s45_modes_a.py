@@ -59,6 +59,7 @@ class S45ModesA:
             if un == "S1" and kst == 0.05 and rule == "trail":
                 S("L3 S1-P5 primary a", line[:198]); S("L3 S1-P5 primary b", (" | ".join(parts[2:]))[:198])
             self.lg("POP " + line)
+            self._s45_free()
         # universe sizes per day (test)
         per = (self.D >= T0) & (self.D <= T1)
         parts = []
@@ -67,8 +68,9 @@ class S45ModesA:
                 um = self._s45_umask(un, rule) & per
                 c = pd.Series(1, index=self.D[um]).groupby(level=0).sum()
                 parts.append(f"{un}/{rule} {np.median(c.values) if len(c) else 0:.0f}")
+        self._s45_mem("after populations")
         S("L4 universe rows/day (test, median)", " ".join(parts)[:198])
-        self.lg("CHECK " + self.s4_check)
+        self._s45_end()
 
     # ---------------- feature leakage tests ----------------
     def mode_s45feature(self):
@@ -171,4 +173,4 @@ class S45ModesA:
         S("F3 univariate (training 2017-20 only, exploratory)", f"S1-P5 ONSET_3 training rows {len(rt)} pos {int(y.sum())} | features tested {len(res)}, BH q<0.05: {len(sig)}")
         self.lg("F3 AUC [95% CI] p q (feature vs ONSET_3, S1-P5, training window; AUC<0.5 = lower values before onsets): " + " | ".join(f"{r[0]} {r[1]:.3f} [{r[2]:.3f},{r[3]:.3f}] q{qq:.3f}" for r, qq in zip(res, qv)))
         self.lg("F4 coverage % finite (training / test rows of S1-P5): " + " ".join(cov))
-        self.lg("CHECK " + self.s4_check)
+        self._s45_end()

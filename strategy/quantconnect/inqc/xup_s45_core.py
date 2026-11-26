@@ -35,6 +35,9 @@ HP_TR1, HP_V0, HP_V1 = _o(2019, 12, 31) - 60, _o(2020, 1, 1), _o(2020, 12, 31)
 C_GRID, LEAF_GRID = (0.01, 0.1, 1.0), (20, 50, 100)
 # cost scenarios (protocol 8): set by amendment after S45EXEC, before S45OUTCOME; None = not yet measured
 S30 = None
+# memory (QC node 7.8 GB): S45 arrays are filled only for rows from KEEP45 (earliest row any S45 analysis uses is 2016-11-01)
+KEEP45 = _o(2016, 6, 1)
+F16MAX = 65000.0
 
 
 class S45Core:
@@ -47,12 +50,20 @@ class S45Core:
         if not hasattr(self, "X45"):
             self.X45 = []
         n = len(r[0])
+        k0 = int(np.searchsorted(r[0], KEEP45))
+        if k0 >= n:
+            self.X45.append((n, k0, None))
+            return r
         try:
-            ex = self._s45_extras(adj, raw, r[0])
+            fe, po, fc = self._s45_extras(adj, raw, r[0][k0:])
+            dvm = fe[:, FI45["dvmed20"]].astype(np.float32)
+            fe = np.clip(fe, -F16MAX, F16MAX).astype(np.float16)
+            ex = (fe, dvm, po, fc)
         except Exception as e:
             self.err.append("s45x " + type(e).__name__)
-            ex = (np.full((n, len(F45)), np.nan, np.float32), np.full((n, len(P45)), np.nan, np.float32), np.full((n, len(FCL)), -1, np.int8))
-        self.X45.append(ex)
+            m = n - k0
+            ex = (np.full((m, len(F45)), np.nan, np.float16), np.full(m, np.nan, np.float32), np.full((m, len(P45)), np.nan, np.float32), np.full((m, len(FCL)), -1, np.int8))
+        self.X45.append((n, k0, ex))
         return r
 
     def _s45_align(self, adj, raw):
@@ -165,28 +176,76 @@ class S45Core:
         self._s4_finish()
         X = self.X45
         assert len(X) == len(self.sid_list), "X45 / parts misaligned"
-        self.FE = np.concatenate([x[0] for x in X])
-        self.PO = np.concatenate([x[1] for x in X])
-        self.FCA = np.concatenate([x[2] for x in X])
+        N = len(self.D)
+        assert sum(x[0] for x in X) == N, "X45 row count"
+        self._s45_mem("before S45 arrays")
+        self.FE = np.full((N, len(F45)), np.nan, dtype=np.float16)
+        self.DVMED = np.full(N, np.nan, dtype=np.float32)
+        self.PO = np.full((N, len(P45)), np.nan, dtype=np.float32)
+        self.FCA = np.full((N, len(FCL)), -1, dtype=np.int8)
+        off = 0
+        for i in range(len(X)):
+            n, k0, ex = X[i]
+            if ex is not None:
+                a, b = off + k0, off + n
+                self.FE[a:b], self.DVMED[a:b], self.PO[a:b], self.FCA[a:b] = ex
+            X[i] = None
+            off += n
         self.X45 = None
-        assert len(self.PO) == len(self.D)
+        self._s45_mem("after S45 arrays")
+        chk = self.D >= KEEP45
         mis = []
         for a, b in (("A10", "mh10"), ("B5", "c5"), ("B10", "c10"), ("M10", "mc10"), ("L10", "ml10")):
-            x, y = self.PO[:, PI45[a]], self.OUT[:, OI[b]]
+            x, y = self.PO[chk, PI45[a]], self.OUT[chk, OI[b]]
             nm = int((np.isnan(x) != np.isnan(y)).sum())
             f = np.isfinite(x) & np.isfinite(y)
             vm = int((np.abs(x[f] - y[f]) > 1e-6 * np.maximum(1, np.abs(y[f]))).sum())
             mis.append(f"{a}:{nm}/{vm}")
         errs = sum(1 for e in self.err if e.startswith("s45x"))
         self.s45_ok = all(m.endswith(":0/0") for m in mis) and errs == 0 and self.s4_ok
-        self.set_runtime_statistic("S45 CHECK", ("OK " if self.s45_ok else "FAILED ") + f"path outcomes vs Stage 4 (nan/value mismatches) {' '.join(mis)} | s45 extension errors {errs} | S4 {'OK' if self.s4_ok else 'FAILED'}")
+        self.set_runtime_statistic("S45 CHECK", ("OK " if self.s45_ok else "FAILED ") + f"path outcomes vs Stage 4, rows>=2016-06 {int(chk.sum())} (nan/value mismatches) {' '.join(mis)} | s45 extension errors {errs} | S4 {'OK' if self.s4_ok else 'FAILED'}")
         # derived arrays
         self.RC = self.PX
-        self.DVMED = self.FE[:, FI45["dvmed20"]].astype(np.float64)
         self.s45_ready = True
+
+    def _s45_mem(self, tag):
+        try:
+            st = open("/proc/self/status").read()
+            g = lambda k: int(st.split(k + ":")[1].split()[0]) / 1e6
+            txt = f"{tag}: RSS {g('VmRSS'):.2f} GB peak {g('VmHWM'):.2f} GB"
+        except Exception:
+            txt = f"{tag}: n/a"
+        self.log("MEM " + txt)
+        self.memlog = getattr(self, "memlog", []) + [txt]
+
+    def _s45_end(self):
+        self._s45_mem("end of mode")
+        self.set_runtime_statistic("MEM", " | ".join(self.memlog)[-198:])
+        self.lg("CHECK " + self.s4_check)
+
+    def _s45_free(self, keep=(("S1", "trail"),)):
+        """drop cached state / population arrays of non-kept universes (memory)"""
+        for k in list(getattr(self, "st45", {}).keys()):
+            if k not in keep:
+                del self.st45[k]
+        for k in list(getattr(self, "pc45", {}).keys()):
+            if (k[1], k[5]) not in keep:
+                del self.pc45[k]
 
     # ---------------- universes ----------------
     def _s45_umask(self, name, rule="trail"):
+        if "/" in name:
+            base, suf = name.split("/", 1)
+            m = self._s45_umask(base, rule)
+            if suf == "strict":
+                return m & self.U["A-strict"]
+            if suf == "h120":
+                return m & ((np.arange(len(self.D)) - self.SEG0) >= 119)
+            if suf == "px1_5":
+                return m & (self.RC < 5)
+            if suf == "px5":
+                return m & (self.RC >= 5)
+            raise ValueError(name)
         p, d = UNIV[name]
         if name == "A":
             return self.U["A"].copy()
@@ -246,6 +305,11 @@ class S45Core:
             scM = self._s4_score(["fullA RF"], False, VSCORE, V1)["fullA RF"]
             scT = self._s4_score(["fullA RF"], True, SCORE_START, Y1)["fullA RF"]
             self.sc45 = (scM, scT)
+            scM = scT = None
+            self._fc = {}  # the two frozen RF refits are not needed after scoring (memory)
+            import gc
+            gc.collect()
+            self._s45_mem("after frozen RF scores")
         return self.sc45
 
     def _s45_state(self, uname, rule="trail"):
@@ -269,6 +333,9 @@ class S45Core:
         use_t = self.D >= T0
         for k in parts[0]:
             out[k] = np.where(use_t, parts[1][k], parts[0][k])
+            if k != "pr":
+                out[k] = out[k].astype(np.float32)
+        parts = None
         out["umask"] = um
         self.st45[key] = out
         return out
@@ -307,7 +374,7 @@ class S45Core:
         last = np.where(flag > 0, t, -1)
         last = pd.Series(last).groupby(self.GS).cummax().values
         since = np.where((last >= 0) & (last >= self.SEG0), t - last, 500).clip(max=500).astype(float)
-        return {"nev250": nev, "since_ev": since}
+        return {"nev250": nev.astype(np.float32), "since_ev": since.astype(np.float32)}
 
     # ---------------- feature matrix ----------------
     def _s45_X(self, rows, feats, st, eh):
@@ -382,7 +449,7 @@ class S45Core:
     def _s45_models(self, exante, lab, st, eh, specs, folds=("a", "b")):
         """fit each spec on each fold's training window, score that fold's test rows; returns {name: score array}"""
         n = len(self.D)
-        out = {nm: np.full(n, np.nan) for nm, _, _ in specs}
+        out = {nm: np.full(n, np.nan, dtype=np.float32) for nm, _, _ in specs}
         for fo in folds:
             trend, te0, te1 = FOLDS[fo]
             tr = exante & (lab >= 0) & (self.D >= TR0) & (self.D <= trend)

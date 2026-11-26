@@ -246,7 +246,6 @@ date and reason. Changes after results are visible are allowed only if they cann
   the persistent state.
 
 ## Amendments
-(none yet)
 
 ### Amendment 1 (2026-11-26, before any Stage 4.5 QC result was seen) — run-up diagnostic
 - **Problem.** With the move-day definition (first session reaching +100 %), a stock that rose, for example,
@@ -259,3 +258,23 @@ date and reason. Changes after results are visible are allowed only if they cann
     re-ranked inside it, and the C2 capture difference is recomputed with its CI.
 - **Use:** these results are reported next to C2 and inform the interpretation of "timing". They do not change
   the C2 rule.
+
+### Amendment 2 (2026-11-26, technical; after S45AUDIT v1 died without output, before any Stage 4.5 result was seen)
+- **What happened.** S45AUDIT v1 (backtest 1e42cf0b…) finished in QC with no runtime statistic and no log
+  line. Even the panel line `P0` is missing, so the process died inside `on_end_of_algorithm`. Most likely cause:
+  memory. The QC node (B-MICRO) has 7.8 GB, and the S45 arrays plus per-universe state caches in float64 add
+  several GB. The run is kept as INVALID in `results/xup_s45_audit_raw.txt`.
+- **Changes (none can affect a criterion):**
+  1. S45 arrays (features, path outcomes, Family C codes) are filled only for rows from 2016-06-01. The earliest
+     row any Stage 4.5 analysis uses is 2016-11-01. Features at t use only past bars, and outcomes are computed
+     from the full series before rows are kept, so stored values are identical.
+     - The S45 CHECK compares path outcomes with Stage 4 on those rows (count reported).
+  2. Feature matrix stored as float16, values clipped at ±65,000. Model inputs are winsorised at p1/p99 anyway.
+     - `dvmed20` (membership) is kept separately in float32.
+     - The leakage test compares recomputations in float64 and is unaffected.
+  3. Transition / event-history features and timing-model scores are stored as float32. The universe percentile
+     `pr` and the frozen RF scores stay float64, so membership in P1/P5/P10 is unchanged.
+  4. Caches of non-primary universes are dropped after use. The two frozen RF refits are released after scoring.
+  5. Memory checkpoints are logged (`MEM`).
+  6. The price × dollar-volume grid and the same-day-rule universes run as a separate mode, S45GRID, so that
+     S45ROBUST stays within limits. Content is unchanged from §8.
