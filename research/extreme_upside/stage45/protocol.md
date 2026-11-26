@@ -247,3 +247,15 @@ date and reason. Changes after results are visible are allowed only if they cann
 
 ## Amendments
 (none yet)
+
+### Amendment 1 (2026-11-26, before any Stage 4.5 QC result was seen) — run-up diagnostic
+- **Problem.** With the move-day definition (first session reaching +100 %), a stock that rose, for example,
+  +60 % on day t and crosses +100 % on t+1 counts as "pre-event". In substance that is detection of a move
+  already under way.
+- **Added to S45MODEL (diagnostic and sensitivity, not a new criterion):**
+  - (a) the distribution of the run-up at the first signal row of each captured event, defined as
+    xr = HIGH(t) / min OPEN(t−9..t) − 1 (Stage 4 path variable, past-only), with the shares ≥ 30 % and ≥ 50 %;
+  - (b) a STRICT pre-move sensitivity: the population additionally requires xr(t) < 50 %, the frozen scores are
+    re-ranked inside it, and the C2 capture difference is recomputed with its CI.
+- **Use:** these results are reported next to C2 and inform the interpretation of "timing". They do not change
+  the C2 rule.
