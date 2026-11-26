@@ -1,7 +1,7 @@
 #!/bin/bash
 # Stage 4.5 runner (adapted from run_s4.sh): one MODE of the Stage 3 panel + Stage 4 modules in QC; appends runtime statistics + log lines
 # (aggregates only) to results/xup_s4_<mode>_raw.txt with a validation verdict and the run identifiers.
-# Usage: run_s45.sh MODE [label]    MODE in S45AUDIT S45FEATURE S45MODEL S45PLACEBO S45ROBUST S45EXEC S45OUTCOME
+# Usage: run_s45.sh MODE [label]    MODE in S45AUDIT S45FEATURE S45MODEL S45PLACEBO S45ROBUST S45GRID S45EXEC S45OUTCOME
 # The committed Stage 3 panel file is NOT modified: a temporary copy gets MODE and the Stage 4 attachments.
 MODE=$1; LABEL=${2:-v1}
 cd "$(dirname "$0")/../.."
