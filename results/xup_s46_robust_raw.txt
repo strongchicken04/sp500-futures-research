@@ -1,0 +1,25 @@
+### xup s4 S46ROBUST v1 | project 38061541 backtest 7e2272513f00f2b0d0dbb01831ad6494 | VALID
+C S1 2026 L2-STATE = net +2.77pp [-1.62,7.44] p 0.2050 | rows 1250 loop 0.3 min
+C S2 2021-25 L2-STATE = net +1.97pp [0.61,3.33] p 0.0050 | rows 8083 loop 1.9 min
+D S1 2026 L2 = eligible 701 | minute cov 595 | breakout30 210 $1M30 299 both 145 (20.7% [16.2,25.6]) | quote entry 143 any entry 145 | complete 143 same-bar 50
+D S1 2026 STATE = eligible 701 | minute cov 646 | breakout30 125 $1M30 106 both 48 (6.8% [4.6,9.6]) | quote entry 48 any entry 48 | complete 48 same-bar 9
+D S2 2021-25 L2 = eligible 4983 | minute cov 4569 | breakout30 1663 $1M30 2602 both 1070 (21.5% [19.3,23.7]) | quote entry 1065 any entry 1070 | complete 1062 same-bar 317
+D S2 2021-25 STATE = eligible 4983 | minute cov 4478 | breakout30 1039 $1M30 1972 both 570 (11.4% [9.8,13.0]) | quote entry 565 any entry 570 | complete 570 same-bar 157
+MEM = k 7.08 GB | after S45 arrays: RSS 7.84 GB peak 7.84 GB | after frozen RF scores: RSS 7.98 GB peak 8.34 GB | after feature compaction: RSS 4.71 GB peak 8.54 GB | end of mode: RSS 4.74 GB peak 8.54 GB
+P0 panel = mode S46ROBUST | sample securities 2989 with data 2949 | rows 6030760 | build 15 min
+R S1 2026 L2 = net neutral mean -2.79% [-5.45,-0.26] two-way [-6.69,1.61] median -12.40% | gross -0.40% | win 29% | T 14.7 A 60.8 amb 0.0 N 24.5% incomplete 2
+R S1 2026 STATE = net neutral mean -5.57% [-10.13,-1.33] median -12.40% | gross -3.17% | win 23% | T 6.2 A 70.8 amb 0.0 N 22.9% incomplete 0
+R S2 2021-25 L2 = net neutral mean -2.06% [-3.30,-0.64] two-way [-3.81,-0.22] median -12.40% | gross +0.33% | win 33% | T 11.7 A 50.4 amb 0.0 N 37.9% incomplete 8
+R S2 2021-25 STATE = net neutral mean -4.03% [-5.56,-2.36] median -12.40% | gross -1.64% | win 25% | T 11.1 A 61.8 amb 0.0 N 27.2% incomplete 0
+S4 CHECK = OK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3098061 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+S46 CHECK = OK raw OHLC rows>=2020-06 1984316 | raw close vs panel price mismatches 0 | missing 0 | S45 OK
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 6.92 GB peak 7.08 GB
+MEM after S45 arrays: RSS 7.84 GB peak 7.84 GB
+MEM after frozen RF scores: RSS 7.98 GB peak 8.34 GB
+MEM after feature compaction: RSS 4.71 GB peak 8.54 GB
+MEM end of mode: RSS 4.74 GB peak 8.54 GB
+CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
+Algorithm Id:(7e2272513f00f2b0d0dbb01831ad6494) completed in 2147.99 seconds at 42k data points per second. Processing total of 90,251,830 data points.
