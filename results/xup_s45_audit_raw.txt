@@ -1,3 +1,34 @@
 ### xup s4 S45AUDIT v1 | project 38061541 backtest 1e42cf0ba44cc6e9116ac000e782f995 | INVALID: mode line missing or wrong (template / incomplete script?); S4 CHECK not OK; S45 CHECK not OK
 err None
 --- LOG ---
+### xup s4 S45AUDIT v2 | project 38061541 backtest 8e5b99235843dbcf4e6142fa210f4b8b | VALID
+L1 B moves = events 1851 (same-day duplicates 0) | 2017-20 338 2021-25 711 2026 147 | rows>=2016-11: k1 +1162/0 2958839/inv 2375/excl 12984 k2 +2319/0 2955311/inv 4746/excl 12984 k3 +3472/0 2951787/inv 7117/excl
+L1 E1 moves = events 4216 (same-day duplicates 0) | 2017-20 808 2021-25 1539 2026 299 | rows>=2016-11: k1 +2411/0 2942801/inv 2356/excl 27792 k2 +4811/0 2938049/inv 4708/excl 27792 k3 +7187/0 2933324/inv 7057/exc
+L1 E2 moves = events 3745 (same-day duplicates 0) | 2017-20 719 2021-25 1337 2026 248 | rows>=2016-11: k1 +2323/0 2945315/inv 2361/excl 25361 k2 +4643/0 2940638/inv 4718/excl 25361 k3 +6961/0 2935964/inv 7074/exc
+L1 E3 moves = events 3885 (same-day duplicates 0) | 2017-20 740 2021-25 1389 2026 257 | rows>=2016-11: k1 +2392/0 2944563/inv 2332/excl 26073 k2 +4778/0 2939850/inv 4659/excl 26073 k3 +7155/0 2935147/inv 6985/exc
+L1 M moves = events 2324 (same-day duplicates 0) | 2017-20 422 2021-25 862 2026 181 | rows>=2016-11: k1 +1393/0 2955846/inv 2374/excl 15747 k2 +2774/0 2952095/inv 4744/excl 15747 k3 +4151/0 2948349/inv 7113/excl
+L2 E1 label onset vs move day = sessions from first positive label row to move day p10/50/90 2/10/10 | move days 4216 vs E1 episodes 4216
+L3 S1-P5 primary a = S1-P5 trail: train17-20: rows 36262 secs 633 pos 335 base 0.92% ev 135/219 rows/day 37.6 excl 2396 | val2020: rows 8729 secs 342 pos 237 base 2.72% ev 97/168 rows/day 34.5 excl 1557 | t21-22: rows 2
+L3 S1-P5 primary b = t21-22: rows 21744 secs 497 pos 250 base 1.15% ev 109/170 rows/day 43.2 excl 2091 | t23-25: rows 27907 secs 543 pos 490 base 1.76% ev 194/243 rows/day 37.1 excl 3669 | y2026: rows 6179 secs 302 pos 
+L4 universe rows/day (test, median) = S0/trail 1015 S0/day 1023 S1/trail 849 S1/day 869 S2/trail 696 S2/day 710 S5M/trail 549 S5M/day 556 A/trail 1273 A/day 1273
+MEM =  GB peak 7.17 GB | after S45 arrays: RSS 7.92 GB peak 7.92 GB | after frozen RF scores: RSS 8.03 GB peak 8.51 GB | after populations: RSS 8.51 GB peak 9.73 GB | end of mode: RSS 8.51 GB peak 9.73 GB
+P0 panel = mode S45AUDIT | sample securities 2986 with data 2947 | rows 6027629 | build 13 min
+S4 CHECK = OK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3094930 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 7.01 GB peak 7.17 GB
+MEM after S45 arrays: RSS 7.92 GB peak 7.92 GB
+MEM after frozen RF scores: RSS 8.03 GB peak 8.51 GB
+MEM after populations: RSS 8.51 GB peak 9.73 GB
+MEM end of mode: RSS 8.51 GB peak 9.73 GB
+POP S1-P5 trail: train17-20: rows 36262 secs 633 pos 335 base 0.92% ev 135/219 rows/day 37.6 excl 2396 | val2020: rows 8729 secs 342 pos 237 base 2.72% ev 97/168 rows/day 34.5 excl 1557 | t21-22: rows 21744 secs 497 pos 250 base 1.15% ev 109/170 rows/day 43.2 excl 2091 | t23-25: rows 27907 secs 543 pos 490 base 1.76% ev 194/243 rows/day 37.1 excl 3669 | y2026: rows 6179 secs 302 pos 147 base 2.38% ev 57/73 rows/day 37.7 excl 969
+POP S1-P1 trail: train17-20: rows 6799 secs 282 pos 117 base 1.72% ev 60/219 rows/day 7.0 excl 1168 | val2020: rows 1536 secs 146 pos 74 base 4.82% ev 38/168 rows/day 6.1 excl 601 | t21-22: rows 4058 secs 248 pos 74 base 1.82% ev 40/170 rows/day 8.1 excl 892 | t23-25: rows 5149 secs 291 pos 141 base 2.74% ev 75/243 rows/day 6.8 excl 1523 | y2026: rows 1071 secs 101 pos 42 base 3.92% ev 18/73 rows/day 6.5 excl 378
+POP S1-P10 trail: train17-20: rows 74149 secs 1035 pos 445 base 0.60% ev 173/219 rows/day 76.8 excl 2678 | val2020: rows 18620 secs 511 pos 338 base 1.82% ev 131/168 rows/day 73.6 excl 1848 | t21-22: rows 45120 secs 658 pos 328 base 0.73% ev 128/170 rows/day 89.7 excl 2316 | t23-25: rows 58855 secs 738 pos 576 base 0.98% ev 210/243 rows/day 78.3 excl 3916 | y2026: rows 13186 secs 415 pos 153 base 1.16% ev 57/73 rows/day 80.4 excl 1027
+POP S2-P5 trail: train17-20: rows 32032 secs 894 pos 167 base 0.52% ev 69/91 rows/day 33.2 excl 1089 | val2020: rows 7830 secs 442 pos 129 base 1.65% ev 54/71 rows/day 30.9 excl 774 | t21-22: rows 18569 secs 545 pos 109 base 0.59% ev 47/68 rows/day 36.9 excl 1076 | t23-25: rows 24532 secs 651 pos 245 base 1.00% ev 92/111 rows/day 32.6 excl 1646 | y2026: rows 5522 secs 304 pos 64 base 1.16% ev 28/35 rows/day 33.7 excl 518
+POP S0-P5 trail: train17-20: rows 41808 secs 583 pos 534 base 1.28% ev 218/348 rows/day 43.3 excl 3488 | val2020: rows 10044 secs 340 pos 302 base 3.01% ev 133/238 rows/day 39.7 excl 2004 | t21-22: rows 25353 secs 515 pos 369 base 1.46% ev 162/248 rows/day 50.4 excl 2674 | t23-25: rows 31874 secs 587 pos 750 base 2.35% ev 317/460 rows/day 42.4 excl 5594 | y2026: rows 6608 secs 295 pos 194 base 2.94% ev 80/125 rows/day 40.3 excl 1544
+POP S5M-P5 trail: train17-20: rows 23065 secs 725 pos 97 base 0.42% ev 39/55 rows/day 23.9 excl 615 | val2020: rows 5841 secs 336 pos 86 base 1.47% ev 35/50 rows/day 23.1 excl 516 | t21-22: rows 13999 secs 443 pos 55 base 0.39% ev 24/33 rows/day 27.8 excl 562 | t23-25: rows 19714 secs 553 pos 130 base 0.66% ev 50/62 rows/day 26.2 excl 940 | y2026: rows 4547 secs 268 pos 50 base 1.10% ev 22/27 rows/day 27.7 excl 364
+POP A-P5 trail: train17-20: rows 48180 secs 415 pos 1141 base 2.37% ev 440/743 rows/day 49.9 excl 5516 | val2020: rows 11545 secs 248 pos 485 base 4.20% ev 198/426 rows/day 45.6 excl 2633 | t21-22: rows 30021 secs 437 pos 599 base 2.00% ev 240/400 rows/day 59.7 excl 3199 | t23-25: rows 40917 secs 457 pos 1292 base 3.16% ev 502/1139 rows/day 54.4 excl 6732 | y2026: rows 8201 secs 214 pos 348 base 4.24% ev 144/299 rows/day 50.0 excl 1770
+POP S1-P5 day: train17-20: rows 35487 secs 703 pos 436 base 1.23% ev 207/310 rows/day 36.8 excl 3593 | val2020: rows 8382 secs 386 pos 278 base 3.32% ev 132/218 rows/day 33.1 excl 2061 | t21-22: rows 21419 secs 554 pos 334 base 1.56% ev 163/223 rows/day 42.6 excl 2731 | t23-25: rows 26045 secs 672 pos 752 base 2.89% ev 373/455 rows/day 34.6 excl 6064 | y2026: rows 5684 secs 396 pos 185 base 3.25% ev 89/109 rows/day 34.7 excl 1580
+CHECK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(8e5b99235843dbcf4e6142fa210f4b8b) completed in 2223.91 seconds at 38k data points per second. Processing total of 84,144,283 data points.

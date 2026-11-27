@@ -326,19 +326,20 @@ class S45Core:
         um = self._s45_umask(uname, rule)
         n = len(self.D)
         out = {}
-        parts = []
-        for sc, lo, hi in ((scM, VSCORE, V1), (scT, SCORE_START, Y1)):
+        use_t = self.D >= T0
+        for j, (sc, lo, hi) in enumerate(((scM, VSCORE, V1), (scT, SCORE_START, Y1))):
             m = um & np.isfinite(sc) & (self.D >= lo) & (self.D <= hi)
             rows = np.nonzero(m)[0]
             pr = np.full(n, np.nan)
             pr[rows] = self._dayrank(sc[rows], self.D[rows])
-            parts.append(self._s45_trans(pr))
-        use_t = self.D >= T0
-        for k in parts[0]:
-            out[k] = np.where(use_t, parts[1][k], parts[0][k])
-            if k != "pr":
-                out[k] = out[k].astype(np.float32)
-        parts = None
+            part = self._s45_trans(pr)
+            pr = None
+            take = use_t if j == 1 else ~use_t
+            for k, v in part.items():
+                if k not in out:
+                    out[k] = np.full(n, np.nan, dtype=np.float64 if k == "pr" else np.float32)
+                out[k][take] = v[take]
+            part = None
         out["umask"] = um
         self.st45[key] = out
         return out
@@ -366,6 +367,9 @@ class S45Core:
         t = np.arange(n)
         lo = np.maximum(t - 249, self.SEG0)
         out["nent250"] = (ce[t + 1] - ce[lo]).astype(float)
+        for k in out:
+            if k != "pr":
+                out[k] = out[k].astype(np.float32)
         return out
 
     def _s45_evhist(self, mv):
