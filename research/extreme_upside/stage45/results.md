@@ -18,6 +18,7 @@ All numbers come from the VALID QC runs listed in §0 (aggregates only; raw outp
 | S45GRIDA | v1 | 7370770f… | VALID | |
 | S45EXEC | v1 | 58371170… | VALID | s30 → Amendment 6 |
 | S45OUTCOME | v1 | 31a02072… | VALID | after Amendment 6 |
+| S45GRIDB | v1 | e94412fb… | VALID | |
 <!--RUNS-->
 
 Every VALID run:
@@ -224,7 +225,15 @@ the population; capture is over its eligible test events (2021–25). Security b
 |---|---|---|---|
 | ≥ $1 | 381 ev: 23.4 → 69.3 %, +45.9 [39.0, 53.1], 8.0 % | 303 ev: 26.7 → 69.3 %, +42.6 [34.0, 49.8], 7.2 % | 243 ev: 32.1 → 73.7 %, +41.6 [32.3, 48.6], 6.7 % |
 | ≥ $2 | 334 ev: 32.3 → 71.3 %, +38.9 [31.3, 46.0], 7.6 % | 263 ev: 38.4 → 73.0 %, +34.6 [26.7, 41.5], 6.8 % | 216 ev: 48.6 → 75.9 %, +27.3 [18.0, 37.1], 6.1 % |
-<!--GRIDB-->
+| ≥ $5 (S45GRIDB v1) | 197 ev: 62.9 → 78.7 %, +15.7 [8.4, 22.9], 5.6 % | 165 ev: 67.3 → 77.0 %, +9.7 [2.6, 17.6], 5.0 % | 139 ev: 69.8 → 79.9 %, +10.1 [2.4, 19.3], 4.6 % |
+
+Same-day dollar-volume rule (S45GRIDB v1):
+
+| Universe | Eligible / all events | Capture STATE → L2 | Δ [95 % CI] | L2 event precision |
+|---|---|---|---|---|
+| S0 | 619 / 882 | 21.0 → 65.3 % | +44.3 [38.6, 49.6] | 10.24 % |
+| S2 | 217 / 264 | 66.8 → 80.2 % | +13.4 [6.8, 20.4] | 6.48 % |
+| S5M | 159 / 184 | 70.4 → 78.6 % | +8.2 [2.0, 15.3] | 5.63 % |
 
 The gain shrinks monotonically with price and liquidity. The STATE capture rises over the same direction.
 
@@ -350,4 +359,18 @@ Removing chased run-ups does not change the economics.
 - S2-P5 L2 signals: 4,982 (population 43,136).
 - Lifts: CB3_20 ×1.76, CB5_50 ×2.17, FC3_20_10 ×1.70, FC5_30_10 ×1.65, FC5_50_15 ×2.23 (all > 1).
 - S2 downside is milder (median close t+5 −1.5 %), but still negative.
-<!--MORE-->
+
+## 9. Decision summary
+| Criterion | Status |
+|---|---|
+| C1 | PASS |
+| C2 | PASS |
+| C3 | PASS |
+| C4 | PASS (CB5_50 only) |
+| C5 | FAIL |
+| C6 | PASS |
+| C7 | FAIL |
+| C8 | PASS |
+| C9 | PASS |
+
+**→ Decision C** (`stage5_decision.md`).

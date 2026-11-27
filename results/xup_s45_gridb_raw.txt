@@ -1,0 +1,25 @@
+### xup s4 S45GRIDB v1 | project 38061541 backtest e94412fb90c65a113b4c721e815214e7 | VALID
+G S0 same-day rule = rows 55950 pos 1293 base 2.31% | ev 619/882 cap S 21.0% L2 65.3% d +44.3pp [38.6,49.6] | P10 S 3.66% L2 10.24% | sig/d 4.9 turn 60%
+G S2 same-day rule = rows 42509 pos 466 base 1.10% | ev 217/264 cap S 66.8% L2 80.2% d +13.4pp [6.8,20.4] | P10 S 4.86% L2 6.48% | sig/d 3.9 turn 57%
+G S5M same-day rule = rows 32850 pos 306 base 0.93% | ev 159/184 cap S 70.4% L2 78.6% d +8.2pp [2.0,15.3] | P10 S 4.63% L2 5.63% | sig/d 3.0 turn 58%
+G price>=$5 = 250k: ev 197 S 62.9 L2 78.7 d +15.7[8.4,22.9] P10 5.6% | 500k: ev 165 S 67.3 L2 77.0 d +9.7[2.6,17.6] P10 5.0% | 1000k: ev 139 S 69.8 L2 79.9 d +10.1[2.4,19.3] P10 4.6%
+MEM = k 7.36 GB | after S45 arrays: RSS 8.12 GB peak 8.12 GB | after frozen RF scores: RSS 8.34 GB peak 8.73 GB | after feature compaction: RSS 5.00 GB peak 8.90 GB | end of mode: RSS 5.20 GB peak 8.90 GB
+P0 panel = mode S45GRIDB | sample securities 2986 with data 2947 | rows 6027629 | build 11 min
+S4 CHECK = OK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3094930 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 7.21 GB peak 7.36 GB
+MEM after S45 arrays: RSS 8.12 GB peak 8.12 GB
+MEM after frozen RF scores: RSS 8.34 GB peak 8.73 GB
+MEM after feature compaction: RSS 5.00 GB peak 8.90 GB
+MEM end of mode: RSS 5.20 GB peak 8.90 GB
+RV grid px>=5 dvmed>=250k: rows 48428 pos 472 base 0.97% | ev 197/255 cap S 62.9% L2 78.7% d +15.7pp [8.4,22.9] | P10 S 4.02% L2 5.60% | sig/d 4.3 turn 49% | per 21-22 +20.3 23-25 +13.3pp | turn S 34% | med px S $8.42 L2 $10.40 | med dvmed20 S 2799k L2 2675k | event precision S 4.02% L2 5.60% false/captured 32.7 signals/security 9.1
+RV grid px>=5 dvmed>=500k: rows 45981 pos 405 base 0.88% | ev 165/217 cap S 67.3% L2 77.0% d +9.7pp [2.6,17.6] | P10 S 3.81% L2 4.97% | sig/d 4.2 turn 48% | per 21-22 +10.5 23-25 +9.3pp | turn S 34% | med px S $8.71 L2 $10.81 | med dvmed20 S 3588k L2 3663k | event precision S 3.81% L2 4.97% false/captured 39.3 signals/security 9.2
+RV grid px>=5 dvmed>=1000k: rows 43101 pos 354 base 0.82% | ev 139/179 cap S 69.8% L2 79.9% d +10.1pp [2.4,19.3] | P10 S 3.73% L2 4.60% | sig/d 4.0 turn 48% | per 21-22 +14.9 23-25 +7.6pp | turn S 33% | med px S $9.06 L2 $11.46 | med dvmed20 S 5226k L2 5646k | event precision S 3.73% L2 4.60% false/captured 42.8 signals/security 9.2
+RV S0 same-day: rows 55950 pos 1293 base 2.31% | ev 619/882 cap S 21.0% L2 65.3% d +44.3pp [38.6,49.6] | P10 S 3.66% L2 10.24% | sig/d 4.9 turn 60% | per 21-22 +34.4 23-25 +48.6pp | turn S 35% | med px S $1.77 L2 $2.96 | med dvmed20 S 840k L2 568k | event precision S 3.66% L2 10.24% false/captured 13.8 signals/security 10.0
+RV S2 same-day: rows 42509 pos 466 base 1.10% | ev 217/264 cap S 66.8% L2 80.2% d +13.4pp [6.8,20.4] | P10 S 4.86% L2 6.48% | sig/d 3.9 turn 57% | per 21-22 +14.5 23-25 +12.8pp | turn S 44% | med px S $8.88 L2 $10.56 | med dvmed20 S 4530k L2 3124k | event precision S 4.86% L2 6.48% false/captured 26.1 signals/security 7.4
+RV S5M same-day: rows 32850 pos 306 base 0.93% | ev 159/184 cap S 70.4% L2 78.6% d +8.2pp [2.0,15.3] | P10 S 4.63% L2 5.63% | sig/d 3.0 turn 58% | per 21-22 +12.1 23-25 +5.9pp | turn S 48% | med px S $10.23 L2 $12.37 | med dvmed20 S 14605k L2 8685k | event precision S 4.63% L2 5.63% false/captured 28.7 signals/security 6.3
+runtime 5.1 min
+CHECK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(e94412fb90c65a113b4c721e815214e7) completed in 1816.42 seconds at 46k data points per second. Processing total of 84,144,283 data points.

@@ -162,8 +162,9 @@ Q5. Does the result hold in S1 and S2?
     | S1 price ≥ $5 | 165 / 217 | 67.3 -> 77.0 % | +9.7 [2.5, 17.4] | 4.97 % |
     | S1 same-day $vol rule | 537 / 678 | 27.2 -> 69.6 % | +42.5 [36.4, 47.9] | 11.17 % |
 
-    - Price x median-$vol grid: the gain falls from +45.9 pp ($1 / 250k) to +27.3 pp ($2 / 1M). The ≥ $5 grid
-      row and the same-day S0 / S2 / S5M rows are in results.md (S45GRIDB).
+    - Price x median-$vol grid: the gain falls from +45.9 pp ($1 / 250k) to +27.3 pp ($2 / 1M), and to
+      +9.7 .. +15.7 pp at ≥ $5 (all CIs > 0).
+    - Same-day rule: S0 +44.3 pp, S2 +13.4 pp [6.8, 20.4], S5M +8.2 pp [2.0, 15.3].
     - Robustness (C8): the C2 direction is positive in all 10 pre-registered items: E2, E3, both periods, RF,
       A-strict, same-day rule, S2, $1-5, ≥ $5.
     - Outcomes in S2 (4,982 signals): CB5_50 lift x2.17; median close t+5 -1.5 %.
@@ -298,6 +299,7 @@ VALID runs (results/xup_s45_*_raw.txt):
 | PLACEBO v1 | bcf56d59 |
 | ROBUST v1-collected | 1d936103 |
 | GRIDA v1 | 7370770f |
+| GRIDB v1 | e94412fb |
 | EXEC v1 | 58371170 |
 | OUTCOME v1 | 31a02072 |
 
