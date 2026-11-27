@@ -1,0 +1,40 @@
+### xup s4 S45MODEL v1 | project 38061541 backtest 391a593b2a589b85204c441f6a5916e4 | VALID
+C2 capture L2_FULL-STATE = 69.3% vs 26.7% d +42.6pp sec [34.5,49.8] p 0.0005 | two-way [28.6,54.9] p 0.0005 -> PASS
+C2 periods / LOGO = 21-22 +31.2pp 23-25 +49.0pp | LOGO vs STATE VACC +42.2 VOLU +41.3 PATH +42.2 TRANS +41.9
+M0 hyperparameters (train 2017-19, validate 2020) = L2 C=0.01 (grid PR-AUC 0.01:0.1983 0.1:0.1663 1.0:0.1519) | RF leaf=100 (20:0.1733 50:0.1719 100:0.1743) | train rows 27662 pos 106 | valid rows 8729 pos 237
+M1 L2_FULL = PR-AUC 0.1412 | pool P@1/5/10 24.3/13.5/8.9% | day-top10 P 7.19% (5492) top25 4.09% lift10 4.83 | cap 69.3% (210/303) | Brier 13.64e-3 LL 0.0618
+M1 L2_noPATH = PR-AUC 0.0823 | pool P@1/5/10 16.1/9.7/6.9% | day-top10 P 5.92% (5492) top25 3.66% lift10 3.97 | cap 69.0% (209/303) | Brier 14.36e-3 LL 0.0681
+M1 L2_noTRANS = PR-AUC 0.1362 | pool P@1/5/10 24.7/13.1/8.8% | day-top10 P 7.14% (5492) top25 4.07% lift10 4.79 | cap 68.6% (208/303) | Brier 13.68e-3 LL 0.0625
+M1 L2_noVACC = PR-AUC 0.1457 | pool P@1/5/10 25.2/13.1/8.7% | day-top10 P 7.14% (5492) top25 3.99% lift10 4.79 | cap 69.0% (209/303) | Brier 13.61e-3 LL 0.0622
+M1 L2_noVOLU = PR-AUC 0.1377 | pool P@1/5/10 23.7/13.0/8.7% | day-top10 P 6.94% (5492) top25 4.14% lift10 4.65 | cap 68.0% (206/303) | Brier 13.68e-3 LL 0.0620
+M1 LR_PATH = PR-AUC 0.1311 | pool P@1/5/10 24.1/13.5/8.5% | day-top10 P 6.92% (5492) top25 4.00% lift10 4.64 | cap 66.3% (201/303) | Brier 13.76e-3 LL 0.0636
+M1 LR_TRANS = PR-AUC 0.0276 | pool P@1/5/10 4.4/3.6/3.3% | day-top10 P 2.75% (5492) top25 2.34% lift10 1.84 | cap 26.7% (81/303) | Brier 14.63e-3 LL 0.0759
+M1 LR_VACC = PR-AUC 0.0593 | pool P@1/5/10 14.3/7.4/5.5% | day-top10 P 4.72% (5492) top25 3.36% lift10 3.16 | cap 63.4% (192/303) | Brier 14.48e-3 LL 0.0717
+M1 LR_VOLU = PR-AUC 0.0803 | pool P@1/5/10 17.3/9.7/6.9% | day-top10 P 5.54% (5492) top25 3.36% lift10 3.71 | cap 62.7% (190/303) | Brier 14.44e-3 LL 0.0706
+M1 RF_FULL = PR-AUC 0.1652 | pool P@1/5/10 29.4/14.1/9.1% | day-top10 P 7.43% (5492) top25 4.26% lift10 4.98 | cap 71.0% (215/303) | Brier 13.52e-3 LL 0.0609
+M1 STATE = PR-AUC 0.0236 | pool P@1/5/10 3.4/3.4/2.5% | day-top10 P 2.68% (5492) top25 2.46% lift10 1.80 | cap 26.7% (81/303)
+M2 test population = S1-P5 2021-25 valid rows 49651 pos 740 base 1.490% | eligible E1 events 303 of 413 test move days in S1 | secs 738
+M3 capture L2_FULL vs others (sec boot) = L2-RF_FULL -1.7[-5.6,2.4] | L2-LR_VACC +5.9[-0.7,12.4] | L2-LR_VOLU +6.6[0.3,12.9] | L2-LR_PATH +3.0[-1.0,6.9] | L2-LR_TRANS +42.6[35.0,49.3]
+M4 PR-AUC L2_FULL-STATE = +0.1176 [0.0943,0.1464] p 0.0005 (security bootstrap 2000, rows 49651)
+M5 2026 YTD diagnostic (fold c) = rows 6179 pos 147 | STATE PR-AUC 0.0434 cap 16/57 P10 5.3% | L2_FULL PR-AUC 0.2423 cap 46/57 P10 12.2%
+M6 ONSET_1 = base 0.55% | PR-AUC STATE 0.0091 L2 0.1243 | cap STATE 19.4% L2 66.3% d +46.9pp [38.7,54.2] (events 273)
+M6 ONSET_2 = base 1.03% | PR-AUC STATE 0.0162 L2 0.1352 | cap STATE 23.0% L2 70.9% d +47.9pp [39.3,55.3] (events 282)
+M6 ONSET_5 = base 2.29% | PR-AUC STATE 0.0368 L2 0.1432 | cap STATE 29.6% L2 69.4% d +39.8pp [31.5,47.2] (events 324)
+M7 strict pre-move (xr<50% at t) = eligible events 176 | cap STATE 27.3% L2 48.3% d +21.0pp [11.0,31.1] | P10 STATE 1.71% L2 2.26%
+MEM = before S45 arrays: RSS 7.43 GB peak 7.59 GB | after S45 arrays: RSS 8.35 GB peak 8.35 GB | after frozen RF scores: RSS 8.53 GB peak 8.90 GB | end of mode: RSS 9.53 GB peak 9.81 GB
+P0 panel = mode S45MODEL | sample securities 2986 with data 2947 | rows 6027629 | build 11 min
+S4 CHECK = OK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3094930 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 7.43 GB peak 7.59 GB
+MEM after S45 arrays: RSS 8.35 GB peak 8.35 GB
+MEM after frozen RF scores: RSS 8.53 GB peak 8.90 GB
+MEM end of mode: RSS 9.53 GB peak 9.81 GB
+EV STATE: captured 81/303 eligible (19.6% of 413 all S1 test move days) | signals 5492 event precision 2.68% false/captured 66.0 signals/security 15.2 | first-signal lead 1/2/3: 18/13/50
+EV L2_FULL: captured 210/303 eligible (50.8% of 413 all S1 test move days) | signals 5492 event precision 7.19% false/captured 24.3 signals/security 9.7 | first-signal lead 1/2/3: 66/49/95
+RUNUP STATE: run-up at first signal (xr) p25/50/75 12.4/38.9/72.4% | share xr>=30% 56% xr>=50% 42% (captured 81)
+RUNUP L2_FULL: run-up at first signal (xr) p25/50/75 46.4/64.8/81.8% | share xr>=30% 92% xr>=50% 71% (captured 210)
+CAL L2_FULL deciles pred/obs %: 0.09/0.06 0.15/0.14 0.20/0.24 0.27/0.36 0.35/0.50 0.48/0.58 0.69/0.81 1.07/1.35 2.00/1.91 8.48/8.94
+CHECK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(391a593b2a589b85204c441f6a5916e4) completed in 1967.52 seconds at 43k data points per second. Processing total of 84,144,283 data points.
