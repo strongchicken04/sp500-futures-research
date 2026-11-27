@@ -5,7 +5,7 @@
    shadow data after 2026-08-27.
 2. **QC data revisions.** QC's historical data changed twice during this project:
    - Stage 4 Amendment 1: 6,022,604 → 6,028,644 rows;
-   - Stage 4.5 Amendment 3: → 6,027,629 rows / 24,428 primary events.
+   - Stage 4.5 Amendment 3: → 6,027,629 rows / 24,428 primary events (−1,015 rows, all in 2021–2026).
 
    Comparisons inside Stage 4.5 are within one build. Stage 4 and Stage 4.5 numbers can differ slightly for that
    reason.

@@ -22,3 +22,15 @@ err None
 --- LOG ---
 G3 errors: 
 Algorithm Id:(4df3d37687ccdc060009a67bb89d2993) completed in 823.45 seconds at 102k data points per second. Processing total of 84,115,119 data points.
+### xup s4 S4DIAG s45rev2 | project 38061541 backtest b8bb81be38ab68f22f88df18be61586f | INVALID: S4 CHECK not OK
+G0 counts = history bars 6176912 md-dropped 0 raw/adj-misaligned dropped 0 securities 2947 | SPY sessions 5258 first 2005-10-03 last 2026-08-27 | errors 0
+G1 rows/pos/secs/spydays/sum-lpx by year a = 06:281513/369/1346/251/758056 07:303982/707/1363/251/832214 08:300163/1919/1303/253/706457 09:282170/2252/1252/252/593061 10:274908/544/1196/252/668721 11:271957/420/1178/252/692305 12:266128/359/11
+G1 rows/pos/secs/spydays/sum-lpx by year b = 13:267496/390/1165/252/732675 14:280194/390/1224/252/806313 15:288183/585/1251/252/807224 16:282061/656/1230/252/771122 17:276505/699/1213/251/796841 18:277951/705/1212/251/813604 19:279140/942/1205
+G1 rows/pos/secs/spydays/sum-lpx by year c = 20:282299/2408/1249/253/778491 21:317370/1103/1459/252/963454 22:343296/1296/1476/251/892768 23:330074/1787/1449/250/828000 24:314281/2608/1380/252/811757 25:305824/2575/1342/250/806567 26:202134/17
+G2 per-security rows = securities 2947 rows p10/50/90 287/1.49e+03/5.16e+03 max 5175 | segments 3541 | sum D mod 1e6 473514
+P0 panel = mode S4DIAG | sample securities 2986 with data 2947 | rows 6027629 | build 12 min
+S4 CHECK = FAILED rows 6027629 (S4 canon 6028644; S3 6022604) primary events 24428 (canon 24426; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+err None
+--- LOG ---
+G3 errors: 
+Algorithm Id:(b8bb81be38ab68f22f88df18be61586f) completed in 736.49 seconds at 114k data points per second. Processing total of 84,144,283 data points.

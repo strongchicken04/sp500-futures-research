@@ -19,7 +19,25 @@ All numbers come from the VALID QC runs listed in §0 (aggregates only; raw outp
 | S45EXEC | v1 | 58371170… | VALID | s30 → Amendment 6 |
 | S45OUTCOME | v1 | 31a02072… | VALID | after Amendment 6 |
 | S45GRIDB | v1 | e94412fb… | VALID | |
-<!--RUNS-->
+| S4DIAG | s45rev2 | b8bb81be… | INVALID by design (Stage 4 count constants) | diagnostic: per-year breakdown of the data revision |
+
+**Data revision breakdown** (S4DIAG s45rev2 vs Stage 4 S4DIAG):
+- Rows 2006–2020: identical, year by year.
+- Rows 2021–2026 changed:
+
+  | Year | Rows | Change |
+  |---|---|---|
+  | 2021 | 317,550 → 317,370 | −180 |
+  | 2022 | 343,547 → 343,296 | −251 |
+  | 2023 | 330,272 → 330,074 | −198 |
+  | 2024 | 314,330 → 314,281 | −49 |
+  | 2025 | 306,074 → 305,824 | −250 |
+  | 2026 | 202,221 → 202,134 | −87 |
+  | **Total** | | **−1,015** |
+
+- Primary positives +2 (2022). Securities with rows: −1 each in 2022, 2023 and 2025.
+- Same 2,947 securities, same 3,541 segments.
+- The revision touches only the test years. All Stage 4.5 comparisons are within one build.
 
 Every VALID run:
 - S4 CHECK OK: 6,027,629 rows, 24,428 primary events, `mh10 == R`, date order;

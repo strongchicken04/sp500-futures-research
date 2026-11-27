@@ -339,3 +339,10 @@ date and reason. Changes after results are visible are allowed only if they cann
   | conservative | 3.0 × s30 + 1.50 % | 4.344 % |
 
 - **Code.** `S30 = 0.009479` in `xup_s45_core.py`. No formula changes.
+
+### Amendment 3 — addendum (2026-11-27, after S4DIAG s45rev2)
+- **Per-year breakdown.** The revision removed 1,015 rows, all in 2021–2026:
+  - −180 in 2021, −251 in 2022, −198 in 2023, −49 in 2024, −250 in 2025, −87 in 2026;
+  - +2 primary positives (2022).
+- **Unchanged:** rows 2006–2020, the 2,947 securities and the 3,541 segments.
+- This is documentation only. Nothing changes.
