@@ -300,3 +300,13 @@ date and reason. Changes after results are visible are allowed only if they cann
   3. Stage 4 results are not changed. Stage 4.5 compares STATE and timing models within the same build, so the
      revision cannot favour either side.
   4. No analysis definition, threshold or criterion changes.
+
+### Amendment 4 (2026-11-27 ~02:00 UTC, after S45MODEL v1; before S45OUTCOME) — exploratory strict pre-move outcome line
+- **Trigger.** S45MODEL v1 showed that 71 % of the events captured by the L2 timing model had a run-up of
+  ≥ 50 % at the first signal (median 64.8 %). In the strict pre-move population (xr < 50 %), the capture gain
+  shrinks from +42.6 pp to +21.0 pp.
+- **Addition.** S45OUTCOME gets one exploratory line, X7. It shows the outcomes of L2 signals re-ranked inside the
+  strict population: FC5_30_10 precision vs that population's base, CB5_50, median B5, P(L5 ≤ −20 %), and the
+  neutral payoff proxy with its CI.
+- **Status.** It enters no criterion. C4, C5 and C7 are evaluated exactly as pre-registered. Its purpose is to show
+  whether outcomes depend on buying stocks that are already up strongly.

@@ -204,6 +204,16 @@ class S45ModesD:
             S(f"C7 payoff {scen}", line[:198])
         nexc = int((self.FCA[g3, FCI[(0.3, 0.1, 5)]] < 0).sum())
         S("C7 verdict", f"neutral security-bootstrap CI lower bound > 0: {'PASS' if c7 else 'FAIL'} | incomplete excluded {nexc} of {len(g3)} | gross outcome per row, overlapping signals counted (not a simulation)")
+        # Amendment 4 (exploratory, added after S45MODEL; no criterion): strict pre-move population xr(t) < 50 %, re-ranked
+        strict = popev & (np.nan_to_num(xr, nan=0) < 0.5)
+        gs = np.nonzero(self._s45_signals(sc["L2_FULL"], strict, 0.10))[0]; gp = np.nonzero(strict)[0]
+        fx = self._s45_tgt("FC5_30_10"); cbx = self._s45_tgt("CB5_50")
+        dS_, bS2 = self._s45_gb(fx, gs, gp, W, nsec)
+        payn = self._s45_payoff(np.arange(len(self.D)), costs["neutral"])
+        mN, bN = self._s45_gb(payn, gs, None, W, nsec)
+        b5s = self.PO[gs, PI45["B5"]].astype(np.float64); l5s = self.PO[gs, PI45["L5"]].astype(np.float64)
+        S("X7 strict pre-move G3 (xr<50%, exploratory)", (f"signals {len(gs)} pop {len(gp)} | FC5_30_10 {100 * np.nanmean(fx[gs]):.2f}% vs {100 * np.nanmean(fx[gp]):.2f}% d {self._ci(100 * bS2, 2)} | CB5_50 {100 * np.nanmean(cbx[gs]):.2f}%"
+                                                          f" | med B5 {100 * np.nanmedian(b5s):+.2f}% P(L5<=-20%) {100 * np.nanmean(np.where(np.isfinite(l5s), l5s <= -0.2, np.nan)):.1f}% | neutral payoff {100 * mN:+.2f}% {self._ci(100 * bN, 2)}")[:198])
         # Family A vs B/C capture (timing signals)
         a5 = self._s45_tgt("A5_50"); cb = self._s45_tgt("CB5_50"); fc = self._s45_tgt("FC5_50_15")
         hitA = g3[a5[g3] == 1]
