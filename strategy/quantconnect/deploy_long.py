@@ -23,6 +23,17 @@ UID, TOK = creds()
 
 
 def call(endpoint, payload=None, method="POST"):
+    """API call with retries on transient network errors (HTTP errors are returned, not retried)"""
+    for k in range(6):
+        try:
+            return _call(endpoint, payload, method)
+        except (urllib.error.URLError, ConnectionError, TimeoutError, OSError) as e:
+            if isinstance(e, urllib.error.HTTPError) or k == 5:
+                raise
+            time.sleep(10 * (k + 1))
+
+
+def _call(endpoint, payload=None, method="POST"):
     ts = str(int(time.time()))
     h = hashlib.sha256(f"{TOK}:{ts}".encode()).hexdigest()
     auth = base64.b64encode(f"{UID}:{h}".encode()).decode()

@@ -209,7 +209,26 @@ class S45Core:
         self.set_runtime_statistic("S45 CHECK", ("OK " if self.s45_ok else "FAILED ") + f"path outcomes vs Stage 4, rows>=2016-06 {int(chk.sum())} (nan/value mismatches) {' '.join(mis)} | s45 extension errors {errs} | S4 {'OK' if self.s4_ok else 'FAILED'}")
         # derived arrays
         self.RC = self.PX
+        # frozen RF scores need all Stage 3 features: compute them now, then keep only the Stage 3 feature columns the
+        # timing models use (memory; Amendment 5). Values are unchanged.
+        self._s45_scores()
+        keep = [c for c in FULL45 if c in FI and c not in FI45]
+        self.FC45 = {c: j for j, c in enumerate(keep)}
+        Fk = np.ascontiguousarray(self.F[:, [FI[c] for c in keep]])
+        self.F = None
+        self.F = Fk
+        self._s45_trim()
+        self._s45_mem("after feature compaction")
         self.s45_ready = True
+
+    def _s45_trim(self):
+        import gc
+        gc.collect()
+        try:
+            import ctypes
+            ctypes.CDLL("libc.so.6").malloc_trim(0)
+        except Exception:
+            pass
 
     def _s45_mem(self, tag):
         try:
@@ -234,6 +253,7 @@ class S45Core:
         for k in list(getattr(self, "pc45", {}).keys()):
             if (k[1], k[5]) not in keep:
                 del self.pc45[k]
+        self._s45_trim()
 
     # ---------------- universes ----------------
     def _s45_umask(self, name, rule="trail"):
@@ -394,7 +414,7 @@ class S45Core:
             elif f in eh:
                 cols.append(eh[f][rows])
             else:
-                cols.append(self.F[rows, FI[f]].astype(np.float64))
+                cols.append(self.F[rows, self.FC45[f]].astype(np.float64))
         return np.column_stack(cols)
 
     # ---------------- population, training, scoring ----------------

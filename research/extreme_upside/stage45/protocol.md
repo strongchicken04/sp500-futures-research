@@ -310,3 +310,19 @@ date and reason. Changes after results are visible are allowed only if they cann
   neutral payoff proxy with its CI.
 - **Status.** It enters no criterion. C4, C5 and C7 are evaluated exactly as pre-registered. Its purpose is to show
   whether outcomes depend on buying stocks that are already up strongly.
+
+### Amendment 5 (2026-11-27 ~03:00 UTC, technical) — memory and run splitting
+- **What happened.** The local polling of S45ROBUST v1 crashed on a network error (RemoteDisconnected). The
+  collector then read a stale result file and recorded the run as INVALID, although the QC backtest was still
+  running.
+  - That line stays in the raw file.
+  - The backtest is collected again from the QC API under the label "v1-collected".
+- **Changes:**
+  - `deploy_long.py` retries transient network errors.
+- **Memory:**
+  - After the frozen RF scores are computed, the Stage 3 feature matrix keeps only the columns the timing models
+    use. The values are identical (synthetic check: MODEL output line-for-line equal).
+  - Heap memory is returned to the OS after caches are dropped.
+- **Run splitting:** robustness and grid can run as S45ROBUSTA / S45ROBUSTB and S45GRIDA / S45GRIDB (same
+  variants, split in two runs). C8 is evaluated over all ten items across the parts.
+- No definition, threshold or criterion changes.

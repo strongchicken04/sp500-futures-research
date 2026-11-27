@@ -73,18 +73,22 @@ class S45ModesC:
                 f" | turn S {100 * r['STATE_turn']:.0f}% | med px S ${r['STATE_px']:.2f} {alt[:2]} ${r[alt + '_px']:.2f} | med dvmed20 S {r['STATE_dv'] / 1e3:.0f}k {alt[:2]} {r[alt + '_dv'] / 1e3:.0f}k"
                 f" | event precision S {100 * r['STATE']['prec']:.2f}% {alt[:2]} {100 * r[alt]['prec']:.2f}% false/captured {r[alt]['fpc']:.1f} signals/security {r[alt]['sps']:.1f}")
 
-    def mode_s45robust(self):
+    def mode_s45robusta(self):
+        self._s45_robust([("S1-P5 reference", dict(uname="S1")), ("S1-P1", dict(uname="S1", kst=0.01)), ("S1-P10", dict(uname="S1", kst=0.10)),
+                          ("E2 labels", dict(uname="S1", defn="E2")), ("E3 labels", dict(uname="S1", defn="E3")),
+                          ("RF family", dict(uname="S1", alt="RF_FULL")), ("S1 A-strict", dict(uname="S1/strict"))], part="A")
+
+    def mode_s45robustb(self):
+        self._s45_robust([("S1 history>=120", dict(uname="S1/h120")),
+                          ("S1 price $1-5", dict(uname="S1/px1_5")), ("S1 price >=$5", dict(uname="S1/px5")),
+                          ("S1 same-day $vol", dict(uname="S1", rule="day")),
+                          ("S2-P5", dict(uname="S2")), ("S0-P5", dict(uname="S0")), ("S5M-P5", dict(uname="S5M")), ("A-P5", dict(uname="A"))], part="B")
+
+    def _s45_robust(self, variants, part):
         S = self.set_runtime_statistic
         self._s45_finish()
         t0 = _time.time()
         c8 = {}
-        variants = [("S1-P5 reference", dict(uname="S1")), ("S1-P1", dict(uname="S1", kst=0.01)), ("S1-P10", dict(uname="S1", kst=0.10)),
-                    ("E2 labels", dict(uname="S1", defn="E2")), ("E3 labels", dict(uname="S1", defn="E3")),
-                    ("RF family", dict(uname="S1", alt="RF_FULL")),
-                    ("S1 A-strict", dict(uname="S1/strict")), ("S1 history>=120", dict(uname="S1/h120")),
-                    ("S1 price $1-5", dict(uname="S1/px1_5")), ("S1 price >=$5", dict(uname="S1/px5")),
-                    ("S1 same-day $vol", dict(uname="S1", rule="day")),
-                    ("S2-P5", dict(uname="S2")), ("S0-P5", dict(uname="S0")), ("S5M-P5", dict(uname="S5M")), ("A-P5", dict(uname="A"))]
         for tag, kw in variants:
             alt = kw.pop("alt", "L2_FULL")
             try:
@@ -104,19 +108,25 @@ class S45ModesC:
                 self.s2dir = r["d"]
             self._s45_free()
             self.lg(f"T {tag} done at {(_time.time() - t0) / 60:.1f} min")
-        keys = ["E2", "E3", "2021-22", "2023-25", "RF", "A-strict", "day rule", "S2", "px $1-5", "px >=$5"]
+        keys = ["E2", "E3", "2021-22", "2023-25", "RF", "A-strict"] if part == "A" else ["day rule", "S2", "px $1-5", "px >=$5"]
         fails = [k for k in keys if not (k in c8 and np.isfinite(c8[k]) and c8[k] > 0)]
-        S("C8 robustness (C2 direction)", (" ".join(f"{k} {100 * c8[k]:+.1f}" if k in c8 else f"{k} n/a" for k in keys) + f" | fails {len(fails)} -> {'PASS' if len(fails) <= 1 else 'FAIL'}")[:198])
-        S("C6 part: S2 direction of C2", f"S2 capture difference {100 * getattr(self, 's2dir', np.nan):+.1f}pp -> {'same sign (>0)' if getattr(self, 's2dir', -1) > 0 else 'NOT reproduced'} (C4 lift in S2: S45OUTCOME)")
+        S(f"C8 items part {part} (C2 direction)", (" ".join(f"{k} {100 * c8[k]:+.1f}" if k in c8 else f"{k} n/a" for k in keys) + f" | non-positive {len(fails)}: {fails} (C8 = all 10 items, at most 1 fail)")[:198])
+        if part == "B":
+            S("C6 part: S2 direction of C2", f"S2 capture difference {100 * getattr(self, 's2dir', np.nan):+.1f}pp -> {'same sign (>0)' if getattr(self, 's2dir', -1) > 0 else 'NOT reproduced'} (C4 lift in S2: S45OUTCOME)")
         self.lg(f"runtime {(_time.time() - t0) / 60:.1f} min")
         self._s45_end()
 
-    def mode_s45grid(self):
+    def mode_s45grida(self):
+        self._s45_grid((1, 2), ())
+
+    def mode_s45gridb(self):
+        self._s45_grid((5,), ("S0", "S2", "S5M"))
+
+    def _s45_grid(self, prices, dayun):
         S = self.set_runtime_statistic
         self._s45_finish()
         t0 = _time.time()
-        rows = []
-        for p in (1, 2, 5):
+        for p in prices:
             parts = []
             for d in (250, 500, 1000):
                 nm = f"G{p}_{d}k"
@@ -128,7 +138,7 @@ class S45ModesC:
                     parts.append(f"{d}k: ERROR {type(e).__name__}")
                 self._s45_free()
             S(f"G price>=${p}", " | ".join(parts)[:198])
-        for un in ("S0", "S2", "S5M"):
+        for un in dayun:
             try:
                 r = self._s45_c2var(uname=un, rule="day", B=500)
                 S(f"G {un} same-day rule", self._s45_c2txt(r)[:198])
