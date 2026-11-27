@@ -17,6 +17,7 @@ All numbers come from the VALID QC runs listed in §0 (aggregates only; raw outp
 | S45ROBUST | v1 | 1d936103… | INVALID → v1-collected VALID | local polling crashed (network); collected from the QC API (Amendment 5) |
 | S45GRIDA | v1 | 7370770f… | VALID | |
 | S45EXEC | v1 | 58371170… | VALID | s30 → Amendment 6 |
+| S45OUTCOME | v1 | 31a02072… | VALID | after Amendment 6 |
 <!--RUNS-->
 
 Every VALID run:
@@ -241,4 +242,112 @@ The gain shrinks monotonically with price and liquidity. The STATE capture rises
 - **s30 = 0.948 %.** Round-trip costs (Amendment 6): optimistic 1.05 %, neutral 2.40 %, conservative 4.34 %.
 - **Price buckets** (S1 signals): spread first 30 min, median $1–5 0.79 %, ≥ $5 1.29 %.
 - **Coverage:** about 93 % of sampled items have minute quotes (140 / 150, 74 / 80, 54 / 60, 71 / 80).
+
+## 8. Capturable targets, downside, costs — C4, C5, C7 (S45OUTCOME v1)
+**Groups** (2021–25):
+
+| Group | Rows | Securities |
+|---|---|---|
+| G0 unconditional S1 | 1,097,183 | 1,641 |
+| G1 S1-P5 population | 49,697 | 743 |
+| G2 STATE signals | 5,492 | 361 |
+| G3 L2 timing signals | 5,492 | 565 |
+
+All returns are from the adjusted OPEN(t+1); incomplete windows are excluded (G3: 33 of 5,492 for h = 5).
+
+### 8.1 Families (P in G3 / G1 / G2, lift G3 / G1; BH within family)
+- **Family A** (max HIGH), 8 / 12 significant:
+  - A3_50 4.26 / 1.64 / 4.09 % (×2.60);
+  - A5_50 6.87 / 3.22 / 7.29 % (×2.14);
+  - A5_100 1.67 / 0.80 / 1.89 %;
+  - A10_100 4.08 / 1.94 / 4.06 % (×2.10).
+- **Family B** (close at t+h), 11 / 12:
+  - B3_20 8.24 / 4.80 / 7.53 %;
+  - B5_20 11.08 / 7.78 / 10.33 %;
+  - B5_50 2.64 / 1.26 / 2.49 %;
+  - B10_100 1.63 / 0.67 / 1.30 %.
+- **Family B-max** (max close), 11 / 12:
+  - CB3_20 11.20 / 6.01 / 9.83 %;
+  - CB5_20 17.11 / 11.10 / 15.65 %;
+  - CB5_50 3.74 / 1.73 / 3.57 %;
+  - CB10_100 2.72 / 1.12 / 2.53 %.
+- **Family C** (upside before adverse), 27 / 27:
+  - FC3_20_10 17.35 / 10.60 / 16.65 %;
+  - FC5_30_10 12.77 / 7.97 / 12.65 %;
+  - FC5_50_15 6.28 / 2.91 / 6.30 %.
+- All 1-day targets have P < 7.1 %.
+- In every family, the timing signals are ≈ the STATE signals (G3 ≈ G2). The lift over the population is
+  1.2–3.8×.
+
+### 8.2 C4 short list (G3 vs G1; security bootstrap 2,000)
+| Target | P (G3) | Base (G1) | Lift | CI of P − base (pp) | vs STATE (pp) | Lift 21–22 / 23–25 | Adverse condition | Close confirmation | Verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| CB3_20 | 11.20 % | 6.01 % | 1.86 | [4.14, 6.16] | +1.37 [0.06, 2.57] | 1.65 / 2.01 | P(L3 ≤ −20 %) 14.22 % > P → fail | — | fail |
+| **CB5_50** | **3.74 %** | **1.73 %** | **2.16** | **[1.32, 2.71]** | +0.17 [−0.82, 1.13] | 1.55 / 2.47 | P(L5 ≤ −50 %) 1.52 % < P → ok | — | **PASS** |
+| FC3_20_10 | 17.35 % | 10.60 % | 1.64 | [5.57, 7.86] | +0.70 [−1.01, 2.18] | 1.60 / 1.66 | success 17.35 % vs adverse 46.01 % + ambiguous 0.91 % → fail | 58 % | fail |
+| FC5_30_10 (primary bracket) | 12.77 % | 7.97 % | 1.60 | [3.61, 5.87]; two-way [3.28, 6.35] | +0.12 [−1.33, 1.53] | 1.44 / 1.72 | 12.77 % vs 57.30 % + 0.38 % → fail | 60 % | fail |
+| FC5_50_15 | 6.28 % | 2.91 % | 2.16 | [2.49, 4.26] | −0.01 [−1.16, 1.14] | 1.67 / 2.49 | 6.28 % vs 39.53 % + 0.07 % → fail | 57 % | fail |
+
+- **→ C4 PASS**, on CB5_50 only: a max close ≥ +50 % within 5 sessions, in 3.74 % of 5,492 signals.
+- It fails on every adverse-constrained bracket.
+- The timing model is not better than the STATE signals on any capturable target (all CIs vs STATE include 0
+  except CB3_20).
+
+### 8.3 FC5_30_10 outcome composition (G3)
+| Outcome | Rows (of 5,492) | Median price | Median $vol | Median run-up xr | Median close t+10 |
+|---|---|---|---|---|---|
+| success | 697 | $4.77 | $2.17M | 44 % | +21 % |
+| adverse first | 3,128 | $4.47 | $2.33M | 44 % | −14 % |
+| ambiguous | 21 | | | 59 % | −3 % |
+| neither | 1,613 | | | 42 % | +2 % |
+| incomplete | 33 | | | | |
+
+Successes and failures look alike ex ante (same price, liquidity and run-up).
+
+### 8.4 Downside (C5) — distributions per group
+| Group | Close t+1 / 3 / 5 / 10 (median) | Close t+5 p10 / p90 | min LOW within 5 / 10 (median) | Touch ≤ −20 / −30 / −50 % within 10 | Close t+10 ≤ −30 / −50 % | Max drawdown within 10 (median) | max HIGH within 10 (median) |
+|---|---|---|---|---|---|---|---|
+| G0 unconditional S1 | −0.0 / −0.0 / 0.0 / 0.0 % | −7.7 / +7.4 % | −3.5 / −5.0 % | 6 / 2 / 0 % | 0.9 / 0.1 % | −8.7 % | +5.0 % |
+| G1 S1-P5 population | −0.7 / −1.5 / −2.2 / −3.7 % | −17.4 / +16.9 % | −9.2 / −13.3 % | 29 / 11 / 2 % | 6.0 / 1.2 % | −21.3 % | +11.6 % |
+| G2 STATE signals | −1.2 / −2.6 / −3.8 / −6.1 % | −22.1 / +20.4 % | −11.7 / −16.6 % | 41 / 20 / 4 % | 11.5 / 2.5 % | −27.1 % | +14.8 % |
+| **G3 L2 timing signals** | **−0.9 / −2.0 / −3.4 / −5.4 %** | −22.6 / +21.8 % | −12.1 / −17.0 % | **42 / 20 / 4 %** | 10.9 / 2.3 % | −26.8 % | +14.4 % |
+| S2 L2 signals | −0.4 / −0.8 / −1.5 / −2.9 % | −19.9 / +18.4 % | −9.7 / −13.8 % | 33 / 14 / 3 % | 7.9 / 1.8 % | −22.1 % | +11.7 % |
+
+**C5** (G3):
+- P(max close ≥ +20 % within 5) 17.11 % < P(min LOW ≤ −20 % within 5) 24.97 %;
+- median close t+5 −3.38 % (< 0);
+- P(close t+5 ≤ −30 %) 4.69 % (≤ 5 %, ok).
+
+**→ C5 FAIL** (two of three conditions fail).
+
+### 8.5 Payoff proxy and costs — C7 (FC5_30_10 bracket per signal row; not a simulation)
+| Scenario | Round-trip cost | G3 mean [security CI] | G3 dedup-5 | STATE | Population | 2021–22 / 2023–25 |
+|---|---|---|---|---|---|---|
+| gross (implied) | 0 | −0.56 % | | −0.85 % | −0.53 % | |
+| optimistic | 1.05 % | −1.61 % [−2.17, −1.08] | −1.66 % | −1.90 % | −1.58 % | −2.03 / −1.29 |
+| **neutral** | **2.40 %** | **−2.96 % [−3.52, −2.43]**; two-way [−3.69, −2.21] | −3.01 % | −3.25 % | −2.93 % | −3.37 / −2.63 |
+| conservative | 4.34 % | −4.91 % [−5.47, −4.38] | −4.96 % | −5.19 % | −4.88 % | −5.32 / −4.58 |
+
+**→ C7 FAIL.** Negative in every scenario and both periods. The timing signals earn the same as the whole
+conditional population; even at zero cost the mean is negative.
+
+### 8.6 Family A vs B-max / C (G3)
+- A5 ≥ +50 % occurs in 6.87 % of signals.
+- Of those hits:
+  - 54 % also reach a close ≥ +50 % within 5 sessions (CB5_50 3.74 % overall);
+  - 91 % reach +50 % before −15 % (FC5_50_15 6.28 % overall).
+- Half of the extreme intraday highs are not held to a close.
+
+### 8.7 Exploratory strict pre-move outcome (Amendment 4, X7; no criterion)
+L2 signals re-ranked inside the xr < 50 % population: 5,095 signals, population 45,379.
+- FC5_30_10 11.68 % vs 7.71 % (CI of the difference [2.81, 5.20]); CB5_50 3.11 %.
+- Median close t+5 −3.54 %; P(L5 ≤ −20 %) 22.5 %.
+- Neutral payoff −3.18 % [−3.74, −2.63].
+
+Removing chased run-ups does not change the economics.
+
+### 8.8 S2 (C6 part)
+- S2-P5 L2 signals: 4,982 (population 43,136).
+- Lifts: CB3_20 ×1.76, CB5_50 ×2.17, FC3_20_10 ×1.70, FC5_30_10 ×1.65, FC5_50_15 ×2.23 (all > 1).
+- S2 downside is milder (median close t+5 −1.5 %), but still negative.
 <!--MORE-->
