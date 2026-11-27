@@ -1,0 +1,36 @@
+### xup s4 S45PLACEBO v1 | project 38061541 backtest bcf56d595f75b80f97854398e670569e | VALID
+C3 verdict = E1 unmatched+matched PASS | E2 or E3 matched PASS -> C3 PASS
+MEM = before S45 arrays: RSS 7.78 GB peak 8.48 GB | after S45 arrays: RSS 8.70 GB peak 8.70 GB | after frozen RF scores: RSS 8.89 GB peak 9.26 GB | end of mode: RSS 9.25 GB peak 9.92 GB
+P B L2_FULL = pre 1-3 vs placebo 31-33 | unmatched n 133: 44.4/10.5% d +33.8[24.6,42.3] r 4.21 * | matched n 128: 44.5/10.9% d +33.6[24.0,42.6] r 4.07 *
+P E1 L2_FULL = pre 1-3 vs placebo 31-33 | unmatched n 225: 54.2/12.4% d +41.8[34.1,49.5] r 4.36 * | matched n 212: 55.2/12.7% d +42.5[34.4,50.9] r 4.33 *
+P E2 L2_FULL = pre 1-3 vs placebo 31-33 | unmatched n 194: 56.7/10.3% d +46.4[38.7,54.7] r 5.50 * | matched n 186: 56.5/10.8% d +45.7[37.9,54.2] r 5.25 *
+P E3 L2_FULL = pre 1-3 vs placebo 31-33 | unmatched n 198: 56.1/11.1% d +44.9[36.8,53.2] r 5.05 * | matched n 187: 56.7/11.2% d +45.5[37.6,53.9] r 5.05 *
+P M L2_FULL = pre 1-3 vs placebo 31-33 | unmatched n 160: 46.2/11.9% d +34.4[25.5,42.5] r 3.89 * | matched n 153: 47.1/11.8% d +35.3[26.4,43.9] r 4.00 *
+P0 panel = mode S45PLACEBO | sample securities 2986 with data 2947 | rows 6027629 | build 12 min
+S4 CHECK = OK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3094930 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 7.78 GB peak 8.48 GB
+MEM after S45 arrays: RSS 8.70 GB peak 8.70 GB
+MEM after frozen RF scores: RSS 8.89 GB peak 9.26 GB
+MEM end of mode: RSS 9.25 GB peak 9.92 GB
+P E1 L2_FULL: pre 1-3 vs placebo 31-33 | unmatched n 225: 54.2/12.4% d +41.8[34.1,49.5] r 4.36 * | matched n 212: 55.2/12.7% d +42.5[34.4,50.9] r 4.33 *
+P E1 L2_FULL: pre 1-5 vs placebo 41-45 | unmatched n 216: 55.6/17.1% d +38.4[30.2,47.2] r 3.24 * | matched n 185: 56.2/17.3% d +38.9[30.5,47.8] r 3.25 *
+P E1 L2_FULL: pre 1-3 vs placebo 61-63 | unmatched n 192: 55.7/11.5% d +44.3[35.2,53.4] r 4.86 * | matched n 173: 55.5/9.8% d +45.7[36.3,55.4] r 5.65 *
+P E1 STATE: pre 1-3 vs placebo 31-33 | unmatched n 225: 15.1/7.1% d +8.0[2.6,13.1] r 2.12 * | matched n 212: 12.7/7.1% d +5.7[0.5,10.7] r 1.80 *
+P E1 STATE: pre 1-5 vs placebo 41-45 | unmatched n 216: 16.7/9.7% d +6.9[0.9,12.9] r 1.71 * | matched n 185: 13.5/8.6% d +4.9[-1.0,10.5] r 1.56
+P E1 STATE: pre 1-3 vs placebo 61-63 | unmatched n 192: 15.1/6.2% d +8.9[3.9,14.0] r 2.42 * | matched n 173: 11.6/3.5% d +8.1[3.2,13.0] r 3.33 *
+P E1 RF_FULL: pre 1-3 vs placebo 31-33 | unmatched n 225: 54.7/12.4% d +42.2[34.8,49.4] r 4.39 * | matched n 212: 55.7/12.7% d +42.9[35.2,50.3] r 4.37 *
+P E1 RF_FULL: pre 1-5 vs placebo 41-45 | unmatched n 216: 56.0/17.6% d +38.4[29.8,47.4] r 3.18 * | matched n 185: 56.2/18.4% d +37.8[28.7,47.1] r 3.06 *
+P E1 RF_FULL: pre 1-3 vs placebo 61-63 | unmatched n 192: 56.2/10.9% d +45.3[36.2,54.8] r 5.14 * | matched n 173: 56.1/10.4% d +45.7[36.2,55.6] r 5.39 *
+P E2 L2_FULL: pre 1-3 vs placebo 31-33 | unmatched n 194: 56.7/10.3% d +46.4[38.7,54.7] r 5.50 * | matched n 186: 56.5/10.8% d +45.7[37.9,54.2] r 5.25 *
+P E2 STATE: pre 1-3 vs placebo 31-33 | unmatched n 194: 14.9/7.2% d +7.7[2.0,13.1] r 2.07 * | matched n 186: 12.4/7.0% d +5.4[-0.5,10.9] r 1.77
+P E3 L2_FULL: pre 1-3 vs placebo 31-33 | unmatched n 198: 56.1/11.1% d +44.9[36.8,53.2] r 5.05 * | matched n 187: 56.7/11.2% d +45.5[37.6,53.9] r 5.05 *
+P E3 STATE: pre 1-3 vs placebo 31-33 | unmatched n 198: 15.7/7.1% d +8.6[3.0,13.9] r 2.21 * | matched n 187: 12.3/7.0% d +5.3[0.0,10.4] r 1.77
+P B L2_FULL: pre 1-3 vs placebo 31-33 | unmatched n 133: 44.4/10.5% d +33.8[24.6,42.3] r 4.21 * | matched n 128: 44.5/10.9% d +33.6[24.0,42.6] r 4.07 *
+P B STATE: pre 1-3 vs placebo 31-33 | unmatched n 133: 10.5/6.0% d +4.5[-1.9,10.9] r 1.75 | matched n 128: 8.6/5.5% d +3.1[-3.3,9.0] r 1.57
+P M L2_FULL: pre 1-3 vs placebo 31-33 | unmatched n 160: 46.2/11.9% d +34.4[25.5,42.5] r 3.89 * | matched n 153: 47.1/11.8% d +35.3[26.4,43.9] r 4.00 *
+P M STATE: pre 1-3 vs placebo 31-33 | unmatched n 160: 11.2/6.9% d +4.4[-2.2,10.7] r 1.64 | matched n 153: 9.8/6.5% d +3.3[-3.6,9.7] r 1.50
+CHECK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(bcf56d595f75b80f97854398e670569e) completed in 1958.32 seconds at 43k data points per second. Processing total of 84,144,283 data points.
