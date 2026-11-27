@@ -278,3 +278,25 @@ date and reason. Changes after results are visible are allowed only if they cann
   5. Memory checkpoints are logged (`MEM`).
   6. The price × dollar-volume grid and the same-day-rule universes run as a separate mode, S45GRID, so that
      S45ROBUST stays within limits. Content is unchanged from §8.
+
+### Amendment 3 (2026-11-27 ~00:30 UTC) — second QC historical-data revision; canonical Stage 4.5 panel
+- **Observation.** S45FEATURE v1 (backtest d315e7fa…) used the same code base, the same fixed-hash sample and the
+  same 2,947 securities with data. It built **6,027,629 rows and 24,428 primary events**, against the Stage 4
+  canonical 6,028,644 / 24,426.
+  - Segments (3,541), `mh10 == R` and date order are unchanged.
+  - QC data points processed rose from 84,115,119 (Stage 4) to 84,271,765.
+  - As in Stage 4 Amendment 1, this is a revision of QC's historical data, not a code change. Stage 4.5 code
+    does not touch the Stage 3/4 row construction; the S45 CHECK compares against Stage 4 arrays of the same build.
+- **Seen before this amendment:** the S45FEATURE v1 leakage results (F1 0 mismatches, F2 0 mismatches) and the
+  exploratory univariate AUCs (F3).
+  - These are exploratory or integrity outputs, not criteria tied to data values.
+  - The run is kept as INVALID and repeated as v2.
+- **Consequences:**
+  1. All Stage 4.5 analyses use the revised panel. The integrity check requires exactly 6,027,629 rows and
+     24,428 primary events (plus `mh10 == R`, date order and the S45 CHECK).
+     - Set in `xup_s45_core.py` by overriding the Stage 4 constants. The check text still says "S4 canon".
+     - A further revision will again invalidate runs instead of passing silently.
+  2. An S4DIAG run on the revised data gives the per-year breakdown of the change (documented in results).
+  3. Stage 4 results are not changed. Stage 4.5 compares STATE and timing models within the same build, so the
+     revision cannot favour either side.
+  4. No analysis definition, threshold or criterion changes.

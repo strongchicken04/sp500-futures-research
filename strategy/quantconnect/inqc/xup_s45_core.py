@@ -6,6 +6,7 @@ import pandas as pd
 from xup_s3_const import *
 from xup_s4_core import *
 from xup_s4_core import _o
+import xup_s4_core as _s4c
 # endregion
 #
 # Stage 4.5 core (research/extreme_upside/stage45/protocol.md): second-stage features and forward-path outcomes
@@ -37,6 +38,8 @@ C_GRID, LEAF_GRID = (0.01, 0.1, 1.0), (20, 50, 100)
 S30 = None
 # memory (QC node 7.8 GB): S45 arrays are filled only for rows from KEEP45 (earliest row any S45 analysis uses is 2016-11-01)
 KEEP45 = _o(2016, 6, 1)
+# Amendment 3: second QC data revision (observed 2026-11-27 in S45FEATURE v1): canonical Stage 4.5 panel
+_s4c.EXP_ROWS, _s4c.EXP_POS = 6027629, 24428
 F16MAX = 65000.0
 
 
