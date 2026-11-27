@@ -1,0 +1,48 @@
+### xup s4 S45OUTCOME v1 | project 38061541 backtest 31a020728c8c8e36ffc4a8a51459d69a | VALID
+C4 CB3_20 = P 11.20% base 6.01% x1.86 d [4.14,6.16] | vs STATE +1.37[0.06,2.57] | lift 21-22 1.65 23-25 2.01 | P(L3<=-20%) 14.22% -> fail
+C4 CB5_50 = P 3.74% base 1.73% x2.16 d [1.32,2.71] | vs STATE +0.17[-0.82,1.13] | lift 21-22 1.55 23-25 2.47 | P(L5<=-50%) 1.52% -> PASS
+C4 FC3_20_10 = P 17.35% base 10.60% x1.64 d [5.57,7.86] | vs STATE +0.70[-1.01,2.18] | lift 21-22 1.60 23-25 1.66 | succ 17.35% adv 46.01% amb 0.91% neither 35.7% | close-conf 58% -> fail
+C4 FC5_30_10 = P 12.77% base 7.97% x1.60 d [3.61,5.87] | vs STATE +0.12[-1.33,1.53] | lift 21-22 1.44 23-25 1.72 | succ 12.77% adv 57.30% amb 0.38% neither 29.5% | close-conf 60% -> fail
+C4 FC5_50_15 = P 6.28% base 2.91% x2.16 d [2.49,4.26] | vs STATE -0.01[-1.16,1.14] | lift 21-22 1.67 23-25 2.49 | succ 6.28% adv 39.53% amb 0.07% neither 54.1% | close-conf 57% -> fail
+C4 verdict = short-list targets passing: ['CB5_50'] -> C4 PASS | FC5_30_10 two-way CI of P-base [3.28,6.35]
+C5 downside (G3) = P(M5>=20%) 17.11% vs P(L5<=-20%) 24.97% | median B5 -3.38% | P(B5<=-30%) 4.69% -> C5 FAIL
+C6 part: S2 lifts of the C4 short list = S2-P5 signals 4982 pop 43136 | CB3_20 x1.76 CB5_50 x2.17 FC3_20_10 x1.70 FC5_30_10 x1.65 FC5_50_15 x2.23
+C7 payoff conservative = cost 4.34% | G3 mean -4.91% [-5.47,-4.38] | dedup5 -4.96% [-5.61,-4.32] | STATE -5.19% pop -4.88% | 21-22 -5.32 23-25 -4.58
+C7 payoff neutral = cost 2.40% | G3 mean -2.96% [-3.52,-2.43] | dedup5 -3.01% [-3.66,-2.37] | STATE -3.25% pop -2.93% | 21-22 -3.37 23-25 -2.63 | two-way [-3.69,-2.21]
+C7 payoff optimistic = cost 1.05% | G3 mean -1.61% [-2.17,-1.08] | dedup5 -1.66% [-2.31,-1.03] | STATE -1.90% pop -1.58% | 21-22 -2.03 23-25 -1.29
+C7 verdict = neutral security-bootstrap CI lower bound > 0: FAIL | incomplete excluded 33 of 5492 | gross outcome per row, overlapping signals counted (not a simulation)
+MEM = k 7.03 GB | after S45 arrays: RSS 7.79 GB peak 7.79 GB | after frozen RF scores: RSS 7.97 GB peak 8.34 GB | after feature compaction: RSS 4.66 GB peak 8.53 GB | end of mode: RSS 5.99 GB peak 8.53 GB
+O0 groups (2021-25) = G0 uncond S1: rows 1097183 secs 1641 | G1 S1-P5 pop: rows 49697 secs 743 | G2 STATE sig: rows 5492 secs 361 | G3 L2 sig: rows 5492 secs 565
+O1 family A = targets 12 | BH q<0.05 (G3 vs pop): 8 | best lift A1_50 0.93% vs 0.25% x3.73
+O1 family B = targets 12 | BH q<0.05 (G3 vs pop): 11 | best lift B3_100 0.37% vs 0.11% x3.30
+O1 family B-max = targets 12 | BH q<0.05 (G3 vs pop): 11 | best lift CB3_100 0.40% vs 0.13% x3.07
+O1 family C = targets 27 | BH q<0.05 (G3 vs pop): 27 | best lift FC1_50_15 0.89% vs 0.24% x3.76
+O2 downside G0 uncond S1 = n 1097183 | B1/B3/B5/B10 med -0.0/-0.0/0.0/0.0% B5 p10/25/75/90 -7.74/-3.35/3.18/7.38% | L1/L3/L5/L10 med -1.5/-2.6/-3.5/-5.0% | touch L10<= -5/-10/-20/-30/-50 50/24/6/2/0% | B5<= -10/-20/-30/-50 6.
+O2 downside G1 S1-P5 pop = n 49697 | B1/B3/B5/B10 med -0.7/-1.5/-2.2/-3.7% B5 p10/25/75/90 -17.4/-9.93/6.34/16.9% | L1/L3/L5/L10 med -4.1/-7.1/-9.2/-13.3% | touch L10<= -5/-10/-20/-30/-50 82/62/29/11/2% | B5<= -10/-20/-30/-50
+O2 downside G2 STATE sig = n 5492 | B1/B3/B5/B10 med -1.2/-2.6/-3.8/-6.1% B5 p10/25/75/90 -22.1/-12.8/6.6/20.4% | L1/L3/L5/L10 med -5.1/-9.1/-11.7/-16.6% | touch L10<= -5/-10/-20/-30/-50 87/71/41/20/4% | B5<= -10/-20/-30/-50 
+O2 downside G3 L2 sig = n 5492 | B1/B3/B5/B10 med -0.9/-2.0/-3.4/-5.4% B5 p10/25/75/90 -22.6/-13.3/7.85/21.8% | L1/L3/L5/L10 med -5.8/-9.6/-12.1/-17.0% | touch L10<= -5/-10/-20/-30/-50 87/72/42/20/4% | B5<= -10/-20/-30/-50
+O3 FC5_30_10 split (G3) = success 697 | adverse 3128 | ambiguous 21 | neither 1613 | incomplete 33
+O4 Family A vs B-max / C (G3) = A5>=+50% 6.87% | of those also CB5_50 54% FC5_50_15 91% | CB5_50 3.74% FC5_50_15 6.28%
+P0 panel = mode S45OUTCOME | sample securities 2986 with data 2947 | rows 6027629 | build 13 min
+S4 CHECK = OK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3094930 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+X7 strict pre-move G3 (xr<50%, exploratory) = signals 5095 pop 45379 | FC5_30_10 11.68% vs 7.71% d [2.81,5.20] | CB5_50 3.11% | med B5 -3.54% P(L5<=-20%) 22.5% | neutral payoff -3.18% [-3.74,-2.63]
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 6.86 GB peak 7.03 GB
+MEM after S45 arrays: RSS 7.79 GB peak 7.79 GB
+MEM after frozen RF scores: RSS 7.97 GB peak 8.34 GB
+MEM after feature compaction: RSS 4.66 GB peak 8.53 GB
+MEM end of mode: RSS 5.99 GB peak 8.53 GB
+FAM A (P G3 L2 / G1 pop / G2 STATE %, lift G3/G1, BH q): A1_50 0.93/0.25/0.73 x3.73 q0.001 | A1_100 0.11/0.05/0.15 x2.26 q0.097 | A1_200 0.00/0.00/0.00 x0.00 q0.289 | A3_50 4.26/1.64/4.09 x2.60 q0.001 | A3_100 0.80/0.38/0.99 x2.14 q0.003 | A3_200 0.15/0.08/0.29 x1.77 q0.256 | A5_50 6.87/3.22/7.29 x2.14 q0.001 | A5_100 1.67/0.80/1.89 x2.09 q0.001 | A5_200 0.35/0.19/0.53 x1.80 q0.122 | A10_50 12.12/7.29/13.60 x1.66 q0.001 | A10_100 4.08/1.94/4.06 x2.10 q0.001 | A10_200 1.03/0.50/1.21 x2.05 q0.024
+FAM B (P G3 L2 / G1 pop / G2 STATE %, lift G3/G1, BH q): B1_20 3.08/1.07/2.42 x2.87 q0.001 | B1_50 0.24/0.08/0.27 x3.02 q0.001 | B1_100 0.02/0.01/0.02 x1.81 q0.755 | B3_20 8.24/4.80/7.53 x1.72 q0.001 | B3_50 1.39/0.61/1.41 x2.28 q0.001 | B3_100 0.37/0.11/0.33 x3.30 q0.001 | B5_20 11.08/7.78/10.33 x1.42 q0.001 | B5_50 2.64/1.26/2.49 x2.10 q0.001 | B5_100 0.71/0.24/0.68 x2.93 q0.001 | B10_20 15.12/12.52/14.70 x1.21 q0.001 | B10_50 4.83/2.80/4.72 x1.73 q0.001 | B10_100 1.63/0.67/1.30 x2.46 q0.001
+FAM B-max (P G3 L2 / G1 pop / G2 STATE %, lift G3/G1, BH q): CB1_20 3.08/1.07/2.42 x2.87 q0.001 | CB1_50 0.24/0.08/0.27 x3.02 q0.001 | CB1_100 0.02/0.01/0.02 x1.81 q0.755 | CB3_20 11.20/6.01/9.83 x1.86 q0.001 | CB3_50 1.79/0.73/1.66 x2.46 q0.001 | CB3_100 0.40/0.13/0.38 x3.07 q0.001 | CB5_20 17.11/11.10/15.65 x1.54 q0.001 | CB5_50 3.74/1.73/3.57 x2.16 q0.001 | CB5_100 0.93/0.34/0.95 x2.71 q0.001 | CB10_20 26.54/20.71/25.79 x1.28 q0.001 | CB10_50 7.97/4.57/8.09 x1.74 q0.001 | CB10_100 2.72/1.12/2.53 x2.42 q0.001
+FAM C (P G3 L2 / G1 pop / G2 STATE %, lift G3/G1, BH q): FC1_20_5 5.31/2.23/4.65 x2.37 q0.001 | FC1_20_10 6.60/2.62/5.82 x2.52 q0.001 | FC1_20_15 7.09/2.74/6.20 x2.59 q0.001 | FC1_30_5 2.32/0.74/2.06 x3.14 q0.001 | FC1_30_10 2.83/0.87/2.52 x3.24 q0.001 | FC1_30_15 2.99/0.92/2.63 x3.26 q0.001 | FC1_50_5 0.66/0.19/0.62 x3.51 q0.001 | FC1_50_10 0.82/0.22/0.69 x3.67 q0.001 | FC1_50_15 0.89/0.24/0.71 x3.76 q0.001 | FC3_20_5 12.28/8.20/11.70 x1.50 q0.001 | FC3_20_10 17.35/10.60/16.65 x1.64 q0.001 | FC3_20_15 19.41/11.23/18.18 x1.73 q0.001 | FC3_30_5 6.93/3.52/6.09 x1.97 q0.001 | FC3_30_10 9.45/4.54/8.66 x2.08 q0.001 | FC3_30_15 10.42/4.85/9.41 x2.15 q0.001 | FC3_50_5 2.49/1.04/2.23 x2.40 q0.001 | FC3_50_10 3.56/1.40/3.40 x2.54 q0.001 | FC3_50_15 4.02/1.53/3.75 x2.63 q0.001 | FC5_20_5 14.56/11.78/14.23 x1.24 q0.001 | FC5_20_10 22.24/16.43/21.88 x1.35 q0.001 | FC5_20_15 25.70/17.88/24.95 x1.44 q0.001 | FC5_30_5 8.74/5.72/8.28 x1.53 q0.001 | FC5_30_10 12.77/7.97/12.65 x1.60 q0.001 | FC5_30_15 14.75/8.71/14.37 x1.69 q0.001 | FC5_50_5 3.70/1.88/3.50 x1.97 q0.001 | FC5_50_10 5.40/2.62/5.44 x2.06 q0.001 | FC5_50_15 6.28/2.91/6.30 x2.16 q0.001
+DOWN G0 uncond S1: n 1097183 | B1/B3/B5/B10 med -0.0/-0.0/0.0/0.0% B5 p10/25/75/90 -7.74/-3.35/3.18/7.38% | L1/L3/L5/L10 med -1.5/-2.6/-3.5/-5.0% | touch L10<= -5/-10/-20/-30/-50 50/24/6/2/0% | B5<= -10/-20/-30/-50 6.5/1.2/0.3/0.1% B10 11.9/3.1/0.9/0.1% | dd5/dd10 med -6.1/-8.7% | A10 med 5.0% | t(min L)/t(max H) med 5/5
+DOWN G1 S1-P5 pop: n 49697 | B1/B3/B5/B10 med -0.7/-1.5/-2.2/-3.7% B5 p10/25/75/90 -17.4/-9.93/6.34/16.9% | L1/L3/L5/L10 med -4.1/-7.1/-9.2/-13.3% | touch L10<= -5/-10/-20/-30/-50 82/62/29/11/2% | B5<= -10/-20/-30/-50 24.9/7.2/2.1/0.4% B10 35.0/15.6/6.0/1.2% | dd5/dd10 med -15.2/-21.3% | A10 med 11.6% | t(min L)/t(max H) med 6/4
+DOWN G2 STATE sig: n 5492 | B1/B3/B5/B10 med -1.2/-2.6/-3.8/-6.1% B5 p10/25/75/90 -22.1/-12.8/6.6/20.4% | L1/L3/L5/L10 med -5.1/-9.1/-11.7/-16.6% | touch L10<= -5/-10/-20/-30/-50 87/71/41/20/4% | B5<= -10/-20/-30/-50 32.5/12.3/4.5/0.9% B10 42.1/23.3/11.5/2.5% | dd5/dd10 med -19.1/-27.1% | A10 med 14.8% | t(min L)/t(max H) med 6/3
+DOWN G3 L2 sig: n 5492 | B1/B3/B5/B10 med -0.9/-2.0/-3.4/-5.4% B5 p10/25/75/90 -22.6/-13.3/7.85/21.8% | L1/L3/L5/L10 med -5.8/-9.6/-12.1/-17.0% | touch L10<= -5/-10/-20/-30/-50 87/72/42/20/4% | B5<= -10/-20/-30/-50 33.0/13.2/4.7/0.7% B10 41.3/23.8/10.9/2.3% | dd5/dd10 med -19.8/-26.8% | A10 med 14.4% | t(min L)/t(max H) med 6/3
+SPLIT FC5_30_10 (G3): success 697: px 4.77 dvmed 2168k xr 44% B10 +21% | adverse 3128: px 4.47 dvmed 2328k xr 44% B10 -14% | ambiguous 21: px 4.95 dvmed 2141k xr 59% B10 -3% | neither 1613: px 4.72 dvmed 2181k xr 42% B10 +2% | incomplete 33: px 7.86 dvmed 878k xr 72% B10 +nan%
+S2 DOWN G3: n 4982 | B1/B3/B5/B10 med -0.4/-0.8/-1.5/-2.9% B5 p10/25/75/90 -19.9/-10.8/6.96/18.4% | L1/L3/L5/L10 med -4.4/-7.7/-9.7/-13.8% | touch L10<= -5/-10/-20/-30/-50 80/62/33/14/3% | B5<= -10/-20/-30/-50 26.9/9.8/3.4/0.6% B10 35.5/18.7/7.9/1.8% | dd5/dd10 med -16.2/-22.1% | A10 med 11.7% | t(min L)/t(max H) med 5/4
+CHECK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(31a020728c8c8e36ffc4a8a51459d69a) completed in 1781.80 seconds at 47k data points per second. Processing total of 84,144,283 data points.
