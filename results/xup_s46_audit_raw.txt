@@ -21,3 +21,26 @@ MEM after feature compaction: RSS 4.69 GB peak 8.54 GB
 MEM end of mode: RSS 5.07 GB peak 8.54 GB
 CHECK rows 6030760 (S4 canon 6027629; S3 6022604) primary events 24429 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
 Algorithm Id:(b3a06dff05c512f59606e39a4c8bcd01) completed in 1723.43 seconds at 49k data points per second. Processing total of 84,631,056 data points.
+### xup s4 S46AUDIT v2 | project 38061541 backtest b65bd5cd3581d1a1dce4a3f95f07e85e | VALID
+A0 frozen reproduction = pop rows 49802 (S45 49697) | L2 5497 STATE 5497 (S45 5492/5492) VOLU 5497 | L2 C=0.01 RF leaf=20 (S45 0.01/100)
+A1 groups = overlap L2&STATE 1171 L2&VOLU 2410 STATE&VOLU 1598 | controls 5497 (unmatched L2 rows 0) | union 17128 rows
+A2 balance (medians) = L2 px 4.63 dv 2.27M atr 12.9% | CTL px 4.28 dv 2.17M atr 12.6% | STATE px 1.87 dv 1.66M atr 19.7% | VOLU px 2.48 dv 1.64M atr 11.4% | POP px 2.43 dv 1.85M atr 11.2%
+A3 daily windows t..t+5 = L2 complete 5461/5497 window 31 daily 0 corp 5 | STATE complete 5465/5497 window 32 daily 0 corp 0 | CTL complete 5484/5497 window 6 daily 0 corp 7
+A4 coverage CTL = n 80 errors 0 | t+1 trade bars 75 median 311 | quotes 75 median 300 first30 28 valid 100% sizes 93% | dayHigh(min)/dayHigh(daily)-1 p10/50/90 -2.57e-06/4.22e-07/3.27e-06%
+A4 coverage L2 = n 80 errors 0 | t+1 trade bars 74 median 320 | quotes 74 median 334 first30 29 valid 100% sizes 93% | dayHigh(min)/dayHigh(daily)-1 p10/50/90 -2.67e-06/3.41e-08/3.47e-06%
+A4 coverage STATE = n 80 errors 0 | t+1 trade bars 71 median 308 | quotes 71 median 294 first30 28 valid 100% sizes 92% | dayHigh(min)/dayHigh(daily)-1 p10/50/90 -3.29e-06/0/3.67e-06%
+A5 bar labels / hours = regular-hours request: earliest bar label 09:30 in 0, 09:31 in 220; latest 16:00 in 218, 15:59 in 0; outside 09:30-16:00 0 | shift 0 | 0.05 s per item
+MEM = k 7.00 GB | after S45 arrays: RSS 7.76 GB peak 7.76 GB | after frozen RF scores: RSS 7.99 GB peak 8.36 GB | after feature compaction: RSS 4.69 GB peak 8.55 GB | end of mode: RSS 5.31 GB peak 8.55 GB
+P0 panel = mode S46AUDIT | sample securities 2989 with data 2949 | rows 6030760 | build 13 min
+S4 CHECK = OK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3098061 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+S46 CHECK = OK raw OHLC rows>=2020-06 1984316 | raw close vs panel price mismatches 0 | missing 0 | S45 OK
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 6.84 GB peak 7.00 GB
+MEM after S45 arrays: RSS 7.76 GB peak 7.76 GB
+MEM after frozen RF scores: RSS 7.99 GB peak 8.36 GB
+MEM after feature compaction: RSS 4.69 GB peak 8.55 GB
+MEM end of mode: RSS 5.31 GB peak 8.55 GB
+CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
+Algorithm Id:(b65bd5cd3581d1a1dce4a3f95f07e85e) completed in 1785.67 seconds at 47k data points per second. Processing total of 84,631,056 data points.
