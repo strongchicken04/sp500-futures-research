@@ -1,0 +1,322 @@
+EXTREME UPSIDE MOVES IN US EQUITIES - STAGE 4.5: CONDITIONAL TIMING, CAPTURABLE TARGETS & LIQUID-UNIVERSE VALIDATION
+=====================================================================================================================
+Date: 2026-11-26/27. Data: QuantConnect / LEAN (daily + minute bars), 2006-02-01 .. 2026-08-27, fixed-hash 20 %
+sample of US equities (2,947 securities with data).
+
+- Every security-level calculation ran inside QuantConnect. Only aggregates left QC. No ticker, identifier,
+  score, prediction or event history was exported.
+- Pre-registration: research/extreme_upside/stage45/protocol.md, commit 0b80fe8, before any Stage 4.5 run.
+  Amendments 1-6 changed no criterion: 1 and 4 are diagnostics; 2, 3 and 5 are technical; 6 sets the frozen
+  cost constant.
+- DATA EXPOSURE: 2021-2025 and 2026 YTD were examined in Stages 3-4. Every number below is a HISTORICAL
+  OUT-OF-SAMPLE REPLICATION under prior research exposure, not an untouched test. Genuine confirmation needs
+  prospective data after 2026-08-27.
+- Details: results.md (all tables), stage5_decision.md, limitations.md, README.md (reproduction).
+
+
+=====================================================================================================================
+EXECUTIVE SUMMARY
+=====================================================================================================================
+DECISION: C - FURTHER RESEARCH REQUIRED. A Stage 5 trading simulation is NOT justified.
+  C1 PASS  C2 PASS  C3 PASS  C4 PASS (one target)  C5 FAIL  C6 PASS  C7 FAIL  C8 PASS  C9 PASS
+  B would need C7 (cost) to pass; it fails clearly.
+
+1. Statistical prediction - YES.
+   - Inside the frozen high-volatility state (S1-P5), a second-stage model predicts a +100 % move day within
+     3 sessions far better than the state rank.
+   - PR-AUC 0.141 vs 0.024. Per-day top-10 % precision 7.19 % vs 2.68 % (base 1.49 %; 5,492 signals each).
+2. Event detection - YES, robustly.
+   - The timing signals catch 210 of 303 eligible E1 events (69.3 %) in the 3 sessions before the move day,
+     against 81 / 303 (26.7 %) for the state rank: +42.6 pp, CI [34.5, 49.8].
+   - The membership-matched same-security placebo ratio is 4.33.
+3. Genuine pre-event timing - WEAK.
+   - At the first signal, the captured stock is already a median +65 % above its 10-day low open (71 % ≥ +50 %).
+     The model mainly sees a move that has started.
+   - Restricted to rows with run-up < 50 %: +21.0 pp [11.0, 31.1], at event precision 2.26 % (state 1.71 %).
+4. Capturable price movement - NOT BEYOND THE STATE.
+   - One short-list target passes C4: CB5_50, a max close ≥ +50 % within 5 sessions, in 3.74 % of 5,492 signals
+     vs 1.73 % base.
+   - It is no better than the plain state signals (+0.17 pp [-0.82, 1.13]).
+   - All adverse-constrained brackets fail: +30 % before -10 % within 5 sessions succeeds in 12.8 %; the -10 %
+     limit comes first in 57.3 %.
+5. Hypothetical execution / profitability - NO.
+   - From the next open, signals lose a median 3.4 % in 5 sessions and 5.4 % in 10; 42 % touch -20 % within 10
+     sessions.
+   - The bracket payoff proxy is -0.56 % before costs.
+   - With the measured quoted spread (s30 = 0.95 %) it is -1.61 % (optimistic), -2.96 % [-3.52, -2.43]
+     (neutral) and -4.91 % (conservative).
+   - Identical to the whole conditional population.
+
+
+=====================================================================================================================
+DESIGN IN ONE SCREEN
+=====================================================================================================================
+- State (frozen, never retrained): the Stage 3 full-A RF score, ranked daily inside the universe.
+  - Primary population S1-P5: price ≥ $1, trailing 20-session median dollar volume ≥ $500k, top 5 % of the
+    state rank.
+  - Rows within 10 sessions after a move day are excluded ex ante.
+- Event onset (move day): first session whose HIGH reaches +100 % from the reference open (E1). E2, E3, B10 and
+  B-max10 are alternatives.
+- Target ONSET_3 = 1 if a move day falls in t+1..t+3. Primary timing model: L2 logistic regression on 39
+  features (volatility acceleration, volume acceleration, path / compression, state transitions).
+- Training starts 2017; hyperparameters are chosen on 2020 only.
+- Rolling-origin folds with a 60-day purge:
+  - a: train to 2020, test 2021-22;
+  - b: train to 2022, test 2023-25;
+  - c: train to 2025, test 2026 YTD.
+- Signals = per-day top 10 % of the population, for the timing model and the state rank alike (same count).
+- Statistics:
+  - paired event-level comparisons on identical eligible events;
+  - security-cluster and two-way (security x date) bootstrap, 2,000 resamples;
+  - BH within target families.
+
+
+=====================================================================================================================
+ANSWERS TO THE TWELVE QUESTIONS
+=====================================================================================================================
+Q1. Does the Stage 3 high-volatility state contain additional short-term timing information?
+    YES, mostly through information about a move already in progress. A smaller genuine pre-move part exists.
+
+    Model (S1-P5, test 2021-25, valid rows 49,651, positives 740, base 1.49 %; 5,492 signals per model):
+
+    | Model | PR-AUC | Per-day top-10 % precision | Lift | Pre-event capture / 303 eligible |
+    |---|---|---|---|---|
+    | STATE (frozen RF rank) | 0.024 | 2.68 % | 1.80 | 81 (26.7 %) |
+    | L2 FULL (primary) | 0.141 | 7.19 % | 4.83 | 210 (69.3 %) |
+    | RF FULL | 0.165 | 7.43 % | 4.98 | 215 (71.0 %) |
+    | LR STATE + volatility accel. | 0.059 | 4.72 % | 3.16 | 192 (63.4 %) |
+    | LR STATE + volume accel. | 0.080 | 5.54 % | 3.71 | 190 (62.7 %) |
+    | LR STATE + path / compression | 0.131 | 6.92 % | 4.64 | 201 (66.3 %) |
+    | LR transitions only | 0.028 | 2.75 % | 1.84 | 81 (26.7 %) |
+
+    - Most of the information is in the path features. The strongest univariate features (training window) are
+      distance from the 20-day low (AUC 0.81), 3-day volatility (0.73), last-day move (0.73) and 1- / 3-day
+      return (0.71).
+    - State-transition features (entering P5, run length, percentile change) carry almost none.
+
+Q2. Can the onset of an extreme move be predicted within 1-3 sessions?
+    It can be DETECTED with high capture. Genuine PREDICTION before the move starts is weak and imprecise.
+
+    | Horizon | Base | Eligible events | Capture STATE -> L2 | Δ [95 % CI] |
+    |---|---|---|---|---|
+    | ONSET_1 | 0.55 % | 273 | 19.4 -> 66.3 % | +46.9 pp [38.7, 54.2] |
+    | ONSET_2 | 1.03 % | 282 | 23.0 -> 70.9 % | +47.9 pp [39.3, 55.3] |
+    | ONSET_3 | 1.49 % | 303 | 26.7 -> 69.3 % | +42.6 pp [34.5, 49.8] |
+    | ONSET_5 | 2.29 % | 324 | 29.6 -> 69.4 % | +39.8 pp [31.5, 47.2] |
+
+    - All E1 move days in S1, test: 413. L2 catches 210 (50.8 % of all).
+    - Event precision is 7.19 % (5,492 signals, 24.3 false signals per captured event). First-signal lead for
+      captured events: 1 session 66, 2 sessions 49, 3 sessions 95.
+    - Run-up at the first signal (captured events, n 210): median +65 %; ≥ +30 % in 92 %; ≥ +50 % in 71 %.
+      For state signals (n 81): median +39 %; 42 % ≥ +50 %.
+    - Strict pre-move (run-up < 50 % at t, 176 eligible events): capture 27.3 % -> 48.3 %, +21.0 pp
+      [11.0, 31.1]. Event precision 1.71 % -> 2.26 %.
+    - 2026 YTD diagnostic (fold c; 6,179 rows, 147 positives, 57 eligible events):
+
+      | Model | Capture | PR-AUC | Precision |
+      |---|---|---|---|
+      | L2 | 46 / 57 | 0.242 | 12.2 % |
+      | STATE | 16 / 57 | 0.043 | 5.3 % |
+
+Q3. Does the timing model outperform the original state-only model?
+    YES on every prediction and detection metric. NO on capturable outcomes.
+    - Capture: +42.6 pp, security CI [34.5, 49.8], two-way [28.6, 54.9], p = 0.0005.
+      - 2021-22 +31.2 pp; 2023-25 +49.0 pp.
+      - Leave-one-group-out: +41.3 to +42.2 pp.
+    - PR-AUC: +0.118 [0.094, 0.146].
+    - Full vs volatility-only: +5.9 pp [-0.7, 12.4]. Full vs volume-only: +6.6 pp [0.3, 12.9]. Full vs RF:
+      -1.7 pp [-5.6, 2.4].
+    - Capturable targets, L2 minus STATE signals (5,492 each):
+      - CB5_50 +0.17 pp [-0.82, 1.13];
+      - FC5_30_10 +0.12 pp [-1.33, 1.53];
+      - FC5_50_15 -0.01 pp;
+      - CB3_20 +1.37 pp [0.06, 2.57].
+
+Q4. Does the improvement survive membership-matched placebo?
+    YES. Detection ≥ 1 signal in τ-3..τ-1 vs τ-33..τ-31; matched = S1 member on every row of both windows.
+
+    | Events | Unmatched | Matched |
+    |---|---|---|
+    | E1 | n 225: 54.2 % vs 12.4 %, Δ +41.8 [34.1, 49.5], ratio 4.36 | n 212: 55.2 % vs 12.7 %, Δ +42.5 [34.4, 50.9], ratio 4.33 |
+    | E2 | | n 186: 56.5 % vs 10.8 %, ratio 5.25 |
+    | E3 | | n 187: 56.7 % vs 11.2 %, ratio 5.05 |
+    | B10 | | n 128: 44.5 % vs 10.9 %, ratio 4.07 |
+    | B-max10 | | n 153: 47.1 % vs 11.8 %, ratio 4.00 |
+
+    - Other windows (E1, matched): 1-5 vs 41-45 ratio 3.25; 1-3 vs 61-63 ratio 5.65.
+    - State-only for comparison: matched E1 12.7 % vs 7.1 %, ratio 1.80.
+    - So the Stage 4 liquid-segment lead was not a membership artefact.
+    - Caution: the pre-window contains the beginning of the price excursion and the placebo window does not;
+      the ratio partly measures "move in progress" (Q2).
+
+Q5. Does the result hold in S1 and S2?
+    S1: YES (primary).
+    S2: same direction, much smaller, because in liquid names the state alone already captures most events.
+
+    | Population | Eligible / all events | Capture STATE -> L2 | Δ [95 % CI] | Event precision L2 |
+    |---|---|---|---|---|
+    | S0-P5 | 479 / 708 | 21.3 -> 67.2 % | +45.9 [39.4, 52.0] | 8.70 % |
+    | S1-P5 | 303 / 413 | 26.7 -> 69.3 % | +42.6 [34.2, 49.8] | 7.19 % |
+    | S2-P5 | 139 / 179 | 69.8 -> 79.9 % | +10.1 [2.1, 19.3] | 4.60 % |
+    | S5M-P5 | 74 / 95 | 70.3 -> 77.0 % | +6.8 [-3.3, 16.9] | 3.39 % |
+    | S1 price ≥ $5 | 165 / 217 | 67.3 -> 77.0 % | +9.7 [2.5, 17.4] | 4.97 % |
+    | S1 same-day $vol rule | 537 / 678 | 27.2 -> 69.6 % | +42.5 [36.4, 47.9] | 11.17 % |
+
+    - Price x median-$vol grid: the gain falls from +45.9 pp ($1 / 250k) to +27.3 pp ($2 / 1M). The ≥ $5 grid
+      row and the same-day S0 / S2 / S5M rows are in results.md (S45GRIDB).
+    - Robustness (C8): the C2 direction is positive in all 10 pre-registered items: E2, E3, both periods, RF,
+      A-strict, same-day rule, S2, $1-5, ≥ $5.
+    - Outcomes in S2 (4,982 signals): CB5_50 lift x2.17; median close t+5 -1.5 %.
+
+Q6. Which target is most realistically capturable?
+    CB5_50 (max CLOSE ≥ +50 % within 5 sessions) is the only short-list target that passes C4, and only weakly:
+    - 3.74 % of 5,492 signals vs 1.73 % in the S1-P5 population (49,697 rows), lift 2.16, CI of difference
+      [1.32, 2.71] pp;
+    - lift 1.55 (2021-22) and 2.47 (2023-25);
+    - P(min LOW ≤ -50 % within 5) 1.52 %.
+
+    Other targets (P signals / P population):
+
+    | Target | Signals | Population |
+    |---|---|---|
+    | CB3_20 | 11.20 % | 6.01 % |
+    | CB5_20 | 17.11 % | 11.10 % |
+    | B5_20 (close at t+5 ≥ +20 %) | 11.08 % | 7.78 % |
+    | A5_50 (intraday high only) | 6.87 % | 3.22 % |
+
+    - Only 54 % of the A5_50 hits also close ≥ +50 % within 5 sessions.
+    - Family D (VWAP) was measured only in samples: the 15-min VWAP vs open on signal entry days has a median of
+      -0.04 % (p25 -1.83 %, p75 +1.52 %; n 140).
+
+Q7. How often does the upside threshold occur before the adverse limit?
+    Rarely. Adverse first dominates. Timing signals, 5,492 rows (incomplete excluded):
+
+    | Bracket | Success first | Adverse first | Ambiguous | Neither | Population success | Close-confirmed successes |
+    |---|---|---|---|---|---|---|
+    | +20 % before -10 %, 3 sessions | 17.35 % | 46.01 % | 0.91 % | 35.7 % | 10.60 % | 58 % |
+    | +30 % before -10 %, 5 sessions (primary) | 12.77 % (697) | 57.30 % (3,128) | 0.38 % (21) | 29.5 % (1,613) | 7.97 % | 60 % |
+    | +50 % before -15 %, 5 sessions | 6.28 % | 39.53 % | 0.07 % | 54.1 % | 2.91 % | 57 % |
+
+    - The primary bracket has 33 incomplete rows.
+    - Successes and failures look alike ex ante: median price $4.77 vs $4.47, median run-up 44 % vs 44 %.
+
+Q8. What is the distribution of adverse excursion and downside tails?
+    Medians unless stated; returns from the next open.
+
+    | Group (rows) | Close t+5 | Close t+10 | Close t+5 p10 / p90 | min LOW within 5 / 10 | Touch ≤ -20 / -30 / -50 % within 10 | Close t+10 ≤ -30 / -50 % | Max drawdown within 10 |
+    |---|---|---|---|---|---|---|---|
+    | Unconditional S1 (1,097,183) | 0.0 % | 0.0 % | -7.7 / +7.4 % | -3.5 / -5.0 % | 6 / 2 / 0 % | 0.9 / 0.1 % | -8.7 % |
+    | S1-P5 population (49,697) | -2.2 % | -3.7 % | -17.4 / +16.9 % | -9.2 / -13.3 % | 29 / 11 / 2 % | 6.0 / 1.2 % | -21.3 % |
+    | State signals (5,492) | -3.8 % | -6.1 % | -22.1 / +20.4 % | -11.7 / -16.6 % | 41 / 20 / 4 % | 11.5 / 2.5 % | -27.1 % |
+    | Timing signals (5,492) | -3.4 % | -5.4 % | -22.6 / +21.8 % | -12.1 / -17.0 % | 42 / 20 / 4 % | 10.9 / 2.3 % | -26.8 % |
+
+    C5 (timing signals): P(max close ≥ +20 % within 5) 17.1 % < P(min LOW ≤ -20 % within 5) 25.0 %; median
+    close t+5 -3.38 %; P(close t+5 ≤ -30 %) 4.69 % -> FAIL.
+
+Q9. What are the realistic quoted spread and estimated transaction costs?
+    Minute quotes, hash samples, 2021-25; relative quoted spread, median of per-day medians:
+
+    | Sample | n with quotes | Full session p50 / p90 | First 30 min p50 / p90 | First 5 min p50 |
+    |---|---|---|---|---|
+    | S1 timing signals, entry day | 140 / 150 | 0.70 / 2.61 % | 0.95 / 3.65 % | 1.25 % |
+    | S2 timing signals, entry day | 74 / 80 | 0.41 / 2.19 % | 0.72 / 3.60 % | 0.91 % |
+    | S1 controls | 54 / 60 | 0.66 % | 0.89 % | |
+    | S1 move days | 71 / 80 | 0.41 % | 0.57 % | |
+
+    - First quote and first trade in the first minute (median and p90).
+    - First-30-min dollar volume on S1 signal entry days: median $0.7M (p25 $0.24M). Capacity is small.
+    - Round trip, frozen formulas with s30 = 0.948 %: optimistic 1.05 %, neutral 2.40 %, conservative 4.34 %.
+
+Q10. Does the result survive neutral and conservative cost assumptions?
+     NO. Not even the optimistic one, and not before costs.
+
+     Payoff proxy per signal (bracket +30 % / -10 % / close t+5; NOT a simulation):
+
+     | Scenario | Timing signals (5,492) | Dedup 5 days | State signals | Population | 2021-22 / 2023-25 |
+     |---|---|---|---|---|---|
+     | gross (implied) | -0.56 % | | -0.85 % | -0.53 % | |
+     | optimistic | -1.61 % [-2.17, -1.08] | -1.66 % | -1.90 % | -1.58 % | -2.03 / -1.29 |
+     | neutral | -2.96 % [-3.52, -2.43] (two-way [-3.69, -2.21]) | -3.01 % | -3.25 % | -2.93 % | -3.37 / -2.63 |
+     | conservative | -4.91 % [-5.47, -4.38] | -4.96 % | -5.19 % | -4.88 % | -5.32 / -4.58 |
+
+     Strict pre-move signals (exploratory): neutral -3.18 % [-3.74, -2.63].
+
+Q11. Is there sufficient evidence to begin Stage 5?
+     NO. Decision C.
+     - C7 (cost) and C5 (downside) fail.
+     - The one passing capturable target (C4) shows no gain over the plain state.
+     - The timing gain (C2, C3) is mostly detection of moves already under way.
+     - A PASS on prediction and detection alone does not justify a trading simulation (protocol and brief).
+
+Q12. If not, what exact unresolved hypothesis should be tested next?
+     H-next (intraday confirmation, pre-registered before any look at intraday outcomes):
+
+       Among S1-P5 rows with a frozen L2 timing signal at the close of t (5,492 rows in 2021-25), an entry on
+       day t+1 ONLY IF the stock trades above the day-t high within the first 30 minutes, with first-30-min
+       dollar volume ≥ $1M, has a positive mean payoff after the NEUTRAL cost (2.40 %). The payoff is the same
+       bracket as here: +30 % / -10 % / close t+5, from the trigger price.
+
+     How to test:
+     - in QC, on minute bars of all signal days (EXEC needed about 0.5 s per day, so about 45 minutes);
+     - against the same rule on STATE signals and on random population rows;
+     - 2021-25 as historical replication, then a prospective shadow log after 2026-08-27.
+
+     Rationale:
+     - The daily data show the signals are right about which stocks move, but entering at the next open buys
+       into mean reversion: median -3.4 % at t+5; the adverse limit comes first 57 % of the time.
+     - Only an entry conditioned on same-day continuation could separate the 13 % successes from the 57 %
+       adverse cases. Ex ante, with daily data, they look identical.
+     - If this fails, the extreme-upside line should be closed for long trading.
+
+     The short side (selected stocks drift down) is a separate hypothesis. It needs borrow availability and
+     fees, which are not in the data; it is not proposed here.
+
+
+=====================================================================================================================
+SEPARATE CLAIMS (as required)
+=====================================================================================================================
+| Claim | Verdict | Evidence |
+|---|---|---|
+| statistical prediction | supported | PR-AUC 0.141 vs 0.024 [Δ 0.094, 0.146]; well calibrated (top decile predicted 8.5 % / observed 8.9 %) |
+| event detection | supported | capture 69.3 % vs 26.7 % (303 events); matched placebo ratio 4.33 |
+| genuine pre-event timing | weak | strict pre-move +21.0 pp [11.0, 31.1]; precision 2.26 % |
+| capturable price movement | not beyond the state | CB5_50 3.74 % vs 1.73 % base, but vs state +0.17 pp [-0.82, 1.13]; adverse-first 57 % |
+| hypothetical execution | feasible but costly | spreads 0.7-0.95 %, quotes from minute 1, first-30-min $vol median $0.7M |
+| profitability | not supported | payoff -0.56 % gross, -2.96 % neutral |
+
+
+=====================================================================================================================
+INTEGRITY, RUNS AND DEVIATIONS
+=====================================================================================================================
+VALID runs (results/xup_s45_*_raw.txt):
+
+| Run | Backtest |
+|---|---|
+| AUDIT v2 | 8e5b9923 |
+| FEATURE v2 | f1cb45e5 |
+| MODEL v1 | 391a593b |
+| PLACEBO v1 | bcf56d59 |
+| ROBUST v1-collected | 1d936103 |
+| GRIDA v1 | 7370770f |
+| EXEC v1 | 58371170 |
+| OUTCOME v1 | 31a02072 |
+
+- Every VALID run: S4 CHECK on 6,027,629 rows / 24,428 events; S45 CHECK on 3,094,930 rows, 0 mismatches.
+- Leakage tests: 0 / 0 mismatches.
+
+INVALID runs retained:
+
+| Run | Cause | Fix |
+|---|---|---|
+| AUDIT v1 | died, memory | Amendment 2 |
+| FEATURE v1 | second QC data revision: 6,028,644 -> 6,027,629 rows | Amendment 3: new canonical counts |
+| ROBUST v1 | local polling crashed on a network error; the QC run itself completed and was collected from the API | Amendment 5 |
+
+Main limitations:
+- prior exposure of the test period;
+- daily-bar ordering inside a session (handled conservatively as "ambiguous");
+- quoted, not effective, spreads;
+- small execution samples;
+- 20 % sample;
+- training history from 2017 only;
+- the payoff proxy is not a portfolio simulation.
