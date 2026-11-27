@@ -35,7 +35,7 @@ FOLDS = {"a": (_o(2020, 12, 31) - 60, T0, _o(2022, 12, 31)), "b": (_o(2022, 12, 
 HP_TR1, HP_V0, HP_V1 = _o(2019, 12, 31) - 60, _o(2020, 1, 1), _o(2020, 12, 31)
 C_GRID, LEAF_GRID = (0.01, 0.1, 1.0), (20, 50, 100)
 # cost scenarios (protocol 8): set by amendment after S45EXEC, before S45OUTCOME; None = not yet measured
-S30 = None
+S30 = 0.009479  # Amendment 6: S45EXEC v1, median first-30-min relative quoted spread of the S1 timing-signal sample (0.9479 %)
 # memory (QC node 7.8 GB): S45 arrays are filled only for rows from KEEP45 (earliest row any S45 analysis uses is 2016-11-01)
 KEEP45 = _o(2016, 6, 1)
 # Amendment 3: second QC data revision (observed 2026-11-27 in S45FEATURE v1): canonical Stage 4.5 panel

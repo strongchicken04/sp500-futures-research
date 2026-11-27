@@ -326,3 +326,16 @@ date and reason. Changes after results are visible are allowed only if they cann
 - **Run splitting:** robustness and grid can run as S45ROBUSTA / S45ROBUSTB and S45GRIDA / S45GRIDB (same
   variants, split in two runs). C8 is evaluated over all ten items across the parts.
 - No definition, threshold or criterion changes.
+
+### Amendment 6 (2026-11-27 ~04:35 UTC, after S45EXEC v1 and before S45OUTCOME) — cost constants
+- **s30.** S45EXEC v1 (backtest 58371170…, VALID; 150 S1 timing-signal entry days, 140 with quotes) gives
+  s30 = 0.9479 %.
+- **Round-trip costs** from the pre-registered formulas:
+
+  | Scenario | Formula | Cost |
+  |---|---|---|
+  | optimistic | 1.0 × s30 + 0.10 % | 1.048 % |
+  | neutral | 2.0 × s30 + 0.50 % | 2.396 % |
+  | conservative | 3.0 × s30 + 1.50 % | 4.344 % |
+
+- **Code.** `S30 = 0.009479` in `xup_s45_core.py`. No formula changes.

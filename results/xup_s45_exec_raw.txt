@@ -1,0 +1,36 @@
+### xup s4 S45EXEC v1 | project 38061541 backtest 583711704128ba3b7bd57555c4228a07 | VALID
+MEM = k 7.82 GB | after S45 arrays: RSS 8.58 GB peak 8.58 GB | after frozen RF scores: RSS 8.76 GB peak 9.12 GB | after feature compaction: RSS 5.49 GB peak 9.32 GB | end of mode: RSS 6.61 GB peak 9.32 GB
+P0 panel = mode S45EXEC | sample securities 2986 with data 2947 | rows 6027629 | build 11 min
+S4 CHECK = OK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3094930 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+X0 samples = S1 signals 5484, S2 signals 4978, S1 controls 44195, S1 E1 move days 413 (test 2021-25); hash samples 150/80/60/80; minute RAW, regular session from bar end times
+X1 S1 E1 move day = done 80/80 trades 71 quotes 71 | spread p25/50/75/90 full 0.28/0.412/0.732/1.33% first30 0.335/0.568/1.13/1.98%
+X1 S1 L2 signal, entry t+1 = done 150/150 trades 140 quotes 140 | spread p25/50/75/90 full 0.391/0.703/1.29/2.61% first30 0.581/0.948/1.99/3.65%
+X1 S1 control (pop, no signal), t+1 = done 60/60 trades 54 quotes 54 | spread p25/50/75/90 full 0.485/0.656/0.921/1.13% first30 0.557/0.889/1.37/2.27%
+X1 S2 L2 signal, entry t+1 = done 80/80 trades 74 quotes 74 | spread p25/50/75/90 full 0.129/0.409/1.08/2.19% first30 0.27/0.723/1.85/3.6%
+X2 S1 E1 move day = first5 0.37/0.65/1.3% first15 0.34/0.591/1.26% | min to 1st 2-sided quote 1/1 1st trade 1/1 | VWAP/open-1 5m -0.698/0.85/2.15% 15m -0.742/1.8/5.29%
+X2 S1 L2 signal, entry t+1 = first5 0.668/1.25/2.46% first15 0.628/1.03/2.03% | min to 1st 2-sided quote 1/1 1st trade 1/1 | VWAP/open-1 5m -1.26/-0.0641/0.795% 15m -1.83/-0.0426/1.52%
+X2 S1 control (pop, no signal), t+1 = first5 0.847/1.12/2.69% first15 0.57/0.915/1.49% | min to 1st 2-sided quote 1/1 1st trade 1/1 | VWAP/open-1 5m -0.528/0.342/0.903% 15m -0.812/0.205/1.15%
+X2 S2 L2 signal, entry t+1 = first5 0.36/0.906/2.61% first15 0.306/0.805/1.94% | min to 1st 2-sided quote 1/1 1st trade 1/1 | VWAP/open-1 5m -0.624/0.0744/0.867% 15m -0.896/0.282/1.33%
+X5 s30 (S1 timing-signal sample) = median first-30-min relative quoted spread s30 = 0.9479% -> round trip optimistic 1.048% neutral 2.396% conservative 4.344%
+X6 errors = none | runtime 2.7 min
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 7.66 GB peak 7.82 GB
+MEM after S45 arrays: RSS 8.58 GB peak 8.58 GB
+MEM after frozen RF scores: RSS 8.76 GB peak 9.12 GB
+MEM after feature compaction: RSS 5.49 GB peak 9.32 GB
+MEM end of mode: RSS 6.61 GB peak 9.32 GB
+X3 S1 L2 signal, entry t+1: $vol regular 1.94e+03/4.85e+03/1.63e+04k first30 243/705/3.6e+03k | VWAP30/open-1 -2.51/-0.115/2.06% | price 2.29/5.3/10
+X4 S1 L2 signal, entry t+1 $1-5: n 72 quotes 63 spread med full 0.66% first30 0.79%
+X4 S1 L2 signal, entry t+1 >=$5: n 77 quotes 76 spread med full 0.74% first30 1.29%
+X3 S2 L2 signal, entry t+1: $vol regular 4.94e+03/1.61e+04/1.02e+05k first30 273/1.91e+03/1.82e+04k | VWAP30/open-1 -1.34/0.283/1.66% | price 8/13.6/29.1
+X4 S2 L2 signal, entry t+1 >=$5: n 80 quotes 74 spread med full 0.41% first30 0.72%
+X3 S1 control (pop, no signal), t+1: $vol regular 789/1.74e+03/5.14e+03k first30 80.7/192/725k | VWAP30/open-1 -1.14/-0.181/0.699% | price 1.59/2.78/5.12
+X4 S1 control (pop, no signal), t+1 $1-5: n 43 quotes 41 spread med full 0.66% first30 0.88%
+X4 S1 control (pop, no signal), t+1 >=$5: n 17 quotes 13 spread med full 0.42% first30 0.95%
+X3 S1 E1 move day: $vol regular 2.98e+04/7.75e+04/3.29e+05k first30 1.52e+03/8.15e+03/5e+04k | VWAP30/open-1 -0.255/3.13/7.21% | price 3.4/6.46/11.8
+X4 S1 E1 move day $1-5: n 29 quotes 25 spread med full 0.41% first30 0.46%
+X4 S1 E1 move day >=$5: n 51 quotes 46 spread med full 0.44% first30 0.79%
+CHECK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(583711704128ba3b7bd57555c4228a07) completed in 1587.13 seconds at 53k data points per second. Processing total of 84,647,366 data points.
