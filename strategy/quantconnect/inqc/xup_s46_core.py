@@ -264,3 +264,32 @@ class S46Core:
             ggap = gross
         c = [float(self.RCL[i + k]) / Pe - 1 for k in (1, 3, 5)]
         return code, gross, ggap, hold, lo_run / Pe - 1, hi_run / Pe - 1, minL5 / Pe - 1, maxH5 / Pe - 1, c[0], c[1], c[2]
+
+    # ---------------- DIAG: minute vs daily price scale ----------------
+    def mode_s46diag(self):
+        S = self.set_runtime_statistic
+        self._s46_finish()
+        g = self._s46_groups(volu=False)
+        rows = np.nonzero(g["L2"])[0]
+        rec = []
+        for i in rows:
+            if i + 1 >= len(self.D) or self.GS[i + 1] != self.GS[i]:
+                continue
+            sym = self.syms.get(self.sid_list[self.SID[i]])
+            try:
+                b1 = self._s46_minute(sym, self.D[i + 1]); b0 = self._s46_minute(sym, self.D[i])
+            except Exception:
+                continue
+            if b1 is None:
+                continue
+            r = {"o1": b1["open"][0] / self.RO[i + 1], "c1": b1["close"][-1] / self.RCL[i + 1], "h1": b1["high"].max() / self.RH[i + 1],
+                 "h0": (b0["high"].max() / self.RH[i]) if b0 is not None else np.nan, "af": float(self.AF[i + 1] / self.AF[i]), "gap": int(self.D[i + 1] - self.D[i]),
+                 "px": float(self.PX[i]), "n0": 0 if b0 is None else 1}
+            rec.append(r)
+        g_ = lambda k: np.array([r[k] for r in rec], dtype=float)
+        for k in ("h0", "o1", "h1", "c1"):
+            x = g_(k); lx = np.abs(np.log(x[np.isfinite(x) & (x > 0)]))
+            S(f"Q {k}", f"n {len(lx)} | ratio p1/5/25/50/75/95/99 {q(x[np.isfinite(x)], (1, 5, 25, 50, 75, 95, 99))} | |log|>1% {int((lx > 0.01).sum())} >10% {int((lx > 0.1).sum())} >50% {int((lx > 0.5).sum())}")
+        h1 = g_("h1"); bad = np.isfinite(h1) & (np.abs(np.log(np.maximum(h1, 1e-9))) > 0.1)
+        S("Q bad t+1", f"bad {int(bad.sum())} | AF ratio t+1/t p50 among bad {np.nanmedian(g_('af')[bad]) if bad.any() else np.nan:.4f} | calendar gap t->t+1 p50/p90 {q(g_('gap')[bad], (50, 90)) if bad.any() else 'na'} | px med bad {np.nanmedian(g_('px')[bad]) if bad.any() else np.nan:.2f} good {np.nanmedian(g_('px')[~bad]):.2f} | day t bad {int((np.abs(np.log(np.maximum(g_('h0'), 1e-9))) > 0.1).sum())}")
+        self._s45_end()
