@@ -14,6 +14,7 @@ All numbers come from the VALID QC runs listed in §0 (aggregates only; raw outp
 | S45FEATURE | v2 | f1cb45e5… | VALID | |
 | S45MODEL | v1 | 391a593b… | VALID | |
 | S45PLACEBO | v1 | bcf56d59… | VALID | |
+| S45ROBUST | v1 | 1d936103… | INVALID → v1-collected VALID | local polling crashed (network); collected from the QC API (Amendment 5) |
 <!--RUNS-->
 
 Every VALID run:
@@ -168,4 +169,50 @@ L2 FULL signals; detection in τ−3..τ−1 vs τ−33..τ−31. "Matched" = S1
 **→ C3 PASS.** The membership-matched contrast is as strong as the unmatched one. The Stage 4 liquid-segment lead
 was not a membership artefact for the timing model. But the same run-up qualification applies: the pre-window
 contains the start of the price excursion; the placebo window does not.
+
+## 5. Robustness and liquidity — C8, C6 part (S45ROBUST v1)
+Each population is re-ranked; models are retrained on its own training rows. Signals are the per-day top 10 % of
+the population; capture is over its eligible test events (2021–25). Security bootstrap 1,000.
+
+| Population | Rows / pos / base | Eligible / all events | Capture STATE → L2 | Δ [95 % CI] | Event precision STATE → L2 | Median price STATE / L2 |
+|---|---|---|---|---|---|---|
+| **S1-P5 (reference)** | 49,651 / 740 / 1.49 % | 303 / 413 | 26.7 → 69.3 % | **+42.6 [34.2, 49.8]** | 2.68 → 7.19 % | $1.91 / $4.58 |
+| S1-P1 | 9,207 / 215 / 2.34 % | 115 / 413 | 28.7 → 62.6 % | +33.9 [22.2, 46.3] | 4.12 → 8.23 % | $1.74 / $2.12 |
+| S1-P10 | 103,975 / 904 / 0.87 % | 338 / 413 | 41.7 → 73.7 % | +32.0 [24.8, 38.2] | 2.44 → 4.71 % | $1.98 / $5.30 |
+| E2 labels | 50,578 / 681 / 1.35 % | 275 / 339 | 24.7 → 66.2 % | +41.5 [32.8, 49.2] | 2.29 → 5.76 % | |
+| E3 labels | 50,386 / 692 / 1.37 % | 281 / 346 | 24.9 → 65.5 % | +40.6 [32.1, 48.4] | 2.29 → 5.97 % | |
+| RF timing family | 49,651 / 740 / 1.49 % | 303 / 413 | 26.7 → 71.0 % | +44.2 [36.4, 51.7] | 2.68 → 7.43 % | $1.91 / $5.04 |
+| S1 A-strict | 44,936 / 672 / 1.50 % | 274 / 367 | 27.0 → 69.7 % | +42.7 [33.8, 50.2] | 2.81 → 6.96 % | |
+| S1 history ≥ 120 | 48,390 / 678 / 1.40 % | 277 / 369 | 31.0 → 70.8 % | +39.7 [30.8, 47.3] | 2.75 → 6.92 % | |
+| S1 price $1–5 | 5,356 / 122 / 2.28 % | 66 / 196 | 40.9 → 68.2 % | +27.3 [11.8, 41.6] | 3.67 → 5.35 % | $1.67 / $1.79 |
+| S1 price ≥ $5 | 45,981 / 405 / 0.88 % | 165 / 217 | 67.3 → 77.0 % | +9.7 [2.5, 17.4] | 3.81 → 4.97 % | $8.71 / $10.81 |
+| S1 same-day $vol rule | 47,464 / 1,086 / 2.29 % | 537 / 678 | 27.2 → 69.6 % | +42.5 [36.4, 47.9] | 4.10 → 11.17 % | |
+| **S2-P5** | 43,101 / 354 / 0.82 % | 139 / 179 | 69.8 → 79.9 % | **+10.1 [2.1, 19.3]** | 3.73 → 4.60 % | $9.06 / $11.46 |
+| S0-P5 | 57,227 / 1,119 / 1.96 % | 479 / 708 | 21.3 → 67.2 % | +45.9 [39.4, 52.0] | 3.16 → 8.70 % | $1.77 / $3.22 |
+| S5M-P5 | 33,713 / 185 / 0.55 % | 74 / 95 | 70.3 → 77.0 % | +6.8 [−3.3, 16.9] | 2.70 → 3.39 % | $10.97 / $14.99 |
+| A-P5 | 70,938 / 1,891 / 2.67 % | 744 / 1,539 | 23.3 → 51.5 % | +28.2 [23.4, 32.9] | 4.70 → 8.51 % | $0.37 / $0.75 |
+
+**C8 items** (C2 point estimate > 0), all 10 positive:
+
+| Item | Δ (pp) |
+|---|---|
+| E2 | +41.5 |
+| E3 | +40.6 |
+| 2021–22 | +31.2 |
+| 2023–25 | +49.0 |
+| RF | +44.2 |
+| A-strict | +42.7 |
+| same-day rule | +42.5 |
+| S2 | +10.1 |
+| price $1–5 | +27.3 |
+| price ≥ $5 | +9.7 |
+
+**→ C8 PASS.** C6 part: the S2 direction of C2 is reproduced (+10.1 pp).
+
+**Reading.**
+- In liquid / higher-priced names (S2, S5M, price ≥ $5), the frozen state alone already captures about 70 % of
+  the eligible events. The timing gain shrinks to about +7–10 pp, at event precision 3.4–5.0 %.
+- The large S1 gain comes from sub-$5 names, where the state ranking points elsewhere and the move-in-progress
+  features dominate.
+- Turnover of L2 signals is about 50 % per day (STATE about 26 %). There are 4.4 signals per day in S1-P5.
 <!--MORE-->
