@@ -1,7 +1,7 @@
 # Brain state
 
 heartbeat: 2026-11-04 (night shifts PAUSED by the owner 2026-11-04: trigger trig_01B4r87kDhBbXX4qsUwAEPse disabled; resume when the owner answers)
-last shift: 2026-11-27 (extreme-upside Stage 4.5 RUNNING: protocol + 3 amendments committed; second QC data revision -> canonical 6,027,629 rows / 24,428 events; AUDIT v2 VALID; queue FEATURE v2 -> MODEL -> PLACEBO -> ROBUST -> GRID -> EXEC -> DIAG, then cost amendment + OUTCOME; trigger still paused)
+last shift: 2026-11-27 (extreme-upside Stage 4.5 COMPLETE: decision C - further research, no Stage 5; timing model detects moves already in progress (+42.6pp capture vs state, matched placebo 4.3x) but capturable outcomes = state and payoff after costs negative (-2.96% neutral, -0.56% gross); report research/extreme_upside/stage45/stage45_report.txt; next: owner decides on the intraday-confirmation hypothesis; trigger still paused)
 
 ## Queue (top = next). Move finished items to registry.md.
 Night 2026-10-28/29 (report brain/reports/2026-10-29.md):
