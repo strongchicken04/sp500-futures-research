@@ -217,6 +217,11 @@ class S46Modes:
         G = {"L2": g["L2"], "STATE": g["STATE"], "VOLU": g["VOLU"], "CTL": ctl}
         uni = g["L2"] | g["STATE"] | g["VOLU"] | ctl
         rows = np.nonzero(uni)[0]
+        mv = self._s45_mv("E1"); sl = (mv["date"] >= T0) & (mv["date"] <= T1)
+        eS = self._s45_evstats(mv, sl, g["STATE"], g["pop"], g["lab"]); eL = self._s45_evstats(mv, sl, g["L2"], g["pop"], g["lab"])
+        el = eS["elig"]
+        no = self._s45_payoff(np.nonzero(g["L2"])[0], COST46["neutral"])
+        S("M0b Stage 4.5 baseline reproduction", f"C2 capture L2 {100 * eL['cap'][el].mean():.1f}% vs STATE {100 * eS['cap'][el].mean():.1f}% of {int(el.sum())} eligible (S45 69.3/26.7 of 303) | next-open neutral payoff L2 {100 * np.nanmean(no):+.2f}% (S45 -2.96%) | P10 L2 {100 * eL['prec']:.2f}% (S45 7.19%)")
         S("M0 frozen groups", f"pop {int(g['pop'].sum())} | L2 {int(g['L2'].sum())} STATE {int(g['STATE'].sum())} VOLU {int(g['VOLU'].sum())} CTL {int(ctl.sum())} (unmatched {nmiss}) | union {len(rows)} | L2 C={self.hp45['l2']}")
         self._s45_mem("before minute loop")
         R = self._s46_run(rows)

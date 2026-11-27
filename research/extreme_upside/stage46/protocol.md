@@ -250,4 +250,41 @@ all L2 signals at the next open (Stage 4.5 baseline).
 All runs go to `results/xup_s46_<mode>_raw.txt` with an automatic VALID / INVALID verdict. Invalid runs are kept.
 
 ## Amendments
-(none)
+
+### Amendment 1 (2026-11-27 ~21:50 UTC, after S46AUDIT v1, before any outcome) — third QC data revision; canonical Stage 4.6 panel
+- **Observation.** S46AUDIT v1 (backtest b3a06dff…) ran with unchanged code. It built a different panel:
+
+  | Quantity | Stage 4.5 canonical | S46AUDIT v1 |
+  |---|---|---|
+  | Hash-sample securities | 2,986 | 2,989 |
+  | Securities with data | 2,947 | 2,949 |
+  | Rows | 6,027,629 | 6,030,760 |
+  | Primary events | 24,428 | 24,429 |
+  | Segments | 3,541 | 3,543 |
+  | QC data points | — | 84,631,056 |
+
+  - QC added securities to its universe and revised history.
+  - The run is INVALID (count checks) and kept.
+- **Why not restrict to the old security set.** The old panel cannot be rebuilt: it would need the list of security
+  identifiers, which must not leave QC. Following the brief ("do not mix versions"), one new canonical panel is fixed
+  for all of Stage 4.6:
+  - **6,030,760 rows / 24,429 primary events**;
+  - S45 CHECK on 3,098,061 rows ≥ 2016-06.
+
+  All Stage 4.6 runs require exactly these counts.
+- **Effect on the frozen pipeline** (seen in v1):
+  - S1-P5 population 49,802 rows (S4.5 49,697);
+  - L2 / STATE / VOLU signals 5,497 each (S4.5 5,492);
+  - L2 C = 0.01 unchanged;
+  - the RF timing model's leaf choice moved from 100 to 20, which is irrelevant: the RF timing model is not used in
+    Stage 4.6.
+- **Baseline reproduction on the new panel**, added to S46MAIN (line M0b) before the intraday outcomes:
+  - the Stage 4.5 C2 capture (L2 vs STATE);
+  - the next-open neutral payoff of all L2 signals;
+  - L2 event precision.
+
+  These are reported next to the Stage 4.5 values (69.3 / 26.7 %, −2.96 %, 7.19 %).
+- **Seen before this amendment:** only counts, group balance and the minute / quote coverage audit (no trigger, no
+  outcome).
+- S46AUDIT is repeated as v2 on the new canonical panel.
+- No hypothesis, endpoint, threshold, cost or criterion changes.

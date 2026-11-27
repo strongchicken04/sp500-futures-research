@@ -8,6 +8,7 @@ from xup_s3_const import *
 from xup_s4_core import *
 from xup_s4_core import _o
 from xup_s45_core import *
+import xup_s4_core as _s4c
 # endregion
 #
 # Stage 4.6 core (research/extreme_upside/stage46/protocol.md): raw daily OHLC per row (wrapper around the Stage 4.5
@@ -16,6 +17,8 @@ from xup_s45_core import *
 # Security-level records never leave QC; modes print aggregates only.
 
 KEEP46 = _o(2020, 6, 1)
+# Stage 4.6 Amendment 1: third QC data revision (S46AUDIT v1): canonical Stage 4.6 panel
+_s4c.EXP_ROWS, _s4c.EXP_POS = 6030760, 24429
 COST46 = {"optimistic": 1.0 * S30 + 0.001, "neutral": 2.0 * S30 + 0.005, "conservative": 3.0 * S30 + 0.015}
 # (name, $vol threshold, window minutes, breakout type); index 0 = PRIMARY
 VAR46 = [("P", 1e6, 30, "high"), ("V0.5M", 5e5, 30, "high"), ("V2M", 2e6, 30, "high"), ("V5M", 5e6, 30, "high"),
