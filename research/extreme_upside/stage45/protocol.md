@@ -327,7 +327,7 @@ date and reason. Changes after results are visible are allowed only if they cann
   variants, split in two runs). C8 is evaluated over all ten items across the parts.
 - No definition, threshold or criterion changes.
 
-### Amendment 6 (2026-11-27 ~04:35 UTC, after S45EXEC v1 and before S45OUTCOME) — cost constants
+### Amendment 6 (2026-11-27 ~04:15 UTC, after S45EXEC v1 and before S45OUTCOME) — cost constants
 - **s30.** S45EXEC v1 (backtest 58371170…, VALID; 150 S1 timing-signal entry days, 140 with quotes) gives
   s30 = 0.9479 %.
 - **Round-trip costs** from the pre-registered formulas:
