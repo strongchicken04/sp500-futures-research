@@ -15,6 +15,8 @@ All numbers come from the VALID QC runs listed in §0 (aggregates only; raw outp
 | S45MODEL | v1 | 391a593b… | VALID | |
 | S45PLACEBO | v1 | bcf56d59… | VALID | |
 | S45ROBUST | v1 | 1d936103… | INVALID → v1-collected VALID | local polling crashed (network); collected from the QC API (Amendment 5) |
+| S45GRIDA | v1 | 7370770f… | VALID | |
+| S45EXEC | v1 | 58371170… | VALID | s30 → Amendment 6 |
 <!--RUNS-->
 
 Every VALID run:
@@ -215,4 +217,28 @@ the population; capture is over its eligible test events (2021–25). Security b
 - The large S1 gain comes from sub-$5 names, where the state ranking points elsewhere and the move-in-progress
   features dominate.
 - Turnover of L2 signals is about 50 % per day (STATE about 26 %). There are 4.4 signals per day in S1-P5.
+
+## 6. Price × liquidity grid (S45GRIDA v1; capture STATE → L2, Δ [CI], L2 event precision)
+| Price | median $vol ≥ 250k | ≥ 500k | ≥ 1M |
+|---|---|---|---|
+| ≥ $1 | 381 ev: 23.4 → 69.3 %, +45.9 [39.0, 53.1], 8.0 % | 303 ev: 26.7 → 69.3 %, +42.6 [34.0, 49.8], 7.2 % | 243 ev: 32.1 → 73.7 %, +41.6 [32.3, 48.6], 6.7 % |
+| ≥ $2 | 334 ev: 32.3 → 71.3 %, +38.9 [31.3, 46.0], 7.6 % | 263 ev: 38.4 → 73.0 %, +34.6 [26.7, 41.5], 6.8 % | 216 ev: 48.6 → 75.9 %, +27.3 [18.0, 37.1], 6.1 % |
+<!--GRIDB-->
+
+The gain shrinks monotonically with price and liquidity. The STATE capture rises over the same direction.
+
+## 7. Execution (S45EXEC v1; minute data, hash samples, 2021–25)
+| Sample | Done / with quotes | Spread p25 / 50 / 75 / 90, full session | First 30 min | First 5 min (p25 / 50 / 75) | VWAP15 / open − 1 (p25 / 50 / 75) | Regular-session $vol median |
+|---|---|---|---|---|---|---|
+| S1 L2 signals, entry t+1 | 150 / 140 | 0.39 / 0.70 / 1.29 / 2.61 % | 0.58 / **0.95** / 1.99 / 3.65 % | 0.67 / 1.25 / 2.46 % | −1.83 / −0.04 / +1.52 % | $4.9M |
+| S2 L2 signals, entry t+1 | 80 / 74 | 0.13 / 0.41 / 1.08 / 2.19 % | 0.27 / 0.72 / 1.85 / 3.60 % | 0.36 / 0.91 / 2.61 % | −0.90 / +0.28 / +1.33 % | $16.1M |
+| S1 controls, t+1 | 60 / 54 | 0.49 / 0.66 / 0.92 / 1.13 % | 0.56 / 0.89 / 1.37 / 2.27 % | 0.85 / 1.12 / 2.69 % | −0.81 / +0.21 / +1.15 % | $1.7M |
+| S1 E1 move days | 80 / 71 | 0.28 / 0.41 / 0.73 / 1.33 % | 0.34 / 0.57 / 1.13 / 1.98 % | 0.37 / 0.65 / 1.30 % | −0.74 / +1.80 / +5.29 % | $77.5M |
+
+- The first two-sided quote and the first trade arrive in the first minute (median and p90 = 1 minute) in all
+  samples.
+- First-30-minute dollar volume on S1 signal entry days: median $0.7M, p25 $0.24M. Capacity is limited.
+- **s30 = 0.948 %.** Round-trip costs (Amendment 6): optimistic 1.05 %, neutral 2.40 %, conservative 4.34 %.
+- **Price buckets** (S1 signals): spread first 30 min, median $1–5 0.79 %, ≥ $5 1.29 %.
+- **Coverage:** about 93 % of sampled items have minute quotes (140 / 150, 74 / 80, 54 / 60, 71 / 80).
 <!--MORE-->
