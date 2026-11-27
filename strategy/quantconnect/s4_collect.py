@@ -24,8 +24,10 @@ if f"mode {mode} " not in p0 + " ":
     why.append("mode line missing or wrong (template / incomplete script?)")
 if not chk.startswith("OK"):
     why.append("S4 CHECK not OK")
-if mode.startswith("S45") and not rs.get("S45 CHECK", "").startswith("OK"):
+if mode.startswith(("S45", "S46")) and not rs.get("S45 CHECK", "").startswith("OK"):
     why.append("S45 CHECK not OK")
+if mode.startswith("S46") and not rs.get("S46 CHECK", "").startswith("OK"):
+    why.append("S46 CHECK not OK")
 if str(bt.get("error")) not in ("None", ""):
     why.append("backtest error")
 if any(k.startswith("ERR") for k in rs):
