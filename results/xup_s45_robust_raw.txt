@@ -1,3 +1,64 @@
 ### xup s4 S45ROBUST v1 | project 38061541 backtest 1d93610334b71f6cb467d6f9f9c26fe1 | INVALID: mode line missing or wrong (template / incomplete script?); S4 CHECK not OK; S45 CHECK not OK
 err None
 --- LOG ---
+### xup s4 S45ROBUST v1-collected | project 38061541 backtest 1d93610334b71f6cb467d6f9f9c26fe1 | VALID
+C6 part: S2 direction of C2 = S2 capture difference +10.1pp -> same sign (>0) (C4 lift in S2: S45OUTCOME)
+C8 robustness (C2 direction) = E2 +41.5 E3 +40.6 2021-22 +31.2 2023-25 +49.0 RF +44.2 A-strict +42.7 day rule +42.5 S2 +10.1 px $1-5 +27.3 px >=$5 +9.7 | fails 0 -> PASS
+MEM = before S45 arrays: RSS 7.15 GB peak 7.30 GB | after S45 arrays: RSS 8.06 GB peak 8.06 GB | after frozen RF scores: RSS 8.24 GB peak 8.61 GB | end of mode: RSS 8.97 GB peak 9.75 GB
+P0 panel = mode S45ROBUST | sample securities 2986 with data 2947 | rows 6027629 | build 12 min
+R A-P5 = rows 70938 pos 1891 base 2.67% | ev 744/1539 cap S 23.3% L2 51.5% d +28.2pp [23.4,32.9] | P10 S 4.70% L2 8.51% | sig/d 6.1 turn 52%
+R E2 labels = rows 50578 pos 681 base 1.35% | ev 275/339 cap S 24.7% L2 66.2% d +41.5pp [32.8,49.2] | P10 S 2.29% L2 5.76% | sig/d 4.4 turn 55%
+R E3 labels = rows 50386 pos 692 base 1.37% | ev 281/346 cap S 24.9% L2 65.5% d +40.6pp [32.1,48.4] | P10 S 2.29% L2 5.97% | sig/d 4.4 turn 55%
+R RF family = rows 49651 pos 740 base 1.49% | ev 303/413 cap S 26.7% RF 71.0% d +44.2pp [36.4,51.7] | P10 S 2.68% RF 7.43% | sig/d 4.4 turn 54%
+R S0-P5 = rows 57227 pos 1119 base 1.96% | ev 479/708 cap S 21.3% L2 67.2% d +45.9pp [39.4,52.0] | P10 S 3.16% L2 8.70% | sig/d 5.0 turn 53%
+R S1 A-strict = rows 44936 pos 672 base 1.50% | ev 274/367 cap S 27.0% L2 69.7% d +42.7pp [33.8,50.2] | P10 S 2.81% L2 6.96% | sig/d 4.1 turn 52%
+R S1 history>=120 = rows 48390 pos 678 base 1.40% | ev 277/369 cap S 31.0% L2 70.8% d +39.7pp [30.8,47.3] | P10 S 2.75% L2 6.92% | sig/d 4.3 turn 50%
+R S1 price $1-5 = rows 5356 pos 122 base 2.28% | ev 66/196 cap S 40.9% L2 68.2% d +27.3pp [11.8,41.6] | P10 S 3.67% L2 5.35% | sig/d 1.0 turn 68%
+R S1 price >=$5 = rows 45981 pos 405 base 0.88% | ev 165/217 cap S 67.3% L2 77.0% d +9.7pp [2.5,17.4] | P10 S 3.81% L2 4.97% | sig/d 4.2 turn 48%
+R S1 same-day $vol = rows 47464 pos 1086 base 2.29% | ev 537/678 cap S 27.2% L2 69.6% d +42.5pp [36.4,47.9] | P10 S 4.10% L2 11.17% | sig/d 4.2 turn 62%
+R S1-P1 = rows 9207 pos 215 base 2.34% | ev 115/413 cap S 28.7% L2 62.6% d +33.9pp [22.2,46.3] | P10 S 4.12% L2 8.23% | sig/d 1.0 turn 73%
+R S1-P10 = rows 103975 pos 904 base 0.87% | ev 338/413 cap S 41.7% L2 73.7% d +32.0pp [24.8,38.2] | P10 S 2.44% L2 4.71% | sig/d 8.7 turn 42%
+R S1-P5 reference = rows 49651 pos 740 base 1.49% | ev 303/413 cap S 26.7% L2 69.3% d +42.6pp [34.2,49.8] | P10 S 2.68% L2 7.19% | sig/d 4.4 turn 52%
+R S2-P5 = rows 43101 pos 354 base 0.82% | ev 139/179 cap S 69.8% L2 79.9% d +10.1pp [2.1,19.3] | P10 S 3.73% L2 4.60% | sig/d 4.0 turn 48%
+R S5M-P5 = rows 33713 pos 185 base 0.55% | ev 74/95 cap S 70.3% L2 77.0% d +6.8pp [-3.3,16.9] | P10 S 2.70% L2 3.39% | sig/d 3.0 turn 48%
+S4 CHECK = OK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3094930 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 7.15 GB peak 7.30 GB
+MEM after S45 arrays: RSS 8.06 GB peak 8.06 GB
+MEM after frozen RF scores: RSS 8.24 GB peak 8.61 GB
+MEM end of mode: RSS 8.97 GB peak 9.75 GB
+RV S1-P5 reference: rows 49651 pos 740 base 1.49% | ev 303/413 cap S 26.7% L2 69.3% d +42.6pp [34.2,49.8] | P10 S 2.68% L2 7.19% | sig/d 4.4 turn 52% | per 21-22 +31.2 23-25 +49.0pp | turn S 26% | med px S $1.91 L2 $4.58 | med dvmed20 S 1664k L2 2255k | event precision S 2.68% L2 7.19% false/captured 24.3 signals/security 9.7
+T S1-P5 reference done at 18.6 min
+RV S1-P1: rows 9207 pos 215 base 2.34% | ev 115/413 cap S 28.7% L2 62.6% d +33.9pp [22.2,46.3] | P10 S 4.12% L2 8.23% | sig/d 1.0 turn 73% | per 21-22 +35.0 23-25 +33.3pp | turn S 41% | med px S $1.74 L2 $2.12 | med dvmed20 S 1624k L2 1660k | event precision S 4.12% L2 8.23% false/captured 16.1 signals/security 4.3
+T S1-P1 done at 19.3 min
+RV S1-P10: rows 103975 pos 904 base 0.87% | ev 338/413 cap S 41.7% L2 73.7% d +32.0pp [24.8,38.2] | P10 S 2.44% L2 4.71% | sig/d 8.7 turn 42% | per 21-22 +26.6 23-25 +35.2pp | turn S 21% | med px S $1.98 L2 $5.30 | med dvmed20 S 1683k L2 2460k | event precision S 2.44% L2 4.71% false/captured 42.0 signals/security 15.7
+T S1-P10 done at 20.2 min
+RV E2 labels: rows 50578 pos 681 base 1.35% | ev 275/339 cap S 24.7% L2 66.2% d +41.5pp [32.8,49.2] | P10 S 2.29% L2 5.76% | sig/d 4.4 turn 55% | per 21-22 +27.7 23-25 +49.4pp | turn S 25% | med px S $1.91 L2 $4.49 | med dvmed20 S 1710k L2 2343k | event precision S 2.29% L2 5.76% false/captured 28.8 signals/security 9.5
+T E2 labels done at 20.4 min
+RV E3 labels: rows 50386 pos 692 base 1.37% | ev 281/346 cap S 24.9% L2 65.5% d +40.6pp [32.1,48.4] | P10 S 2.29% L2 5.97% | sig/d 4.4 turn 55% | per 21-22 +28.4 23-25 +47.5pp | turn S 25% | med px S $1.92 L2 $4.53 | med dvmed20 S 1727k L2 2319k | event precision S 2.29% L2 5.97% false/captured 28.3 signals/security 9.6
+T E3 labels done at 20.8 min
+RV RF family: rows 49651 pos 740 base 1.49% | ev 303/413 cap S 26.7% RF 71.0% d +44.2pp [36.4,51.7] | P10 S 2.68% RF 7.43% | sig/d 4.4 turn 54% | per 21-22 +29.4 23-25 +52.6pp | turn S 26% | med px S $1.91 RF $5.04 | med dvmed20 S 1664k RF 2460k | event precision S 2.68% RF 7.43% false/captured 23.6 signals/security 9.1
+T RF family done at 23.3 min
+RV S1 A-strict: rows 44936 pos 672 base 1.50% | ev 274/367 cap S 27.0% L2 69.7% d +42.7pp [33.8,50.2] | P10 S 2.81% L2 6.96% | sig/d 4.1 turn 52% | per 21-22 +27.5 23-25 +50.3pp | turn S 26% | med px S $1.95 L2 $4.95 | med dvmed20 S 1699k L2 2354k | event precision S 2.81% L2 6.96% false/captured 24.8 signals/security 10.1
+T S1 A-strict done at 24.3 min
+RV S1 history>=120: rows 48390 pos 678 base 1.40% | ev 277/369 cap S 31.0% L2 70.8% d +39.7pp [30.8,47.3] | P10 S 2.75% L2 6.92% | sig/d 4.3 turn 50% | per 21-22 +28.4 23-25 +46.3pp | turn S 26% | med px S $1.91 L2 $4.25 | med dvmed20 S 1711k L2 2304k | event precision S 2.75% L2 6.92% false/captured 25.7 signals/security 10.2
+T S1 history>=120 done at 25.4 min
+RV S1 price $1-5: rows 5356 pos 122 base 2.28% | ev 66/196 cap S 40.9% L2 68.2% d +27.3pp [11.8,41.6] | P10 S 3.67% L2 5.35% | sig/d 1.0 turn 68% | per 21-22 +40.0 23-25 +19.5pp | turn S 37% | med px S $1.67 L2 $1.79 | med dvmed20 S 1539k L2 1607k | event precision S 3.67% L2 5.35% false/captured 26.3 signals/security 4.8
+T S1 price $1-5 done at 26.5 min
+RV S1 price >=$5: rows 45981 pos 405 base 0.88% | ev 165/217 cap S 67.3% L2 77.0% d +9.7pp [2.5,17.4] | P10 S 3.81% L2 4.97% | sig/d 4.2 turn 48% | per 21-22 +10.5 23-25 +9.3pp | turn S 34% | med px S $8.71 L2 $10.81 | med dvmed20 S 3588k L2 3663k | event precision S 3.81% L2 4.97% false/captured 39.3 signals/security 9.2
+T S1 price >=$5 done at 27.6 min
+RV S1 same-day $vol: rows 47464 pos 1086 base 2.29% | ev 537/678 cap S 27.2% L2 69.6% d +42.5pp [36.4,47.9] | P10 S 4.10% L2 11.17% | sig/d 4.2 turn 62% | per 21-22 +33.7 23-25 +46.3pp | turn S 40% | med px S $1.88 L2 $4.01 | med dvmed20 S 1562k L2 954k | event precision S 4.10% L2 11.17% false/captured 12.6 signals/security 8.1
+T S1 same-day $vol done at 28.7 min
+RV S2-P5: rows 43101 pos 354 base 0.82% | ev 139/179 cap S 69.8% L2 79.9% d +10.1pp [2.1,19.3] | P10 S 3.73% L2 4.60% | sig/d 4.0 turn 48% | per 21-22 +14.9 23-25 +7.6pp | turn S 33% | med px S $9.06 L2 $11.46 | med dvmed20 S 5226k L2 5646k | event precision S 3.73% L2 4.60% false/captured 42.8 signals/security 9.2
+T S2-P5 done at 29.8 min
+RV S0-P5: rows 57227 pos 1119 base 1.96% | ev 479/708 cap S 21.3% L2 67.2% d +45.9pp [39.4,52.0] | P10 S 3.16% L2 8.70% | sig/d 5.0 turn 53% | per 21-22 +34.0 23-25 +52.1pp | turn S 27% | med px S $1.77 L2 $3.22 | med dvmed20 S 812k L2 975k | event precision S 3.16% L2 8.70% false/captured 17.9 signals/security 10.3
+T S0-P5 done at 30.6 min
+RV S5M-P5: rows 33713 pos 185 base 0.55% | ev 74/95 cap S 70.3% L2 77.0% d +6.8pp [-3.3,16.9] | P10 S 2.70% L2 3.39% | sig/d 3.0 turn 48% | per 21-22 +16.7 23-25 +2.0pp | turn S 32% | med px S $10.97 L2 $14.99 | med dvmed20 S 20815k L2 21112k | event precision S 2.70% L2 3.39% false/captured 64.5 signals/security 9.1
+T S5M-P5 done at 31.6 min
+RV A-P5: rows 70938 pos 1891 base 2.67% | ev 744/1539 cap S 23.3% L2 51.5% d +28.2pp [23.4,32.9] | P10 S 4.70% L2 8.51% | sig/d 6.1 turn 52% | per 21-22 +32.5 23-25 +26.2pp | turn S 23% | med px S $0.37 L2 $0.75 | med dvmed20 S 351k L2 244k | event precision S 4.70% L2 8.51% false/captured 18.3 signals/security 15.8
+T A-P5 done at 32.5 min
+runtime 32.5 min
+CHECK rows 6027629 (S4 canon 6027629; S3 6022604) primary events 24428 (canon 24428; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3541 | s4 extension errors 0
+Algorithm Id:(1d93610334b71f6cb467d6f9f9c26fe1) completed in 2726.42 seconds at 31k data points per second. Processing total of 84,144,283 data points.
