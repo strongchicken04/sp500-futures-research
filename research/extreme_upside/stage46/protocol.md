@@ -288,3 +288,29 @@ All runs go to `results/xup_s46_<mode>_raw.txt` with an automatic VALID / INVALI
   outcome).
 - S46AUDIT is repeated as v2 on the new canonical panel.
 - No hypothesis, endpoint, threshold, cost or criterion changes.
+
+### Amendment 2 (2026-11-28 ~00:05 UTC, after S46MAIN v1 / S46ROBUST v1) — implementation defect: quote price normalization
+- **Symptom.** In S46MAIN v1 (backtest 4281450f…) the entry price exceeded the prior close by a factor of about 5 for
+  roughly a quarter of the triggered L2 signals (entry vs prior close: p50 +6.9 %, p75 +406 %).
+- **Cause, confirmed by S46DIAG v1** (backtest a921a976…, VALID):
+  - Minute TradeBars were requested in RAW mode and match the daily raw OHLC exactly: 0 of 4,953 sessions off by
+    more than 1 %.
+  - Minute QuoteBars were requested without a normalization argument, so QC returned ADJUSTED prices. For
+    securities with later reverse splits or dividends these are a multiple of the raw price:
+    - 89 / 400 sampled sessions had a quote mid off the RAW trades by more than 10 %, 78 by more than 50 %, up to
+      20×;
+    - with RAW requested, 0 / 400 were off by more than 10 % (max about 1 %).
+  - The trigger, which uses trade bars, was correct. The quote-based entry price, and with it the bracket levels and
+    payoffs, was wrong for those cases.
+- **Fix:**
+  1. QuoteBars are requested with `data_normalization_mode=RAW`.
+  2. A pre-specified validity rule for the quote entry: the ask must lie within ±20 % of the close of the last
+     completed trade bar at or before m*; otherwise the minute proxy is used.
+- **Status of runs:**
+  - S46MAIN v1 and S46ROBUST v1 are INVALID (implementation defect). They are kept in the raw files and are not
+    evidence.
+  - Their outcome numbers were seen. The fix only corrects a price-unit error. It changes no hypothesis, trigger,
+    threshold, cost, endpoint or criterion.
+  - S46MAIN v2 and S46ROBUST v2 are re-run.
+- **Stage 4.5.** Its spread measurements are relative spreads, (ask − bid) / mid, which are invariant to the
+  multiplicative adjustment. s30 and the frozen costs are unaffected.

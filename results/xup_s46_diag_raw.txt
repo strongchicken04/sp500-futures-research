@@ -1,0 +1,23 @@
+### xup s4 S46DIAG v1 | project 38061541 backtest a921a976494f4b56ba792335f387aaec | VALID
+MEM = k 7.93 GB | after S45 arrays: RSS 8.69 GB peak 8.69 GB | after frozen RF scores: RSS 8.90 GB peak 9.27 GB | after feature compaction: RSS 5.63 GB peak 9.46 GB | end of mode: RSS 6.33 GB peak 9.46 GB
+P0 panel = mode S46DIAG | sample securities 2989 with data 2949 | rows 6030760 | build 12 min
+Q bad t+1 = bad 0 | AF ratio t+1/t p50 among bad nan | calendar gap t->t+1 p50/p90 na | px med bad nan good 4.82 | day t bad 0
+Q c1 = n 4953 | ratio p1/5/25/50/75/95/99 1/1/1/1/1/1/1 | |log|>1% 0 >10% 0 >50% 0
+Q h0 = n 4952 | ratio p1/5/25/50/75/95/99 1/1/1/1/1/1/1 | |log|>1% 0 >10% 0 >50% 0
+Q h1 = n 4953 | ratio p1/5/25/50/75/95/99 1/1/1/1/1/1/1 | |log|>1% 0 >10% 0 >50% 0
+Q o1 = n 4953 | ratio p1/5/25/50/75/95/99 1/1/1/1/1/1/1 | |log|>1% 0 >10% 0 >50% 0
+Q qdef = n 400 | ratio p1/5/25/50/75/95/99 0.835/0.911/0.998/1/1/20/20.1 | |log|>1% 128 >10% 89 >50% 78
+Q qraw = n 400 | ratio p1/5/25/50/75/95/99 0.98/0.992/0.999/1/1/1.01/1.01 | |log|>1% 18 >10% 0 >50% 0
+Q quote err = none
+S4 CHECK = OK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3098061 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+S46 CHECK = OK raw OHLC rows>=2020-06 1984316 | raw close vs panel price mismatches 0 | missing 0 | S45 OK
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 7.77 GB peak 7.93 GB
+MEM after S45 arrays: RSS 8.69 GB peak 8.69 GB
+MEM after frozen RF scores: RSS 8.90 GB peak 9.27 GB
+MEM after feature compaction: RSS 5.63 GB peak 9.46 GB
+MEM end of mode: RSS 6.33 GB peak 9.46 GB
+CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
+Algorithm Id:(a921a976494f4b56ba792335f387aaec) completed in 1867.92 seconds at 49k data points per second. Processing total of 90,661,235 data points.

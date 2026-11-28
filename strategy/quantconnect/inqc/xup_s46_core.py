@@ -155,7 +155,7 @@ class S46Core:
         t0 = _dt.combine(_date.fromordinal(int(d)), _dt.min.time())
         self.s46_calls = getattr(self, "s46_calls", 0) + 1
         if quote:
-            h = self.history(QuoteBar, sym, t0, t0 + _td(days=1), Resolution.MINUTE, fill_forward=False, extended_market_hours=False)
+            h = self.history(QuoteBar, sym, t0, t0 + _td(days=1), Resolution.MINUTE, fill_forward=False, extended_market_hours=False, data_normalization_mode=DataNormalizationMode.RAW)
         else:
             h = self.history(sym, t0, t0 + _td(days=1), Resolution.MINUTE, fill_forward=False, extended_market_hours=False, data_normalization_mode=DataNormalizationMode.RAW)
         b = self._s46_df(h, quote)
@@ -193,11 +193,13 @@ class S46Core:
         """first executable-price proxy after the end of bar ms: (P_e, type 1 quote / 2 minute proxy, s_trig, j_e)"""
         je = np.nonzero(b["m"] > ms)[0]
         je = int(je[0]) if len(je) else -1
+        lc = b["close"][b["m"] <= ms]
+        lc = float(lc[-1]) if len(lc) else np.nan
         if q is not None:
             for k in np.nonzero((q["m"] > ms) & (q["m"] <= ms + 2))[0]:
                 a = q["askopen"][k] if np.isfinite(q["askopen"][k]) and q["askopen"][k] > 0 else q["askclose"][k]
                 bd = q["bidopen"][k] if np.isfinite(q["bidopen"][k]) and q["bidopen"][k] > 0 else q["bidclose"][k]
-                if np.isfinite(a) and np.isfinite(bd) and a > 0 and bd > 0 and a >= bd and (a - bd) / ((a + bd) / 2) <= 0.20:
+                if np.isfinite(a) and np.isfinite(bd) and a > 0 and bd > 0 and a >= bd and (a - bd) / ((a + bd) / 2) <= 0.20 and abs(a / lc - 1) <= 0.20:
                     return float(a), 1, float((a - bd) / ((a + bd) / 2)), je
         if je >= 0:
             return float((b["open"][je] + b["high"][je]) / 2), 2, np.nan, je

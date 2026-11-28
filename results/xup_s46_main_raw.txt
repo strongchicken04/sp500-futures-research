@@ -49,3 +49,4 @@ TABLE S1 2021-25 VOLU: eligible 5497 triggered 725 rate 13.2% valid entry 725 gr
 TABLE S1 2021-25 CTL: eligible 5497 triggered 394 rate 7.2% valid entry 394 gross -3.28% net -5.68% [-7.05,-4.15] T 7.1 A 67.2 amb 0.0 incomplete 1 MAE med -11.5% P(touch-20) 44%
 CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
 Algorithm Id:(4281450f24886ccff9e03b1f207e62bd) completed in 1983.39 seconds at 48k data points per second. Processing total of 94,335,657 data points.
+### MANUAL VERDICT S46MAIN v1: INVALID (implementation defect: QuoteBars requested in ADJUSTED normalization; see stage46/protocol.md Amendment 2 and results/xup_s46_diag_raw.txt)

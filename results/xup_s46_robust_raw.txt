@@ -23,3 +23,4 @@ MEM after feature compaction: RSS 4.71 GB peak 8.54 GB
 MEM end of mode: RSS 4.74 GB peak 8.54 GB
 CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
 Algorithm Id:(7e2272513f00f2b0d0dbb01831ad6494) completed in 2147.99 seconds at 42k data points per second. Processing total of 90,251,830 data points.
+### MANUAL VERDICT S46ROBUST v1: INVALID (implementation defect: QuoteBars requested in ADJUSTED normalization; see stage46/protocol.md Amendment 2 and results/xup_s46_diag_raw.txt)
