@@ -42,3 +42,28 @@ The protocol is `protocol.md`, commit 2e229f8. It was committed before any code 
   - trigger at the later confirmation;
   - entry at the next-minute ask.
 - Synthetic numbers are meaningless.
+
+## Runs (QC project 38061541; all results under `results/`)
+| Run | Backtest | Verdict | File |
+|---|---|---|---|
+| S46AUDIT v1 | b3a06dff05c512f59606e39a4c8bcd01 | INVALID (third QC data revision → Amendment 1) | xup_s46_audit_raw.txt |
+| S46AUDIT v2 | b65bd5cd3581d1a1dce4a3f95f07e85e | VALID | xup_s46_audit_raw.txt |
+| S46MAIN v1 | 4281450f24886ccff9e03b1f207e62bd | INVALID (quote normalization defect → Amendment 2) | xup_s46_main_raw.txt |
+| S46ROBUST v1 | 7e2272513f00f2b0d0dbb01831ad6494 | INVALID (same defect) | xup_s46_robust_raw.txt |
+| S46DIAG v1 | a921a976494f4b56ba792335f387aaec | VALID (defect diagnosis) | xup_s46_diag_raw.txt |
+| **S46MAIN v2** | **7a585d96a518aaaa36092ab205a3ec25** | **VALID (primary)** | xup_s46_main_raw.txt |
+| S46ROBUST v2 | d2c2494ba3f1a679b04128409e0979cc | VALID | xup_s46_robust_raw.txt |
+| S46SHADOW v1 | d7d1b68cf919601d89c0c8a33843d21a | VALID (0 prospective sessions; ObjectStore unavailable) | xup_s46_shadow_raw.txt |
+
+S46MAIN v2 was collected from the QC API after a container restart interrupted local polling (`s4_collect.py` with
+project and backtest ID).
+
+## Reproduction
+```
+export QC_PROJECT_ID=38061541     # QC credentials from the environment, never printed
+bash strategy/quantconnect/run_s46.sh S46AUDIT   v2
+bash strategy/quantconnect/run_s46.sh S46MAIN    v2
+bash strategy/quantconnect/run_s46.sh S46ROBUST  v2
+bash strategy/quantconnect/run_s46.sh S46DIAG    v1
+bash strategy/quantconnect/run_s46.sh S46SHADOW  v1
+```

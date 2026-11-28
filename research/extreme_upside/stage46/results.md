@@ -229,7 +229,29 @@ L2 − STATE: S2 +1.00 pp [−0.04, 2.02] (p 0.06); 2026 +1.61 pp [−2.50, 6.37
 All are significantly negative (BH q < 0.01). No variant comes near zero.
 
 ## 16. Prospective shadow log
-<!--SHADOW-->
+S46SHADOW v1 (backtest d7d1b68c…, VALID):
+- **Status:** the QC data end is 2026-08-27, so there are **0 prospective sessions**. No prospective observation
+  exists, and none is reported.
+- **Frozen-model fingerprints:** L2 `db61acdec347` (fold c), RF state `6c7274669d4b`. Any later run must reproduce
+  them before it can count as frozen.
+- **Dry run** of the logging path on 5 historical sessions (2026-08-13..19; labelled DRY RUN, not prospective):
+  - 36 signals, 3 triggered, 3 complete windows;
+  - the code path runs end-to-end.
+- **Technical limitation:** QC's ObjectStore raised `InvalidOperationException` in backtests. Write-once
+  security-level shadow records therefore cannot be stored inside QC on this account. Exporting them is not allowed.
+- **Fallback procedure** (re-run when QC data extend past 2026-08-27):
+  1. Raise `DATA_END` and the history end date (one-line change, logged as an amendment).
+  2. Run S46SHADOW.
+  3. Check the fingerprints.
+  4. The mode recomputes signals, triggers and outcomes deterministically for every new session.
+  5. Commit its aggregate output with the run ID and timestamp.
+
+  Immutability then comes from the frozen code commit plus committed aggregates, not from stored per-trade records.
+- **Required prospective sample:** n = ((1.645 + 0.842) · σ / 2 pp)² with σ = 14.0 % (the SD of L2 triggered
+  neutral payoff), which gives **304 triggered trades**. At 0.68 triggered complete L2 trades per session on the 20 %
+  sample, that is **about 1.8 years** (about 4–5 months on the full universe).
+- Because the historical result is clearly negative (Decision B), running the shadow for this rule is not
+  recommended.
 
 ## 17. Limitations
 See `limitations.md`. The main ones:

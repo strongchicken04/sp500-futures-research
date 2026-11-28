@@ -1,0 +1,17 @@
+### xup s4 S46SHADOW v1 | project 38061541 backtest d7d1b68cf919601d89c0c8a33843d21a | VALID
+MEM = k 7.04 GB | after S45 arrays: RSS 7.80 GB peak 7.80 GB | after frozen RF scores: RSS 7.96 GB peak 8.32 GB | after feature compaction: RSS 4.67 GB peak 8.52 GB | end of mode: RSS 5.34 GB peak 8.52 GB
+P0 panel = mode S46SHADOW | sample securities 2989 with data 2949 | rows 6030760 | build 15 min
+S4 CHECK = OK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3098061 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+S46 CHECK = OK raw OHLC rows>=2020-06 1984316 | raw close vs panel price mismatches 0 | missing 0 | S45 OK
+SH0 shadow status = data end 2026-08-27 | prospective sessions after 2026-08-27: 0 | model fingerprints L2 db61acdec347 RF 6c7274669d4b | ObjectStore error InvalidOperationException
+SH1 dry run (historical, not prospective) = sessions 5 signals 36 triggered 3 complete-window 3 | records written once to ObjectStore -1 keys
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 6.88 GB peak 7.04 GB
+MEM after S45 arrays: RSS 7.80 GB peak 7.80 GB
+MEM after frozen RF scores: RSS 7.96 GB peak 8.32 GB
+MEM after feature compaction: RSS 4.67 GB peak 8.52 GB
+MEM end of mode: RSS 5.34 GB peak 8.52 GB
+CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
+Algorithm Id:(d7d1b68cf919601d89c0c8a33843d21a) completed in 1900.95 seconds at 44k data points per second. Processing total of 84,188,856 data points.

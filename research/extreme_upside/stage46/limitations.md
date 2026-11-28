@@ -32,3 +32,10 @@
    of the universe.
 9. **Prospective shadow.** The QC data end at 2026-08-27, so no prospective session exists yet. The framework is
    built and dry-run on historical sessions. Prospective results require re-running as QC data extend.
+   - QC's ObjectStore is not usable from backtests on this account (`InvalidOperationException`), so write-once
+     per-trade records cannot be kept inside QC.
+   - The fallback is deterministic recomputation with fingerprinted frozen models, plus committed aggregates.
+10. **Data revisions.** QC revised its historical data three times during the project. Stage 4.6 uses its own
+    canonical panel (6,030,760 rows); the Stage 4.5 baselines were reproduced on it (M0b).
+11. **Implementation defect (fixed).** The first MAIN / ROBUST runs used ADJUSTED quote prices. They are kept as
+    INVALID (Amendment 2).
