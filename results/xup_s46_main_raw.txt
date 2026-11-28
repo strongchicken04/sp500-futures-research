@@ -50,3 +50,54 @@ TABLE S1 2021-25 CTL: eligible 5497 triggered 394 rate 7.2% valid entry 394 gros
 CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
 Algorithm Id:(4281450f24886ccff9e03b1f207e62bd) completed in 1983.39 seconds at 48k data points per second. Processing total of 94,335,657 data points.
 ### MANUAL VERDICT S46MAIN v1: INVALID (implementation defect: QuoteBars requested in ADJUSTED normalization; see stage46/protocol.md Amendment 2 and results/xup_s46_diag_raw.txt)
+### xup s4 S46MAIN v2 | project 38061541 backtest 7a585d96a518aaaa36092ab205a3ec25 | VALID
+C S1 2021-25 L2-CTL = net +0.46pp [-1.39,2.15] p 0.6310 | trig +8.5pp [7.1,9.9] | T +3.2pp [-0.7,6.6] | A +4.0pp [-2.0,10.3] | gross +0.46pp [-1.39,2.15]
+C S1 2021-25 L2-STATE = net +1.76pp [0.03,3.35] p 0.0440 | trig +9.8pp [8.3,11.3] | T -0.8pp [-4.7,3.0] | A -9.8pp [-15.8,-4.0] | gross +1.76pp [0.03,3.35] | two-way net [-1.27,4.50]
+C S1 2021-25 L2-VOLU = net +0.32pp [-0.61,1.25] p 0.5190 | trig +2.4pp [1.3,3.5] | T +0.9pp [-1.1,3.0] | A +2.1pp [-1.2,5.7] | gross +0.32pp [-0.61,1.25]
+D S1 2021-25 CTL = eligible 5497 | minute cov 5024 | breakout30 1225 $1M30 1164 both 394 (7.2% [6.0,8.3]) | quote entry 393 any entry 394 | complete 393 same-bar 79
+D S1 2021-25 L2 = eligible 5497 | minute cov 4953 | breakout30 1638 $1M30 2067 both 859 (15.6% [13.9,17.4]) | quote entry 852 any entry 859 | complete 857 same-bar 209
+D S1 2021-25 STATE = eligible 5497 | minute cov 4838 | breakout30 942 $1M30 1026 both 320 (5.8% [4.9,6.8]) | quote entry 316 any entry 320 | complete 318 same-bar 56
+D S1 2021-25 VOLU = eligible 5497 | minute cov 4947 | breakout30 1276 $1M30 1986 both 725 (13.2% [11.9,14.5]) | quote entry 716 any entry 725 | complete 724 same-bar 168
+DEC S1 2021-25 L2 = next-open all L2 -2.91% (n 5466) | triggered subset at next open -1.02% | triggered at trigger entry -3.13% (n 857)
+E1 S1 2021-25 diagnostic = triggered L2 with E1 move day in t+1..t+3 162/857 | net with move +5.65% without -5.17% (diagnostic only)
+GATE S1 2021-25 = G1 FAIL G2 FAIL G3 PASS G4 FAIL G5 FAIL G6 FAIL G7 PASS | complete 857 quote share 99% | adverse>target+neither True -> B (not supported)
+K S1 2021-25 L2 costs = opti -1.78% [-2.86,-0.77] | neut -3.13% [-4.21,-2.12] | cons -5.07% [-6.16,-4.07] | QI -2.82% [-3.96,-1.77] | s_trig p10/25/50/75/90 0.212/0.327/0.566/0.967/1.63%
+M0 frozen groups = pop 49802 | L2 5497 STATE 5497 VOLU 5497 CTL 5497 (unmatched 0) | union 17128 | L2 C=0.01
+M0b Stage 4.5 baseline reproduction = C2 capture L2 69.9% vs STATE 25.5% of 302 eligible (S45 69.3/26.7 of 303) | next-open neutral payoff L2 -2.91% (S45 -2.96%) | P10 L2 7.19% (S45 7.19%)
+M1 minute loop = rows 17128 done 17128 in 4.1 min | history calls 19541 | label shift 0 | errors none
+MEM = 8.19 GB | after frozen RF scores: RSS 8.43 GB peak 8.80 GB | after feature compaction: RSS 5.14 GB peak 8.99 GB | before minute loop: RSS 5.89 GB peak 8.99 GB | end of mode: RSS 6.00 GB peak 8.99 GB
+P0 panel = mode S46MAIN | sample securities 2989 with data 2949 | rows 6030760 | build 11 min
+R S1 2021-25 CTL = net neutral mean -3.58% [-4.95,-2.14] median -12.40% | gross -1.19% | win 30% | T 8.9 A 56.0 amb 0.0 N 35.1% incomplete 1
+R S1 2021-25 L2 = net neutral mean -3.13% [-4.21,-2.12] two-way [-4.91,-1.35] median -12.40% | gross -0.73% | win 29% | T 12.1 A 60.0 amb 0.0 N 27.9% incomplete 2
+R S1 2021-25 STATE = net neutral mean -4.88% [-6.40,-3.30] median -12.40% | gross -2.49% | win 21% | T 12.9 A 69.8 amb 0.0 N 17.3% incomplete 2
+R S1 2021-25 VOLU = net neutral mean -3.45% [-4.47,-2.39] median -12.40% | gross -1.06% | win 28% | T 11.2 A 57.9 amb 0.0 N 30.9% incomplete 1
+ROB S1 2021-25 concentration = top-10 secs removed -4.24% | sec-group LOO min -3.47 max -2.78 | A-strict -3.21% | dedup5 -2.93% n 626 | secs 285
+ROB S1 2021-25 execution = conservative -3.15% [-4.23,-2.14] | gap-realistic -3.29% | quote-only -3.06% n 850 | proxy-only -11.19% n 7 | no same-bar -2.67%
+ROB S1 2021-25 periods = 21-22 -3.78% n 394 | 23-25 -2.57% n 463 | LOYO 21:-2.96 22:-2.91 23:-3.43 24:-3.08 25:-3.24
+S4 CHECK = OK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3098061 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+S46 CHECK = OK raw OHLC rows>=2020-06 1984316 | raw close vs panel price mismatches 0 | missing 0 | S45 OK
+SEL S1 2021-25 L2 entry = entry vs prior close p25/50/75 1.96/4.64/9.28% | vs prior high -0.0583/1.25/4.33% | entry minute after 09:30 p25/50/75 2/7/16
+SEL S1 2021-25 L2 trig vs not = trig n 859 px 5.62 dv 6.08M atr 9.8% xr 52% dv30 4.65M | not n 4094 px 4.67 dv 1.89M atr 13.6% xr 42% dv30 0.42M
+SENS S1 2021-25 a = V0.5M trig 1085 n 1083 -3.20% [-4.13,-2.30] q0.00 | V2M trig 655 n 653 -3.19% [-4.32,-2.13] q0.00 | V5M trig 416 n 415 -3.96% [-5.33,-2.60] q0.00 | W5 trig 377 n 375 -3.65% [-5.02,-2.26] q0.00
+SENS S1 2021-25 b = W15 trig 630 n 628 -3.36% [-4.47,-2.26] q0.00 | W60 trig 1144 n 1141 -2.92% [-3.84,-2.09] q0.00 | BCLOSE trig 777 n 775 -2.99% [-4.15,-1.89] q0.00
+SHADOW S1 2021-25 power = SD of L2 triggered net payoff 14.0% -> n_min (delta 2pp, alpha .05 one-sided, power .8) 304 | triggered complete L2 per session 0.68 -> about 1.8 years on the 20% sample
+X S1 2021-25 L2 downside = MAE med -10.3% MFE med 7.6% | 5d touch -20/-30/-50 31/11/2% +20/+30/+50 26/15/6% | close t+1/3/5 med -1.8/-3.4/-4.5%
+X S1 2021-25 L2 net pctl = net neutral p5/10/25/50/75/90/95 -12.4/-12.4/-12.4/-12.4/3.81/27.6/27.6% | hold mean 2.89 med 2 sessions
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 7.26 GB peak 7.42 GB
+MEM after S45 arrays: RSS 8.19 GB peak 8.19 GB
+MEM after frozen RF scores: RSS 8.43 GB peak 8.80 GB
+MEM after feature compaction: RSS 5.14 GB peak 8.99 GB
+MEM before minute loop: RSS 5.89 GB peak 8.99 GB
+MEM end of mode: RSS 6.00 GB peak 8.99 GB
+DOWN STATE: MAE med -10.6% touch -20% 38% +30% 19% close t+5 med -8.7% net p10/50/90 -12.4/-12.4/27.6%
+DOWN CTL: MAE med -10.2% touch -20% 22% +30% 10% close t+5 med -4.1% net p10/50/90 -12.4/-12.4/20.4%
+DOWN VOLU: MAE med -10.2% touch -20% 28% +30% 14% close t+5 med -3.7% net p10/50/90 -12.4/-12.4/27.6%
+TABLE S1 2021-25 L2: eligible 5497 triggered 859 rate 15.6% valid entry 859 gross -0.73% net -3.13% [-4.21,-2.12] T 12.1 A 60.0 amb 0.0 incomplete 2 MAE med -10.3% P(touch-20) 31%
+TABLE S1 2021-25 STATE: eligible 5497 triggered 320 rate 5.8% valid entry 320 gross -2.49% net -4.88% [-6.40,-3.30] T 12.9 A 69.8 amb 0.0 incomplete 2 MAE med -10.6% P(touch-20) 38%
+TABLE S1 2021-25 VOLU: eligible 5497 triggered 725 rate 13.2% valid entry 725 gross -1.06% net -3.45% [-4.47,-2.39] T 11.2 A 57.9 amb 0.0 incomplete 1 MAE med -10.2% P(touch-20) 28%
+TABLE S1 2021-25 CTL: eligible 5497 triggered 394 rate 7.2% valid entry 394 gross -1.19% net -3.58% [-4.95,-2.14] T 8.9 A 56.0 amb 0.0 incomplete 1 MAE med -10.2% P(touch-20) 22%
+CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
+Algorithm Id:(7a585d96a518aaaa36092ab205a3ec25) completed in 1949.72 seconds at 48k data points per second. Processing total of 94,338,165 data points.
