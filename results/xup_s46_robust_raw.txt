@@ -24,3 +24,28 @@ MEM end of mode: RSS 4.74 GB peak 8.54 GB
 CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
 Algorithm Id:(7e2272513f00f2b0d0dbb01831ad6494) completed in 2147.99 seconds at 42k data points per second. Processing total of 90,251,830 data points.
 ### MANUAL VERDICT S46ROBUST v1: INVALID (implementation defect: QuoteBars requested in ADJUSTED normalization; see stage46/protocol.md Amendment 2 and results/xup_s46_diag_raw.txt)
+### xup s4 S46ROBUST v2 | project 38061541 backtest d2c2494ba3f1a679b04128409e0979cc | VALID
+C S1 2026 L2-STATE = net +1.61pp [-2.50,6.37] p 0.4380 | rows 1250 loop 0.3 min
+C S2 2021-25 L2-STATE = net +1.00pp [-0.04,2.02] p 0.0600 | rows 8083 loop 2.7 min
+D S1 2026 L2 = eligible 701 | minute cov 595 | breakout30 210 $1M30 299 both 145 (20.7% [16.2,25.6]) | quote entry 143 any entry 145 | complete 143 same-bar 50
+D S1 2026 STATE = eligible 701 | minute cov 646 | breakout30 125 $1M30 106 both 48 (6.8% [4.6,9.6]) | quote entry 48 any entry 48 | complete 48 same-bar 9
+D S2 2021-25 L2 = eligible 4983 | minute cov 4569 | breakout30 1663 $1M30 2602 both 1070 (21.5% [19.3,23.7]) | quote entry 1065 any entry 1070 | complete 1062 same-bar 317
+D S2 2021-25 STATE = eligible 4983 | minute cov 4478 | breakout30 1039 $1M30 1972 both 570 (11.4% [9.8,13.0]) | quote entry 565 any entry 570 | complete 570 same-bar 157
+MEM = k 7.06 GB | after S45 arrays: RSS 7.82 GB peak 7.82 GB | after frozen RF scores: RSS 8.04 GB peak 8.40 GB | after feature compaction: RSS 4.75 GB peak 8.60 GB | end of mode: RSS 4.78 GB peak 8.60 GB
+P0 panel = mode S46ROBUST | sample securities 2989 with data 2949 | rows 6030760 | build 15 min
+R S1 2026 L2 = net neutral mean -3.12% [-5.55,-0.92] two-way [-6.84,1.11] median -12.40% | gross -0.72% | win 29% | T 13.3 A 60.8 amb 0.0 N 25.9% incomplete 2
+R S1 2026 STATE = net neutral mean -4.73% [-9.53,-0.70] median -12.40% | gross -2.34% | win 25% | T 8.3 A 68.8 amb 0.0 N 22.9% incomplete 0
+R S2 2021-25 L2 = net neutral mean -2.95% [-3.78,-2.18] two-way [-4.33,-1.63] median -11.10% | gross -0.56% | win 31% | T 7.8 A 49.7 amb 0.0 N 42.5% incomplete 8
+R S2 2021-25 STATE = net neutral mean -3.95% [-5.06,-2.83] median -12.40% | gross -1.56% | win 25% | T 9.8 A 59.3 amb 0.0 N 30.9% incomplete 0
+S4 CHECK = OK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | 
+S45 CHECK = OK path outcomes vs Stage 4, rows>=2016-06 3098061 (nan/value mismatches) A10:0/0 B5:0/0 B10:0/0 M10:0/0 L10:0/0 | s45 extension errors 0 | S4 OK
+S46 CHECK = OK raw OHLC rows>=2020-06 1984316 | raw close vs panel price mismatches 0 | missing 0 | S45 OK
+err None
+--- LOG ---
+MEM before S45 arrays: RSS 6.89 GB peak 7.06 GB
+MEM after S45 arrays: RSS 7.82 GB peak 7.82 GB
+MEM after frozen RF scores: RSS 8.04 GB peak 8.40 GB
+MEM after feature compaction: RSS 4.75 GB peak 8.60 GB
+MEM end of mode: RSS 4.78 GB peak 8.60 GB
+CHECK rows 6030760 (S4 canon 6030760; S3 6022604) primary events 24429 (canon 24429; S3 24371) | mh10 vs R mismatches: nan 0 value 0 | non-increasing dates within segment 0 | segments 3543 | s4 extension errors 0
+Algorithm Id:(d2c2494ba3f1a679b04128409e0979cc) completed in 2239.46 seconds at 40k data points per second. Processing total of 90,254,338 data points.

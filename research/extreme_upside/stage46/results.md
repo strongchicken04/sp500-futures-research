@@ -203,7 +203,17 @@ volume baseline, and all four are negative.
 
 **E1 diagnostic** (never used to select): with a move day in t+1..t+3, +5.65 % (n 162); without, −5.17 % (n 695).
 Detecting the actual move would pay; the trigger does not separate the two groups well enough.
-<!--ROBUST-->
+
+**S2 and 2026 YTD** (S46ROBUST v2, backtest d2c2494b…, VALID; primary rule, neutral):
+
+| Population | Group | Eligible | Triggered (rate) | Complete | Mean net [95 % CI] | Gross | T / A / N |
+|---|---|---|---|---|---|---|---|
+| S2-P5 2021–25 | L2 | 4,983 | 1,070 (21.5 %) | 1,062 | −2.95 % [−3.78, −2.18]; two-way [−4.33, −1.63] | −0.56 % | 7.8 / 49.7 / 42.5 % |
+| S2-P5 2021–25 | STATE | 4,983 | 570 (11.4 %) | 570 | −3.95 % [−5.06, −2.83] | −1.56 % | 9.8 / 59.3 / 30.9 % |
+| S1-P5 2026 YTD (diagnostic) | L2 | 701 | 145 (20.7 %) | 143 | −3.12 % [−5.55, −0.92] | −0.72 % | 13.3 / 60.8 / 25.9 % |
+| S1-P5 2026 YTD (diagnostic) | STATE | 701 | 48 (6.8 %) | 48 | −4.73 % [−9.53, −0.70] | −2.34 % | 8.3 / 68.8 / 22.9 % |
+
+L2 − STATE: S2 +1.00 pp [−0.04, 2.02] (p 0.06); 2026 +1.61 pp [−2.50, 6.37] (p 0.44).
 
 ## 15. Secondary sensitivities (exploratory; BH over 7 variants; each changes one element)
 | Variant | Triggered | n | Mean net [95 % CI] |
